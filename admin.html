@@ -2,8 +2,8 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>studio.402 / Operations Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>studio.402 / Operations Dashboard &amp; Leads</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +28,6 @@
     svg.lucide, [data-lucide] {
       stroke-width: 1.5px;
     }
-    /* Subtle custom scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -51,7 +50,7 @@
   <!-- 1. AUTH GATE (FULLSCREEN LOGIN SCREEN)                                    -->
   <!-- ========================================================================= -->
   <div id="auth-gate" class="fixed inset-0 z-50 bg-[#09090b] flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-[#121215] border border-zinc-800/90 rounded-2xl p-7 space-y-6 shadow-2xl relative overflow-hidden">
+    <div class="max-w-md w-full bg-[#121215] border border-zinc-800/90 rounded-2xl p-6 sm:p-7 space-y-6 shadow-2xl relative overflow-hidden">
       <!-- Glow Accent -->
       <div class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -63,9 +62,9 @@
         <div>
           <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
             studio.402
-            <span class="text-xs font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">OPERATIONS</span>
+            <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">OPERATIONS</span>
           </h2>
-          <p class="text-xs text-zinc-400 mt-0.5">Developer dashboard &amp; revenue control</p>
+          <p class="text-xs text-zinc-400 mt-0.5">Commercial keepsakes &amp; leads management</p>
         </div>
       </div>
 
@@ -115,47 +114,59 @@
   <div id="dashboard-app" class="hidden flex-1 flex flex-col">
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40 px-4 md:px-8 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
+    <header class="border-b border-zinc-800/80 bg-[#09090b]/85 backdrop-blur-xl sticky top-0 z-40 px-4 md:px-8 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse"></span>
           <span class="font-extrabold text-base tracking-tight text-white">studio.402</span>
         </div>
-        <span class="text-zinc-600 font-mono text-xs">/</span>
-        <span class="font-mono text-xs uppercase tracking-wider text-zinc-400 font-semibold hidden sm:inline">Operations Dashboard</span>
+        <span class="text-zinc-600 font-mono text-xs hidden sm:inline">/</span>
+        <span class="font-mono text-xs uppercase tracking-wider text-zinc-400 font-semibold hidden sm:inline">Operations &amp; Leads</span>
       </div>
 
-      <div class="flex items-center gap-2.5">
-        <!-- Live Server Status Indicator -->
-        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          <span>Daemon: 6h Purge</span>
+      <!-- Quick Actions Header Strip -->
+      <div class="flex items-center gap-2">
+        <!-- Database Mode Status Pill -->
+        <div id="db-status-pill" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400">
+          <span id="db-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span id="db-status-text">Database Loading...</span>
         </div>
+
+        <!-- Trigger Abandoned Scan (>1h) -->
+        <button 
+          onclick="triggerScanAbandoned()" 
+          title="Scan drafts older than 1 hour and send WA reminders"
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition text-xs font-mono"
+        >
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Scan Abandoned (>1h)</span>
+        </button>
+
+        <!-- Send Test WhatsApp -->
+        <button 
+          onclick="sendTestWhatsApp()" 
+          title="Send a live test message to your WhatsApp phone"
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition text-xs font-mono"
+        >
+          <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Test WA</span>
+        </button>
 
         <!-- Refresh Button -->
         <button 
           onclick="fetchDashboardData()" 
           title="Reload data"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-mono"
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-mono"
         >
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i>
           <span class="hidden sm:inline">Refresh</span>
         </button>
 
-        <!-- Studio Editor Link -->
-        <a 
-          href="/editor.html" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-medium"
-        >
-          <i data-lucide="palette" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Editor</span>
-        </a>
-
-        <!-- Logout / Lock Button -->
+        <!-- Logout Button -->
         <button 
           onclick="handleLogout()" 
           title="Clear session and lock"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 hover:text-white transition text-xs font-mono"
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white transition text-xs font-mono"
         >
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Lock</span>
@@ -164,59 +175,59 @@
     </header>
 
     <!-- MAIN DASHBOARD CONTENT -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8 space-y-8">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 md:px-8 py-6 space-y-6">
 
       <!-- ===================================================================== -->
-      <!-- METRICS ROW: 4 KEY COMMERCIAL PERFORMANCE INDICATORS                  -->
+      <!-- METRICS ROW: 4 COMMERCIAL PERFORMANCE CARDS                           -->
       <!-- ===================================================================== -->
-      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         
         <!-- Metric 1: Total Leads (Drafts) -->
-        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-1.5">
           <div class="flex items-center justify-between text-zinc-400">
-            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Total Leads</span>
+            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Total Leads</span>
             <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-              <i data-lucide="clock" class="w-4 h-4"></i>
+              <i data-lucide="users" class="w-3.5 h-3.5"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-amber-400 font-mono tracking-tight" id="metric-drafts">0</div>
-          <p class="text-xs text-zinc-500 font-mono">Unpaid drafts in 7-day vault</p>
+          <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono tracking-tight" id="metric-drafts">0</div>
+          <p class="text-[10px] text-zinc-500 font-mono">Draf tersimpan (belum bayar)</p>
         </div>
 
-        <!-- Metric 2: Active Paid Pages -->
-        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+        <!-- Metric 2: Active Paid Keepsakes -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-1.5">
           <div class="flex items-center justify-between text-zinc-400">
-            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Active Paid Pages</span>
+            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Active Paid</span>
             <div class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-emerald-400 font-mono tracking-tight" id="metric-paid">0</div>
-          <p class="text-xs text-zinc-500 font-mono">Active customer keepsakes</p>
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono tracking-tight" id="metric-paid">0</div>
+          <p class="text-[10px] text-zinc-500 font-mono">Lunas &amp; aktif permanen</p>
         </div>
 
-        <!-- Metric 3: Conversion Rate % -->
-        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+        <!-- Metric 3: Abandoned Drafts (>1 Hour) -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-1.5">
           <div class="flex items-center justify-between text-zinc-400">
-            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Conversion Rate</span>
-            <div class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
-              <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Perlu Follow-up</span>
+            <div class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <i data-lucide="bell" class="w-3.5 h-3.5"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-sky-400 font-mono tracking-tight" id="metric-conversion">0.0%</div>
-          <p class="text-xs text-zinc-500 font-mono">Paid / Total link creations</p>
+          <div class="text-2xl sm:text-3xl font-extrabold text-rose-400 font-mono tracking-tight" id="metric-abandoned">0</div>
+          <p class="text-[10px] text-zinc-500 font-mono">Draf tertinggal &gt; 1 jam</p>
         </div>
 
-        <!-- Metric 4: Estimated Revenue ($) -->
-        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+        <!-- Metric 4: Estimated Revenue -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-1.5">
           <div class="flex items-center justify-between text-zinc-400">
-            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Estimated Revenue</span>
+            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Est. Revenue</span>
             <div class="p-1.5 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/20">
-              <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+              <i data-lucide="dollar-sign" class="w-3.5 h-3.5"></i>
             </div>
           </div>
-          <div class="text-3xl font-extrabold text-white font-mono tracking-tight" id="metric-revenue">$0.00</div>
-          <p class="text-xs text-zinc-500 font-mono" id="metric-revenue-sub">Calculated via Gumroad ping</p>
+          <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono tracking-tight" id="metric-revenue">$0.00</div>
+          <p class="text-[10px] text-zinc-500 font-mono" id="metric-conversion">Konversi: 0.0%</p>
         </div>
 
       </section>
@@ -224,50 +235,56 @@
       <!-- ===================================================================== -->
       <!-- SEARCH & FILTER TOOLBAR                                               -->
       <!-- ===================================================================== -->
-      <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#121215]/80 p-3 rounded-2xl border border-zinc-800/80">
+      <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#121215] p-3 rounded-2xl border border-zinc-800/80">
         <!-- Search Field -->
         <div class="relative flex-1">
           <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
           <input 
             type="text" 
             id="table-search-input" 
-            placeholder="Search email, slug, or design code..." 
-            oninput="renderProjectsTable()" 
+            placeholder="Cari email, slug /v/..., atau kode ST-..." 
+            oninput="renderProjectsList()" 
             class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-zinc-200 placeholder-zinc-500 font-mono focus:outline-none focus:border-zinc-600 transition"
           />
         </div>
 
         <!-- Filter Segmented Tabs -->
-        <div class="flex items-center gap-1 p-1 bg-zinc-950 rounded-xl border border-zinc-800 text-xs font-mono">
-          <button onclick="setFilter('all')" id="filter-tab-all" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition">All</button>
-          <button onclick="setFilter('paid')" id="filter-tab-paid" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Paid</button>
-          <button onclick="setFilter('draft')" id="filter-tab-draft" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Drafts</button>
-          <button onclick="setFilter('expired')" id="filter-tab-expired" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Expired</button>
+        <div class="flex items-center gap-1 p-1 bg-zinc-950 rounded-xl border border-zinc-800 text-xs font-mono overflow-x-auto">
+          <button onclick="setFilter('all')" id="filter-tab-all" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition whitespace-nowrap">Semua</button>
+          <button onclick="setFilter('paid')" id="filter-tab-paid" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Paid</button>
+          <button onclick="setFilter('draft')" id="filter-tab-draft" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Draft</button>
+          <button onclick="setFilter('abandoned')" id="filter-tab-abandoned" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Perlu Follow-up</button>
         </div>
       </section>
 
       <!-- ===================================================================== -->
-      <!-- MOBILE-FRIENDLY PROJECT TABLE                                         -->
+      <!-- RESPONSIVE PROJECTS VIEW                                              -->
       <!-- ===================================================================== -->
-      <section class="bg-[#121215] rounded-2xl border border-zinc-800/80 overflow-hidden shadow-2xl">
+
+      <!-- MOBILE CARD VIEW (< 768px) -->
+      <section class="block md:hidden space-y-3" id="mobile-cards-container">
+        <!-- Dynamically populated mobile cards -->
+      </section>
+
+      <!-- DESKTOP TABLE VIEW (>= 768px) -->
+      <section class="hidden md:block bg-[#121215] rounded-2xl border border-zinc-800/80 overflow-hidden shadow-2xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse min-w-[760px]">
             <thead>
               <tr class="border-b border-zinc-800 text-[11px] font-mono text-zinc-400 uppercase tracking-wider bg-zinc-950/60">
                 <th class="py-3 px-4">Custom Link (/v/...)</th>
-                <th class="py-3 px-4">Customer Email</th>
+                <th class="py-3 px-4">Pembeli (Email)</th>
                 <th class="py-3 px-4">Template</th>
-                <th class="py-3 px-4">Status &amp; Retention</th>
-                <th class="py-3 px-4">Created Time</th>
-                <th class="py-3 px-4 text-right">Actions</th>
+                <th class="py-3 px-4">Status &amp; Waktu</th>
+                <th class="py-3 px-4 text-right">Aksi Cepat</th>
               </tr>
             </thead>
             <tbody id="projects-table-body" class="divide-y divide-zinc-800/60 text-sm">
               <tr>
-                <td colspan="6" class="py-14 text-center text-zinc-500 font-mono text-xs">
+                <td colspan="5" class="py-14 text-center text-zinc-500 font-mono text-xs">
                   <div class="inline-flex items-center gap-2">
                     <i data-lucide="loader" class="w-4 h-4 animate-spin text-zinc-400"></i>
-                    <span>Connecting to studio.402 operations engine...</span>
+                    <span>Memuat data proyek dari database...</span>
                   </div>
                 </td>
               </tr>
@@ -276,17 +293,65 @@
         </div>
       </section>
 
-      <!-- RECOVERY / HELP FOOTER -->
-      <footer class="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-600 font-mono gap-3">
-        <div>studio.402 Keepsake Engine &bull; Zero Emojis Policy &bull; Lucide 1.5px Icons</div>
-        <div>Protected Endpoint &bull; Auth via sessionStorage &bull; Node.js / Bun</div>
+      <!-- FOOTER -->
+      <footer class="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-600 font-mono gap-2">
+        <div>studio.402 Keepsake Engine &bull; Zero Emojis Policy &bull; Fonnte WhatsApp &amp; Supabase DB</div>
+        <div>Protected Endpoint &bull; Auth via sessionStorage</div>
       </footer>
 
     </main>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 3. INTERACTIVE FLOATING TOAST NOTIFICATION                                -->
+  <!-- 3. FOLLOW-UP EMAIL PREVIEW MODAL                                          -->
+  <!-- ========================================================================= -->
+  <div id="email-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="max-w-lg w-full bg-[#121215] border border-zinc-800 rounded-2xl p-6 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i data-lucide="mail" class="w-4 h-4 text-amber-400"></i>
+          <span class="font-bold text-sm text-white font-mono">Draf Email Follow-up (15% Diskon)</span>
+        </div>
+        <button onclick="closeEmailModal()" class="w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2 text-xs font-mono">
+        <div>
+          <span class="text-zinc-500">Kepada:</span>
+          <span id="modal-email-recipient" class="text-zinc-200 font-bold ml-1"></span>
+        </div>
+        <div>
+          <span class="text-zinc-500">Subjek:</span>
+          <span id="modal-email-subject" class="text-zinc-300 ml-1">Special Gift: Your private keepsake is ready to unlock (15% off inside)</span>
+        </div>
+      </div>
+
+      <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-300 leading-relaxed font-sans max-h-56 overflow-y-auto whitespace-pre-wrap" id="modal-email-body"></div>
+
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button 
+          onclick="copyFollowupEmailText()" 
+          class="py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs flex items-center justify-center gap-1.5 transition"
+        >
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Salin Teks Email</span>
+        </button>
+        <a 
+          id="modal-direct-mailto" 
+          href="#" 
+          class="py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold font-mono text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-amber-400/10"
+        >
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Buka di Mail / Gmail</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. FLOATING TOAST NOTIFICATION                                            -->
   <!-- ========================================================================= -->
   <div 
     id="toast-notification" 
@@ -297,43 +362,38 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 4. DASHBOARD LOGIC SCRIPT                                                 -->
+  <!-- 5. JAVASCRIPT CONTROLLER                                                  -->
   <!-- ========================================================================= -->
   <script>
-    // Storage Key
     const STORAGE_KEY = 'studio402_admin_key';
-
-    // State Variables
     let currentAdminKey = sessionStorage.getItem(STORAGE_KEY) || '';
     let projectsData = [];
     let activeFilter = 'all';
+    let activeStats = null;
+    let selectedFollowupProject = null;
 
-    // Template Display Dictionary
-    const TEMPLATE_NAMES = {
-      'spotilove': '01 Vinyl Wrapped',
-      'spotilove_ultra_1000_10_studio_edition.html': '01 Vinyl Wrapped',
-      'vinyl': '01 Vinyl Wrapped',
-      'netlove': '02 Cinema Bandersnatch',
-      'netlove_interactive_streaming_bandersnatch_app.html': '02 Cinema Bandersnatch',
-      'cinema': '02 Cinema Bandersnatch',
-      'lovebox': '03 Vintage 35mm',
-      'lovebox_98_instant_polaroid_camera_retro_game_gadget.html': '03 Vintage 35mm',
-      'camera': '03 Vintage 35mm',
-      'camera.html': '03 Vintage 35mm',
-      'retro': '03 Vintage 35mm'
+    const TEMPLATE_INFO = {
+      'spotilove': { name: 'Vinyl Studio', color: 'emerald' },
+      'spotilove_ultra_1000_10_studio_edition.html': { name: 'Vinyl Studio', color: 'emerald' },
+      'vinyl': { name: 'Vinyl Studio', color: 'emerald' },
+      'vinyl.html': { name: 'Vinyl Studio', color: 'emerald' },
+      'netlove': { name: 'Cinema Stream', color: 'rose' },
+      'netlove_interactive_streaming_bandersnatch_app.html': { name: 'Cinema Stream', color: 'rose' },
+      'cinema': { name: 'Cinema Stream', color: 'rose' },
+      'cinema.html': { name: 'Cinema Stream', color: 'rose' },
+      'lovebox': { name: '35mm Darkroom', color: 'amber' },
+      'lovebox_98_instant_polaroid_camera_retro_game_gadget.html': { name: '35mm Darkroom', color: 'amber' },
+      'camera': { name: '35mm Darkroom', color: 'amber' },
+      'camera.html': { name: '35mm Darkroom', color: 'amber' },
+      'bundle': { name: 'All-3 Bundle', color: 'purple' }
     };
 
-    // -------------------------------------------------------------------------
-    // Toast Notification Dispatcher
-    // -------------------------------------------------------------------------
-    let toastTimeout = null;
     function showToast(message, isSuccess = true) {
       const toast = document.getElementById('toast-notification');
       const msgEl = document.getElementById('toast-message');
       const iconEl = document.getElementById('toast-icon');
 
       msgEl.innerText = message;
-
       if (isSuccess) {
         iconEl.setAttribute('data-lucide', 'check-circle');
         iconEl.className = 'w-4 h-4 text-emerald-400 flex-shrink-0';
@@ -344,26 +404,35 @@
       lucide.createIcons();
 
       toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
         toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
       }, 3500);
     }
 
+    // Format Relative Time (e.g. "12m ago", "2h ago")
+    function formatTimeAgo(dateString) {
+      if (!dateString) return '-';
+      const sec = Math.floor((Date.now() - new Date(dateString).getTime()) / 1000);
+      if (sec < 60) return 'Baru saja';
+      const min = Math.floor(sec / 60);
+      if (min < 60) return `${min} menit lalu`;
+      const hrs = Math.floor(min / 60);
+      if (hrs < 24) return `${hrs} jam lalu`;
+      const days = Math.floor(hrs / 24);
+      return `${days} hari lalu`;
+    }
+
     // -------------------------------------------------------------------------
-    // 1. Authentication Gate Handlers
+    // AUTH HANDLERS
     // -------------------------------------------------------------------------
     function initAuth() {
       if (currentAdminKey) {
-        // Attempt loading dashboard with stored session key
         verifyAndLoadData();
       } else {
-        // Show Auth Gate
         document.getElementById('auth-gate').classList.remove('hidden');
         document.getElementById('dashboard-app').classList.add('hidden');
-        setTimeout(() => {
-          document.getElementById('auth-key-input').focus();
-        }, 100);
+        setTimeout(() => document.getElementById('auth-key-input').focus(), 100);
       }
     }
 
@@ -374,10 +443,7 @@
 
       const submitBtn = document.getElementById('auth-submit-btn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `
-        <i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>
-        <span>Verifying...</span>
-      `;
+      submitBtn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Memverifikasi...</span>`;
       lucide.createIcons();
 
       currentAdminKey = inputVal;
@@ -385,10 +451,7 @@
 
       const success = await verifyAndLoadData();
       submitBtn.disabled = false;
-      submitBtn.innerHTML = `
-        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-        <span>Authenticate Session</span>
-      `;
+      submitBtn.innerHTML = `<i data-lucide="lock" class="w-3.5 h-3.5"></i><span>Authenticate Session</span>`;
       lucide.createIcons();
 
       if (!success) {
@@ -406,11 +469,11 @@
       document.getElementById('auth-key-input').value = '';
       document.getElementById('dashboard-app').classList.add('hidden');
       document.getElementById('auth-gate').classList.remove('hidden');
-      showToast('Session locked');
+      showToast('Sesi dashboard terkunci');
     }
 
     // -------------------------------------------------------------------------
-    // 2. Data Fetching & Metrics Calculation
+    // DATA FETCHING & METRICS
     // -------------------------------------------------------------------------
     async function verifyAndLoadData() {
       const refreshIcon = document.getElementById('refresh-icon');
@@ -418,37 +481,41 @@
 
       try {
         const res = await fetch('/api/admin/projects', {
-          headers: {
-            'x-admin-key': currentAdminKey
-          }
+          headers: { 'x-admin-key': currentAdminKey }
         });
 
-        if (res.status === 401) {
-          return false;
-        }
-
-        if (!res.ok) {
-          throw new Error(`Server returned HTTP ${res.status}`);
-        }
+        if (res.status === 401) return false;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
         projectsData = Array.isArray(data.projects) ? data.projects : [];
+        activeStats = data.stats || {};
 
-        // Hide auth gate & show dashboard
+        // Switch to dashboard view
         document.getElementById('auth-gate').classList.add('hidden');
         document.getElementById('dashboard-app').classList.remove('hidden');
         document.getElementById('auth-error-msg').classList.add('hidden');
 
-        // Compute Metrics
-        updateMetricsRow();
+        // Update Database status indicator
+        const dbPill = document.getElementById('db-status-pill');
+        const dbDot = document.getElementById('db-status-dot');
+        const dbText = document.getElementById('db-status-text');
+        if (dbPill && activeStats) {
+          if (activeStats.isUsingSupabase) {
+            dbDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
+            dbText.innerText = 'Supabase Cloud DB';
+          } else {
+            dbDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
+            dbText.innerText = 'Local Fallback Store';
+          }
+        }
 
-        // Render Table
-        renderProjectsTable();
-
+        updateMetricsView();
+        renderProjectsList();
         return true;
       } catch (err) {
-        console.error('[studio.402 Admin Error]:', err);
-        showToast('Network error loading projects', false);
+        console.error('[studio.402 Admin]', err);
+        showToast('Gagal memuat data dari server', false);
         return false;
       } finally {
         if (refreshIcon) refreshIcon.classList.remove('animate-spin');
@@ -457,78 +524,49 @@
 
     async function fetchDashboardData() {
       await verifyAndLoadData();
-      showToast('Dashboard data refreshed');
+      showToast('Data dashboard berhasil diperbarui');
     }
 
-    function updateMetricsRow() {
-      const now = Date.now();
-      const totalCount = projectsData.length;
-
-      // Drafts: status === 'draft'
-      const draftsCount = projectsData.filter(p => p.status === 'draft').length;
-
-      // Active Paid: status === 'paid' AND not expired
-      const paidProjects = projectsData.filter(p => {
-        if (p.status !== 'paid') return false;
-        if (!p.expiresAt) return true;
-        return new Date(p.expiresAt).getTime() > now;
-      });
-      const paidCount = paidProjects.length;
-
-      // Conversion Rate %: (Paid / Total) * 100
-      const conversionRate = totalCount > 0 ? ((paidCount / totalCount) * 100).toFixed(1) : '0.0';
-
-      // Estimated Revenue ($): sum of paidPrice or $19 standard tier
-      let revenue = 0;
-      paidProjects.forEach(p => {
-        if (p.paidPrice) {
-          const num = parseFloat(String(p.paidPrice).replace(/[^0-9.]/g, ''));
-          revenue += !isNaN(num) && num > 0 ? num : 19.00;
-        } else {
-          revenue += 19.00;
-        }
-      });
-
-      // Update DOM
-      document.getElementById('metric-drafts').innerText = draftsCount;
-      document.getElementById('metric-paid').innerText = paidCount;
-      document.getElementById('metric-conversion').innerText = `${conversionRate}%`;
-      document.getElementById('metric-revenue').innerText = `$${revenue.toFixed(2)}`;
-      document.getElementById('metric-revenue-sub').innerText = `${paidCount} paid keepsakes &bull; $19.00 avg`;
+    function updateMetricsView() {
+      if (!activeStats) return;
+      document.getElementById('metric-drafts').innerText = activeStats.totalDrafts ?? 0;
+      document.getElementById('metric-paid').innerText = activeStats.totalPaid ?? 0;
+      document.getElementById('metric-abandoned').innerText = activeStats.abandonedCount ?? 0;
+      document.getElementById('metric-revenue').innerText = `$${activeStats.estimatedRevenue ?? '0.00'}`;
+      document.getElementById('metric-conversion').innerText = `Konversi: ${activeStats.conversionRate ?? '0.0'}%`;
     }
 
     // -------------------------------------------------------------------------
-    // 3. Filter and Table Rendering
+    // FILTER & SEARCH LOGIC
     // -------------------------------------------------------------------------
     function setFilter(filter) {
       activeFilter = filter;
-      ['all', 'paid', 'draft', 'expired'].forEach(f => {
+      ['all', 'paid', 'draft', 'abandoned'].forEach(f => {
         const btn = document.getElementById(`filter-tab-${f}`);
-        if (f === filter) {
-          btn.className = 'px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition';
-        } else {
-          btn.className = 'px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition';
+        if (btn) {
+          if (f === filter) {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition whitespace-nowrap';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap';
+          }
         }
       });
-      renderProjectsTable();
+      renderProjectsList();
     }
 
-    function renderProjectsTable() {
+    function getFilteredProjects() {
       const query = (document.getElementById('table-search-input').value || '').trim().toLowerCase();
-      const tbody = document.getElementById('projects-table-body');
-      const now = Date.now();
+      const oneHourAgo = Date.now() - 60 * 60 * 1000;
 
-      const filtered = projectsData.filter(p => {
-        const isExpired = p.expiresAt && new Date(p.expiresAt).getTime() <= now;
-        const isPaid = p.status === 'paid' && !isExpired;
+      return projectsData.filter(p => {
+        const isPaid = p.status === 'paid';
         const isDraft = p.status === 'draft';
+        const isAbandoned = isDraft && new Date(p.createdAt).getTime() <= oneHourAgo;
 
-        // Filter tab check
         if (activeFilter === 'paid' && !isPaid) return false;
         if (activeFilter === 'draft' && !isDraft) return false;
-        if (activeFilter === 'expired' && !isExpired) return false;
+        if (activeFilter === 'abandoned' && !isAbandoned) return false;
 
-        // Search check
         if (query) {
           const matchEmail = (p.email || '').toLowerCase().includes(query);
           const matchSlug = (p.slug || '').toLowerCase().includes(query);
@@ -538,157 +576,203 @@
 
         return true;
       });
+    }
+
+    // -------------------------------------------------------------------------
+    // RENDER: DUAL VIEW (CARDS FOR MOBILE, TABLE FOR DESKTOP)
+    // -------------------------------------------------------------------------
+    function renderProjectsList() {
+      const filtered = getFilteredProjects();
+      const mobileContainer = document.getElementById('mobile-cards-container');
+      const tableBody = document.getElementById('projects-table-body');
+      const oneHourAgo = Date.now() - 60 * 60 * 1000;
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="py-14 text-center text-zinc-500 font-mono text-xs">
-              No matching records found for current criteria.
-            </td>
-          </tr>
+        const emptyHtml = `
+          <div class="py-12 text-center text-zinc-500 font-mono text-xs bg-[#121215] rounded-2xl border border-zinc-800/80 p-6">
+            Tidak ada data proyek yang sesuai kriteria filter saat ini.
+          </div>
         `;
+        mobileContainer.innerHTML = emptyHtml;
+        tableBody.innerHTML = `<tr><td colspan="5" class="py-14 text-center text-zinc-500 font-mono text-xs">Tidak ada data proyek yang sesuai kriteria filter.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = filtered.map(p => {
-        const isExpired = p.expiresAt && new Date(p.expiresAt).getTime() <= now;
-        const isPaid = p.status === 'paid' && !isExpired;
-        const templateLabel = TEMPLATE_NAMES[p.template] || p.template || 'Custom Template';
-
-        // Status Badge Logic: DRAFT vs LIVE - 29d left vs EXPIRED
-        let statusBadge = '';
-        if (isExpired) {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono font-medium">
-              <span class="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
-              EXPIRED
-            </span>
-          `;
-        } else if (isPaid) {
-          let daysLeft = 30;
-          if (p.expiresAt) {
-            daysLeft = Math.max(0, Math.ceil((new Date(p.expiresAt).getTime() - now) / (1000 * 60 * 60 * 24)));
-          }
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 text-xs font-mono font-medium">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              LIVE &bull; ${daysLeft}d left
-            </span>
-          `;
-        } else {
-          statusBadge = `
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/80 border border-amber-800 text-amber-400 text-xs font-mono font-medium">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-              DRAFT
-            </span>
-          `;
-        }
-
-        // Relative Created Time Formatter
-        const createdDate = new Date(p.createdAt || Date.now());
-        const timeAgo = formatTimeAgo(createdDate);
-        const fullDate = createdDate.toLocaleDateString('en-US', {
-          month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
-        });
-
-        // Slug link
-        const customUrl = `/v/${p.slug}`;
+      // 1. Render Mobile Cards
+      mobileContainer.innerHTML = filtered.map(p => {
+        const tInfo = TEMPLATE_INFO[p.template] || { name: 'Vinyl Studio', color: 'emerald' };
+        const isPaid = p.status === 'paid';
+        const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
+        const timeAgo = formatTimeAgo(p.createdAt);
 
         return `
-          <tr class="hover:bg-zinc-950/40 transition group">
-            
-            <!-- Custom Link (/v/:slug) -->
-            <td class="py-3.5 px-4">
-              <div class="flex items-center gap-2">
-                <a 
-                  href="${customUrl}" 
-                  target="_blank" 
-                  class="font-mono font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1 text-xs"
-                >
-                  <span>/v/${escapeHtml(p.slug)}</span>
-                  <i data-lucide="external-link" class="w-3 h-3 text-zinc-500 group-hover:text-emerald-400 transition"></i>
+          <div class="p-4 rounded-2xl bg-[#121215] border ${isAbandoned ? 'border-amber-500/40 bg-gradient-to-b from-amber-500/[0.04] to-transparent' : 'border-zinc-800/80'} space-y-3.5 shadow-lg">
+            <!-- Header Card -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="space-y-0.5">
+                <a href="/v/${p.slug}" target="_blank" class="font-mono text-sm font-bold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  <span>/v/${p.slug}</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5 text-zinc-500"></i>
                 </a>
-                <button 
-                  onclick="copyToClipboard('${customUrl}', 'Link copied')" 
-                  class="p-1 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-200 transition" 
-                  title="Copy path"
-                >
-                  <i data-lucide="copy" class="w-3 h-3"></i>
-                </button>
+                <div class="text-xs text-zinc-400 font-mono flex items-center gap-1">
+                  <i data-lucide="mail" class="w-3 h-3 text-zinc-500"></i>
+                  <span>${p.email}</span>
+                </div>
               </div>
-              <div class="text-[11px] font-mono text-zinc-500 mt-0.5">Code: ${escapeHtml(p.designCode || p.id)}</div>
+
+              <!-- Status Badge -->
+              ${isPaid ? `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-[10px] font-mono font-bold text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  PAID
+                </span>
+              ` : (isAbandoned ? `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950 border border-amber-800 text-[10px] font-mono font-bold text-amber-400 animate-pulse">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                  FOLLOW-UP (>1H)
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-[10px] font-mono text-zinc-300">
+                  <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>
+                  DRAFT
+                </span>
+              `)}
+            </div>
+
+            <!-- Meta Strip -->
+            <div class="flex items-center justify-between text-[11px] font-mono text-zinc-500 pt-1 border-t border-zinc-900">
+              <span class="px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">${tInfo.name}</span>
+              <span>${timeAgo}</span>
+            </div>
+
+            <!-- Action Buttons Row (Mobile Ergonomic) -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <a 
+                href="/v/${p.slug}" 
+                target="_blank" 
+                class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition active:scale-95"
+              >
+                <i data-lucide="eye" class="w-3.5 h-3.5 text-zinc-400"></i>
+                <span>Preview</span>
+              </a>
+
+              ${!isPaid ? `
+                <button 
+                  onclick="openFollowupModal('${p.id}')" 
+                  class="py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
+                >
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                  <span>Email Follow-up</span>
+                </button>
+              ` : `
+                <button 
+                  onclick="copyCheckoutLink('${p.slug}', '${p.email}')" 
+                  class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
+                >
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span>Salin Link</span>
+                </button>
+              `}
+            </div>
+
+            ${!isPaid ? `
+              <button 
+                onclick="manualActivate('${p.id}', '${p.slug}')" 
+                class="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
+              >
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                <span>Aktivasi Manual (Jadikan Paid +30 Hari)</span>
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // 2. Render Desktop Table
+      tableBody.innerHTML = filtered.map(p => {
+        const tInfo = TEMPLATE_INFO[p.template] || { name: 'Vinyl Studio', color: 'emerald' };
+        const isPaid = p.status === 'paid';
+        const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
+        const timeAgo = formatTimeAgo(p.createdAt);
+
+        return `
+          <tr class="hover:bg-zinc-900/50 transition">
+            <!-- Slug -->
+            <td class="py-3.5 px-4 font-mono font-bold">
+              <a href="/v/${p.slug}" target="_blank" class="text-white hover:text-emerald-400 flex items-center gap-1.5 transition">
+                <span>/v/${p.slug}</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-zinc-500"></i>
+              </a>
             </td>
 
-            <!-- Customer Email -->
-            <td class="py-3.5 px-4 font-mono text-xs text-zinc-200">
-              <div class="flex items-center gap-1.5">
-                <span>${escapeHtml(p.email)}</span>
-                <button 
-                  onclick="copyToClipboard('${escapeHtml(p.email)}', 'Email copied')" 
-                  class="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-200 transition" 
-                  title="Copy email"
-                >
-                  <i data-lucide="copy" class="w-3 h-3"></i>
-                </button>
-              </div>
+            <!-- Email -->
+            <td class="py-3.5 px-4 font-mono text-xs text-zinc-300">
+              <a href="mailto:${p.email}" class="hover:underline text-zinc-300 hover:text-white">${p.email}</a>
             </td>
 
-            <!-- Template Type -->
-            <td class="py-3.5 px-4 font-mono text-xs text-zinc-400">
-              <span class="inline-block px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[11px]">
-                ${escapeHtml(templateLabel)}
+            <!-- Template -->
+            <td class="py-3.5 px-4">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-zinc-900 text-zinc-300 border border-zinc-800">
+                ${tInfo.name}
               </span>
             </td>
 
-            <!-- Status Badge -->
-            <td class="py-3.5 px-4">
-              ${statusBadge}
+            <!-- Status & Created -->
+            <td class="py-3.5 px-4 space-y-1">
+              ${isPaid ? `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-[10px] font-mono font-bold text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> PAID (Aktif)
+                </span>
+              ` : (isAbandoned ? `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-950 border border-amber-800 text-[10px] font-mono font-bold text-amber-400 animate-pulse">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> FOLLOW-UP (>1H)
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-[10px] font-mono text-zinc-300">
+                  <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span> DRAFT
+                </span>
+              `)}
+              <div class="text-[10px] font-mono text-zinc-500">${timeAgo}</div>
             </td>
 
-            <!-- Created Time -->
-            <td class="py-3.5 px-4 font-mono text-xs text-zinc-400">
-              <div class="text-zinc-300 font-medium">${timeAgo}</div>
-              <div class="text-[10px] text-zinc-500">${fullDate}</div>
-            </td>
-
-            <!-- Actions Row -->
+            <!-- Quick Actions -->
             <td class="py-3.5 px-4 text-right">
-              <div class="inline-flex items-center gap-1.5 font-mono text-xs">
-                
-                <!-- Action A: Open Live Link -->
+              <div class="inline-flex items-center justify-end gap-1.5">
                 <a 
-                  href="${customUrl}" 
+                  href="/v/${p.slug}" 
                   target="_blank" 
-                  title="Open customer keepsake in new tab" 
-                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white transition"
+                  title="Buka Live Preview" 
+                  class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition"
                 >
-                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                  <span class="hidden xl:inline">Open</span>
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                 </a>
 
-                <!-- Action B: Copy Abandoned Cart Email -->
-                <button 
-                  onclick="copyAbandonedCartEmail('${escapeHtml(p.email)}', '${escapeHtml(p.slug)}', '${escapeHtml(p.designCode || '')}')" 
-                  title="Copy high-converting abandoned cart follow-up email"
-                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 hover:border-zinc-700 text-amber-400 hover:text-amber-300 transition"
-                >
-                  <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                  <span class="hidden md:inline">Follow-up</span>
-                </button>
-
-                <!-- Action C: Toggle Paid / +30 Days -->
-                <button 
-                  onclick="quickActivateOrExtend('${escapeHtml(p.slug)}', ${isPaid})" 
-                  title="${isPaid ? 'Extend page retention by +30 Days' : 'Manually activate project and set +30 Days'}"
-                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border ${isPaid ? 'border-zinc-800 bg-zinc-900/90 text-emerald-400 hover:border-emerald-700' : 'border-emerald-700/60 bg-emerald-950/80 text-emerald-300 hover:bg-emerald-900/80'} transition font-medium"
-                >
-                  <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-                  <span>${isPaid ? '+30d' : 'Activate'}</span>
-                </button>
-
+                ${!isPaid ? `
+                  <button 
+                    onclick="openFollowupModal('${p.id}')" 
+                    title="Kirim Email Follow-up (15% Diskon)" 
+                    class="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition"
+                  >
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button 
+                    onclick="manualActivate('${p.id}', '${p.slug}')" 
+                    title="Aktivasi Manual (Jadikan Paid +30 Hari)" 
+                    class="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 transition"
+                  >
+                    <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                  </button>
+                ` : `
+                  <button 
+                    onclick="copyCheckoutLink('${p.slug}', '${p.email}')" 
+                    title="Salin Link Checkout" 
+                    class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white transition"
+                  >
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  </button>
+                `}
               </div>
             </td>
-
           </tr>
         `;
       }).join('');
@@ -697,9 +781,13 @@
     }
 
     // -------------------------------------------------------------------------
-    // 4. Action Handlers: Toggle Paid / Extend 30 Days
+    // ACTION CONTROLLERS
     // -------------------------------------------------------------------------
-    async function quickActivateOrExtend(slug, currentlyPaid) {
+    async function manualActivate(id, slug) {
+      if (!confirm(`Konfirmasi aktivasi manual untuk "/v/${slug}"?\nStatus akan diubah menjadi PAID dan aktif 30 hari.`)) {
+        return;
+      }
+
       try {
         const res = await fetch('/api/admin/update-status', {
           method: 'POST',
@@ -707,107 +795,122 @@
             'Content-Type': 'application/json',
             'x-admin-key': currentAdminKey
           },
-          body: JSON.stringify({
-            slug: slug,
-            status: 'paid',
-            extendDays: 30
-          })
+          body: JSON.stringify({ id, status: 'paid' })
         });
 
-        if (res.status === 401) {
-          handleLogout();
-          return;
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Proyek /v/${slug} berhasil diaktifkan (PAID)!`);
+          await verifyAndLoadData();
+        } else {
+          showToast(data.error || 'Gagal mengubah status', false);
         }
-
-        if (!res.ok) {
-          throw new Error('Failed to update status');
-        }
-
-        showToast(currentlyPaid ? `Extended /v/${slug} retention by 30 days` : `Activated /v/${slug} (Paid + 30 Days)`);
-        await verifyAndLoadData();
       } catch (err) {
-        console.error(err);
-        showToast('Error updating project status', false);
+        showToast('Error koneksi saat aktivasi', false);
       }
     }
 
-    // -------------------------------------------------------------------------
-    // 5. Action Handlers: Copy Abandoned Cart Follow-Up Email
-    // -------------------------------------------------------------------------
-    function copyAbandonedCartEmail(email, slug, designCode) {
-      const domain = window.location.origin;
-      const previewUrl = `${domain}/v/${slug}`;
-      const checkoutUrl = `${domain}/editor.html?resume=${slug}#checkout`;
-
-      const emailText = 
-`Subject: Your keepsake preview is ready (+ 15% off)
-
-Hi there,
-
-We noticed you started designing a romantic keepsake on studio.402 for your special someone, but didn't finish claiming your private link:
-
-${previewUrl}
-
-Your personalized draft is currently stored in our private vault. To unlock full audio playback, remove the draft watermark, and keep your memory live forever, use private discount code LOVE15 at checkout for 15% off:
-
-Code: LOVE15
-Finish Order: ${checkoutUrl}
-
-Note: Unclaimed drafts are automatically purged after 7 days to protect customer media privacy.
-
-Warmly,
-The studio.402 Team
-https://studio402.com
-support@studio402.com`;
-
-      copyToClipboard(emailText, `Abandoned cart email for ${email} copied`);
+    async function sendTestWhatsApp() {
+      try {
+        showToast('Mengirim pesan tes WhatsApp...');
+        const res = await fetch('/api/admin/test-wa', {
+          method: 'POST',
+          headers: { 'x-admin-key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast('Pesan WhatsApp tes terkirim!');
+        } else {
+          showToast(data.error || 'Gagal mengirim WA', false);
+        }
+      } catch (err) {
+        showToast('Error koneksi WA', false);
+      }
     }
 
-    // -------------------------------------------------------------------------
-    // 6. Utility Functions
-    // -------------------------------------------------------------------------
-    function copyToClipboard(text, successToastMsg = 'Copied to clipboard') {
-      navigator.clipboard.writeText(text).then(() => {
-        showToast(successToastMsg);
+    async function triggerScanAbandoned() {
+      try {
+        showToast('Memindai draf tertinggal (>1 jam)...');
+        const res = await fetch('/api/cron/check-abandoned', {
+          method: 'POST',
+          headers: { 'x-admin-key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Selesai! ${data.processedCount || 0} pengingat WA diproses.`);
+          await verifyAndLoadData();
+        } else {
+          showToast(data.error || 'Gagal memindai', false);
+        }
+      } catch (err) {
+        showToast('Error koneksi pemindaian', false);
+      }
+    }
+
+    function copyCheckoutLink(slug, email) {
+      const checkoutUrl = `https://studio402.gumroad.com/l/keepsake?email=${encodeURIComponent(email)}&wanted=true&project_slug=${encodeURIComponent(slug)}`;
+      navigator.clipboard.writeText(checkoutUrl).then(() => {
+        showToast('Link checkout disalin ke clipboard');
       }).catch(() => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        showToast(successToastMsg);
+        prompt('Salin link checkout berikut:', checkoutUrl);
       });
     }
 
-    function formatTimeAgo(date) {
-      const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-      if (seconds < 60) return 'just now';
-      const minutes = Math.floor(seconds / 60);
-      if (minutes < 60) return `${minutes}m ago`;
-      const hours = Math.floor(minutes / 60);
-      if (hours < 24) return `${hours}h ago`;
-      const days = Math.floor(hours / 24);
-      if (days < 30) return `${days}d ago`;
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
+    // Follow-up Email Modal
+    function openFollowupModal(projectId) {
+      const project = projectsData.find(p => p.id === projectId);
+      if (!project) return;
+      selectedFollowupProject = project;
 
-    function escapeHtml(text) {
-      return String(text || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
+      const fullPreview = `${window.location.origin}/v/${project.slug}`;
+      const checkoutLink = `https://studio402.gumroad.com/l/keepsake?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}`;
 
-    // -------------------------------------------------------------------------
-    // 7. Lifecycle Startup
-    // -------------------------------------------------------------------------
-    document.addEventListener('DOMContentLoaded', () => {
+      const emailText = 
+`Hi there,
+
+I noticed you created a romantic digital keepsake for your partner at studio.402:
+Preview Link: ${fullPreview}
+
+Your personalized songs, photos, and secret notes are currently saved safely in your private draft.
+
+To help you surprise your partner this week, here is an exclusive 15% discount code for checkout:
+Code: FOREVER15 (Save 15% at checkout)
+
+Complete your keepsake here:
+${checkoutLink}
+
+If you need any custom edits or have questions, just reply directly to this email!
+
+Warm regards,
+studio.402 Keepsakes Team`;
+
+      document.getElementById('modal-email-recipient').innerText = project.email;
+      document.getElementById('modal-email-body').innerText = emailText;
+
+      const subject = encodeURIComponent('Special Gift: Your private keepsake is ready to unlock (15% off inside) ✨');
+      const body = encodeURIComponent(emailText);
+      document.getElementById('modal-direct-mailto').href = `mailto:${project.email}?subject=${subject}&body=${body}`;
+
+      document.getElementById('email-modal').classList.remove('hidden');
       lucide.createIcons();
+    }
+
+    function closeEmailModal() {
+      document.getElementById('email-modal').classList.add('hidden');
+      selectedFollowupProject = null;
+    }
+
+    function copyFollowupEmailText() {
+      const text = document.getElementById('modal-email-body').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Teks email follow-up disalin ke clipboard!');
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
       initAuth();
+      lucide.createIcons();
     });
   </script>
 </body>
