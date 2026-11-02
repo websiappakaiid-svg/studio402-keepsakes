@@ -440,8 +440,26 @@ async function handleRequest(req, res) {
         }
       }
 
-      const targetSlug = (urlParams.project_slug || body.project_slug || '').toLowerCase();
-      const targetId = urlParams.project_id || body.project_id || '';
+      const customFields = body.custom_fields || {};
+      const targetSlug = (
+        urlParams.project_slug ||
+        urlParams.custom_slug ||
+        body.project_slug ||
+        body.custom_slug ||
+        customFields.project_slug ||
+        customFields.custom_slug ||
+        body['custom_fields[custom_slug]'] ||
+        body['custom_fields[project_slug]'] ||
+        ''
+      ).toLowerCase();
+
+      const targetId = (
+        urlParams.project_id ||
+        body.project_id ||
+        customFields.project_id ||
+        body['custom_fields[project_id]'] ||
+        ''
+      );
 
       console.log(`[studio.402 Gumroad] Ping received for email: "${buyerEmail}", slug: "${targetSlug}"`);
 

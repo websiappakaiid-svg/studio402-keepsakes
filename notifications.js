@@ -6,26 +6,26 @@ const https = require('https');
 const http = require('http');
 const url = require('url');
 
-// Environment variables
-const FONNTE_TOKEN = process.env.FONNTE_TOKEN || '';
-const ADMIN_WHATSAPP_PHONE = process.env.ADMIN_WHATSAPP_PHONE || '';
-const CALLMEBOT_PHONE = process.env.CALLMEBOT_PHONE || '';
-const CALLMEBOT_API_KEY = process.env.CALLMEBOT_API_KEY || '';
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
-const APP_URL = process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
+// Dynamic environment getter to support serverless & updated runtime values
+const getFonnteToken = () => process.env.FONNTE_TOKEN || '';
+const getAdminPhone = () => process.env.ADMIN_WHATSAPP_PHONE || '';
+const getCallmebotPhone = () => process.env.CALLMEBOT_PHONE || '';
+const getCallmebotKey = () => process.env.CALLMEBOT_API_KEY || '';
+const getAppUrl = () => process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
 
 /**
  * Universal WhatsApp Sender
  */
 async function sendWhatsApp(message) {
   const cleanMsg = String(message).trim();
+  const fonnteToken = getFonnteToken();
+  const adminPhone = getAdminPhone();
 
   // 1. Try Fonnte API if configured
-  if (FONNTE_TOKEN && ADMIN_WHATSAPP_PHONE) {
+  if (fonnteToken && adminPhone) {
     try {
       const payload = JSON.stringify({
-        target: ADMIN_WHATSAPP_PHONE,
+        target: adminPhone,
         message: cleanMsg,
         countryCode: '62'
       });
@@ -37,7 +37,7 @@ async function sendWhatsApp(message) {
           path: '/send',
           method: 'POST',
           headers: {
-            'Authorization': FONNTE_TOKEN,
+            'Authorization': fonnteToken,
             'Content-Type': 'application/json',
             'Content-Length': Buffer.byteLength(payload)
           },
@@ -72,10 +72,12 @@ async function sendWhatsApp(message) {
   }
 
   // 2. Try CallMeBot API as alternative/fallback
-  if (CALLMEBOT_PHONE && CALLMEBOT_API_KEY) {
+  const cmbPhone = getCallmebotPhone();
+  const cmbKey = getCallmebotKey();
+  if (cmbPhone && cmbKey) {
     try {
-      const cleanPhone = CALLMEBOT_PHONE.replace(/[^\d]/g, '');
-      const reqUrl = `https://api.callmebot.com/whatsapp.php?phone=${cleanPhone}&text=${encodeURIComponent(cleanMsg)}&apikey=${CALLMEBOT_API_KEY}`;
+      const cleanPhone = cmbPhone.replace(/[^\d]/g, '');
+      const reqUrl = `https://api.callmebot.com/whatsapp.php?phone=${cleanPhone}&text=${encodeURIComponent(cleanMsg)}&apikey=${cmbKey}`;
       
       const res = await new Promise((resolve) => {
         https.get(reqUrl, { timeout: 10000 }, (r) => {
@@ -109,7 +111,8 @@ async function sendWhatsApp(message) {
  * 1. Notification: New Lead Saved Draft
  */
 async function notifyNewDraft({ email, slug, previewUrl, template, designCode, checkoutUrl }) {
-  const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${APP_URL}${previewUrl}`;
+  const base = getAppUrl();
+  const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${base}${previewUrl}`;
   
   const msg = 
 `💌 *[studio.402] LEAD BARU MASUK!*
@@ -129,7 +132,8 @@ Calon pembeli baru saja mengunci draf dan diarahkan ke halaman pembayaran Gumroa
  * 2. Notification: Order Paid & Live (Gumroad Webhook)
  */
 async function notifyPaidOrder({ email, slug, liveUrl, price, template }) {
-  const fullLive = liveUrl.startsWith('http') ? liveUrl : `${APP_URL}${liveUrl}`;
+  const base = getAppUrl();
+  const fullLive = liveUrl.startsWith('http') ? liveUrl : `${base}${liveUrl}`;
   
   const msg = 
 `🎉 *[studio.402] ORDER LUNAS & AKTIF!*
@@ -148,7 +152,8 @@ Pembayaran terverifikasi via Gumroad Ping. Watermark preview telah dihapus otoma
  * 3. Notification: Abandoned Draft Reminder (>1 Hour Unpaid)
  */
 async function notifyAbandonedDraft({ email, slug, previewUrl, createdAt, mailtoLink }) {
-  const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${APP_URL}${previewUrl}`;
+  const base = getAppUrl();
+  const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${base}${previewUrl}`;
   const createdDate = new Date(createdAt).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
 
   const msg = 
@@ -169,5 +174,9 @@ module.exports = {
   notifyNewDraft,
   notifyPaidOrder,
   notifyAbandonedDraft,
-  APP_URL
+  getAppUrl,
+  get APP_URL() {
+    return getAppUrl();
+  }
 };
+
