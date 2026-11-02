@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>studio.402 / Operations Dashboard</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #09090b;
+      color: #f4f4f5;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    svg.lucide, [data-lucide] {
+      stroke-width: 1.5px;
+    }
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased flex flex-col selection:bg-zinc-800 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. AUTH GATE (FULLSCREEN LOGIN SCREEN)                                    -->
+  <!-- ========================================================================= -->
+  <div id="auth-gate" class="fixed inset-0 z-50 bg-[#09090b] flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-[#121215] border border-zinc-800/90 rounded-2xl p-7 space-y-6 shadow-2xl relative overflow-hidden">
+      <!-- Glow Accent -->
+      <div class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Header -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-200">
+          <i data-lucide="shield" class="w-5 h-5 text-emerald-400"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            studio.402
+            <span class="text-xs font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">OPERATIONS</span>
+          </h2>
+          <p class="text-xs text-zinc-400 mt-0.5">Developer dashboard &amp; revenue control</p>
+        </div>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div class="space-y-1.5">
+          <label class="block text-xs font-mono uppercase tracking-wider text-zinc-400 font-medium">
+            Admin Secret Key
+          </label>
+          <div class="relative">
+            <i data-lucide="key" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="password" 
+              id="auth-key-input" 
+              placeholder="Enter server admin key..." 
+              autocomplete="current-password"
+              required
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition"
+            />
+          </div>
+          <p id="auth-error-msg" class="text-xs text-rose-400 font-mono hidden pt-1 flex items-center gap-1.5">
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+            <span>Invalid administrator key. Access denied.</span>
+          </p>
+        </div>
+
+        <button 
+          type="submit" 
+          id="auth-submit-btn" 
+          class="w-full py-2.5 px-4 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 transition font-semibold text-xs tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-white/5 active:scale-[0.99]"
+        >
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          <span>Authenticate Session</span>
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-zinc-900 flex items-center justify-between text-[11px] font-mono text-zinc-600">
+        <span>Session stored in browser</span>
+        <span>studio.402 &bull; 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN DASHBOARD APPLICATION                                             -->
+  <!-- ========================================================================= -->
+  <div id="dashboard-app" class="hidden flex-1 flex flex-col">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="border-b border-zinc-800/80 bg-[#09090b]/80 backdrop-blur-xl sticky top-0 z-40 px-4 md:px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
+          <span class="font-extrabold text-base tracking-tight text-white">studio.402</span>
+        </div>
+        <span class="text-zinc-600 font-mono text-xs">/</span>
+        <span class="font-mono text-xs uppercase tracking-wider text-zinc-400 font-semibold hidden sm:inline">Operations Dashboard</span>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <!-- Live Server Status Indicator -->
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>Daemon: 6h Purge</span>
+        </div>
+
+        <!-- Refresh Button -->
+        <button 
+          onclick="fetchDashboardData()" 
+          title="Reload data"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-mono"
+        >
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+
+        <!-- Studio Editor Link -->
+        <a 
+          href="/editor.html" 
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-medium"
+        >
+          <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Editor</span>
+        </a>
+
+        <!-- Logout / Lock Button -->
+        <button 
+          onclick="handleLogout()" 
+          title="Clear session and lock"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 hover:text-white transition text-xs font-mono"
+        >
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Lock</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8 space-y-8">
+
+      <!-- ===================================================================== -->
+      <!-- METRICS ROW: 4 KEY COMMERCIAL PERFORMANCE INDICATORS                  -->
+      <!-- ===================================================================== -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Metric 1: Total Leads (Drafts) -->
+        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+          <div class="flex items-center justify-between text-zinc-400">
+            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Total Leads</span>
+            <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <i data-lucide="clock" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-amber-400 font-mono tracking-tight" id="metric-drafts">0</div>
+          <p class="text-xs text-zinc-500 font-mono">Unpaid drafts in 7-day vault</p>
+        </div>
+
+        <!-- Metric 2: Active Paid Pages -->
+        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+          <div class="flex items-center justify-between text-zinc-400">
+            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Active Paid Pages</span>
+            <div class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-emerald-400 font-mono tracking-tight" id="metric-paid">0</div>
+          <p class="text-xs text-zinc-500 font-mono">Active customer keepsakes</p>
+        </div>
+
+        <!-- Metric 3: Conversion Rate % -->
+        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+          <div class="flex items-center justify-between text-zinc-400">
+            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Conversion Rate</span>
+            <div class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+              <i data-lucide="trending-up" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-sky-400 font-mono tracking-tight" id="metric-conversion">0.0%</div>
+          <p class="text-xs text-zinc-500 font-mono">Paid / Total link creations</p>
+        </div>
+
+        <!-- Metric 4: Estimated Revenue ($) -->
+        <div class="p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-2">
+          <div class="flex items-center justify-between text-zinc-400">
+            <span class="text-xs font-mono uppercase tracking-wider font-semibold">Estimated Revenue</span>
+            <div class="p-1.5 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/20">
+              <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-extrabold text-white font-mono tracking-tight" id="metric-revenue">$0.00</div>
+          <p class="text-xs text-zinc-500 font-mono" id="metric-revenue-sub">Calculated via Gumroad ping</p>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- SEARCH & FILTER TOOLBAR                                               -->
+      <!-- ===================================================================== -->
+      <section class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#121215]/80 p-3 rounded-2xl border border-zinc-800/80">
+        <!-- Search Field -->
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            id="table-search-input" 
+            placeholder="Search email, slug, or design code..." 
+            oninput="renderProjectsTable()" 
+            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-zinc-200 placeholder-zinc-500 font-mono focus:outline-none focus:border-zinc-600 transition"
+          />
+        </div>
+
+        <!-- Filter Segmented Tabs -->
+        <div class="flex items-center gap-1 p-1 bg-zinc-950 rounded-xl border border-zinc-800 text-xs font-mono">
+          <button onclick="setFilter('all')" id="filter-tab-all" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition">All</button>
+          <button onclick="setFilter('paid')" id="filter-tab-paid" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Paid</button>
+          <button onclick="setFilter('draft')" id="filter-tab-draft" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Drafts</button>
+          <button onclick="setFilter('expired')" id="filter-tab-expired" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition">Expired</button>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- MOBILE-FRIENDLY PROJECT TABLE                                         -->
+      <!-- ===================================================================== -->
+      <section class="bg-[#121215] rounded-2xl border border-zinc-800/80 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[760px]">
+            <thead>
+              <tr class="border-b border-zinc-800 text-[11px] font-mono text-zinc-400 uppercase tracking-wider bg-zinc-950/60">
+                <th class="py-3 px-4">Custom Link (/v/...)</th>
+                <th class="py-3 px-4">Customer Email</th>
+                <th class="py-3 px-4">Template</th>
+                <th class="py-3 px-4">Status &amp; Retention</th>
+                <th class="py-3 px-4">Created Time</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-body" class="divide-y divide-zinc-800/60 text-sm">
+              <tr>
+                <td colspan="6" class="py-14 text-center text-zinc-500 font-mono text-xs">
+                  <div class="inline-flex items-center gap-2">
+                    <i data-lucide="loader" class="w-4 h-4 animate-spin text-zinc-400"></i>
+                    <span>Connecting to studio.402 operations engine...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RECOVERY / HELP FOOTER -->
+      <footer class="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-600 font-mono gap-3">
+        <div>studio.402 Keepsake Engine &bull; Zero Emojis Policy &bull; Lucide 1.5px Icons</div>
+        <div>Protected Endpoint &bull; Auth via sessionStorage &bull; Node.js / Bun</div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. INTERACTIVE FLOATING TOAST NOTIFICATION                                -->
+  <!-- ========================================================================= -->
+  <div 
+    id="toast-notification" 
+    class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 max-w-md w-auto px-4 py-3 rounded-xl bg-zinc-900/95 border border-zinc-700 text-xs font-mono text-zinc-200 shadow-2xl flex items-center gap-2.5 backdrop-blur-md"
+  >
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0" id="toast-icon"></i>
+    <span id="toast-message">Operation completed successfully</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. DASHBOARD LOGIC SCRIPT                                                 -->
+  <!-- ========================================================================= -->
+  <script>
+    // Storage Key
+    const STORAGE_KEY = 'studio402_admin_key';
+
+    // State Variables
+    let currentAdminKey = sessionStorage.getItem(STORAGE_KEY) || '';
+    let projectsData = [];
+    let activeFilter = 'all';
+
+    // Template Display Dictionary
+    const TEMPLATE_NAMES = {
+      'spotilove': '01 Vinyl Wrapped',
+      'spotilove_ultra_1000_10_studio_edition.html': '01 Vinyl Wrapped',
+      'vinyl': '01 Vinyl Wrapped',
+      'netlove': '02 Cinema Bandersnatch',
+      'netlove_interactive_streaming_bandersnatch_app.html': '02 Cinema Bandersnatch',
+      'cinema': '02 Cinema Bandersnatch',
+      'lovebox': '03 Vintage 35mm',
+      'lovebox_98_instant_polaroid_camera_retro_game_gadget.html': '03 Vintage 35mm',
+      'camera': '03 Vintage 35mm',
+      'camera.html': '03 Vintage 35mm',
+      'retro': '03 Vintage 35mm'
+    };
+
+    // -------------------------------------------------------------------------
+    // Toast Notification Dispatcher
+    // -------------------------------------------------------------------------
+    let toastTimeout = null;
+    function showToast(message, isSuccess = true) {
+      const toast = document.getElementById('toast-notification');
+      const msgEl = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+
+      msgEl.innerText = message;
+
+      if (isSuccess) {
+        iconEl.setAttribute('data-lucide', 'check-circle');
+        iconEl.className = 'w-4 h-4 text-emerald-400 flex-shrink-0';
+      } else {
+        iconEl.setAttribute('data-lucide', 'alert-circle');
+        iconEl.className = 'w-4 h-4 text-rose-400 flex-shrink-0';
+      }
+      lucide.createIcons();
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. Authentication Gate Handlers
+    // -------------------------------------------------------------------------
+    function initAuth() {
+      if (currentAdminKey) {
+        // Attempt loading dashboard with stored session key
+        verifyAndLoadData();
+      } else {
+        // Show Auth Gate
+        document.getElementById('auth-gate').classList.remove('hidden');
+        document.getElementById('dashboard-app').classList.add('hidden');
+        setTimeout(() => {
+          document.getElementById('auth-key-input').focus();
+        }, 100);
+      }
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const inputVal = document.getElementById('auth-key-input').value.trim();
+      if (!inputVal) return;
+
+      const submitBtn = document.getElementById('auth-submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>
+        <span>Verifying...</span>
+      `;
+      lucide.createIcons();
+
+      currentAdminKey = inputVal;
+      sessionStorage.setItem(STORAGE_KEY, currentAdminKey);
+
+      const success = await verifyAndLoadData();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+        <span>Authenticate Session</span>
+      `;
+      lucide.createIcons();
+
+      if (!success) {
+        sessionStorage.removeItem(STORAGE_KEY);
+        currentAdminKey = '';
+        document.getElementById('auth-error-msg').classList.remove('hidden');
+        document.getElementById('auth-key-input').select();
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem(STORAGE_KEY);
+      currentAdminKey = '';
+      document.getElementById('auth-error-msg').classList.add('hidden');
+      document.getElementById('auth-key-input').value = '';
+      document.getElementById('dashboard-app').classList.add('hidden');
+      document.getElementById('auth-gate').classList.remove('hidden');
+      showToast('Session locked');
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Data Fetching & Metrics Calculation
+    // -------------------------------------------------------------------------
+    async function verifyAndLoadData() {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('/api/admin/projects', {
+          headers: {
+            'x-admin-key': currentAdminKey
+          }
+        });
+
+        if (res.status === 401) {
+          return false;
+        }
+
+        if (!res.ok) {
+          throw new Error(`Server returned HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        projectsData = Array.isArray(data.projects) ? data.projects : [];
+
+        // Hide auth gate & show dashboard
+        document.getElementById('auth-gate').classList.add('hidden');
+        document.getElementById('dashboard-app').classList.remove('hidden');
+        document.getElementById('auth-error-msg').classList.add('hidden');
+
+        // Compute Metrics
+        updateMetricsRow();
+
+        // Render Table
+        renderProjectsTable();
+
+        return true;
+      } catch (err) {
+        console.error('[studio.402 Admin Error]:', err);
+        showToast('Network error loading projects', false);
+        return false;
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      }
+    }
+
+    async function fetchDashboardData() {
+      await verifyAndLoadData();
+      showToast('Dashboard data refreshed');
+    }
+
+    function updateMetricsRow() {
+      const now = Date.now();
+      const totalCount = projectsData.length;
+
+      // Drafts: status === 'draft'
+      const draftsCount = projectsData.filter(p => p.status === 'draft').length;
+
+      // Active Paid: status === 'paid' AND not expired
+      const paidProjects = projectsData.filter(p => {
+        if (p.status !== 'paid') return false;
+        if (!p.expiresAt) return true;
+        return new Date(p.expiresAt).getTime() > now;
+      });
+      const paidCount = paidProjects.length;
+
+      // Conversion Rate %: (Paid / Total) * 100
+      const conversionRate = totalCount > 0 ? ((paidCount / totalCount) * 100).toFixed(1) : '0.0';
+
+      // Estimated Revenue ($): sum of paidPrice or $19 standard tier
+      let revenue = 0;
+      paidProjects.forEach(p => {
+        if (p.paidPrice) {
+          const num = parseFloat(String(p.paidPrice).replace(/[^0-9.]/g, ''));
+          revenue += !isNaN(num) && num > 0 ? num : 19.00;
+        } else {
+          revenue += 19.00;
+        }
+      });
+
+      // Update DOM
+      document.getElementById('metric-drafts').innerText = draftsCount;
+      document.getElementById('metric-paid').innerText = paidCount;
+      document.getElementById('metric-conversion').innerText = `${conversionRate}%`;
+      document.getElementById('metric-revenue').innerText = `$${revenue.toFixed(2)}`;
+      document.getElementById('metric-revenue-sub').innerText = `${paidCount} paid keepsakes &bull; $19.00 avg`;
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Filter and Table Rendering
+    // -------------------------------------------------------------------------
+    function setFilter(filter) {
+      activeFilter = filter;
+      ['all', 'paid', 'draft', 'expired'].forEach(f => {
+        const btn = document.getElementById(`filter-tab-${f}`);
+        if (f === filter) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition';
+        }
+      });
+      renderProjectsTable();
+    }
+
+    function renderProjectsTable() {
+      const query = (document.getElementById('table-search-input').value || '').trim().toLowerCase();
+      const tbody = document.getElementById('projects-table-body');
+      const now = Date.now();
+
+      const filtered = projectsData.filter(p => {
+        const isExpired = p.expiresAt && new Date(p.expiresAt).getTime() <= now;
+        const isPaid = p.status === 'paid' && !isExpired;
+        const isDraft = p.status === 'draft';
+
+        // Filter tab check
+        if (activeFilter === 'paid' && !isPaid) return false;
+        if (activeFilter === 'draft' && !isDraft) return false;
+        if (activeFilter === 'expired' && !isExpired) return false;
+
+        // Search check
+        if (query) {
+          const matchEmail = (p.email || '').toLowerCase().includes(query);
+          const matchSlug = (p.slug || '').toLowerCase().includes(query);
+          const matchCode = (p.designCode || '').toLowerCase().includes(query);
+          if (!matchEmail && !matchSlug && !matchCode) return false;
+        }
+
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-14 text-center text-zinc-500 font-mono text-xs">
+              No matching records found for current criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const isExpired = p.expiresAt && new Date(p.expiresAt).getTime() <= now;
+        const isPaid = p.status === 'paid' && !isExpired;
+        const templateLabel = TEMPLATE_NAMES[p.template] || p.template || 'Custom Template';
+
+        // Status Badge Logic: DRAFT vs LIVE - 29d left vs EXPIRED
+        let statusBadge = '';
+        if (isExpired) {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-mono font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-500"></span>
+              EXPIRED
+            </span>
+          `;
+        } else if (isPaid) {
+          let daysLeft = 30;
+          if (p.expiresAt) {
+            daysLeft = Math.max(0, Math.ceil((new Date(p.expiresAt).getTime() - now) / (1000 * 60 * 60 * 24)));
+          }
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 text-xs font-mono font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              LIVE &bull; ${daysLeft}d left
+            </span>
+          `;
+        } else {
+          statusBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/80 border border-amber-800 text-amber-400 text-xs font-mono font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+              DRAFT
+            </span>
+          `;
+        }
+
+        // Relative Created Time Formatter
+        const createdDate = new Date(p.createdAt || Date.now());
+        const timeAgo = formatTimeAgo(createdDate);
+        const fullDate = createdDate.toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        // Slug link
+        const customUrl = `/v/${p.slug}`;
+
+        return `
+          <tr class="hover:bg-zinc-950/40 transition group">
+            
+            <!-- Custom Link (/v/:slug) -->
+            <td class="py-3.5 px-4">
+              <div class="flex items-center gap-2">
+                <a 
+                  href="${customUrl}" 
+                  target="_blank" 
+                  class="font-mono font-semibold text-white hover:text-emerald-400 transition flex items-center gap-1 text-xs"
+                >
+                  <span>/v/${escapeHtml(p.slug)}</span>
+                  <i data-lucide="external-link" class="w-3 h-3 text-zinc-500 group-hover:text-emerald-400 transition"></i>
+                </a>
+                <button 
+                  onclick="copyToClipboard('${customUrl}', 'Link copied')" 
+                  class="p-1 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-200 transition" 
+                  title="Copy path"
+                >
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                </button>
+              </div>
+              <div class="text-[11px] font-mono text-zinc-500 mt-0.5">Code: ${escapeHtml(p.designCode || p.id)}</div>
+            </td>
+
+            <!-- Customer Email -->
+            <td class="py-3.5 px-4 font-mono text-xs text-zinc-200">
+              <div class="flex items-center gap-1.5">
+                <span>${escapeHtml(p.email)}</span>
+                <button 
+                  onclick="copyToClipboard('${escapeHtml(p.email)}', 'Email copied')" 
+                  class="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-zinc-800 rounded text-zinc-500 hover:text-zinc-200 transition" 
+                  title="Copy email"
+                >
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </td>
+
+            <!-- Template Type -->
+            <td class="py-3.5 px-4 font-mono text-xs text-zinc-400">
+              <span class="inline-block px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[11px]">
+                ${escapeHtml(templateLabel)}
+              </span>
+            </td>
+
+            <!-- Status Badge -->
+            <td class="py-3.5 px-4">
+              ${statusBadge}
+            </td>
+
+            <!-- Created Time -->
+            <td class="py-3.5 px-4 font-mono text-xs text-zinc-400">
+              <div class="text-zinc-300 font-medium">${timeAgo}</div>
+              <div class="text-[10px] text-zinc-500">${fullDate}</div>
+            </td>
+
+            <!-- Actions Row -->
+            <td class="py-3.5 px-4 text-right">
+              <div class="inline-flex items-center gap-1.5 font-mono text-xs">
+                
+                <!-- Action A: Open Live Link -->
+                <a 
+                  href="${customUrl}" 
+                  target="_blank" 
+                  title="Open customer keepsake in new tab" 
+                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white transition"
+                >
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  <span class="hidden xl:inline">Open</span>
+                </a>
+
+                <!-- Action B: Copy Abandoned Cart Email -->
+                <button 
+                  onclick="copyAbandonedCartEmail('${escapeHtml(p.email)}', '${escapeHtml(p.slug)}', '${escapeHtml(p.designCode || '')}')" 
+                  title="Copy high-converting abandoned cart follow-up email"
+                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 hover:border-zinc-700 text-amber-400 hover:text-amber-300 transition"
+                >
+                  <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                  <span class="hidden md:inline">Follow-up</span>
+                </button>
+
+                <!-- Action C: Toggle Paid / +30 Days -->
+                <button 
+                  onclick="quickActivateOrExtend('${escapeHtml(p.slug)}', ${isPaid})" 
+                  title="${isPaid ? 'Extend page retention by +30 Days' : 'Manually activate project and set +30 Days'}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border ${isPaid ? 'border-zinc-800 bg-zinc-900/90 text-emerald-400 hover:border-emerald-700' : 'border-emerald-700/60 bg-emerald-950/80 text-emerald-300 hover:bg-emerald-900/80'} transition font-medium"
+                >
+                  <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                  <span>${isPaid ? '+30d' : 'Activate'}</span>
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Action Handlers: Toggle Paid / Extend 30 Days
+    // -------------------------------------------------------------------------
+    async function quickActivateOrExtend(slug, currentlyPaid) {
+      try {
+        const res = await fetch('/api/admin/update-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': currentAdminKey
+          },
+          body: JSON.stringify({
+            slug: slug,
+            status: 'paid',
+            extendDays: 30
+          })
+        });
+
+        if (res.status === 401) {
+          handleLogout();
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error('Failed to update status');
+        }
+
+        showToast(currentlyPaid ? `Extended /v/${slug} retention by 30 days` : `Activated /v/${slug} (Paid + 30 Days)`);
+        await verifyAndLoadData();
+      } catch (err) {
+        console.error(err);
+        showToast('Error updating project status', false);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Action Handlers: Copy Abandoned Cart Follow-Up Email
+    // -------------------------------------------------------------------------
+    function copyAbandonedCartEmail(email, slug, designCode) {
+      const domain = window.location.origin;
+      const previewUrl = `${domain}/v/${slug}`;
+      const checkoutUrl = `${domain}/editor.html?resume=${slug}#checkout`;
+
+      const emailText = 
+`Subject: Your keepsake preview is ready (+ 15% off)
+
+Hi there,
+
+We noticed you started designing a romantic keepsake on studio.402 for your special someone, but didn't finish claiming your private link:
+
+${previewUrl}
+
+Your personalized draft is currently stored in our private vault. To unlock full audio playback, remove the draft watermark, and keep your memory live forever, use private discount code LOVE15 at checkout for 15% off:
+
+Code: LOVE15
+Finish Order: ${checkoutUrl}
+
+Note: Unclaimed drafts are automatically purged after 7 days to protect customer media privacy.
+
+Warmly,
+The studio.402 Team
+https://studio402.com
+support@studio402.com`;
+
+      copyToClipboard(emailText, `Abandoned cart email for ${email} copied`);
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Utility Functions
+    // -------------------------------------------------------------------------
+    function copyToClipboard(text, successToastMsg = 'Copied to clipboard') {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successToastMsg);
+      }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast(successToastMsg);
+      });
+    }
+
+    function formatTimeAgo(date) {
+      const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+      if (seconds < 60) return 'just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes}m ago`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `${hours}h ago`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `${days}d ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Lifecycle Startup
+    // -------------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initAuth();
+    });
+  </script>
+</body>
+</html>

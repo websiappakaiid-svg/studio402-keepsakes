@@ -1,0 +1,20 @@
+{
+  "name": "studio402-keepsakes",
+  "version": "1.0.0",
+  "description": "studio.402 commercial romantic keepsakes engine and live editor backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test-server.js"
+  },
+  "keywords": [
+    "studio402",
+    "romantic-keepsakes",
+    "spotilove",
+    "netlove",
+    "lovebox"
+  ],
+  "author": "studio.402",
+  "license": "UNLICENSED"
+}
+

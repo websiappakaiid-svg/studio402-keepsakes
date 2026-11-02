@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Vinyl Wrapped Studio Editor — studio.402</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #09090b;
+      color: #f4f4f5;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    svg.lucide, [data-lucide] {
+      stroke-width: 1.5px;
+    }
+    /* Bottom Sheet Drawer Transitions */
+    .drawer-backdrop {
+      transition: opacity 0.28s ease-out;
+    }
+    .drawer-sheet {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(100%);
+    }
+    .drawer-sheet.is-open {
+      transform: translateY(0%);
+    }
+    /* Hide scrollbar for clean tab strip */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col relative selection:bg-[#1ed760] selection:text-black">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP APP BAR                                                            -->
+  <!-- ========================================================================= -->
+  <header class="h-12 border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between z-30 flex-shrink-0">
+    <div class="flex items-center gap-2">
+      <a href="index.html" class="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition" title="Back to Home">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+      </a>
+      <div class="flex items-center gap-1.5">
+        <span class="font-extrabold text-xs text-white tracking-tight">studio.402</span>
+        <span class="text-zinc-600 font-mono text-xs">/</span>
+        <span class="px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-800/80 text-[10px] font-mono text-emerald-400 font-semibold uppercase">
+          01 Vinyl Wrapped
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button onclick="reloadPreview()" class="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition" title="Reload Preview">
+        <i data-lucide="rotate-cw" class="w-3.5 h-3.5" id="reload-icon"></i>
+      </button>
+      <button onclick="openPublishModal()" class="px-3 py-1.5 rounded-lg bg-[#1ed760] text-zinc-950 hover:bg-[#1fdf64] transition font-bold text-xs flex items-center gap-1.5 shadow-sm active:scale-95">
+        <i data-lucide="upload-cloud" class="w-3.5 h-3.5"></i>
+        <span>Save</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. FULLSCREEN INTERACTIVE PREVIEW IFRAME                                  -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 w-full relative bg-black overflow-hidden flex items-center justify-center">
+    <iframe 
+      id="preview-frame" 
+      src="vinyl.html" 
+      class="w-full h-full border-0 bg-[#040406]"
+      allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    ></iframe>
+
+    <!-- Overlay Helper Cue on First Load -->
+    <div id="preview-helper-pill" class="absolute top-3 left-1/2 -translate-x-1/2 pointer-events-none transition-all duration-500 z-10 px-3 py-1 rounded-full bg-zinc-900/90 border border-zinc-700/80 backdrop-blur-md shadow-xl flex items-center gap-1.5 text-[11px] font-mono text-zinc-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Live Interactive Preview &bull; Tap Tabs Below to Edit</span>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MOBILE BOTTOM DOCK BAR (CapCut / Instagram Style)                       -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-zinc-800/90 bg-[#121215]/95 backdrop-blur-xl px-2 py-2 flex items-center justify-between z-30 flex-shrink-0 gap-1 overflow-x-auto no-scrollbar safe-area-pb">
+    
+    <!-- Tab 1: Names & Date -->
+    <button onclick="openDrawer('names')" class="flex-1 min-w-[68px] py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition active:scale-95">
+      <i data-lucide="heart" class="w-4 h-4 text-rose-400"></i>
+      <span class="text-[10px] font-mono tracking-tight whitespace-nowrap">1. Names</span>
+    </button>
+
+    <!-- Tab 2: Photos -->
+    <button onclick="openDrawer('photos')" class="flex-1 min-w-[68px] py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition active:scale-95">
+      <i data-lucide="image" class="w-4 h-4 text-sky-400"></i>
+      <span class="text-[10px] font-mono tracking-tight whitespace-nowrap">2. Photos</span>
+    </button>
+
+    <!-- Tab 3: Music & YouTube -->
+    <button onclick="openDrawer('audio')" class="flex-1 min-w-[68px] py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition active:scale-95">
+      <i data-lucide="music" class="w-4 h-4 text-emerald-400"></i>
+      <span class="text-[10px] font-mono tracking-tight whitespace-nowrap">3. Music</span>
+    </button>
+
+    <!-- Tab 4: Letters & Prompts -->
+    <button onclick="openDrawer('letters')" class="flex-1 min-w-[68px] py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition active:scale-95">
+      <i data-lucide="file-text" class="w-4 h-4 text-amber-400"></i>
+      <span class="text-[10px] font-mono tracking-tight whitespace-nowrap">4. Prompts</span>
+    </button>
+
+    <!-- Primary CTA: Save & Publish Link -->
+    <button onclick="openPublishModal()" class="py-2 px-3.5 rounded-xl bg-[#1ed760] text-zinc-950 hover:bg-[#1fdf64] transition font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-[#1ed760]/20 flex-shrink-0 active:scale-95 ml-1">
+      <i data-lucide="sparkles" class="w-3.5 h-3.5 fill-current"></i>
+      <span class="font-mono text-[11px] uppercase tracking-wider font-extrabold">Publish</span>
+    </button>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 4. BOTTOM SHEET DRAWER (SLIDE-UP HALF-SCREEN FORM)                       -->
+  <!-- ========================================================================= -->
+  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 opacity-0 pointer-events-none drawer-backdrop"></div>
+
+  <div id="drawer-sheet" class="fixed inset-x-0 bottom-0 z-50 bg-[#121215] border-t border-zinc-800 rounded-t-3xl max-h-[80vh] h-[75vh] flex flex-col shadow-2xl drawer-sheet">
+    
+    <!-- Drag Handle & Drawer Header -->
+    <div class="px-5 pt-3 pb-3 border-b border-zinc-800/80 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-[#1ed760]"></div>
+        <h3 id="drawer-title" class="font-bold text-sm text-white tracking-tight">Names &amp; Relationship Date</h3>
+      </div>
+      <button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Drawer Body -->
+    <div class="flex-1 overflow-y-auto p-5 space-y-6 text-xs text-zinc-300 font-sans">
+      
+      <!-- ------------------------------------------------------------------- -->
+      <!-- SECTION 1: NAMES & DATE FORM                                        -->
+      <!-- ------------------------------------------------------------------- -->
+      <div id="pane-names" class="space-y-4">
+        <div class="space-y-1.5">
+          <label class="block font-mono uppercase tracking-wider text-[11px] text-zinc-400 font-semibold">Couple Names</label>
+          <input 
+            type="text" 
+            id="f-coupleName" 
+            oninput="handleConfigChange('coupleName', this.value, '[data-field=\'coupleName\']')" 
+            placeholder="Hannah & Ethan"
+            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 font-mono text-xs focus:outline-none focus:border-[#1ed760] transition"
+          />
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block font-mono uppercase tracking-wider text-[11px] text-zinc-400 font-semibold">Album Title</label>
+          <input 
+            type="text" 
+            id="f-albumTitle" 
+            oninput="handleConfigChange('albumTitle', this.value, '[data-field=\'albumTitle\']')" 
+            placeholder="Late Night Memories"
+            class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-zinc-100 font-mono text-xs focus:outline-none focus:border-[#1ed760] transition"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1.5">
+            <label class="block font-mono uppercase tracking-wider text-[11px] text-zinc-400 font-semibold">Anniversary Date (ISO)</label>
+            <input 
+              type="date" 
+              id="f-anniversaryISO" 
+              onchange="handleConfigChange('anniversaryISO', this.value, '[data-section=\'counter\']')" 
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs focus:outline-none focus:border-[#1ed760] transition"
+            />
+          </div>
+          <div class="space-y-1.5">
+            <label class="block font-mono uppercase tracking-wider text-[11px] text-zinc-400 font-semibold">Together Since (Label)</label>
+            <input 
+              type="text" 
+              id="f-estText" 
+              oninput="handleConfigChange('estText', this.value, '[data-field=\'estText\']')" 
+              placeholder="Together Since Oct 14, 2023"
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs focus:outline-none focus:border-[#1ed760] transition"
+            />
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-zinc-800/80 space-y-3">
+          <div class="font-mono text-[11px] uppercase tracking-wider text-zinc-400 font-bold">LDR Distance Card (Optional)</div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-mono text-zinc-500">City 1 (Code &bull; Name)</label>
+              <input type="text" id="f-cityOneName" oninput="handleConfigChange('cityOneName', this.value)" placeholder="New York" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs mt-1" />
+            </div>
+            <div>
+              <label class="block text-[10px] font-mono text-zinc-500">City 2 (Code &bull; Name)</label>
+              <input type="text" id="f-cityTwoName" oninput="handleConfigChange('cityTwoName', this.value)" placeholder="Los Angeles" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs mt-1" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-mono text-zinc-500">Distance Badge Text</label>
+            <input type="text" id="f-distanceBadge" oninput="handleConfigChange('distanceBadge', this.value)" placeholder="2,450 MILES APART" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs mt-1" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- SECTION 2: PHOTOS & CHAPTERS (CANVAS COMPRESSED WEBP)               -->
+      <!-- ------------------------------------------------------------------- -->
+      <div id="pane-photos" class="hidden space-y-5">
+        
+        <!-- Album Cover Photo -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-zinc-300 text-[11px] uppercase">Cover Album Photo</span>
+            <span class="text-[10px] font-mono text-zinc-500">Front Album &bull; Center Vinyl</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <img id="img-preview-coverPhoto" src="" alt="Cover" class="w-14 h-14 rounded-xl object-cover bg-zinc-900 border border-zinc-800 flex-shrink-0" />
+            <div class="flex-1">
+              <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs cursor-pointer transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Upload Phone Photo</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'coverPhoto', '[data-field=\'coverPhoto\']')" />
+              </label>
+              <p class="text-[10px] font-mono text-zinc-500 mt-1">Auto-compressed to WebP 800px</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Polaroid Photo Chapters (Up to 7) -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-mono font-bold text-zinc-200 text-xs uppercase">Polaroid Memory Chapters</h4>
+              <p class="text-[10px] font-mono text-zinc-500">Tap to edit photo, story note &amp; date</p>
+            </div>
+            <button onclick="addChapterSlot()" id="btn-add-chapter" class="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono flex items-center gap-1 transition">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+              <span>Add (Max 7)</span>
+            </button>
+          </div>
+
+          <div id="chapters-list-container" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- SECTION 3: YOUTUBE & MUSIC ENGINE                                   -->
+      <!-- ------------------------------------------------------------------- -->
+      <div id="pane-audio" class="hidden space-y-5">
+        
+        <!-- Track Title & Artist -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="block font-mono text-[10px] uppercase text-zinc-400 font-bold">Song Title</label>
+            <input type="text" id="f-songTitle" oninput="handleConfigChange('songTitle', this.value, '[data-field=\'songTitle\']')" placeholder="Golden Hour" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs" />
+          </div>
+          <div class="space-y-1">
+            <label class="block font-mono text-[10px] uppercase text-zinc-400 font-bold">Artist / Note</label>
+            <input type="text" id="f-songArtist" oninput="handleConfigChange('songArtist', this.value, '[data-field=\'songArtist\']')" placeholder="JVKE" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs" />
+          </div>
+        </div>
+
+        <!-- Option A: Paste YouTube Song or Video Link -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+          <div class="flex items-center gap-1.5 text-rose-400 font-mono font-bold text-xs">
+            <i data-lucide="video" class="w-3.5 h-3.5"></i>
+            <span>Option A: Paste YouTube Song / Video URL</span>
+          </div>
+          <p class="text-[10px] font-mono text-zinc-400">
+            Paste any YouTube link (watch?v=, youtu.be/, or shorts/). It automatically streams without uploading files!
+          </p>
+          <div class="flex items-center gap-2">
+            <input 
+              type="text" 
+              id="f-customVideoUrl" 
+              oninput="handleConfigChange('customVideoUrl', this.value, '#video-memory-section')" 
+              placeholder="https://youtube.com/watch?v=..." 
+              class="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs focus:outline-none focus:border-rose-500"
+            />
+          </div>
+        </div>
+
+        <!-- Option B: iTunes Live Song Search -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2.5">
+          <div class="flex items-center gap-1.5 text-[#1ed760] font-mono font-bold text-xs">
+            <i data-lucide="music" class="w-3.5 h-3.5"></i>
+            <span>Option B: Search Apple Music / iTunes Preview</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input 
+              type="text" 
+              id="itunes-search-input" 
+              placeholder="Search artist or song name (e.g. Taylor Swift Lover)..." 
+              class="flex-1 bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 py-2 text-zinc-100 font-mono text-xs"
+            />
+            <button onclick="searchITunesTracks()" class="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs font-semibold">
+              Search
+            </button>
+          </div>
+          <!-- iTunes results -->
+          <div id="itunes-results-box" class="space-y-1.5 max-h-44 overflow-y-auto pt-1"></div>
+        </div>
+
+        <!-- Option C: Upload Local MP3 File -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-bold text-zinc-300 text-xs">Option C: Upload MP3 File</span>
+            <span class="text-[10px] font-mono text-zinc-500">From Device</span>
+          </div>
+          <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs cursor-pointer transition">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <span>Select MP3 / Voice Note</span>
+            <input type="file" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)" />
+          </label>
+        </div>
+
+      </div>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- SECTION 4: LETTERS & PROMPTS                                        -->
+      <!-- ------------------------------------------------------------------- -->
+      <div id="pane-letters" class="hidden space-y-4">
+        
+        <!-- Secret Scratch-Off Ticket -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+          <div class="font-mono text-xs font-bold text-amber-400 uppercase">Golden Scratch Card</div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono text-zinc-500">Headline</label>
+            <input type="text" id="f-scratchTitle" oninput="handleConfigChange('scratchTitle', this.value)" placeholder="SECRET ANNIVERSARY SURPRISE" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs" />
+          </div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono text-zinc-500">Hidden Code / Prize Message</label>
+            <input type="text" id="f-scratchCode" oninput="handleConfigChange('scratchCode', this.value)" placeholder="VIP-WEEKEND-ROADTRIP" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs" />
+          </div>
+        </div>
+
+        <!-- Proposal Question & Confirmation -->
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
+          <div class="font-mono text-xs font-bold text-rose-400 uppercase">Proposal / Big Question</div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono text-zinc-500">Question</label>
+            <input type="text" id="f-proposalQuestion" oninput="handleConfigChange('proposalQuestion', this.value)" placeholder="Will you be my forever concert buddy?" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs" />
+          </div>
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono text-zinc-500">Response Pop-up Message</label>
+            <textarea id="f-confirmationMessage" oninput="handleConfigChange('confirmationMessage', this.value)" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-100 font-mono text-xs"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. SAVE & PUBLISH MODAL (SLUG CHECKER & EMAIL CAPTURE)                    -->
+  <!-- ========================================================================= -->
+  <div id="publish-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-[#121215] border border-zinc-800 rounded-3xl p-6 sm:p-7 space-y-5 shadow-2xl relative">
+      
+      <button onclick="closePublishModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Step A: Form Input -->
+      <div id="modal-step-form" class="space-y-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Publish Your Private Keepsake</span>
+          </div>
+          <h3 class="text-xl font-bold text-white tracking-tight">Claim Your Custom Link</h3>
+          <p class="text-xs text-zinc-400">Enter your buyer email and choose your romantic URL.</p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold">Your Email Address</label>
+            <input 
+              type="email" 
+              id="buyer-email" 
+              placeholder="youremail@example.com" 
+              required
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-zinc-100 font-mono focus:outline-none focus:border-[#1ed760]"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold">Custom Link Slug</label>
+            <div class="flex items-center bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-mono text-zinc-400 focus-within:border-[#1ed760]">
+              <span class="text-zinc-600 select-none">studio402.com/v/</span>
+              <input 
+                type="text" 
+                id="link-slug" 
+                placeholder="hannah-ethan" 
+                oninput="checkSlugAvailability(this.value)" 
+                class="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none ml-1"
+              />
+              <span id="slug-badge" class="text-[10px] text-zinc-500 font-mono">checking...</span>
+            </div>
+            <p id="slug-error-text" class="text-[10px] font-mono text-rose-400 hidden pt-0.5">Custom link already taken</p>
+          </div>
+        </div>
+
+        <div class="pt-2 flex flex-col gap-2">
+          <button 
+            type="button" 
+            onclick="submitDraftSave()" 
+            id="btn-submit-publish" 
+            class="w-full py-3.5 rounded-xl bg-[#1ed760] hover:bg-[#1fdf64] text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-[#1ed760]/20 active:scale-95 transition cursor-pointer"
+          >
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>Save &amp; Continue to Checkout</span>
+          </button>
+          
+          <button 
+            type="button" 
+            onclick="downloadJsonBackup()" 
+            class="w-full py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white font-mono text-xs flex items-center justify-center gap-1.5 transition"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download Backup (.json)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step B: Handoff Success -->
+      <div id="modal-step-success" class="hidden space-y-5 text-center py-2">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+          <i data-lucide="check" class="w-6 h-6"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xl font-bold text-white tracking-tight">Draft Saved in Vault!</h3>
+          <p class="text-xs text-zinc-400">Your design is safely stored with code:</p>
+          <div class="inline-block px-4 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 font-mono text-base font-bold text-white my-1" id="display-design-code">
+            ST-40289
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono text-zinc-300">
+          Your Link: <span class="text-[#1ed760]" id="display-published-slug">studio402.com/v/hannah-ethan</span>
+        </div>
+
+        <a 
+          id="btn-gumroad-checkout" 
+          href="#" 
+          target="_blank" 
+          class="w-full py-3.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-white/10 transition block"
+        >
+          <span>Complete Activation on Gumroad ($19)</span>
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-pill" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 px-4 py-2.5 rounded-full bg-zinc-900/95 border border-zinc-700 text-xs font-mono text-zinc-200 shadow-2xl flex items-center gap-2 backdrop-blur-md">
+    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+    <span id="toast-text">Update applied to preview</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT ENGINE                                                         -->
+  <!-- ========================================================================= -->
+  <script>
+    // State Store for Vinyl Edition
+    let editorConfig = {
+      coupleName: "Hannah & Ethan",
+      estText: "Together Since Oct 14, 2023",
+      anniversaryISO: "2023-10-14",
+      albumTitle: "Late Night Memories",
+      coverPhoto: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=85",
+      songTitle: "01. Golden Hour With You",
+      songArtist: "Our Official Soundtrack",
+      customMp3Url: "",
+      customVideoUrl: "",
+      cityOneName: "New York",
+      cityTwoName: "Los Angeles",
+      distanceBadge: "2,450 MILES APART",
+      scratchTitle: "SECRET ANNIVERSARY SURPRISE",
+      scratchCode: "VIP-WEEKEND-GETAWAY",
+      proposalQuestion: "Will you be my forever concert buddy?",
+      confirmationMessage: "You just made me the happiest person in the world.",
+      chapters: [
+        {
+          number: "01",
+          title: "The Coffee Shop",
+          date: "OCT 2023",
+          story: "We sat in the corner booth for four hours until they closed. You told me about your favorite records.",
+          photo: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=85"
+        },
+        {
+          number: "02",
+          title: "Lost on the Highway",
+          date: "JAN 2024",
+          story: "Missed the turn completely because we were singing along to every lyric with the windows down.",
+          photo: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=85"
+        },
+        {
+          number: "03",
+          title: "Sunset in Big Sur",
+          date: "APR 2024",
+          story: "Shared an overpriced pizza by the ocean. The sky was the exact color of peach velvet.",
+          photo: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=900&q=85"
+        },
+        {
+          number: "04",
+          title: "Our Quiet Mornings",
+          date: "JUL 2024",
+          story: "Making coffee on the porch while the rain tapped on the roof. My favorite place on earth.",
+          photo: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=900&q=85"
+        }
+      ]
+    };
+
+    let isSlugAvailable = true;
+    let slugCheckTimer = null;
+
+    // Toast Helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast-pill');
+      document.getElementById('toast-text').innerText = msg;
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    // -------------------------------------------------------------------------
+    // Bottom Sheet Drawer Management
+    // -------------------------------------------------------------------------
+    function openDrawer(tabName) {
+      const titles = {
+        'names': '1. Names & Relationship Date',
+        'photos': '2. Photos & Polaroid Chapters',
+        'audio': '3. YouTube & Music Soundtrack',
+        'letters': '4. Secret Prompts & Vows'
+      };
+
+      document.getElementById('drawer-title').innerText = titles[tabName] || 'Editor Form';
+
+      // Switch active pane
+      ['names', 'photos', 'audio', 'letters'].forEach(pane => {
+        const el = document.getElementById(`pane-${pane}`);
+        if (pane === tabName) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('drawer-backdrop').classList.remove('opacity-0', 'pointer-events-none');
+      document.getElementById('drawer-sheet').classList.add('is-open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawer-backdrop').classList.add('opacity-0', 'pointer-events-none');
+      document.getElementById('drawer-sheet').classList.remove('is-open');
+    }
+
+    // -------------------------------------------------------------------------
+    // Live Configuration & Iframe Sync
+    // -------------------------------------------------------------------------
+    function handleConfigChange(key, val, focusSelector) {
+      editorConfig[key] = val;
+      dispatchUpdateToIframe(focusSelector);
+    }
+
+    function dispatchUpdateToIframe(focusSelector) {
+      const iframe = document.getElementById('preview-frame');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({
+          type: 'UPDATE_CONFIG',
+          payload: editorConfig,
+          focusSelector: focusSelector
+        }, '*');
+      }
+    }
+
+    function reloadPreview() {
+      const icon = document.getElementById('reload-icon');
+      if (icon) icon.classList.add('animate-spin');
+      const iframe = document.getElementById('preview-frame');
+      iframe.src = 'vinyl.html';
+      setTimeout(() => {
+        if (icon) icon.classList.remove('animate-spin');
+        dispatchUpdateToIframe();
+        showToast('Preview reloaded');
+      }, 700);
+    }
+
+    // -------------------------------------------------------------------------
+    // HTML5 Canvas WebP Image Compressor (Max 800px, 0.75 Quality)
+    // -------------------------------------------------------------------------
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width = Math.round((width * MAX_HEIGHT) / height);
+                height = MAX_HEIGHT;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/webp', 0.75);
+            resolve(dataUrl);
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleImageUpload(e, targetField, focusSelector) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const compressedBase64 = await compressImageFile(file);
+        editorConfig[targetField] = compressedBase64;
+        
+        const previewEl = document.getElementById(`img-preview-${targetField}`);
+        if (previewEl) previewEl.src = compressedBase64;
+
+        dispatchUpdateToIframe(focusSelector);
+        showToast('Photo compressed & updated');
+      } catch (err) {
+        console.error('Image compression error:', err);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // Polaroid Chapters (Up to 7)
+    // -------------------------------------------------------------------------
+    function renderChaptersList() {
+      const container = document.getElementById('chapters-list-container');
+      container.innerHTML = editorConfig.chapters.map((ch, idx) => `
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-xs font-bold text-emerald-400">Chapter #${ch.number || idx + 1}</span>
+            ${editorConfig.chapters.length > 4 ? `
+              <button onclick="removeChapterSlot(${idx})" class="text-zinc-500 hover:text-rose-400 text-xs font-mono flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3 h-3"></i>
+                <span>Remove</span>
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="flex items-center gap-3">
+            <img id="chapter-thumb-${idx}" src="${ch.photo}" class="w-14 h-14 rounded-xl object-cover bg-zinc-900 border border-zinc-800 flex-shrink-0" />
+            <div class="flex-1 space-y-1">
+              <label class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-[11px] cursor-pointer">
+                <i data-lucide="image" class="w-3 h-3"></i>
+                <span>Replace Photo</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleChapterPhotoUpload(event, ${idx})" />
+              </label>
+              <input type="text" value="${escapeHtml(ch.title)}" oninput="updateChapterField(${idx}, 'title', this.value)" placeholder="Memory title" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-100 font-mono text-xs" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" value="${escapeHtml(ch.date || '')}" oninput="updateChapterField(${idx}, 'date', this.value)" placeholder="Date (e.g. OCT 2023)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-zinc-100 font-mono text-[11px]" />
+            <span class="text-[10px] text-zinc-500 font-mono self-center">Tap Polaroid in preview to flip</span>
+          </div>
+
+          <textarea oninput="updateChapterField(${idx}, 'story', this.value)" rows="2" placeholder="Handwritten story on back of card..." class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-zinc-200 font-mono text-xs">${escapeHtml(ch.story || '')}</textarea>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    async function handleChapterPhotoUpload(e, idx) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const base64 = await compressImageFile(file);
+      editorConfig.chapters[idx].photo = base64;
+      document.getElementById(`chapter-thumb-${idx}`).src = base64;
+      dispatchUpdateToIframe();
+      showToast('Chapter photo updated');
+    }
+
+    function updateChapterField(idx, field, val) {
+      if (editorConfig.chapters[idx]) {
+        editorConfig.chapters[idx][field] = val;
+        dispatchUpdateToIframe();
+      }
+    }
+
+    function addChapterSlot() {
+      if (editorConfig.chapters.length >= 7) {
+        showToast('Maximum 7 photo slots reached');
+        return;
+      }
+      const nextNum = editorConfig.chapters.length + 1;
+      editorConfig.chapters.push({
+        number: String(nextNum).padStart(2, '0'),
+        title: `Memory #${nextNum}`,
+        date: "2024",
+        story: "A quiet moment together that I never want to forget.",
+        photo: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=85"
+      });
+      renderChaptersList();
+      dispatchUpdateToIframe();
+      showToast('New photo slot added');
+    }
+
+    function removeChapterSlot(idx) {
+      if (editorConfig.chapters.length <= 4) return;
+      editorConfig.chapters.splice(idx, 1);
+      renderChaptersList();
+      dispatchUpdateToIframe();
+      showToast('Photo slot removed');
+    }
+
+    // -------------------------------------------------------------------------
+    // iTunes Live Search API
+    // -------------------------------------------------------------------------
+    async function searchITunesTracks() {
+      const query = (document.getElementById('itunes-search-input').value || '').trim();
+      if (!query) return;
+
+      const resultsBox = document.getElementById('itunes-results-box');
+      resultsBox.innerHTML = `<div class="text-[11px] font-mono text-zinc-400 py-2">Searching Apple Music...</div>`;
+
+      try {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=5`);
+        const data = await res.json();
+        
+        if (!data.results || data.results.length === 0) {
+          resultsBox.innerHTML = `<div class="text-[11px] font-mono text-zinc-500 py-1">No songs found. Try another query.</div>`;
+          return;
+        }
+
+        resultsBox.innerHTML = data.results.map(r => `
+          <div onclick="selectITunesSong('${escapeHtml(r.trackName)}', '${escapeHtml(r.artistName)}', '${r.previewUrl}')" class="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 flex items-center justify-between cursor-pointer transition">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <img src="${r.artworkUrl60 || r.artworkUrl30}" class="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+              <div class="truncate">
+                <div class="text-xs font-semibold text-white truncate">${escapeHtml(r.trackName)}</div>
+                <div class="text-[10px] text-zinc-400 truncate">${escapeHtml(r.artistName)}</div>
+              </div>
+            </div>
+            <button class="px-2 py-1 rounded-md bg-[#1ed760] text-zinc-950 font-bold text-[10px] font-mono">Select</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        resultsBox.innerHTML = `<div class="text-[11px] font-mono text-rose-400 py-1">Error searching iTunes.</div>`;
+      }
+    }
+
+    function selectITunesSong(title, artist, previewUrl) {
+      editorConfig.songTitle = title;
+      editorConfig.songArtist = artist;
+      editorConfig.customMp3Url = previewUrl;
+
+      document.getElementById('f-songTitle').value = title;
+      document.getElementById('f-songArtist').value = artist;
+
+      dispatchUpdateToIframe('[data-section="music"]');
+      showToast(`Selected "${title}"`);
+    }
+
+    function handleAudioUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        editorConfig.customMp3Url = evt.target.result;
+        dispatchUpdateToIframe('[data-section="music"]');
+        showToast('MP3 voice note uploaded');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // -------------------------------------------------------------------------
+    // Publish Modal & Slug Checker
+    // -------------------------------------------------------------------------
+    function openPublishModal() {
+      // Auto-suggest slug based on couple name
+      const cleanSlug = editorConfig.coupleName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      const slugInput = document.getElementById('link-slug');
+      if (!slugInput.value) {
+        slugInput.value = cleanSlug || 'our-memories';
+      }
+      checkSlugAvailability(slugInput.value);
+
+      document.getElementById('modal-step-form').classList.remove('hidden');
+      document.getElementById('modal-step-success').classList.add('hidden');
+      document.getElementById('publish-modal').classList.remove('hidden');
+    }
+
+    function closePublishModal() {
+      document.getElementById('publish-modal').classList.add('hidden');
+    }
+
+    function checkSlugAvailability(raw) {
+      clearTimeout(slugCheckTimer);
+      const badge = document.getElementById('slug-badge');
+      const errText = document.getElementById('slug-error-text');
+      const slug = raw.toLowerCase().replace(/[^a-z0-9-]/g, '').trim();
+
+      if (!slug) {
+        badge.innerText = 'empty';
+        badge.className = 'text-[10px] text-zinc-500 font-mono';
+        return;
+      }
+
+      badge.innerText = 'checking...';
+      badge.className = 'text-[10px] text-zinc-400 font-mono';
+
+      slugCheckTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/check-slug?slug=${encodeURIComponent(slug)}`);
+          if (res.ok) {
+            const data = await res.json();
+            isSlugAvailable = data.available;
+          } else {
+            isSlugAvailable = true;
+          }
+        } catch (_) {
+          isSlugAvailable = true;
+        }
+
+        if (isSlugAvailable) {
+          badge.innerText = 'Available \u2713';
+          badge.className = 'text-[10px] text-emerald-400 font-mono font-bold';
+          errText.classList.add('hidden');
+        } else {
+          badge.innerText = 'Taken';
+          badge.className = 'text-[10px] text-rose-400 font-mono font-bold';
+          errText.classList.remove('hidden');
+        }
+      }, 350);
+    }
+
+    async function submitDraftSave() {
+      const email = (document.getElementById('buyer-email').value || '').trim();
+      const slug = (document.getElementById('link-slug').value || '').trim().toLowerCase();
+
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (!slug) {
+        alert('Please enter your custom link slug.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-submit-publish');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>Saving to vault...</span>`;
+
+      const designCode = `ST-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      try {
+        await fetch('/api/save-draft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            slug: slug,
+            template: 'spotilove',
+            designCode: designCode,
+            configData: editorConfig
+          })
+        });
+      } catch (err) {
+        console.warn('Local draft fallback:', err);
+      }
+
+      // Transition to success screen
+      document.getElementById('modal-step-form').classList.add('hidden');
+      document.getElementById('modal-step-success').classList.remove('hidden');
+      document.getElementById('display-design-code').innerText = designCode;
+      document.getElementById('display-published-slug').innerText = `studio402.com/v/${slug}`;
+      document.getElementById('btn-gumroad-checkout').href = `https://studio402.gumroad.com/l/keepsake?custom_slug=${encodeURIComponent(slug)}&email=${encodeURIComponent(email)}`;
+    }
+
+    function downloadJsonBackup() {
+      const blob = new Blob([JSON.stringify(editorConfig, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `studio402-vinyl-${Date.now()}.json`;
+      a.click();
+    }
+
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Startup Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sync form fields with initial state
+      document.getElementById('f-coupleName').value = editorConfig.coupleName;
+      document.getElementById('f-albumTitle').value = editorConfig.albumTitle;
+      document.getElementById('f-estText').value = editorConfig.estText;
+      document.getElementById('f-anniversaryISO').value = editorConfig.anniversaryISO;
+      document.getElementById('img-preview-coverPhoto').src = editorConfig.coverPhoto;
+      document.getElementById('f-songTitle').value = editorConfig.songTitle;
+      document.getElementById('f-songArtist').value = editorConfig.songArtist;
+      document.getElementById('f-scratchTitle').value = editorConfig.scratchTitle;
+      document.getElementById('f-scratchCode').value = editorConfig.scratchCode;
+      document.getElementById('f-proposalQuestion').value = editorConfig.proposalQuestion;
+      document.getElementById('f-confirmationMessage').value = editorConfig.confirmationMessage;
+
+      renderChaptersList();
+      lucide.createIcons();
+
+      // Fade out preview helper after 4s
+      setTimeout(() => {
+        const helper = document.getElementById('preview-helper-pill');
+        if (helper) helper.classList.add('opacity-0', '-translate-y-4');
+      }, 4000);
+    });
+  </script>
+</body>
+</html>
