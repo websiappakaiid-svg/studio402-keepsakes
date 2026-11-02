@@ -3,14 +3,16 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["*.html"]
+      }
     }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/server.js" },
     { "src": "/v/(.*)", "dest": "/server.js" },
-    { "src": "/admin(.*)", "dest": "/server.js" },
-    { "src": "/(index|vinyl|cinema|camera|editor-vinyl|editor-cinema|editor-camera|admin|editor)\\.html", "dest": "/server.js" },
-    { "src": "/(.*)", "dest": "/server.js" }
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
