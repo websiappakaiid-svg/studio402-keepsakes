@@ -59,12 +59,12 @@ const APP_URL = process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
 
 // Template file resolution map
 const TEMPLATE_MAP = {
-  'spotilove': 'spotilove_ultra_1000_10_studio_edition.html',
-  'spotilove_ultra_1000_10_studio_edition.html': 'spotilove_ultra_1000_10_studio_edition.html',
+  'spotilove': 'vinyl.html',
+  'spotilove_ultra_1000_10_studio_edition.html': 'vinyl.html',
   'vinyl': 'vinyl.html',
   'vinyl.html': 'vinyl.html',
-  'netlove': 'netlove_interactive_streaming_bandersnatch_app.html',
-  'netlove_interactive_streaming_bandersnatch_app.html': 'netlove_interactive_streaming_bandersnatch_app.html',
+  'netlove': 'cinema.html',
+  'netlove_interactive_streaming_bandersnatch_app.html': 'cinema.html',
   'cinema': 'cinema.html',
   'cinema.html': 'cinema.html',
   'lovebox': 'camera.html',
