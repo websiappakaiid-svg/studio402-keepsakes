@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "*.html"
+    }
+  },
   "rewrites": [
     { "source": "/v/:slug*", "destination": "/api" },
     { "source": "/api/:path*", "destination": "/api" }
