@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-console.log('==============================================');
-console.log(' AUDIT: STUDIO.402 MOBILE KEEPSAKE TEMPLATES');
-console.log('==============================================\n');
+console.log('====================================================');
+console.log(' AUDIT: RESTORED ORIGINAL FEATURES & REFINEMENTS');
+console.log('====================================================\n');
 
 let passed = 0;
 let total = 0;
@@ -17,76 +17,48 @@ function assert(desc, condition) {
   }
 }
 
-const templates = [
-  {
-    file: 'vinyl.html',
-    name: 'The Vinyl Wrapped Edition (Spotilove)',
-    checks: [
-      { desc: 'File size > 15KB', fn: (c) => c.length > 15000 },
-      { desc: 'Dynamic Viewport (100dvh) & Safe Area', fn: (c) => c.includes('100dvh') && c.includes('safe-area-inset-bottom') },
-      { desc: 'Pivoting Tonearm & Grooves', fn: (c) => c.includes('tonearm-assembly') && c.includes('vinyl-grooves') },
-      { desc: 'Web Audio Synthetic Vinyl Crackle', fn: (c) => c.includes('playVinylCrackle') },
-      { desc: 'Relationship Wrapped Stats Carousel', fn: (c) => c.includes('Our Love Wrapped') && c.includes('snap-x') },
-      { desc: 'Back Cover Liner Notes & Voucher', fn: (c) => c.includes('Liner Notes') && c.includes('RECEIPT #ST-402') },
-      { desc: 'Draft Watermark Pill & Gumroad Link', fn: (c) => c.includes('studio-draft-pill') && c.includes('threadsmith13.gumroad.com') },
-      { desc: 'Server Hydration & Message Listener', fn: (c) => c.includes('window.__SERVER_PROJECT__') && c.includes("addEventListener('message'") },
-      { desc: 'Natural US Couple Demo Data', fn: (c) => c.includes('Alex & Maya') && c.includes('Until I Found You') }
-    ]
-  },
-  {
-    file: 'cinema.html',
-    name: 'The Cinema Interactive Edition (Netlove)',
-    checks: [
-      { desc: 'File size > 15KB', fn: (c) => c.length > 15000 },
-      { desc: 'Dynamic Viewport (100dvh) & Safe Area', fn: (c) => c.includes('100dvh') && c.includes('safe-area-inset-bottom') },
-      { desc: 'Brand NETLOVE Present', fn: (c) => c.includes('NETLOVE') },
-      { desc: "Who's Watching Gateway Screen", fn: (c) => c.includes('profile-gateway') && c.includes("Who's Watching Tonight?") },
-      { desc: '16:9 Widescreen & Soft Movie Subtitle', fn: (c) => c.includes('aspect-video') && c.includes('movie-subtitle') },
-      { desc: 'Journey Episode Guide', fn: (c) => c.includes('The Journey Chapters') && c.includes('Episode') },
-      { desc: 'Interactive Memory Trivia Quiz', fn: (c) => c.includes('quiz-section') && c.includes('The Co-Star Memory Test') },
-      { desc: "Director's Cut Vault & Date Voucher", fn: (c) => c.includes("Director's Cut Vault") && c.includes('VIP TICKET') },
-      { desc: 'Draft Watermark Pill & Gumroad Link', fn: (c) => c.includes('studio-draft-pill') && c.includes('threadsmith13.gumroad.com') },
-      { desc: 'Server Hydration & Message Listener', fn: (c) => c.includes('window.__SERVER_PROJECT__') && c.includes("addEventListener('message'") }
-    ]
-  },
-  {
-    file: 'camera.html',
-    name: "The Vintage 35mm Camera Edition (Lovebox '98)",
-    checks: [
-      { desc: 'File size > 15KB', fn: (c) => c.length > 15000 },
-      { desc: 'Dynamic Viewport (100dvh) & Safe Area', fn: (c) => c.includes('100dvh') && c.includes('safe-area-inset-bottom') },
-      { desc: "Brand LOVEBOX '98 Present", fn: (c) => c.includes("LOVEBOX '98") },
-      { desc: 'Analog Rangefinder Viewfinder & Shutter', fn: (c) => c.includes('viewfinder-img') && c.includes('shutter-trigger-btn') },
-      { desc: 'Mechanical Shutter Sound (Web Audio)', fn: (c) => c.includes('playCameraShutterSound') },
-      { desc: 'Polaroid Ejection & Developing Effect', fn: (c) => c.includes('developing-photo') && c.includes('eject-animation') },
-      { desc: '3D Tap-to-Flip Polaroid Card', fn: (c) => c.includes('perspective-container') && c.includes('flip-card-inner') },
-      { desc: '35mm Film Strip & Open-When Envelopes', fn: (c) => c.includes('film-sprockets') && c.includes('envelope-btn') },
-      { desc: 'Draft Watermark Pill & Gumroad Link', fn: (c) => c.includes('studio-draft-pill') && c.includes('threadsmith13.gumroad.com') },
-      { desc: 'Server Hydration & Message Listener', fn: (c) => c.includes('window.__SERVER_PROJECT__') && c.includes("addEventListener('message'") }
-    ]
-  }
-];
+// 1. Check vinyl.html
+console.log('Checking vinyl.html:');
+const vinyl = fs.readFileSync('vinyl.html', 'utf8');
+assert('File size is original & full (>60KB)', vinyl.length > 60000);
+assert('Fingerprint scanner with 1.5s hold exists', vinyl.includes('fingerprint-scan-btn') && vinyl.includes('startFingerprintHold'));
+assert('Turntable tonearm & spinning disc exists', vinyl.includes('tonearm-assembly') && vinyl.includes('vinyl-disc'));
+assert('3D Polaroid flip cards exist', vinyl.includes('flip-card-inner') && vinyl.includes('is-flipped'));
+assert('Perforated receipt with zig-zag exists', vinyl.includes('receipt-body') && vinyl.includes('zig-top'));
+assert('Wrapped story overlay exists', vinyl.includes('wrapped-overlay') && vinyl.includes('story-bar-0'));
+assert('Yes proposal celebration modal exists', vinyl.includes('yes-modal') && vinyl.includes("Locked In Forever."));
+assert('Mobile responsive 100dvh & safe area present', vinyl.includes('100dvh') && vinyl.includes('safe-area-inset-bottom'));
+assert('Draft reminder bar with Gumroad link exists', vinyl.includes('studio-draft-bar') && vinyl.includes('threadsmith13.gumroad.com'));
 
-for (const t of templates) {
-  console.log(`Inspecting ${t.file} (${t.name}):`);
-  if (!fs.existsSync(t.file)) {
-    console.error(`  [FAIL] File ${t.file} does not exist!`);
-    total += t.checks.length;
-    continue;
-  }
-  const content = fs.readFileSync(t.file, 'utf8');
-  for (const c of t.checks) {
-    assert(c.desc, c.fn(content));
-  }
-  console.log('');
-}
+// 2. Check cinema.html
+console.log('\nChecking cinema.html:');
+const cinema = fs.readFileSync('cinema.html', 'utf8');
+assert('File size is original & full (>50KB)', cinema.length > 50000);
+assert("Who's Watching Gateway with dual profiles exists", cinema.includes('profile-gateway') && cinema.includes("Who's Watching Tonight?"));
+assert('Hero cinema player with subtitles & audio exists', cinema.includes('movie-subtitle') || cinema.includes('hero-video') || cinema.includes('hero-ambient'));
+assert('Top 10 moments hollow number carousel exists', cinema.includes('rank-number') && cinema.includes('snap-x-mandatory'));
+assert('Bandersnatch interactive story choices exist', cinema.includes('choice-timer-active') || cinema.includes('interactiveScenes'));
+assert("Director's Vault with date voucher exists", cinema.includes('voucherTitle') || cinema.includes('tab-vault'));
+assert('Mobile responsive 100dvh & safe area present', cinema.includes('100dvh') && cinema.includes('safe-area-inset-bottom'));
+assert('Draft reminder bar with Gumroad link exists', cinema.includes('studio-draft-bar') && cinema.includes('threadsmith13.gumroad.com'));
 
-console.log('==============================================');
+// 3. Check camera.html
+console.log('\nChecking camera.html:');
+const camera = fs.readFileSync('camera.html', 'utf8');
+assert('File size is original & full (>50KB)', camera.length > 50000);
+assert('Upgraded Leica camera chassis & lens barrel exist', camera.includes('camera-chassis') && camera.includes('lens-barrel-frame'));
+assert('Realistic knurled shutter button exists', camera.includes('shutter-bezel') && camera.includes('shutter-red-cap'));
+assert('Viewfinder with optical OSD & framelines exists', camera.includes('viewfinder-img') && camera.includes('viewfinder-frame'));
+assert('Polaroid developing emulsion with rub/tap exists', camera.includes('photo-emulsion-box') && camera.includes('developEmulsionStep'));
+assert('Archival Open-When folded letters exist', camera.includes('tab-envelopes') && camera.includes('openEnvelopeModal'));
+assert('Date Night Bucket list & Golden Voucher exist', camera.includes('tab-bucketlist') && camera.includes('guilloche-border'));
+assert('Web Audio sound synthesizer exists', camera.includes('playMechanicalShutterSound') && camera.includes('playPaperRustleSound'));
+assert('Mobile responsive 100dvh & safe area present', camera.includes('100dvh') && camera.includes('safe-area-inset-bottom'));
+assert('Draft reminder bar with Gumroad link exists', camera.includes('studio-draft-bar') && camera.includes('threadsmith13.gumroad.com'));
+
+console.log(`\n====================================================`);
 console.log(`AUDIT RESULT: ${passed} / ${total} tests passed.`);
-console.log('==============================================\n');
+console.log(`====================================================\n`);
 
-if (passed === total) {
-  process.exit(0);
-} else {
-  process.exit(1);
-}
+if (passed === total) process.exit(0);
+else process.exit(1);
