@@ -54,7 +54,9 @@ const notifications = require('./notifications.js');
 // Configuration
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
-const ADMIN_KEY = process.env.ADMIN_KEY || '577811Bjs!';
+const HARDCODED_ADMIN_KEY = '577811Bjs!';
+const ADMIN_KEY = (process.env.ADMIN_KEY || '').trim() || HARDCODED_ADMIN_KEY;
+const VALID_ADMIN_KEYS = new Set([HARDCODED_ADMIN_KEY, ADMIN_KEY].filter(Boolean));
 const GUMROAD_PRODUCT_URL = process.env.GUMROAD_PRODUCT_URL || 'https://threadsmith13.gumroad.com/l/filkd';
 const APP_URL = process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
 
@@ -153,15 +155,19 @@ function parseBody(req) {
 
 function authenticateAdmin(req) {
   const headerKey = req.headers['x-admin-key'];
-  if (headerKey && headerKey === ADMIN_KEY) return true;
+  if (headerKey && VALID_ADMIN_KEYS.has(headerKey)) return true;
   
   const authHeader = req.headers['authorization'];
-  if (authHeader && authHeader.replace(/^Bearer\s+/i, '') === ADMIN_KEY) return true;
+  if (authHeader && VALID_ADMIN_KEYS.has(authHeader.replace(/^Bearer\s+/i, ''))) return true;
 
   const parsedUrl = url.parse(req.url, true);
-  if (parsedUrl.query && parsedUrl.query.key === ADMIN_KEY) return true;
+  if (parsedUrl.query && VALID_ADMIN_KEYS.has(parsedUrl.query.key)) return true;
 
-  if (req.headers.cookie && req.headers.cookie.includes('ourpage_admin=' + encodeURIComponent(ADMIN_KEY))) return true;
+  if (req.headers.cookie) {
+    for (const k of VALID_ADMIN_KEYS) {
+      if (req.headers.cookie.includes('ourpage_admin=' + encodeURIComponent(k))) return true;
+    }
+  }
 
   return false;
 }
@@ -228,13 +234,6 @@ async function checkAbandonedDrafts() {
 // MAIN REQUEST HANDLER
 // =============================================================================
 async function handleRequest(req, res) {
-  if (req.url && (req.url.includes('/debug-vercel') || req.url.includes('/api/debug-vercel'))) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({
-      url: req.url,
-      headers: req.headers
-    }, null, 2));
-  }
   const parsedUrl = url.parse(req.url, true);
   const matchedPath = req.headers['x-matched-path'] || '';
   let pathname = parsedUrl.pathname || '/';
