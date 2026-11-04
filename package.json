@@ -1,20 +1,18 @@
 {
-  "name": "studio402-keepsakes",
-  "version": "1.0.0",
-  "description": "studio.402 commercial romantic keepsakes engine and live editor backend",
+  "name": "ourpage-keepsakes",
+  "version": "2.0.0",
+  "description": "ourpage LoveOS romantic keepsake engine and live editor backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node test-server.js"
+    "test": "node test-loveos.js"
   },
   "keywords": [
-    "studio402",
+    "ourpage",
     "romantic-keepsakes",
-    "spotilove",
-    "netlove",
-    "lovebox"
+    "loveos"
   ],
-  "author": "studio.402",
+  "author": "ourpage",
   "license": "UNLICENSED",
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0"

@@ -1,87 +1,83 @@
 /**
- * studio.402 Keepsake Database Engine
+ * ourpage Keepsake Database Engine — Strict Supabase Live Cloud
  * 
- * Supports:
- * 1. Supabase PostgreSQL (Cloud Production - Free Tier)
- * 2. Local Fallback Store (Local Dev & Offline Testing)
+ * DESIGN PRINCIPLE:
+ * 100% Direct Live Cloud Database via Supabase PostgreSQL.
+ * Local files/fallbacks are completely disabled and bypassed.
+ * Template 1 (LoveOS) stores directly to Supabase Table: "loveos_projects".
  */
 
+const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const path = require('path');
-const { createClient } = require('@supabase/supabase-js');
-
 const ROOT_DIR = path.resolve(__dirname);
-const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(ROOT_DIR, 'data');
-const LOCAL_JSON_FILE = path.join(DATA_DIR, 'projects.json');
+function loadLocalEnv() {
+  const envPath = path.join(ROOT_DIR, '.env');
+  if (fs.existsSync(envPath)) {
+    try {
+      const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const idx = trimmed.indexOf('=');
+        if (idx !== -1) {
+          const key = trimmed.slice(0, idx).trim();
+          let val = trimmed.slice(idx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          if (process.env[key] === undefined) {
+            process.env[key] = val;
+          }
+        }
+      }
+    } catch (_) {}
+  }
+}
+loadLocalEnv();
+
+
+// =============================================================================
+// TEMPLATE REGISTRY (ISOLATED LIVE CLOUD TABLES PER TEMPLATE)
+// =============================================================================
+const TEMPLATE_REGISTRY = {
+  loveos: {
+    name: 'LoveOS (iOS Keepsake)',
+    table: 'loveos_projects',
+    defaultTemplate: 'loveos'
+  }
+  // Di masa depan untuk Template 2:
+  // template2: {
+  //   name: 'Template 2',
+  //   table: 'template2_projects',
+  //   defaultTemplate: 'template2'
+  // }
+};
 
 // Supabase Environment Configurations
 const rawSupabaseUrl = (process.env.SUPABASE_URL || '').trim();
 const SUPABASE_URL = rawSupabaseUrl.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
 const SUPABASE_KEY = (process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
 
-let supabase = null;
-let isUsingSupabase = false;
-
-if (SUPABASE_URL && SUPABASE_KEY) {
-  try {
-    supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-      auth: { persistSession: false }
-    });
-    isUsingSupabase = true;
-    console.log('[studio.402 DB] Connected to Supabase Cloud PostgreSQL');
-  } catch (err) {
-    console.warn('[studio.402 DB] Failed to init Supabase client, falling back to local store:', err.message);
-  }
-} else {
-  console.log('[studio.402 DB] SUPABASE_URL not configured. Operating in Local Store Fallback mode.');
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error('[ourpage DB] FATAL: SUPABASE_URL or SUPABASE_KEY is missing from environment!');
 }
 
-// =============================================================================
-// LOCAL FALLBACK HELPERS
-// =============================================================================
-function ensureLocalStore() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(LOCAL_JSON_FILE)) {
-    fs.writeFileSync(LOCAL_JSON_FILE, JSON.stringify([], null, 2), 'utf8');
-  }
-}
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false }
+});
 
-function loadLocalProjects() {
-  ensureLocalStore();
-  try {
-    const raw = fs.readFileSync(LOCAL_JSON_FILE, 'utf8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (err) {
-    console.error('[studio.402 DB] Error reading local store:', err.message);
-    return [];
-  }
-}
+console.log('[ourpage DB] Connected directly to Supabase Cloud PostgreSQL');
 
-function saveLocalProjects(projects) {
-  ensureLocalStore();
-  try {
-    const tempFile = `${LOCAL_JSON_FILE}.tmp.${Date.now()}`;
-    fs.writeFileSync(tempFile, JSON.stringify(projects, null, 2), 'utf8');
-    fs.renameSync(tempFile, LOCAL_JSON_FILE);
-    return true;
-  } catch (err) {
-    console.error('[studio.402 DB] Error saving local store:', err.message);
-    return false;
-  }
-}
-
-function normalizeProjectRow(p) {
+function normalizeProjectRow(p, defaultTemplate = 'loveos') {
   if (!p) return null;
   const config = p.config_data || p.configData || p.config || {};
   return {
     id: p.id,
     slug: p.slug,
     email: p.email,
-    template: p.template || 'spotilove',
-    designCode: p.design_code || p.designCode || (p.id ? `ST-${p.id.slice(-6).toUpperCase()}` : 'ST-402000'),
+    template: p.template || defaultTemplate,
+    designCode: p.design_code || p.designCode || (p.id ? `OP-${p.id.slice(-6).toUpperCase()}` : 'OP-100000'),
     configData: typeof config === 'string' ? JSON.parse(config) : config,
     status: p.status || 'draft',
     followupSent: Boolean(p.followup_sent || p.followupSent),
@@ -91,76 +87,84 @@ function normalizeProjectRow(p) {
   };
 }
 
+function getTemplateConfig(templateKey = 'loveos') {
+  const key = String(templateKey || 'loveos').toLowerCase().trim();
+  return TEMPLATE_REGISTRY[key] || TEMPLATE_REGISTRY.loveos;
+}
+
 // =============================================================================
-// UNIFIED DATABASE INTERFACE
+// STRICT LIVE SUPABASE DATABASE OPERATIONS
 // =============================================================================
 
-async function getProjectBySlug(slug) {
+/**
+ * Get project by slug from Supabase Cloud table
+ */
+async function getProjectBySlug(slug, template = null) {
   if (!slug) return null;
   const cleanSlug = String(slug).trim().toLowerCase();
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
 
-  if (isUsingSupabase && supabase) {
+  for (const tConf of targets) {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from(tConf.table)
         .select('*')
         .eq('slug', cleanSlug)
         .maybeSingle();
 
       if (!error && data) {
-        return normalizeProjectRow(data);
+        return normalizeProjectRow(data, tConf.defaultTemplate);
       }
-      if (error) {
-        console.warn('[studio.402 DB] Supabase getProjectBySlug warning:', error.message);
+      if (error && error.code === '42P01') {
+        console.error(`[ourpage DB] Table "${tConf.table}" not found in Supabase! Please execute supabase_loveos_schema.sql in Supabase SQL editor.`);
       }
     } catch (e) {
-      console.warn('[studio.402 DB] Supabase getProjectBySlug error:', e.message);
+      console.error(`[ourpage DB] getProjectBySlug error on "${tConf.table}":`, e.message);
     }
   }
 
-  // Fallback to local
-  const projects = loadLocalProjects();
-  const found = projects.find(p => (p.slug || '').toLowerCase() === cleanSlug);
-  return normalizeProjectRow(found);
+  return null;
 }
 
-async function getProjectById(id) {
+/**
+ * Get project by ID from Supabase Cloud table
+ */
+async function getProjectById(id, template = null) {
   if (!id) return null;
   const cleanId = String(id).trim();
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
 
-  if (isUsingSupabase && supabase) {
+  for (const tConf of targets) {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from(tConf.table)
         .select('*')
         .eq('id', cleanId)
         .maybeSingle();
 
       if (!error && data) {
-        return normalizeProjectRow(data);
-      }
-      if (error) {
-        console.warn('[studio.402 DB] Supabase getProjectById warning:', error.message);
+        return normalizeProjectRow(data, tConf.defaultTemplate);
       }
     } catch (e) {
-      console.warn('[studio.402 DB] Supabase getProjectById error:', e.message);
+      console.error(`[ourpage DB] getProjectById error on "${tConf.table}":`, e.message);
     }
   }
 
-  // Fallback to local
-  const projects = loadLocalProjects();
-  const found = projects.find(p => p.id === cleanId);
-  return normalizeProjectRow(found);
+  return null;
 }
 
-async function checkSlugAvailable(slug, excludeId = null) {
+/**
+ * Check if a URL slug is available across registered Supabase template tables
+ */
+async function checkSlugAvailable(slug, excludeId = null, template = null) {
   if (!slug) return false;
   const cleanSlug = String(slug).trim().toLowerCase();
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
 
-  if (isUsingSupabase && supabase) {
+  for (const tConf of targets) {
     try {
       let query = supabase
-        .from('projects')
+        .from(tConf.table)
         .select('id')
         .eq('slug', cleanSlug);
 
@@ -169,117 +173,89 @@ async function checkSlugAvailable(slug, excludeId = null) {
       }
 
       const { data, error } = await query;
-      if (!error && data) {
-        if (data.length > 0) return false;
+      if (!error && data && data.length > 0) {
+        return false;
       }
     } catch (e) {
-      console.warn('[studio.402 DB] checkSlugAvailable Supabase check error:', e.message);
+      console.error(`[ourpage DB] checkSlugAvailable error:`, e.message);
     }
   }
 
-  // Also check local store
-  const projects = loadLocalProjects();
-  const match = projects.find(p => (p.slug || '').toLowerCase() === cleanSlug && p.id !== excludeId);
-  return !match;
+  return true;
 }
 
-async function saveDraft({ id, slug, email, template, configData, designCode }) {
+/**
+ * Save Draft directly into Supabase Cloud table (strictly live)
+ */
+async function saveDraft({ id, slug, email, template = 'loveos', configData, designCode }) {
   const now = new Date().toISOString();
   const cleanSlug = String(slug).trim().toLowerCase();
   const cleanEmail = String(email || '').trim().toLowerCase();
-  const cleanTemplate = String(template || 'spotilove').trim();
+  const cleanTemplate = String(template || 'loveos').trim().toLowerCase();
   const payloadConfig = configData || {};
 
-  if (isUsingSupabase && supabase) {
-    try {
-      // Check if project exists by id or slug
-      const { data: existing } = await supabase
-        .from('projects')
-        .select('id')
-        .or(`id.eq.${id},slug.eq.${cleanSlug}`)
-        .maybeSingle();
+  const tConf = getTemplateConfig(cleanTemplate);
 
-      const dbRecord = {
-        id: id,
-        slug: cleanSlug,
-        email: cleanEmail,
-        template: cleanTemplate,
-        config_data: payloadConfig,
-        status: 'draft',
-        followup_sent: false,
-        updated_at: now
-      };
+  // Check existing in Supabase template table
+  const { data: existing } = await supabase
+    .from(tConf.table)
+    .select('id')
+    .or(`id.eq.${id},slug.eq.${cleanSlug}`)
+    .maybeSingle();
 
-      if (existing) {
-        const { data, error } = await supabase
-          .from('projects')
-          .update(dbRecord)
-          .eq('id', existing.id)
-          .select()
-          .maybeSingle();
-
-        if (error) {
-          console.warn(`[studio.402 DB] Supabase saveDraft update failed: ${error.message}`);
-          if (error.code === '42501') {
-            console.warn(`[studio.402 DB] TIP: Table "projects" has RLS active. Run in Supabase SQL Editor: ALTER TABLE projects DISABLE ROW LEVEL SECURITY;`);
-          }
-        } else if (data) {
-          return normalizeProjectRow(data);
-        }
-      } else {
-        dbRecord.created_at = now;
-        const { data, error } = await supabase
-          .from('projects')
-          .insert(dbRecord)
-          .select()
-          .maybeSingle();
-
-        if (error) {
-          console.warn(`[studio.402 DB] Supabase saveDraft insert failed: ${error.message}`);
-          if (error.code === '42501') {
-            console.warn(`[studio.402 DB] TIP: Table "projects" has RLS active. Run in Supabase SQL Editor: ALTER TABLE projects DISABLE ROW LEVEL SECURITY;`);
-          }
-        } else if (data) {
-          return normalizeProjectRow(data);
-        }
-      }
-    } catch (err) {
-      console.warn(`[studio.402 DB] Supabase saveDraft exception: ${err.message}`);
-    }
-  }
-
-  // Fallback to local
-  const projects = loadLocalProjects();
-  const existingIdx = projects.findIndex(p => p.id === id || (p.slug || '').toLowerCase() === cleanSlug);
-
-  const localProject = {
+  const dbRecord = {
     id: id,
     slug: cleanSlug,
     email: cleanEmail,
     template: cleanTemplate,
-    designCode: designCode || `ST-${id.slice(-6).toUpperCase()}`,
-    configData: payloadConfig,
+    design_code: designCode || `OP-${id.slice(-6).toUpperCase()}`,
+    config_data: payloadConfig,
     status: 'draft',
-    followupSent: false,
-    createdAt: existingIdx >= 0 ? projects[existingIdx].createdAt : now,
-    updatedAt: now,
-    expiresAt: null
+    followup_sent: false,
+    updated_at: now
   };
 
-  if (existingIdx >= 0) {
-    projects[existingIdx] = { ...projects[existingIdx], ...localProject };
-  } else {
-    projects.push(localProject);
-  }
+  if (existing) {
+    const { data, error } = await supabase
+      .from(tConf.table)
+      .update(dbRecord)
+      .eq('id', existing.id)
+      .select()
+      .maybeSingle();
 
-  saveLocalProjects(projects);
-  return normalizeProjectRow(localProject);
+    if (error) {
+      console.error(`[ourpage DB] Supabase update failed on "${tConf.table}":`, error.message);
+      throw new Error(`Supabase error: ${error.message}`);
+    }
+    return normalizeProjectRow(data, tConf.defaultTemplate);
+  } else {
+    dbRecord.created_at = now;
+    const { data, error } = await supabase
+      .from(tConf.table)
+      .insert(dbRecord)
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error(`[ourpage DB] Supabase insert failed on "${tConf.table}":`, error.message);
+      if (error.code === '42P01') {
+        throw new Error(`Tabel "${tConf.table}" belum dibuat di Supabase. Silakan jalankan query di supabase_loveos_schema.sql pada Supabase SQL Editor.`);
+      }
+      throw new Error(`Supabase error: ${error.message}`);
+    }
+    return normalizeProjectRow(data, tConf.defaultTemplate);
+  }
 }
 
-async function updateProjectStatus(identifier, { status, expiresAt, configData, followupSent }) {
+/**
+ * Update project status in Supabase Cloud table
+ */
+async function updateProjectStatus(identifier, { status, expiresAt, configData, followupSent }, template = null) {
   const now = new Date().toISOString();
+  const cleanId = String(identifier).trim();
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
 
-  if (isUsingSupabase && supabase) {
+  for (const tConf of targets) {
     try {
       const updatePayload = { updated_at: now };
       if (status !== undefined) updatePayload.status = status;
@@ -288,49 +264,41 @@ async function updateProjectStatus(identifier, { status, expiresAt, configData, 
       if (followupSent !== undefined) updatePayload.followup_sent = Boolean(followupSent);
 
       const { data, error } = await supabase
-        .from('projects')
+        .from(tConf.table)
         .update(updatePayload)
-        .or(`id.eq.${identifier},slug.eq.${String(identifier).toLowerCase()}`)
+        .or(`id.eq.${cleanId},slug.eq.${cleanId.toLowerCase()}`)
         .select()
         .maybeSingle();
 
-      if (error) {
-        console.warn('[studio.402 DB] updateProjectStatus warning:', error.message);
-      } else if (data) {
-        return normalizeProjectRow(data);
+      if (!error && data) {
+        return normalizeProjectRow(data, tConf.defaultTemplate);
       }
     } catch (e) {
-      console.warn('[studio.402 DB] updateProjectStatus error:', e.message);
+      console.error(`[ourpage DB] updateProjectStatus error:`, e.message);
     }
   }
 
-  // Fallback to local
-  const projects = loadLocalProjects();
-  const cleanId = String(identifier).toLowerCase();
-  const idx = projects.findIndex(p => p.id === identifier || (p.slug || '').toLowerCase() === cleanId);
-
-  if (idx === -1) return null;
-
-  if (status !== undefined) projects[idx].status = status;
-  if (expiresAt !== undefined) projects[idx].expiresAt = expiresAt;
-  if (configData !== undefined) projects[idx].configData = configData;
-  if (followupSent !== undefined) projects[idx].followupSent = Boolean(followupSent);
-  projects[idx].updatedAt = now;
-
-  saveLocalProjects(projects);
-  return normalizeProjectRow(projects[idx]);
+  return null;
 }
 
-async function markFollowupSent(id) {
-  return updateProjectStatus(id, { followupSent: true });
+/**
+ * Mark followup as sent
+ */
+async function markFollowupSent(id, template = null) {
+  return updateProjectStatus(id, { followupSent: true }, template);
 }
 
-async function getAllProjects({ status, search } = {}) {
-  let supabaseList = [];
-  if (isUsingSupabase && supabase) {
+/**
+ * Get all projects directly from Supabase Cloud
+ */
+async function getAllProjects({ status, search, template = null } = {}) {
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
+  const results = [];
+
+  for (const tConf of targets) {
     try {
       let query = supabase
-        .from('projects')
+        .from(tConf.table)
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -344,138 +312,83 @@ async function getAllProjects({ status, search } = {}) {
 
       const { data, error } = await query;
       if (!error && data) {
-        supabaseList = data.map(normalizeProjectRow);
+        results.push(...data.map(r => normalizeProjectRow(r, tConf.defaultTemplate)));
       } else if (error) {
-        console.warn('[studio.402 DB] getAllProjects Supabase warning:', error.message);
+        console.warn(`[ourpage DB] getAllProjects warning on "${tConf.table}":`, error.message);
       }
     } catch (e) {
-      console.warn('[studio.402 DB] getAllProjects Supabase error:', e.message);
+      console.error(`[ourpage DB] getAllProjects exception:`, e.message);
     }
   }
 
-  // Also read local projects and merge (deduplicate by id or slug)
-  let localList = loadLocalProjects();
-  if (status && status !== 'all') {
-    localList = localList.filter(p => p.status === status);
-  }
-  if (search) {
-    const q = search.trim().toLowerCase();
-    localList = localList.filter(p => 
-      (p.email || '').toLowerCase().includes(q) || 
-      (p.slug || '').toLowerCase().includes(q) ||
-      (p.designCode || '').toLowerCase().includes(q)
-    );
-  }
-  localList = localList.map(normalizeProjectRow);
-
-  // Combine and deduplicate
-  const mergedMap = new Map();
-  for (const item of supabaseList) {
-    mergedMap.set(item.id, item);
-  }
-  for (const item of localList) {
-    if (!mergedMap.has(item.id)) {
-      mergedMap.set(item.id, item);
-    }
-  }
-
-  return Array.from(mergedMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
-async function getAbandonedDrafts(hoursOld = 1) {
+/**
+ * Get abandoned drafts (>1 hour old) from Supabase Cloud
+ */
+async function getAbandonedDrafts(hoursOld = 1, template = null) {
   const cutoffTime = new Date(Date.now() - hoursOld * 60 * 60 * 1000).toISOString();
-  let supabaseList = [];
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
+  const results = [];
 
-  if (isUsingSupabase && supabase) {
+  for (const tConf of targets) {
     try {
       const { data, error } = await supabase
-        .from('projects')
+        .from(tConf.table)
         .select('*')
         .eq('status', 'draft')
         .eq('followup_sent', false)
         .lte('created_at', cutoffTime);
 
       if (!error && data) {
-        supabaseList = data.map(normalizeProjectRow);
-      } else if (error) {
-        console.warn('[studio.402 DB] getAbandonedDrafts Supabase warning:', error.message);
+        results.push(...data.map(r => normalizeProjectRow(r, tConf.defaultTemplate)));
       }
     } catch (e) {
-      console.warn('[studio.402 DB] getAbandonedDrafts Supabase error:', e.message);
+      console.error(`[ourpage DB] getAbandonedDrafts exception:`, e.message);
     }
   }
 
-  // Also check local store
-  const localProjects = loadLocalProjects();
-  const localList = localProjects
-    .filter(p => p.status === 'draft' && !p.followupSent && new Date(p.createdAt) <= new Date(cutoffTime))
-    .map(normalizeProjectRow);
-
-  const mergedMap = new Map();
-  for (const item of supabaseList) {
-    mergedMap.set(item.id, item);
-  }
-  for (const item of localList) {
-    if (!mergedMap.has(item.id)) {
-      mergedMap.set(item.id, item);
-    }
-  }
-
-  return Array.from(mergedMap.values());
+  return results;
 }
 
-async function findProjectForGumroadWebhook({ slug, id, email }) {
-  if (isUsingSupabase && supabase) {
+/**
+ * Find project for Gumroad webhook directly from Supabase Cloud
+ */
+async function findProjectForGumroadWebhook({ slug, id, email, template = null }) {
+  const targets = template ? [getTemplateConfig(template)] : Object.values(TEMPLATE_REGISTRY);
+
+  for (const tConf of targets) {
     try {
-      // 1. Try slug
       if (slug) {
-        const { data } = await supabase.from('projects').select('*').eq('slug', String(slug).toLowerCase()).maybeSingle();
-        if (data) return normalizeProjectRow(data);
+        const { data } = await supabase.from(tConf.table).select('*').eq('slug', String(slug).toLowerCase()).maybeSingle();
+        if (data) return normalizeProjectRow(data, tConf.defaultTemplate);
       }
-      // 2. Try id
       if (id) {
-        const { data } = await supabase.from('projects').select('*').eq('id', id).maybeSingle();
-        if (data) return normalizeProjectRow(data);
+        const { data } = await supabase.from(tConf.table).select('*').eq('id', id).maybeSingle();
+        if (data) return normalizeProjectRow(data, tConf.defaultTemplate);
       }
-      // 3. Try latest draft by email
       if (email) {
         const { data } = await supabase
-          .from('projects')
+          .from(tConf.table)
           .select('*')
           .eq('email', String(email).toLowerCase())
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle();
-        if (data) return normalizeProjectRow(data);
+        if (data) return normalizeProjectRow(data, tConf.defaultTemplate);
       }
     } catch (e) {
-      console.warn('[studio.402 DB] findProjectForGumroadWebhook Supabase error:', e.message);
+      console.error(`[ourpage DB] findProjectForGumroadWebhook error:`, e.message);
     }
   }
 
-  // Fallback to local
-  const projects = loadLocalProjects();
-  if (slug) {
-    const clean = String(slug).toLowerCase();
-    const found = projects.find(p => (p.slug || '').toLowerCase() === clean);
-    if (found) return normalizeProjectRow(found);
-  }
-  if (id) {
-    const found = projects.find(p => p.id === id);
-    if (found) return normalizeProjectRow(found);
-  }
-  if (email) {
-    const cleanEmail = String(email).toLowerCase();
-    const found = projects
-      .filter(p => (p.email || '').toLowerCase() === cleanEmail)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-    if (found) return normalizeProjectRow(found);
-  }
   return null;
 }
 
 module.exports = {
-  isUsingSupabase: () => isUsingSupabase,
+  isUsingSupabase: () => true,
+  TEMPLATE_REGISTRY,
   getProjectBySlug,
   getProjectById,
   checkSlugAvailable,
@@ -486,4 +399,3 @@ module.exports = {
   getAbandonedDrafts,
   findProjectForGumroadWebhook
 };
-

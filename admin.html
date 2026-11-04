@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>studio.402 / Operations Dashboard &amp; Leads</title>
+  <title>ourpage / Operations Dashboard &amp; Leads</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -61,7 +61,7 @@
         </div>
         <div>
           <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-            studio.402
+            ourpage
             <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">OPERATIONS</span>
           </h2>
           <p class="text-xs text-zinc-400 mt-0.5">Commercial keepsakes &amp; leads management</p>
@@ -103,7 +103,7 @@
 
       <div class="pt-2 border-t border-zinc-900 flex items-center justify-between text-[11px] font-mono text-zinc-600">
         <span>Session stored in browser</span>
-        <span>studio.402 &bull; 2026</span>
+        <span>ourpage &bull; 2026</span>
       </div>
     </div>
   </div>
@@ -118,7 +118,7 @@
       <div class="flex items-center gap-2.5">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse"></span>
-          <span class="font-extrabold text-base tracking-tight text-white">studio.402</span>
+          <span class="font-extrabold text-base tracking-tight text-white">ourpage</span>
         </div>
         <span class="text-zinc-600 font-mono text-xs hidden sm:inline">/</span>
         <span class="font-mono text-xs uppercase tracking-wider text-zinc-400 font-semibold hidden sm:inline">Operations &amp; Leads</span>
@@ -295,7 +295,7 @@
 
       <!-- FOOTER -->
       <footer class="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-600 font-mono gap-2">
-        <div>studio.402 Keepsake Engine &bull; Zero Emojis Policy &bull; Fonnte WhatsApp &amp; Supabase DB</div>
+        <div>ourpage Keepsake Engine &bull; Zero Emojis Policy &bull; Fonnte WhatsApp &amp; Supabase DB</div>
         <div>Protected Endpoint &bull; Auth via sessionStorage</div>
       </footer>
 
@@ -365,7 +365,7 @@
   <!-- 5. JAVASCRIPT CONTROLLER                                                  -->
   <!-- ========================================================================= -->
   <script>
-    const STORAGE_KEY = 'studio402_admin_key';
+    const STORAGE_KEY = 'ourpage_admin_key';
     let currentAdminKey = sessionStorage.getItem(STORAGE_KEY) || '';
     let projectsData = [];
     let activeFilter = 'all';
@@ -373,19 +373,9 @@
     let selectedFollowupProject = null;
 
     const TEMPLATE_INFO = {
-      'spotilove': { name: 'Vinyl Studio', color: 'emerald' },
-      'spotilove_ultra_1000_10_studio_edition.html': { name: 'Vinyl Studio', color: 'emerald' },
-      'vinyl': { name: 'Vinyl Studio', color: 'emerald' },
-      'vinyl.html': { name: 'Vinyl Studio', color: 'emerald' },
-      'netlove': { name: 'Cinema Stream', color: 'rose' },
-      'netlove_interactive_streaming_bandersnatch_app.html': { name: 'Cinema Stream', color: 'rose' },
-      'cinema': { name: 'Cinema Stream', color: 'rose' },
-      'cinema.html': { name: 'Cinema Stream', color: 'rose' },
-      'lovebox': { name: '35mm Darkroom', color: 'amber' },
-      'lovebox_98_instant_polaroid_camera_retro_game_gadget.html': { name: '35mm Darkroom', color: 'amber' },
-      'camera': { name: '35mm Darkroom', color: 'amber' },
-      'camera.html': { name: '35mm Darkroom', color: 'amber' },
-      'bundle': { name: 'All-3 Bundle', color: 'purple' }
+      'loveos': { name: 'LoveOS (iOS Keepsake)', color: 'rose' },
+      'loveos.html': { name: 'LoveOS (iOS Keepsake)', color: 'rose' },
+      'love-os': { name: 'LoveOS (iOS Keepsake)', color: 'rose' }
     };
 
     function showToast(message, isSuccess = true) {
@@ -514,7 +504,7 @@
         renderProjectsList();
         return true;
       } catch (err) {
-        console.error('[studio.402 Admin]', err);
+        console.error('[ourpage Admin]', err);
         showToast('Gagal memuat data dari server', false);
         return false;
       } finally {
@@ -600,7 +590,7 @@
 
       // 1. Render Mobile Cards
       mobileContainer.innerHTML = filtered.map(p => {
-        const tInfo = TEMPLATE_INFO[p.template] || { name: 'Vinyl Studio', color: 'emerald' };
+        const tInfo = TEMPLATE_INFO[p.template] || { name: 'LoveOS (iOS Keepsake)', color: 'rose' };
         const isPaid = p.status === 'paid';
         const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
         const timeAgo = formatTimeAgo(p.createdAt);
@@ -690,7 +680,7 @@
 
       // 2. Render Desktop Table
       tableBody.innerHTML = filtered.map(p => {
-        const tInfo = TEMPLATE_INFO[p.template] || { name: 'Vinyl Studio', color: 'emerald' };
+        const tInfo = TEMPLATE_INFO[p.template] || { name: 'LoveOS (iOS Keepsake)', color: 'rose' };
         const isPaid = p.status === 'paid';
         const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
         const timeAgo = formatTimeAgo(p.createdAt);
@@ -848,7 +838,7 @@
     }
 
     function copyCheckoutLink(slug, email) {
-      const checkoutUrl = `https://studio402.gumroad.com/l/keepsake?email=${encodeURIComponent(email)}&wanted=true&project_slug=${encodeURIComponent(slug)}`;
+      const checkoutUrl = `https://ourpage.gumroad.com/l/keepsake?email=${encodeURIComponent(email)}&wanted=true&project_slug=${encodeURIComponent(slug)}`;
       navigator.clipboard.writeText(checkoutUrl).then(() => {
         showToast('Link checkout disalin ke clipboard');
       }).catch(() => {
@@ -863,12 +853,12 @@
       selectedFollowupProject = project;
 
       const fullPreview = `${window.location.origin}/v/${project.slug}`;
-      const checkoutLink = `https://studio402.gumroad.com/l/keepsake?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}`;
+      const checkoutLink = `https://ourpage.gumroad.com/l/keepsake?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}`;
 
       const emailText = 
 `Hi there,
 
-I noticed you created a romantic digital keepsake for your partner at studio.402:
+I noticed you created a romantic digital keepsake for your partner at ourpage:
 Preview Link: ${fullPreview}
 
 Your personalized songs, photos, and secret notes are currently saved safely in your private draft.
@@ -882,7 +872,7 @@ ${checkoutLink}
 If you need any custom edits or have questions, just reply directly to this email!
 
 Warm regards,
-studio.402 Keepsakes Team`;
+ourpage Keepsakes Team`;
 
       document.getElementById('modal-email-recipient').innerText = project.email;
       document.getElementById('modal-email-body').innerText = emailText;

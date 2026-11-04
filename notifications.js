@@ -1,5 +1,5 @@
 /**
- * studio.402 Notification Engine (WhatsApp Fonnte & CallMeBot + Telegram Fallback)
+ * ourpage Notification Engine (WhatsApp Fonnte & CallMeBot)
  */
 
 const https = require('https');
@@ -11,7 +11,7 @@ const getFonnteToken = () => process.env.FONNTE_TOKEN || '';
 const getAdminPhone = () => process.env.ADMIN_WHATSAPP_PHONE || '';
 const getCallmebotPhone = () => process.env.CALLMEBOT_PHONE || '';
 const getCallmebotKey = () => process.env.CALLMEBOT_API_KEY || '';
-const getAppUrl = () => process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
+const getAppUrl = () => process.env.APP_URL || 'https://ourpage-keepsakes.vercel.app';
 
 /**
  * Universal WhatsApp Sender
@@ -46,13 +46,13 @@ async function sendWhatsApp(message) {
           let body = '';
           res.on('data', chunk => body += chunk);
           res.on('end', () => {
-            console.log(`[studio.402 WA Fonnte] Response status ${res.statusCode}:`, body.slice(0, 100));
+            console.log(`[ourpage WA Fonnte] Response status ${res.statusCode}:`, body.slice(0, 100));
             resolve({ ok: res.statusCode === 200, body });
           });
         });
 
         req.on('error', (err) => {
-          console.warn('[studio.402 WA Fonnte] Request error:', err.message);
+          console.warn('[ourpage WA Fonnte] Request error:', err.message);
           resolve({ ok: false, error: err.message });
         });
 
@@ -67,7 +67,7 @@ async function sendWhatsApp(message) {
 
       if (res.ok) return true;
     } catch (e) {
-      console.warn('[studio.402 WA Fonnte] Failed:', e.message);
+      console.warn('[ourpage WA Fonnte] Failed:', e.message);
     }
   }
 
@@ -84,24 +84,24 @@ async function sendWhatsApp(message) {
           let body = '';
           r.on('data', c => body += c);
           r.on('end', () => {
-            console.log(`[studio.402 WA CallMeBot] Status ${r.statusCode}:`, body.slice(0, 100));
+            console.log(`[ourpage WA CallMeBot] Status ${r.statusCode}:`, body.slice(0, 100));
             resolve({ ok: r.statusCode === 200 });
           });
         }).on('error', err => {
-          console.warn('[studio.402 WA CallMeBot] Error:', err.message);
+          console.warn('[ourpage WA CallMeBot] Error:', err.message);
           resolve({ ok: false });
         });
       });
 
       if (res.ok) return true;
     } catch (e) {
-      console.warn('[studio.402 WA CallMeBot] Failed:', e.message);
+      console.warn('[ourpage WA CallMeBot] Failed:', e.message);
     }
   }
 
   // 3. Fallback: Always log clearly to console
   console.log(`\n======================================================`);
-  console.log(`💬 [WHATSAPP NOTIFICATION DISPATCHED]`);
+  console.log(`💬 [ourpage WHATSAPP NOTIFICATION DISPATCHED]`);
   console.log(cleanMsg);
   console.log(`======================================================\n`);
   return true;
@@ -115,15 +115,15 @@ async function notifyNewDraft({ email, slug, previewUrl, template, designCode, c
   const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${base}${previewUrl}`;
   
   const msg = 
-`💌 *[studio.402] LEAD BARU MASUK!*
+`💌 *[ourpage] LEAD BARU MASUK!*
 ---------------------------------------
 👤 *Email Pembeli:* ${email}
 🔗 *Link Preview:* ${fullPreview}
-🎨 *Template:* ${template || 'Vinyl Studio'}
-🏷️ *Kode Desain:* ${designCode || 'ST-402'}
+🎨 *Template:* ${template || 'LoveOS (iOS Keepsake)'}
+🏷️ *Kode Desain:* ${designCode || 'OP-100'}
 💳 *Link Checkout:* ${checkoutUrl}
 ---------------------------------------
-Calon pembeli baru saja mengunci draf dan diarahkan ke halaman pembayaran Gumroad.`;
+Calon pembeli baru saja mengunci draf dan siap melakukan checkout Gumroad.`;
 
   return sendWhatsApp(msg);
 }
@@ -136,12 +136,12 @@ async function notifyPaidOrder({ email, slug, liveUrl, price, template }) {
   const fullLive = liveUrl.startsWith('http') ? liveUrl : `${base}${liveUrl}`;
   
   const msg = 
-`🎉 *[studio.402] ORDER LUNAS & AKTIF!*
+`🎉 *[ourpage] ORDER LUNAS & AKTIF!*
 ---------------------------------------
 💰 *Nilai Pembayaran:* ${price || '$19.00 USD'}
 👤 *Email Pembeli:* ${email}
 ✨ *Link Keepsake Aktif:* ${fullLive}
-🎨 *Template:* ${template || 'Vinyl Studio'}
+🎨 *Template:* ${template || 'LoveOS (iOS Keepsake)'}
 ---------------------------------------
 Pembayaran terverifikasi via Gumroad Ping. Watermark preview telah dihapus otomatis dan link aktif permanen!`;
 
@@ -157,7 +157,7 @@ async function notifyAbandonedDraft({ email, slug, previewUrl, createdAt, mailto
   const createdDate = new Date(createdAt).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
 
   const msg = 
-`⏰ *[studio.402] FOLLOW-UP: LEAD BELUM CHECKOUT (>1 JAM)*
+`⏰ *[ourpage] FOLLOW-UP: LEAD BELUM CHECKOUT (>1 JAM)*
 ---------------------------------------
 👤 *Email Pembeli:* ${email}
 🔗 *Link Preview Draf:* ${fullPreview}
@@ -179,4 +179,3 @@ module.exports = {
     return getAppUrl();
   }
 };
-

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>OurPage — LoveOS Romantic Keepsake Studio</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Instrument Serif, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #08080a;
+      color: #f4f4f5;
+      overflow-x: hidden;
+    }
+    .font-serif {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+    .glass-card {
+      background: rgba(18, 18, 23, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-[#08080a] selection:bg-rose-500/30 selection:text-rose-200">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP NAVIGATION BAR                                                    -->
+  <!-- ========================================================================= -->
+  <header class="h-14 border-b border-white/[0.08] bg-[#0c0c10]/90 backdrop-blur-xl sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between">
+    <!-- Left: Branding -->
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-105 transition">
+          <i data-lucide="heart" class="w-4 h-4 fill-rose-500/30"></i>
+        </div>
+        <div class="leading-tight">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm tracking-tight text-white">OurPage</span>
+            <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">LoveOS Edition</span>
+          </div>
+          <p class="text-[10px] text-zinc-500 hidden sm:block">A Private Phone Just For You Two</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Center: Mobile Tab Switcher (Form vs Preview) -->
+    <div class="flex lg:hidden bg-zinc-900 border border-zinc-800 rounded-lg p-0.5 text-xs font-semibold">
+      <button type="button" id="tab-btn-form" onclick="switchMobileTab('form')" class="px-3 py-1 rounded-md bg-white text-zinc-950 shadow-sm transition">
+        Editor
+      </button>
+      <button type="button" id="tab-btn-preview" onclick="switchMobileTab('preview')" class="px-3 py-1 rounded-md text-zinc-400 hover:text-white transition">
+        Live Preview
+      </button>
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="flex items-center gap-2.5">
+      <button 
+        type="button" 
+        onclick="resetToDefaultData()" 
+        class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.08] text-xs text-zinc-400 hover:text-white hover:bg-white/[0.04] transition"
+        title="Reset to default example"
+      >
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+        <span>Reset Demo</span>
+      </button>
+
+      <!-- Primary High-Conversion Save Button -->
+      <button 
+        type="button" 
+        id="save-draft-btn" 
+        onclick="openEmailPromptModal()" 
+        class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-semibold text-xs tracking-wide shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-2 border border-white/20"
+      >
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>Simpan &amp; Ambil Link</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. SPLIT WORKSPACE: FORM BUILDER (LEFT) & LIVE PREVIEW (RIGHT)            -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 flex overflow-hidden relative">
+
+    <!-- LEFT PANEL: FORM EDITOR -->
+    <div id="panel-form" class="w-full lg:w-[480px] xl:w-[540px] 2xl:w-[580px] h-[calc(100vh-3.5rem)] flex flex-col border-r border-white/[0.08] bg-[#08080a] overflow-hidden">
+      
+      <!-- Section Navigation Pills (With Auto-Scroll Sync to Live Phone) -->
+      <div class="px-4 py-2.5 border-b border-white/[0.06] bg-zinc-950/60 overflow-x-auto no-scrollbar flex items-center gap-1.5 text-xs font-medium">
+        <button type="button" onclick="scrollToSection('sec-basic', 'section-home')" class="sec-pill px-3 py-1 rounded-lg bg-white/10 text-white whitespace-nowrap transition flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+          <span>1. Data Inti</span>
+        </button>
+        <button type="button" onclick="scrollToSection('sec-photos', 'section-photos')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">2. Foto Polaroid</button>
+        <button type="button" onclick="scrollToSection('sec-letter', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">3. Surat Cinta</button>
+        <button type="button" onclick="scrollToSection('sec-music', 'section-music')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">4. Musik</button>
+        <button type="button" onclick="scrollToSection('sec-milestones', 'section-home')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">5. Timeline</button>
+        <button type="button" onclick="scrollToSection('sec-chat', 'section-messages')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">6. Chat iMessage</button>
+        <button type="button" onclick="scrollToSection('sec-drafts', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">7. Catatan Rahasia</button>
+        <button type="button" onclick="scrollToSection('sec-envelopes', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">8. Amplop Cinta</button>
+        <button type="button" onclick="scrollToSection('sec-extras', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">9. Bucket List</button>
+      </div>
+
+      <!-- Scrollable Form Body -->
+      <div id="form-scroll-container" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 1: BASIC INFO [WAJIB]                                           -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-basic" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4 border-rose-500/20" onfocusin="syncScrollToPreview('section-home')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              <span>1. Data Inti Pasangan</span>
+            </div>
+            <span class="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+              WAJIB DIISI
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1">
+                Panggilan Pasangan (Partner Name) <span class="text-rose-400">*</span>
+              </label>
+              <input type="text" id="input-partner-name" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition" placeholder="e.g. Mia" required oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-300 mb-1">
+                Nama / Panggilan Anda (Your Name) <span class="text-rose-400">*</span>
+              </label>
+              <input type="text" id="input-creator-name" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition" placeholder="e.g. Alex" required oninput="syncFormToPreview()">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-zinc-300 mb-1">
+              Tanggal &amp; Waktu Jadian / Momen Pertama <span class="text-rose-400">*</span>
+            </label>
+            <input type="datetime-local" id="input-anniversary-date" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition" required oninput="syncFormToPreview()">
+            <p class="text-[11px] text-zinc-500 mt-1">Otomatis menghitung waktu berjalan live (Tahun, Hari, Jam, Menit, Detik).</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-zinc-300 mb-1">
+              Custom Link Address (URL Slug) <span class="text-rose-400">*</span>
+            </label>
+            <div class="flex items-center rounded-xl bg-zinc-900 border border-zinc-800 overflow-hidden focus-within:border-rose-500 transition">
+              <span class="text-xs text-zinc-500 px-3 select-none font-mono">ourpage/v/</span>
+              <input type="text" id="input-slug" class="w-full bg-transparent py-2 pr-3 text-sm text-white font-mono lowercase focus:outline-none" placeholder="alex-mia" oninput="handleSlugInput(this.value)">
+            </div>
+            <div id="slug-feedback" class="text-[11px] mt-1 font-mono hidden"></div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 2: POLAROID PHOTOS [OPSIONAL]                                   -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-photos" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-photos')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-amber-400 font-semibold text-sm">
+              <i data-lucide="camera" class="w-4 h-4"></i>
+              <span>2. Foto Polaroid (4 Momen Indah)</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL • Smart Default
+            </span>
+          </div>
+          <p class="text-xs text-zinc-400">Sudah terisi foto estetik default. Anda bisa mengganti dengan foto berdua dan catatan tulisan tangan di baliknya.</p>
+
+          <div id="photos-container" class="space-y-4">
+            <!-- Dynamically populated photo cards -->
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 3: MAIN LOVE LETTER [OPSIONAL]                                  -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-letter" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-notes')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>3. Surat Cinta Utama (Love Letter)</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL • Teks Terisi
+            </span>
+          </div>
+          <p class="text-xs text-zinc-400">Surat cinta mendalam yang tersimpan di aplikasi Notes LoveOS.</p>
+
+          <textarea 
+            id="input-main-letter" 
+            rows="6" 
+            class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-rose-500 transition leading-relaxed"
+            placeholder="Tuliskan ungkapan hatimu..."
+            oninput="syncFormToPreview()"
+          ></textarea>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 4: MUSIC & SOUNDTRACK [OPSIONAL]                                -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-music" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-music')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-indigo-400 font-semibold text-sm">
+              <i data-lucide="music" class="w-4 h-4"></i>
+              <span>4. Musik &amp; Audio Player</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL • Preset Ready
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">Judul Lagu</label>
+              <input type="text" id="input-song-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">Artis / Keterangan</label>
+              <input type="text" id="input-song-artist" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-zinc-400 mb-1">Link MP3 Musik</label>
+            <input type="url" id="input-song-url" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="text-[10px] text-zinc-500 self-center">Preset Audio:</span>
+              <button type="button" onclick="setAudioPreset('lofi')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Lofi Night</button>
+              <button type="button" onclick="setAudioPreset('acoustic')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Acoustic Romance</button>
+              <button type="button" onclick="setAudioPreset('piano')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Soft Piano</button>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <label class="block text-xs font-medium text-zinc-400">Memory Notes (4 Catatan Saat Musik Berputar)</label>
+            <div id="memory-notes-container" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 5: MILESTONE TIMELINE [OPSIONAL]                                -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-milestones" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-home')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+              <i data-lucide="milestone" class="w-4 h-4"></i>
+              <span>5. Milestone Timeline</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL
+            </span>
+          </div>
+          <div id="milestones-container" class="space-y-3.5"></div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 6: iMESSAGE CHAT REPLAY [OPSIONAL]                              -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-chat" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-messages')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-sky-400 font-semibold text-sm">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>6. iMessage Chat Replay</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+                OPSIONAL
+              </span>
+              <button type="button" onclick="addChatMessage()" class="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+          <div id="chat-messages-container" class="space-y-2.5"></div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 7: UNSENT DRAFTS [OPSIONAL]                                     -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-drafts" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-notes-letters')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-amber-400 font-semibold text-sm">
+              <i data-lucide="pencil-line" class="w-4 h-4"></i>
+              <span>7. Unsent Late-Night Drafts</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL
+            </span>
+          </div>
+          <div id="drafts-container" class="space-y-3.5"></div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 8: OPEN WHEN ENVELOPES [OPSIONAL]                               -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-envelopes" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-notes-letters')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              <span>8. Open When Envelopes (4 Amplop)</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL
+            </span>
+          </div>
+          <div id="envelopes-container" class="space-y-3.5"></div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 9: CONFESSION & BUCKET LIST [OPSIONAL]                          -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-extras" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-notes')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-purple-400 font-semibold text-sm">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>9. Rahasia &amp; Bucket List</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL
+            </span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-zinc-400 mb-1">Secret Confession (Buka saat disentuh)</label>
+            <textarea id="input-secret-confession" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500 transition" oninput="syncFormToPreview()"></textarea>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-medium text-zinc-400">Future Bucket List</label>
+              <button type="button" onclick="addChecklistItem()" class="text-xs text-purple-400 hover:text-purple-300 font-medium flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Goal</span>
+              </button>
+            </div>
+            <div id="checklist-container" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- Big Bottom CTA -->
+        <div class="pt-4 pb-16">
+          <button 
+            type="button" 
+            onclick="openEmailPromptModal()" 
+            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2.5"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Simpan &amp; Dapatkan Link Keepsake</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: LIVE INTERACTIVE PHONE PREVIEW STAGE -->
+    <div id="panel-preview" class="hidden lg:flex flex-1 h-[calc(100vh-3.5rem)] bg-[#050507] items-center justify-center p-4 relative overflow-hidden">
+      <!-- Ambient Studio Lighting -->
+      <div class="absolute w-[500px] h-[500px] rounded-full bg-rose-500/10 blur-[120px] pointer-events-none"></div>
+      <div class="absolute w-[350px] h-[350px] rounded-full bg-amber-500/5 blur-[100px] pointer-events-none -bottom-10 -right-10"></div>
+
+      <!-- Sync Status Pill Badge -->
+      <div class="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 backdrop-blur-md text-[11px] font-mono text-zinc-300 shadow-lg">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Live Sync Active</span>
+      </div>
+
+      <!-- iPhone Liquid Glass Enclosure -->
+      <div class="relative w-full max-w-[420px] h-[92vh] max-h-[860px] rounded-[50px] p-2.5 bg-gradient-to-b from-zinc-700/60 via-zinc-900 to-black shadow-2xl border border-white/10 flex flex-col items-center justify-center">
+        <!-- Dynamic Island Notch Shell -->
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-30 pointer-events-none flex items-center justify-center">
+          <div class="w-3 h-3 rounded-full bg-[#0a0a0f] border border-white/10 ml-auto mr-3"></div>
+        </div>
+
+        <!-- Display Screen / Iframe Container -->
+        <div class="w-full h-full rounded-[42px] overflow-hidden bg-black relative shadow-inner">
+          <iframe 
+            id="loveos-preview-iframe" 
+            src="/loveos.html?preview=true" 
+            class="w-full h-full border-0 select-none"
+            title="OurPage LoveOS Live Preview"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. EMAIL PROMPT MODAL (HIGH CLOSING CONVERSION PSYCHOLOGY)                 -->
+  <!-- ========================================================================= -->
+  <div id="email-prompt-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="max-w-md w-full bg-[#121217] border border-rose-500/30 rounded-3xl p-6 sm:p-7 space-y-5 text-left shadow-2xl relative">
+      <button type="button" onclick="closeEmailPromptModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-lg">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
+          <i data-lucide="lock" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white tracking-tight">Kunci &amp; Amankan Keepsake Anda</h3>
+          <p class="text-xs text-zinc-400">Satu langkah terakhir sebelum link aktif dibuat</p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="block text-xs font-semibold text-zinc-200">
+          Email Penerima / Pembeli <span class="text-rose-400">*</span>
+        </label>
+        <div class="relative">
+          <i data-lucide="mail" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="email" 
+            id="prompt-buyer-email" 
+            placeholder="you@example.com" 
+            required 
+            class="w-full bg-zinc-950 border border-zinc-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition font-mono"
+          />
+        </div>
+      </div>
+
+      <!-- CRUCIAL WARNING BOX (HIGH CONVERSION & ZERO DISPUTE) -->
+      <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-1">
+        <div class="flex items-center gap-1.5 font-bold text-amber-300">
+          <i data-lucide="alert-triangle" class="w-4 h-4 flex-shrink-0"></i>
+          <span>WAJIB DIPERHATIKAN:</span>
+        </div>
+        <p class="leading-relaxed text-[11px] text-amber-200/90">
+          Pastikan email ini <strong>SAMA PERSIS</strong> dengan email yang Anda masukkan saat pembayaran checkout di Gumroad. Sistem kami mengaktifkan link dan menghapus watermark secara otomatis berdasarkan kecocokan email!
+        </p>
+      </div>
+
+      <button 
+        type="button" 
+        id="btn-confirm-save" 
+        onclick="executeSaveDraft()" 
+        class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs tracking-wide uppercase flex items-center justify-center gap-2 shadow-lg shadow-rose-950/50 hover:brightness-110 active:scale-95 transition"
+      >
+        <i data-lucide="check" class="w-4 h-4"></i>
+        <span>Kunci Link Sekarang &amp; Lanjutkan</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. SUCCESS & CHECKOUT MODAL                                               -->
+  <!-- ========================================================================= -->
+  <div id="success-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="max-w-md w-full bg-[#121217] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-5 text-center shadow-2xl relative">
+      <button type="button" onclick="closeSuccessModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-lg">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 mx-auto">
+        <i data-lucide="check" class="w-7 h-7"></i>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-xl font-bold text-white tracking-tight">Keepsake Berhasil Disimpan!</h3>
+        <p class="text-xs text-zinc-400">Data Anda telah aman tersimpan di cloud database OurPage.</p>
+      </div>
+
+      <!-- Preview Link Copy Box -->
+      <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex items-center justify-between gap-2">
+        <div class="text-left overflow-hidden">
+          <span class="text-[10px] text-zinc-500 block font-mono">Keepsake Preview URL:</span>
+          <span id="modal-preview-url" class="text-xs font-mono text-rose-300 font-semibold truncate block">/v/...</span>
+        </div>
+        <button type="button" onclick="copyPreviewLink()" id="btn-copy-link" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-mono transition flex items-center gap-1.5 flex-shrink-0">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-2.5 pt-2">
+        <a 
+          id="modal-checkout-link" 
+          href="#" 
+          target="_blank" 
+          class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs tracking-wide uppercase flex items-center justify-center gap-2 shadow-lg shadow-rose-950/40 hover:brightness-110 transition"
+        >
+          <i data-lucide="unlock" class="w-4 h-4"></i>
+          <span>Buka Live Selamanya ($19 USD)</span>
+        </a>
+
+        <a 
+          id="modal-view-link" 
+          href="#" 
+          target="_blank" 
+          class="w-full py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs flex items-center justify-center gap-2 transition"
+        >
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          <span>Lihat Draf di Tab Baru</span>
+        </a>
+      </div>
+
+      <p class="text-[11px] text-zinc-500 pt-1">
+        Saat pembayaran selesai diverifikasi di Gumroad, watermark preview akan otomatis hilang dan link keepsake aktif permanen!
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. ENGINE JAVASCRIPT LOGIC (TWO-WAY SYNC & CLOUD DATABASE)                -->
+  <!-- ========================================================================= -->
+  <script>
+    const DEFAULT_LOVEOS_DATA = {
+      partnerName: "Mia",
+      creatorName: "Alex",
+      anniversaryDate: "2024-10-14T19:30:00",
+      slug: "alex-mia",
+      polaroidPhotos: [
+        {
+          imageUrl: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80",
+          caption: "Golden hour by the pier",
+          date: "OCT 18, 2024",
+          location: "Santa Monica, CA",
+          backNote: "You were freezing because you insisted you didn't need a jacket. Giving you my hoodie was the best move I ever made."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
+          caption: "Sunday morning coffee run",
+          date: "DEC 08, 2024",
+          location: "Silver Lake, LA",
+          backNote: "Half-awake, bedhead, iced oat latte in 55-degree weather. I looked across the table and thought: yeah, this is my person."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=900&q=80",
+          caption: "Lost on Highway 1",
+          date: "FEB 15, 2025",
+          location: "Big Sur, CA",
+          backNote: "Zero cell service, wrong turn twice, and us screaming lyrics with the windows down. Still my favorite weekend of my life."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=900&q=80",
+          caption: "Late night rooftop talks",
+          date: "JUN 22, 2025",
+          location: "Downtown Rooftop",
+          backNote: "We stayed up until 3 AM talking about where we want to be in five years. As long as you're there, I'm good."
+        }
+      ],
+      mainLoveLetter: "I don't think I say this nearly enough when life gets loud and busy, so I wanted to put it somewhere permanent where you can read it whenever you want.\\n\\nBefore you, I used to think love had to feel like some dramatic movie scene. With you, I learned it's actually in the quiet, ordinary stuff. It's the way you reach for my hand when we're walking through a crowded parking lot, how you send me songs that remind you of us in the middle of a random Tuesday, and how safe it feels just sitting next to you doing absolutely nothing.\\n\\nThank you for being my calm when my head is spinning, for laughing at my terrible jokes, and for loving me in a way that makes me want to be better every single day. No matter how many seasons change, you're still my favorite notification, my favorite place to come home to, and my favorite person on this planet.",
+      songData: {
+        title: "2:14 AM in Your Car",
+        artist: "Late Night Tape — Alex & Mia",
+        audioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+        memoryNotes: [
+          "Reminds me of driving home with the windows cracked open and your hand on the center console.",
+          "That quiet moment at red lights when you look over and smile for no reason.",
+          "Playing this at half-volume while we talk about everything and nothing until 2 AM.",
+          "Every time this melody loops, it feels like that first autumn night we met."
+        ]
+      },
+      milestones: [
+        {
+          id: "first-text",
+          label: "First Text",
+          date: "Sep 29, 2024",
+          location: "iMessage • 11:42 PM",
+          story: "I stared at my phone for twenty minutes trying to reply without sounding too eager, then immediately double-texted you anyway. Best decision ever."
+        },
+        {
+          id: "first-date",
+          label: "First Date",
+          date: "Oct 14, 2024",
+          location: "Corner Booth • Tacos & Neon",
+          story: "What was supposed to be a quick 45-minute drink turned into four hours of talking until the staff literally started flipping chairs onto the tables."
+        },
+        {
+          id: "first-kiss",
+          label: "First Kiss",
+          date: "Oct 26, 2024",
+          location: "Outside Your Front Door",
+          story: "Waiting by the passenger side of my car in the cold. You stopped mid-sentence, looked up at me, and my heart was beating so loud I swear you could hear it."
+        },
+        {
+          id: "best-trip",
+          label: "Best Trip",
+          date: "Feb 14, 2025",
+          location: "Pacific Coast Highway",
+          story: "Two iced coffees, a chaotic playlist, ocean fog rolling over the cliffs, and realizing I could travel anywhere in the world as long as you're my co-pilot."
+        }
+      ],
+      chatReplay: [
+        {
+          sender: "me",
+          text: "Wait are you actually a fan of late-night diner pancakes or are you just being polite?",
+          time: "11:42 PM"
+        },
+        {
+          sender: "them",
+          text: "Excuse me?? Breakfast for dinner is elite. Don't test me on this.",
+          time: "11:43 PM"
+        },
+        {
+          sender: "me",
+          text: "Okay prove it. Thursday night, 8pm. I'm picking you up.",
+          time: "11:45 PM"
+        },
+        {
+          sender: "them",
+          text: "Smooth. Really smooth. Okay, it's a date.",
+          time: "11:46 PM"
+        },
+        {
+          sender: "me",
+          text: "Can't wait. Don't bail on me now.",
+          time: "11:47 PM",
+          status: "Delivered • Read 11:47 PM"
+        }
+      ],
+      unsentDrafts: [
+        {
+          id: "draft-1",
+          date: "Oct 04, 2024 • 1:18 AM",
+          context: "Typed after our second hangout",
+          preview: "I know we just started talking, but I legitimately...",
+          fullText: "I know we just started talking, but I legitimately get butterflies every single time your name pops up on my lockscreen. Deleted this so I wouldn't scare you off."
+        },
+        {
+          id: "draft-2",
+          date: "Oct 15, 2024 • 12:09 AM",
+          context: "Right after dropping you home",
+          preview: "I sat in my parked car for ten minutes after you...",
+          fullText: "I sat in my parked car for ten minutes after you walked inside just smiling at the steering wheel like an idiot. I don't think I've ever clicked with someone this fast."
+        },
+        {
+          id: "draft-3",
+          date: "Nov 11, 2024 • 2:44 AM",
+          context: "When you fell asleep on FaceTime",
+          preview: "I think I'm already falling in love with you and...",
+          fullText: "I think I'm already falling in love with you and it honestly terrifies me a little bit because of how much you already mean to me."
+        }
+      ],
+      openWhenEnvelopes: [
+        {
+          id: "env-now",
+          title: "Open right now",
+          subtitle: "Start here first",
+          tag: "01 • RIGHT NOW",
+          letter: "Hey baby,\\n\\nIf you're reading this, welcome to our tiny corner of the internet. I made this little phone screen just for us—so no matter where you are, you have all our favorite memories, my voice, and a piece of my heart right in your pocket.\\n\\nTake your time tapping around. Every photo, every timestamp, and every word here is real.",
+          signOff: "Forever yours, Alex"
+        },
+        {
+          id: "env-miss",
+          title: "Open when you miss me",
+          subtitle: "For the distance between us",
+          tag: "02 • MISSING YOU",
+          letter: "I promise you, whatever the distance or the hours between us right now, I'm missing you just as much—probably more.\\n\\nClose your eyes for five seconds and remember the exact feeling of my arms wrapped tight around your shoulders. Put on one of my hoodies, drink some water, and text me right now. Even if I'm busy, seeing your name will make my whole day.",
+          signOff: "Counting down until I see you, Alex"
+        },
+        {
+          id: "env-rough",
+          title: "Open when you're having a rough day",
+          subtitle: "Take a deep breath",
+          tag: "03 • ROUGH DAY",
+          letter: "First: unclench your jaw, drop your shoulders, and take one slow, deep breath for me.\\n\\nYou carry so much and you try so hard, even when nobody sees it. Well, I see it. You don't have to have everything figured out today. Let tonight be easy—no pressure, no expectations. Let me take care of you when I get to you.",
+          signOff: "Always in your corner, Alex"
+        },
+        {
+          id: "env-why",
+          title: "Open when you need a reminder of why I love you",
+          subtitle: "Read this twice",
+          tag: "04 • WHY I LOVE YOU",
+          letter: "I love the way your eyes light up when you talk about something you care about. I love how kind your heart is even when the world is exhausting. I love your laugh when you're trying not to laugh.\\n\\nMost of all, I love who I am when I'm with you. Loving you is the easiest, most natural thing I've ever done.",
+          signOff: "In love with you always, Alex"
+        }
+      ],
+      secretConfession: "Sometimes when you're half-asleep next to me, I stay awake a little longer just looking at you and quietly thanking the universe that out of eight billion people, I somehow got lucky enough to hold you.",
+      futureChecklist: [
+        {
+          id: "dream-1",
+          title: "Take an autumn road trip up the coast with no itinerary",
+          category: "Adventure"
+        },
+        {
+          id: "dream-2",
+          title: "Cook a chaotic 3-course pasta dinner at midnight",
+          category: "Date Night"
+        },
+        {
+          id: "dream-3",
+          title: "Watch the sunrise from a national park overlook",
+          category: "Travel"
+        },
+        {
+          id: "dream-4",
+          title: "Get our own place and decorate the living room together",
+          category: "Milestone"
+        },
+        {
+          id: "dream-5",
+          title: "Fly somewhere we need our passports stamped for",
+          category: "Bucket List"
+        }
+      ]
+    };
+
+    let currentFormData = JSON.parse(JSON.stringify(DEFAULT_LOVEOS_DATA));
+    let slugCheckTimer = null;
+    let syncDebounceTimer = null;
+
+    // -------------------------------------------------------------------------
+    // BIDIRECTIONAL AUTO-SCROLL TO PREVIEW
+    // -------------------------------------------------------------------------
+    function syncScrollToPreview(targetSectionId) {
+      if (!targetSectionId) return;
+      const iframe = document.getElementById('loveos-preview-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({
+          type: 'SCROLL_TO_SECTION',
+          target: targetSectionId
+        }, '*');
+      }
+    }
+
+    function scrollToSection(formSectionId, targetPreviewSectionId) {
+      const el = document.getElementById(formSectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (targetPreviewSectionId) {
+        syncScrollToPreview(targetPreviewSectionId);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // AUDIO PRESETS
+    // -------------------------------------------------------------------------
+    const AUDIO_PRESETS = {
+      lofi: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+      acoustic: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=warm-acoustic-guitar-11003.mp3",
+      piano: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c078021c.mp3?filename=romantic-piano-10886.mp3"
+    };
+
+    function setAudioPreset(key) {
+      if (AUDIO_PRESETS[key]) {
+        document.getElementById('input-song-url').value = AUDIO_PRESETS[key];
+        syncFormToPreview();
+        syncScrollToPreview('section-music');
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // INITIALIZATION
+    // -------------------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      populateFormWithData(currentFormData);
+
+      const iframe = document.getElementById('loveos-preview-iframe');
+      iframe.addEventListener('load', () => {
+        syncFormToPreview(true);
+      });
+    });
+
+    function populateFormWithData(data) {
+      document.getElementById('input-partner-name').value = data.partnerName || '';
+      document.getElementById('input-creator-name').value = data.creatorName || '';
+      
+      if (data.anniversaryDate) {
+        const d = new Date(data.anniversaryDate);
+        if (!isNaN(d.getTime())) {
+          const pad = n => String(n).padStart(2, '0');
+          const formatted = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+          document.getElementById('input-anniversary-date').value = formatted;
+        } else {
+          document.getElementById('input-anniversary-date').value = data.anniversaryDate;
+        }
+      }
+
+      document.getElementById('input-slug').value = data.slug || 'alex-mia';
+      document.getElementById('input-main-letter').value = data.mainLoveLetter ? data.mainLoveLetter.replace(/\\n/g, '\n') : '';
+
+      if (data.songData) {
+        document.getElementById('input-song-title').value = data.songData.title || '';
+        document.getElementById('input-song-artist').value = data.songData.artist || '';
+        document.getElementById('input-song-url').value = data.songData.audioUrl || '';
+      }
+
+      renderPolaroidInputs(data.polaroidPhotos || []);
+      renderMemoryNoteInputs(data.songData?.memoryNotes || []);
+      renderMilestoneInputs(data.milestones || []);
+      renderChatInputs(data.chatReplay || []);
+      renderDraftInputs(data.unsentDrafts || []);
+      renderEnvelopeInputs(data.openWhenEnvelopes || []);
+
+      document.getElementById('input-secret-confession').value = data.secretConfession || '';
+      renderChecklistInputs(data.futureChecklist || []);
+
+      lucide.createIcons();
+    }
+
+    // -------------------------------------------------------------------------
+    // RENDER FORM FIELDS
+    // -------------------------------------------------------------------------
+    function renderPolaroidInputs(photos) {
+      const container = document.getElementById('photos-container');
+      container.innerHTML = photos.map((p, idx) => `
+        <div class="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-3" onfocusin="syncScrollToPreview('section-photos')">
+          <div class="flex items-center justify-between text-xs font-semibold text-zinc-300">
+            <span>Polaroid Photo #${idx + 1}</span>
+            <span class="text-[10px] font-mono text-zinc-500">Tap to flip in app</span>
+          </div>
+          <div>
+            <label class="block text-[11px] text-zinc-400 mb-1">Image URL or Local Upload</label>
+            <div class="flex items-center gap-2">
+              <input type="url" id="photo-url-${idx}" value="${escapeAttr(p.imageUrl || '')}" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500 transition" placeholder="https://..." oninput="syncFormToPreview()">
+              <label class="px-2.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-[11px] text-zinc-200 cursor-pointer font-medium transition flex items-center gap-1">
+                <i data-lucide="upload" class="w-3 h-3"></i>
+                <span>File</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event, ${idx})">
+              </label>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Caption</label>
+              <input type="text" id="photo-cap-${idx}" value="${escapeAttr(p.caption || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Date</label>
+              <input type="text" id="photo-date-${idx}" value="${escapeAttr(p.date || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Location</label>
+              <input type="text" id="photo-loc-${idx}" value="${escapeAttr(p.location || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-400 mb-0.5">Back Note (Catatan di Balik Foto Polaroid)</label>
+            <textarea id="photo-back-${idx}" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white focus:outline-none leading-relaxed" oninput="syncFormToPreview()">${escapeAttr(p.backNote || '')}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderMemoryNoteInputs(notes) {
+      const container = document.getElementById('memory-notes-container');
+      const list = notes.length ? notes : ["", "", "", ""];
+      container.innerHTML = list.slice(0, 4).map((n, idx) => `
+        <div class="flex items-center gap-2" onfocusin="syncScrollToPreview('section-music')">
+          <span class="text-[10px] font-mono text-zinc-500 w-4">${idx + 1}.</span>
+          <input type="text" id="mem-note-${idx}" value="${escapeAttr(n)}" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+        </div>
+      `).join('');
+    }
+
+    function renderMilestoneInputs(milestones) {
+      const container = document.getElementById('milestones-container');
+      container.innerHTML = milestones.map((m, idx) => `
+        <div class="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-2" onfocusin="syncScrollToPreview('section-home')">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Label</label>
+              <input type="text" id="ms-label-${idx}" value="${escapeAttr(m.label || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Date</label>
+              <input type="text" id="ms-date-${idx}" value="${escapeAttr(m.date || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Location</label>
+              <input type="text" id="ms-loc-${idx}" value="${escapeAttr(m.location || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-500 mb-0.5">Story Memory</label>
+            <textarea id="ms-story-${idx}" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white focus:outline-none leading-relaxed" oninput="syncFormToPreview()">${escapeAttr(m.story || '')}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderChatInputs(chats) {
+      const container = document.getElementById('chat-messages-container');
+      container.innerHTML = chats.map((c, idx) => `
+        <div class="flex items-center gap-2 p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" onfocusin="syncScrollToPreview('section-messages')">
+          <select id="chat-sender-${idx}" class="bg-zinc-900 border border-zinc-800 text-xs text-white rounded-lg px-2 py-1 focus:outline-none font-medium" onchange="syncFormToPreview()">
+            <option value="me" ${c.sender === 'me' ? 'selected' : ''}>Me (Blue)</option>
+            <option value="them" ${c.sender === 'them' ? 'selected' : ''}>Them (Gray)</option>
+          </select>
+          <input type="text" id="chat-text-${idx}" value="${escapeAttr(c.text || '')}" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" placeholder="Message..." oninput="syncFormToPreview()">
+          <input type="text" id="chat-time-${idx}" value="${escapeAttr(c.time || '11:45 PM')}" class="w-20 bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-[11px] text-zinc-400 font-mono text-center focus:outline-none" oninput="syncFormToPreview()">
+          <button type="button" onclick="removeChatMessage(${idx})" class="text-zinc-500 hover:text-rose-400 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addChatMessage() {
+      const chats = extractChatData();
+      chats.push({
+        sender: "me",
+        text: "I was just thinking about you.",
+        time: "11:50 PM"
+      });
+      renderChatInputs(chats);
+      syncFormToPreview();
+      syncScrollToPreview('section-messages');
+    }
+
+    function removeChatMessage(idx) {
+      const chats = extractChatData();
+      chats.splice(idx, 1);
+      renderChatInputs(chats);
+      syncFormToPreview();
+    }
+
+    function renderDraftInputs(drafts) {
+      const container = document.getElementById('drafts-container');
+      container.innerHTML = drafts.map((d, idx) => `
+        <div class="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-2" onfocusin="syncScrollToPreview('section-notes-letters')">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Date / Time</label>
+              <input type="text" id="draft-date-${idx}" value="${escapeAttr(d.date || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Context</label>
+              <input type="text" id="draft-ctx-${idx}" value="${escapeAttr(d.context || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-500 mb-0.5">Full Unsent Feeling</label>
+            <textarea id="draft-full-${idx}" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white focus:outline-none leading-relaxed" oninput="syncFormToPreview()">${escapeAttr(d.fullText || '')}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderEnvelopeInputs(envs) {
+      const container = document.getElementById('envelopes-container');
+      container.innerHTML = envs.map((e, idx) => `
+        <div class="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-2.5" onfocusin="syncScrollToPreview('section-notes-letters')">
+          <div class="flex items-center justify-between text-xs font-semibold text-rose-300">
+            <span>Envelope #${idx + 1}: ${e.tag || 'OPEN WHEN'}</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Title</label>
+              <input type="text" id="env-title-${idx}" value="${escapeAttr(e.title || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-500 mb-0.5">Subtitle / Condition</label>
+              <input type="text" id="env-sub-${idx}" value="${escapeAttr(e.subtitle || '')}" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] text-zinc-500 mb-0.5">Envelope Letter Content</label>
+            <textarea id="env-letter-${idx}" rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2 text-xs text-white focus:outline-none leading-relaxed" oninput="syncFormToPreview()">${escapeAttr(e.letter ? e.letter.replace(/\\n/g, '\n') : '')}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderChecklistInputs(items) {
+      const container = document.getElementById('checklist-container');
+      container.innerHTML = items.map((item, idx) => `
+        <div class="flex items-center gap-2 p-2 rounded-xl bg-zinc-950/80 border border-zinc-800" onfocusin="syncScrollToPreview('section-notes')">
+          <input type="text" id="chk-cat-${idx}" value="${escapeAttr(item.category || 'Goal')}" class="w-24 bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-[11px] text-zinc-400 font-mono text-center focus:outline-none" oninput="syncFormToPreview()">
+          <input type="text" id="chk-title-${idx}" value="${escapeAttr(item.title || '')}" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none" oninput="syncFormToPreview()">
+          <button type="button" onclick="removeChecklistItem(${idx})" class="text-zinc-500 hover:text-rose-400 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addChecklistItem() {
+      const items = extractChecklistData();
+      items.push({
+        id: `dream-${Date.now()}`,
+        title: "New dream to explore together",
+        category: "Adventure"
+      });
+      renderChecklistInputs(items);
+      syncFormToPreview();
+      syncScrollToPreview('section-notes');
+    }
+
+    function removeChecklistItem(idx) {
+      const items = extractChecklistData();
+      items.splice(idx, 1);
+      renderChecklistInputs(items);
+      syncFormToPreview();
+    }
+
+    // -------------------------------------------------------------------------
+    // DATA EXTRACTION & LIVE POSTMESSAGE SYNC
+    // -------------------------------------------------------------------------
+    function extractFormData() {
+      const partnerName = document.getElementById('input-partner-name').value.trim() || 'Mia';
+      const creatorName = document.getElementById('input-creator-name').value.trim() || 'Alex';
+      const anniversaryDate = document.getElementById('input-anniversary-date').value || '2024-10-14T19:30:00';
+      const slug = document.getElementById('input-slug').value.trim().toLowerCase() || 'alex-mia';
+      const mainLoveLetter = document.getElementById('input-main-letter').value;
+
+      const polaroidPhotos = [];
+      for (let i = 0; i < 4; i++) {
+        const urlEl = document.getElementById(`photo-url-${i}`);
+        if (urlEl) {
+          polaroidPhotos.push({
+            imageUrl: urlEl.value.trim(),
+            caption: document.getElementById(`photo-cap-${i}`)?.value.trim() || '',
+            date: document.getElementById(`photo-date-${i}`)?.value.trim() || '',
+            location: document.getElementById(`photo-loc-${i}`)?.value.trim() || '',
+            backNote: document.getElementById(`photo-back-${i}`)?.value.trim() || ''
+          });
+        }
+      }
+
+      const songData = {
+        title: document.getElementById('input-song-title')?.value.trim() || '2:14 AM in Your Car',
+        artist: document.getElementById('input-song-artist')?.value.trim() || 'Late Night Tape',
+        audioUrl: document.getElementById('input-song-url')?.value.trim() || '',
+        memoryNotes: [
+          document.getElementById('mem-note-0')?.value.trim() || '',
+          document.getElementById('mem-note-1')?.value.trim() || '',
+          document.getElementById('mem-note-2')?.value.trim() || '',
+          document.getElementById('mem-note-3')?.value.trim() || ''
+        ]
+      };
+
+      const milestones = [];
+      for (let i = 0; i < 4; i++) {
+        const labelEl = document.getElementById(`ms-label-${i}`);
+        if (labelEl) {
+          milestones.push({
+            id: `ms-${i}`,
+            label: labelEl.value.trim(),
+            date: document.getElementById(`ms-date-${i}`)?.value.trim() || '',
+            location: document.getElementById(`ms-loc-${i}`)?.value.trim() || '',
+            story: document.getElementById(`ms-story-${i}`)?.value.trim() || ''
+          });
+        }
+      }
+
+      const chatReplay = extractChatData();
+
+      const unsentDrafts = [];
+      for (let i = 0; i < 3; i++) {
+        const dateEl = document.getElementById(`draft-date-${i}`);
+        if (dateEl) {
+          const full = document.getElementById(`draft-full-${i}`)?.value.trim() || '';
+          unsentDrafts.push({
+            id: `draft-${i + 1}`,
+            date: dateEl.value.trim(),
+            context: document.getElementById(`draft-ctx-${i}`)?.value.trim() || '',
+            preview: full.slice(0, 48) + '...',
+            fullText: full
+          });
+        }
+      }
+
+      const openWhenEnvelopes = [];
+      for (let i = 0; i < 4; i++) {
+        const titleEl = document.getElementById(`env-title-${i}`);
+        if (titleEl) {
+          openWhenEnvelopes.push({
+            id: `env-${i + 1}`,
+            title: titleEl.value.trim(),
+            subtitle: document.getElementById(`env-sub-${i}`)?.value.trim() || '',
+            tag: `0${i + 1} • NOTE`,
+            letter: document.getElementById(`env-letter-${i}`)?.value || '',
+            signOff: `Forever yours, ${creatorName}`
+          });
+        }
+      }
+
+      const secretConfession = document.getElementById('input-secret-confession')?.value || '';
+      const futureChecklist = extractChecklistData();
+
+      return {
+        partnerName,
+        creatorName,
+        anniversaryDate,
+        slug,
+        polaroidPhotos,
+        mainLoveLetter,
+        songData,
+        milestones,
+        chatReplay,
+        unsentDrafts,
+        openWhenEnvelopes,
+        secretConfession,
+        futureChecklist,
+        isPaid: false
+      };
+    }
+
+    function extractChatData() {
+      const chats = [];
+      let i = 0;
+      while (document.getElementById(`chat-text-${i}`)) {
+        chats.push({
+          sender: document.getElementById(`chat-sender-${i}`).value,
+          text: document.getElementById(`chat-text-${i}`).value,
+          time: document.getElementById(`chat-time-${i}`).value
+        });
+        i++;
+      }
+      return chats;
+    }
+
+    function extractChecklistData() {
+      const items = [];
+      let i = 0;
+      while (document.getElementById(`chk-title-${i}`)) {
+        items.push({
+          id: `dream-${i + 1}`,
+          category: document.getElementById(`chk-cat-${i}`).value,
+          title: document.getElementById(`chk-title-${i}`).value,
+          defaultChecked: i < 2,
+          checkedDate: i < 2 ? "2025" : null
+        });
+        i++;
+      }
+      return items;
+    }
+
+    function syncFormToPreview(immediate = false) {
+      if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+      
+      const doSync = () => {
+        const payload = extractFormData();
+        const iframe = document.getElementById('loveos-preview-iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_COUPLE_DATA',
+            payload: payload
+          }, '*');
+        }
+      };
+
+      if (immediate) doSync();
+      else syncDebounceTimer = setTimeout(doSync, 60);
+    }
+
+    function handlePhotoUpload(event, idx) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        const input = document.getElementById(`photo-url-${idx}`);
+        if (input) {
+          input.value = dataUrl;
+          syncFormToPreview(true);
+          syncScrollToPreview('section-photos');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleSlugInput(val) {
+      const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/--+/g, '-');
+      document.getElementById('input-slug').value = clean;
+
+      const fb = document.getElementById('slug-feedback');
+      fb.classList.remove('hidden');
+
+      if (!clean) {
+        fb.textContent = 'Please enter a custom slug.';
+        fb.className = 'text-[11px] mt-1 font-mono text-zinc-500';
+        return;
+      }
+
+      fb.textContent = 'Checking availability...';
+      fb.className = 'text-[11px] mt-1 font-mono text-zinc-400';
+
+      if (slugCheckTimer) clearTimeout(slugCheckTimer);
+      slugCheckTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/check-slug?slug=${encodeURIComponent(clean)}`);
+          const data = await res.json();
+          if (data.available) {
+            fb.textContent = `✓ "${clean}" is available!`;
+            fb.className = 'text-[11px] mt-1 font-mono text-emerald-400 font-semibold';
+          } else {
+            fb.textContent = `✗ "${clean}" is already taken or reserved.`;
+            fb.className = 'text-[11px] mt-1 font-mono text-rose-400 font-semibold';
+          }
+        } catch (_) {
+          fb.textContent = `✓ Address format valid`;
+          fb.className = 'text-[11px] mt-1 font-mono text-zinc-400';
+        }
+      }, 300);
+
+      syncFormToPreview();
+    }
+
+    // -------------------------------------------------------------------------
+    // HIGH-CONVERTING SAVE FLOW (EMAIL PROMPT ON SAVE)
+    // -------------------------------------------------------------------------
+    function openEmailPromptModal() {
+      const partnerName = document.getElementById('input-partner-name').value.trim();
+      const creatorName = document.getElementById('input-creator-name').value.trim();
+      const slug = document.getElementById('input-slug').value.trim();
+
+      if (!partnerName || !creatorName) {
+        alert('Mohon isi Nama Pasangan dan Nama Anda di bagian 1 (Data Inti).');
+        scrollToSection('sec-basic', 'section-home');
+        return;
+      }
+
+      if (!slug) {
+        alert('Mohon tentukan alamat link (slug) di bagian 1.');
+        scrollToSection('sec-basic', 'section-home');
+        return;
+      }
+
+      const modal = document.getElementById('email-prompt-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.getElementById('prompt-buyer-email').focus();
+    }
+
+    function closeEmailPromptModal() {
+      const modal = document.getElementById('email-prompt-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+
+    async function executeSaveDraft() {
+      const email = document.getElementById('prompt-buyer-email').value.trim();
+      if (!email || !email.includes('@')) {
+        alert('Mohon masukkan alamat email yang valid.');
+        document.getElementById('prompt-buyer-email').focus();
+        return;
+      }
+
+      const confirmBtn = document.getElementById('btn-confirm-save');
+      const originalText = confirmBtn.innerHTML;
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = `
+        <svg class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span>Menyimpan ke Cloud Supabase...</span>
+      `;
+
+      try {
+        const formData = extractFormData();
+        formData.email = email;
+
+        const response = await fetch('/api/save-draft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            template: 'loveos',
+            slug: formData.slug,
+            email: email,
+            configData: formData
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.ok) {
+          closeEmailPromptModal();
+          openSuccessModal(result);
+        } else {
+          alert('Error menyimpan keepsake: ' + (result.error || 'Server error.'));
+        }
+      } catch (err) {
+        console.error('Save draft error:', err);
+        alert('Koneksi ke server gagal. Pastikan koneksi internet stabil.');
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = originalText;
+      }
+    }
+
+    function openSuccessModal(res) {
+      const fullUrl = window.location.origin + res.previewUrl;
+      document.getElementById('modal-preview-url').textContent = fullUrl;
+      document.getElementById('modal-checkout-link').href = res.checkoutUrl;
+      document.getElementById('modal-view-link').href = res.previewUrl;
+
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+
+    function copyPreviewLink() {
+      const text = document.getElementById('modal-preview-url').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btn-copy-link');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<span>Tersalin!</span>`;
+        setTimeout(() => btn.innerHTML = orig, 2000);
+      });
+    }
+
+    function resetToDefaultData() {
+      if (confirm('Kembalikan semua isian form ke contoh default LoveOS?')) {
+        populateFormWithData(DEFAULT_LOVEOS_DATA);
+        syncFormToPreview(true);
+      }
+    }
+
+    function switchMobileTab(tab) {
+      const panelForm = document.getElementById('panel-form');
+      const panelPreview = document.getElementById('panel-preview');
+      const btnForm = document.getElementById('tab-btn-form');
+      const btnPreview = document.getElementById('tab-btn-preview');
+
+      if (tab === 'form') {
+        panelForm.classList.remove('hidden');
+        panelPreview.classList.add('hidden');
+        panelPreview.classList.remove('flex');
+        btnForm.className = 'px-3 py-1 rounded-md bg-white text-zinc-950 shadow-sm transition';
+        btnPreview.className = 'px-3 py-1 rounded-md text-zinc-400 hover:text-white transition';
+      } else {
+        panelForm.classList.add('hidden');
+        panelPreview.classList.remove('hidden');
+        panelPreview.classList.add('flex');
+        btnPreview.className = 'px-3 py-1 rounded-md bg-white text-zinc-950 shadow-sm transition';
+        btnForm.className = 'px-3 py-1 rounded-md text-zinc-400 hover:text-white transition';
+        syncFormToPreview(true);
+      }
+    }
+
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+  </script>
+</body>
+</html>

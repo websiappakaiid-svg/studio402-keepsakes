@@ -1,0 +1,3043 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>LoveOS — A Tiny Phone Just For Us</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Instrument Serif, JetBrains Mono, Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            hand: ['"Caveat"', 'cursive'],
+          },
+          colors: {
+            obsidian: '#08080a',
+            graphite: '#121216',
+            iosBlue: '#007AFF',
+            iosBubbleGray: '#262629',
+            notesAmber: '#F59E0B',
+            polaroidPaper: '#faf8f5',
+            roseAccent: '#f43f5e',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ==========================================================================
+       PREMIUM iOS 18 LIQUID GLASS & TACTILE MOTION SYSTEM
+       ========================================================================== */
+    :root {
+      color-scheme: dark;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #08080a;
+      color: #f4f4f5;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Hide scrollbars cleanly while keeping smooth scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Core iOS Liquid Glass Surface (Cards) */
+    .ios-glass-card {
+      background: rgba(18, 18, 23, 0.76);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 
+        0 24px 48px -12px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    /* Floating Dock Glass */
+    .ios-dock-glass {
+      background: rgba(15, 15, 20, 0.84);
+      backdrop-filter: blur(30px) saturate(200%);
+      -webkit-backdrop-filter: blur(30px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 
+        0 20px 40px -8px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Interactive Pill Glass */
+    .ios-pill {
+      background: rgba(36, 36, 44, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ios-pill:active {
+      transform: scale(0.96);
+    }
+    .ios-pill.active-pill {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: rgba(251, 113, 133, 0.45);
+      color: #fecdd3;
+      box-shadow: 0 0 24px -4px rgba(244, 63, 94, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* ==========================================================================
+       DYNAMIC ISLAND (AUTHENTIC TOP STATUS BAR INTEGRATION & EXPANDED SPRING)
+       ========================================================================== */
+    .dynamic-island-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      transition: all 0.45s cubic-bezier(0.34, 1.45, 0.64, 1);
+    }
+
+    .dynamic-island-pill {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 
+        0 8px 24px -4px rgba(0, 0, 0, 0.95),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+      transition: all 0.42s cubic-bezier(0.34, 1.45, 0.64, 1);
+      cursor: pointer;
+      user-select: none;
+      min-height: 28px;
+    }
+    .dynamic-island-pill:hover {
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+    .dynamic-island-pill:active {
+      transform: scale(0.97);
+    }
+
+    .dynamic-island-pill.is-expanded {
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 16px);
+      max-width: 395px;
+      height: auto;
+      border-radius: 26px;
+      background: rgba(10, 10, 14, 0.95);
+      backdrop-filter: blur(34px) saturate(200%);
+      -webkit-backdrop-filter: blur(34px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 24px 55px -10px rgba(0, 0, 0, 0.95),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+      padding: 14px 16px;
+      cursor: default;
+      z-index: 50;
+    }
+
+    /* Waveform Animation in Dynamic Island */
+    @keyframes waveBounce {
+      0%, 100% { height: 3px; }
+      50% { height: 14px; }
+    }
+    .island-wave-bar {
+      width: 2.5px;
+      border-radius: 999px;
+      background-color: #fb7185;
+      animation: waveBounce 0.85s ease-in-out infinite;
+    }
+    .island-wave-bar.paused {
+      animation-play-state: paused;
+      height: 3px !important;
+    }
+    .wave-b1 { animation-delay: 0.1s; }
+    .wave-b2 { animation-delay: 0.3s; }
+    .wave-b3 { animation-delay: 0.5s; }
+    .wave-b4 { animation-delay: 0.2s; }
+
+    /* ==========================================================================
+       VINYL DISC & GROOVES
+       ========================================================================== */
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .vinyl-disc {
+      animation: spinVinyl 6.5s linear infinite;
+      animation-play-state: paused;
+    }
+    .vinyl-disc.is-playing {
+      animation-play-state: running;
+    }
+
+    .vinyl-grooves {
+      background: 
+        radial-gradient(circle at center, #18181b 0%, #18181b 28%, transparent 29%),
+        repeating-radial-gradient(circle at center, #131316 0px, #131316 1.5px, #24242b 2px, #101013 3.5px);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.85),
+        inset 0 0 14px rgba(255, 255, 255, 0.08);
+    }
+
+    /* Custom Range Slider for Audio Scrubber */
+    input[type="range"].audio-scrubber {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      height: 20px;
+    }
+    input[type="range"].audio-scrubber::-webkit-slider-runnable-track {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    input[type="range"].audio-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+      margin-top: -4.5px;
+      transition: transform 0.15s ease;
+    }
+    input[type="range"].audio-scrubber:active::-webkit-slider-thumb {
+      transform: scale(1.3);
+    }
+
+    /* ==========================================================================
+       3D POLAROID CARD FLIP & TOUCH GESTURES
+       ========================================================================== */
+    .polaroid-scene {
+      perspective: 1200px;
+      -webkit-perspective: 1200px;
+      touch-action: pan-y;
+    }
+    .polaroid-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.75s cubic-bezier(0.34, 1.45, 0.64, 1);
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+    .polaroid-card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .polaroid-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+    }
+    .polaroid-back {
+      transform: rotateY(180deg);
+      background-color: #faf8f5;
+      background-image: 
+        radial-gradient(rgba(24, 24, 27, 0.035) 1px, transparent 0),
+        linear-gradient(to bottom, #faf8f5 0%, #f3efe6 100%);
+      background-size: 16px 16px, 100% 100%;
+    }
+    .polaroid-front {
+      background-color: #faf8f5;
+      background-image: linear-gradient(145deg, #ffffff 0%, #f4f0e6 100%);
+    }
+
+    /* ==========================================================================
+       iMESSAGE BUBBLES & TYPING ANIMATION
+       ========================================================================== */
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+    .typing-dot-1 { animation: typingBounce 1.2s infinite ease-in-out 0s; }
+    .typing-dot-2 { animation: typingBounce 1.2s infinite ease-in-out 0.2s; }
+    .typing-dot-3 { animation: typingBounce 1.2s infinite ease-in-out 0.4s; }
+
+    @keyframes bubblePop {
+      0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .chat-bubble-anim {
+      animation: bubblePop 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* ==========================================================================
+       "OPEN WHEN" REALISTIC ENVELOPE & WAX SEAL
+       ========================================================================== */
+    .envelope-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+      perspective: 800px;
+    }
+    .envelope-card:active {
+      transform: scale(0.97);
+    }
+    .envelope-flap {
+      transform-origin: top center;
+      transition: transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .envelope-card.opening .envelope-flap {
+      transform: rotateX(160deg);
+    }
+
+    .wax-seal {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f43f5e, #be123c 65%, #881337 100%);
+      box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff1f2;
+      transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .envelope-card:hover .wax-seal {
+      transform: scale(1.08) rotate(4deg);
+    }
+
+    /* ==========================================================================
+       APPLE NOTES & SECRET REVEAL
+       ========================================================================== */
+    .notes-paper-bg {
+      background-image: linear-gradient(to bottom, transparent 31px, rgba(255, 255, 255, 0.035) 32px);
+      background-size: 100% 32px;
+    }
+
+    @keyframes wordReveal {
+      from { opacity: 0; filter: blur(5px); transform: translateY(4px); }
+      to { opacity: 1; filter: blur(0); transform: translateY(0); }
+    }
+    .revealed-word {
+      display: inline-block;
+      animation: wordReveal 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .confession-highlight {
+      background: linear-gradient(120deg, #fef08a 0%, #f59e0b 50%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+      text-shadow: 0 0 18px rgba(245, 158, 11, 0.38);
+    }
+
+    /* ==========================================================================
+       CELEBRATION HEARTS (CHECKLIST 100% COMPLETE BURST)
+       ========================================================================== */
+    @keyframes heartFloatUp {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0) scale(0.4) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--float-x, 0px), -360px, 0) scale(var(--float-scale, 1.2)) rotate(var(--float-rot, 25deg));
+      }
+    }
+    .celebration-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      animation: heartFloatUp var(--float-dur, 2.6s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* ==========================================================================
+       SCROLL-TRIGGERED REVEAL SYSTEM & DEMO CTA SMOOTH SLIDE
+       ========================================================================== */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-on-scroll.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #demo-cta-bar {
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    /* ==========================================================================
+       CINEMATIC FIRST-OPEN INTRO OVERLAY
+       ========================================================================== */
+    #cinematic-intro {
+      backdrop-filter: blur(35px);
+      -webkit-backdrop-filter: blur(35px);
+      transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #cinematic-intro.intro-dismissed {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    @keyframes heartBreathe {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 14px rgba(244, 63, 94, 0.5)); }
+      50% { transform: scale(1.09); filter: drop-shadow(0 0 28px rgba(244, 63, 94, 0.85)); }
+    }
+    .intro-heart-anim {
+      animation: heartBreathe 2.8s ease-in-out infinite;
+    }
+
+    /* ==========================================================================
+       ACCESSIBILITY & REDUCED MOTION
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-obsidian text-zinc-100 antialiased selection:bg-rose-500/30 selection:text-rose-200">
+
+  <!-- ==========================================================================
+       CENTRALIZED CONFIGURATION ARCHITECTURE: window.COUPLE_DATA
+       ========================================================================== -->
+  <script>
+    window.COUPLE_DATA = {
+      /* ========================================================================
+         [REQUIRED - 4 Data Inti yang Wajib Diisi Pembeli]
+         ======================================================================== */
+      partnerName: "Mia",
+      creatorName: "Alex",
+      anniversaryDate: "2024-10-14T19:30:00",
+
+      polaroidPhotos: [
+        {
+          imageUrl: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80",
+          caption: "Golden hour by the pier",
+          date: "OCT 18, 2024",
+          location: "Santa Monica, CA",
+          backNote: "You were freezing because you insisted you didn't need a jacket. Giving you my hoodie was the best move I ever made."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80",
+          caption: "Sunday morning coffee run",
+          date: "DEC 08, 2024",
+          location: "Silver Lake, LA",
+          backNote: "Half-awake, bedhead, iced oat latte in 55-degree weather. I looked across the table and thought: yeah, this is my person."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=900&q=80",
+          caption: "Lost on Highway 1",
+          date: "FEB 15, 2025",
+          location: "Big Sur, CA",
+          backNote: "Zero cell service, wrong turn twice, and us screaming lyrics with the windows down. Still my favorite weekend of my life."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=900&q=80",
+          caption: "Late night rooftop talks",
+          date: "JUN 22, 2025",
+          location: "Downtown Rooftop",
+          backNote: "We stayed up until 3 AM talking about where we want to be in five years. As long as you're there, I'm good."
+        }
+      ],
+
+      mainLoveLetter: `I don't think I say this nearly enough when life gets loud and busy, so I wanted to put it somewhere permanent where you can read it whenever you want.\n\nBefore you, I used to think love had to feel like some dramatic movie scene. With you, I learned it's actually in the quiet, ordinary stuff. It's the way you reach for my hand when we're walking through a crowded parking lot, how you send me songs that remind you of us in the middle of a random Tuesday, and how safe it feels just sitting next to you doing absolutely nothing.\n\nThank you for being my calm when my head is spinning, for laughing at my terrible jokes, and for loving me in a way that makes me want to be better every single day. No matter how many seasons change, you're still my favorite notification, my favorite place to come home to, and my favorite person on this planet.`,
+
+      /* ========================================================================
+         [SMART DEFAULT - Otomatis Terisi Kalimat Bahasa Inggris US yang Natural & Opsional Diedit]
+         ======================================================================== */
+      isPaid: false,
+
+      songData: {
+        title: "2:14 AM in Your Car",
+        artist: "Late Night Tape — Alex & Mia",
+        audioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+        memoryNotes: [
+          "Reminds me of driving home with the windows cracked open and your hand on the center console.",
+          "That quiet moment at red lights when you look over and smile for no reason.",
+          "Playing this at half-volume while we talk about everything and nothing until 2 AM.",
+          "Every time this melody loops, it feels like that first autumn night we met."
+        ]
+      },
+
+      milestones: [
+        {
+          id: "first-text",
+          label: "First Text",
+          date: "Sep 29, 2024",
+          location: "iMessage • 11:42 PM",
+          story: "I stared at my phone for twenty minutes trying to reply without sounding too eager, then immediately double-texted you anyway. Best decision ever."
+        },
+        {
+          id: "first-date",
+          label: "First Date",
+          date: "Oct 14, 2024",
+          location: "Corner Booth • Tacos & Neon",
+          story: "What was supposed to be a quick 45-minute drink turned into four hours of talking until the staff literally started flipping chairs onto the tables."
+        },
+        {
+          id: "first-kiss",
+          label: "First Kiss",
+          date: "Oct 26, 2024",
+          location: "Outside Your Front Door",
+          story: "Waiting by the passenger side of my car in the cold. You stopped mid-sentence, looked up at me, and my heart was beating so loud I swear you could hear it."
+        },
+        {
+          id: "best-trip",
+          label: "Best Trip",
+          date: "Feb 14, 2025",
+          location: "Pacific Coast Highway",
+          story: "Two iced coffees, a chaotic playlist, ocean fog rolling over the cliffs, and realizing I could travel anywhere in the world as long as you're my co-pilot."
+        }
+      ],
+
+      chatReplay: [
+        {
+          sender: "me",
+          text: "Wait are you actually a fan of late-night diner pancakes or are you just being polite?",
+          time: "11:42 PM"
+        },
+        {
+          sender: "them",
+          text: "Excuse me?? Breakfast for dinner is elite. Don't test me on this.",
+          time: "11:43 PM"
+        },
+        {
+          sender: "me",
+          text: "Okay prove it. Thursday night, 8pm. I'm picking you up.",
+          time: "11:45 PM"
+        },
+        {
+          sender: "them",
+          text: "Smooth. Really smooth. Okay, it's a date.",
+          time: "11:46 PM"
+        },
+        {
+          sender: "me",
+          text: "Can't wait. Don't bail on me now.",
+          time: "11:47 PM",
+          status: "Delivered • Read 11:47 PM"
+        }
+      ],
+
+      unsentDrafts: [
+        {
+          id: "draft-1",
+          date: "Oct 04, 2024 • 1:18 AM",
+          context: "Typed after our second hangout",
+          preview: "I know we just started talking, but I legitimately...",
+          fullText: "I know we just started talking, but I legitimately get butterflies every single time your name pops up on my lockscreen. Deleted this so I wouldn't scare you off."
+        },
+        {
+          id: "draft-2",
+          date: "Oct 15, 2024 • 12:09 AM",
+          context: "Right after dropping you home",
+          preview: "I sat in my parked car for ten minutes after you...",
+          fullText: "I sat in my parked car for ten minutes after you walked inside just smiling at the steering wheel like an idiot. I don't think I've ever clicked with someone this fast."
+        },
+        {
+          id: "draft-3",
+          date: "Nov 11, 2024 • 2:44 AM",
+          context: "When you fell asleep on FaceTime",
+          preview: "I think I'm already falling in love with you and...",
+          fullText: "I think I'm already falling in love with you and it honestly terrifies me a little bit because of how much you already mean to me."
+        }
+      ],
+
+      openWhenEnvelopes: [
+        {
+          id: "env-now",
+          title: "Open right now",
+          subtitle: "Start here first",
+          tag: "01 • RIGHT NOW",
+          letter: "Hey baby,\n\nIf you're reading this, welcome to our tiny corner of the internet. I made this little phone screen just for us—so no matter where you are, you have all our favorite memories, my voice, and a piece of my heart right in your pocket.\n\nTake your time tapping around. Every photo, every timestamp, and every word here is real.",
+          signOff: "Forever yours, Alex"
+        },
+        {
+          id: "env-miss",
+          title: "Open when you miss me",
+          subtitle: "For the distance between us",
+          tag: "02 • MISSING YOU",
+          letter: "I promise you, whatever the distance or the hours between us right now, I'm missing you just as much—probably more.\n\nClose your eyes for five seconds and remember the exact feeling of my arms wrapped tight around your shoulders. Put on one of my hoodies, drink some water, and text me right now. Even if I'm busy, seeing your name will make my whole day.",
+          signOff: "Counting down until I see you, Alex"
+        },
+        {
+          id: "env-rough",
+          title: "Open when you're having a rough day",
+          subtitle: "Take a deep breath",
+          tag: "03 • ROUGH DAY",
+          letter: "First: unclench your jaw, drop your shoulders, and take one slow, deep breath for me.\n\nYou carry so much and you try so hard, even when nobody sees it. Well, I see it. You don't have to have everything figured out today. Let tonight be easy—no pressure, no expectations. Let me take care of you when I get to you.",
+          signOff: "Always in your corner, Alex"
+        },
+        {
+          id: "env-why",
+          title: "Open when you need a reminder of why I love you",
+          subtitle: "Read this twice",
+          tag: "04 • WHY I LOVE YOU",
+          letter: "I love the way your eyes light up when you talk about something you care about. I love how kind your heart is even when the world is exhausting. I love your laugh when you're trying not to laugh.\n\nMost of all, I love who I am when I'm with you. Loving you is the easiest, most natural thing I've ever done.",
+          signOff: "In love with you always, Alex"
+        }
+      ],
+
+      secretConfession: "Sometimes when you're half-asleep next to me, I stay awake a little longer just looking at you and quietly thanking the universe that out of eight billion people, I somehow got lucky enough to hold you.",
+
+      futureChecklist: [
+        {
+          id: "dream-1",
+          title: "Take an autumn road trip up the coast with no itinerary",
+          category: "Adventure",
+          defaultChecked: true,
+          checkedDate: "Feb 15, 2025"
+        },
+        {
+          id: "dream-2",
+          title: "Cook a chaotic 3-course pasta dinner at midnight",
+          category: "Date Night",
+          defaultChecked: true,
+          checkedDate: "May 03, 2025"
+        },
+        {
+          id: "dream-3",
+          title: "Watch the sunrise from a national park overlook",
+          category: "Travel",
+          defaultChecked: false,
+          checkedDate: null
+        },
+        {
+          id: "dream-4",
+          title: "Get our own place and decorate the living room together",
+          category: "Milestone",
+          defaultChecked: false,
+          checkedDate: null
+        },
+        {
+          id: "dream-5",
+          title: "Fly somewhere we need our passports stamped for",
+          category: "Bucket List",
+          defaultChecked: false,
+          checkedDate: null
+        }
+      ]
+    };
+  </script>
+
+  <!-- ==========================================================================
+       CINEMATIC FIRST-OPEN EXPERIENCE (INTRO OVERLAY)
+       ========================================================================== -->
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#08080a] select-none" aria-modal="true" role="dialog">
+    <div class="relative w-full max-w-[390px] text-center flex flex-col items-center">
+      <!-- Breathing Ambient Light Behind Heart -->
+      <div class="w-24 h-24 rounded-full bg-rose-500/20 blur-2xl absolute -top-4"></div>
+
+      <!-- Glowing Heart Icon -->
+      <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500/25 to-amber-500/20 border border-rose-400/30 flex items-center justify-center text-rose-400 shadow-xl intro-heart-anim mb-6">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+
+      <!-- Recipient's Name in Elegant Instrument Serif -->
+      <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-rose-300/80 mb-2">A Private Space</p>
+      <h1 id="intro-partner-name" class="font-serif italic text-4xl sm:text-5xl text-zinc-100 tracking-tight leading-tight mb-3">
+        For Mia
+      </h1>
+
+      <!-- Short Emotional Introduction -->
+      <p class="text-sm text-zinc-400 leading-relaxed max-w-[300px] mb-8 font-sans">
+        “A little place, made just for us.”
+      </p>
+
+      <!-- Obvious Enter Button -->
+      <button
+        id="enter-loveos-btn"
+        type="button"
+        class="w-full max-w-[260px] py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-semibold text-xs tracking-wider uppercase shadow-xl shadow-rose-950/50 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2 border border-white/20"
+      >
+        <span>Open LoveOS</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+        </svg>
+      </button>
+
+      <!-- Skip / Tap Hint -->
+      <button id="skip-intro-btn" type="button" class="mt-4 text-[11px] font-mono text-zinc-500 hover:text-zinc-300 transition">
+        Tap anywhere to enter
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       OUTER VIEWPORT CONTAINER (430px iPhone Frame Lock)
+       ========================================================================== -->
+  <div class="relative w-full min-h-dvh bg-obsidian flex justify-center overflow-x-hidden">
+    
+    <!-- Multi-Layer Translucent Ambient Glow Behind Container -->
+    <div class="pointer-events-none fixed inset-0 overflow-hidden z-0 flex justify-center">
+      <div class="w-full max-w-[430px] relative h-full">
+        <div class="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-rose-500/12 blur-[100px]"></div>
+        <div class="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-amber-500/10 blur-[110px]"></div>
+        <div class="absolute bottom-20 -left-12 w-80 h-80 rounded-full bg-indigo-500/10 blur-[120px]"></div>
+      </div>
+    </div>
+
+    <!-- Main Mobile App Shell: Locked to max-w-[430px] mx-auto min-h-dvh -->
+    <main id="loveos-app" class="relative z-10 w-full max-w-[430px] mx-auto min-h-dvh pb-36 px-4 pt-1 flex flex-col gap-5 sm:border-x sm:border-white/[0.06] sm:shadow-2xl">
+      <!-- Dynamic Content Injected by window.renderLoveOS() -->
+    </main>
+
+    <!-- ========================================================================
+         FLOATING iOS LIQUID GLASS NAVIGATION DOCK
+         ======================================================================== -->
+    <nav id="ios-nav-dock" class="fixed z-40 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[390px] ios-dock-glass rounded-2xl p-1.5 flex items-center justify-around shadow-2xl transition-all duration-300" style="bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));" aria-label="Quick Navigation">
+      <button type="button" data-nav-target="section-home" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Home">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </button>
+
+      <button type="button" data-nav-target="section-music" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Music">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>Music</span>
+      </button>
+
+      <button type="button" data-nav-target="section-messages" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Messages">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Messages</span>
+      </button>
+
+      <button type="button" data-nav-target="section-photos" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Photos">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
+        <span>Memories</span>
+      </button>
+
+      <button type="button" data-nav-target="section-notes" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Notes & Letters">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <span>Notes</span>
+      </button>
+    </nav>
+
+    <!-- ========================================================================
+         MODAL 1: "OPEN WHEN..." LETTER SHEET MODAL
+         ======================================================================== -->
+    <div id="envelope-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0" aria-hidden="true" role="dialog">
+      <div id="envelope-modal-card" class="relative w-full max-w-[385px] rounded-3xl bg-[#faf8f5] text-zinc-900 p-6 sm:p-7 shadow-2xl border border-amber-900/10 transform scale-95 transition-all duration-300">
+        <div class="flex items-center justify-between border-b border-zinc-200/80 pb-3.5 mb-5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm"></span>
+            <span id="modal-env-tag" class="font-mono text-[11px] uppercase tracking-widest text-zinc-500 font-semibold">01 • RIGHT NOW</span>
+          </div>
+          <button id="close-envelope-modal" type="button" class="w-8 h-8 rounded-full bg-zinc-200/80 hover:bg-zinc-300 flex items-center justify-center text-zinc-700 transition active:scale-95" aria-label="Close letter">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <h3 id="modal-env-title" class="font-serif italic text-3xl text-zinc-900 leading-tight mb-4">Open right now</h3>
+        <div id="modal-env-body" class="text-[15px] leading-relaxed text-zinc-700 whitespace-pre-line font-sans max-h-[52vh] overflow-y-auto pr-1"></div>
+
+        <div class="mt-6 pt-4 border-t border-zinc-200/80 flex items-center justify-between">
+          <p id="modal-env-signoff" class="font-hand text-2xl text-rose-700 font-semibold"></p>
+          <div class="w-9 h-9 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-600">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         MODAL 2: CUSTOMIZE YOURS STUDIO DRAWER (NO FIXED PRICE LABELS)
+         ======================================================================== -->
+    <div id="customize-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0" aria-hidden="true" role="dialog">
+      <div id="customize-modal-card" class="w-full max-w-[400px] ios-glass-card rounded-3xl p-6 border border-white/15 shadow-2xl transform translate-y-4 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] font-mono uppercase tracking-wider">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
+            </svg>
+            <span>OurPage LoveOS</span>
+          </div>
+          <button id="close-customize-modal" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center text-zinc-300 transition" aria-label="Close modal">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <h3 class="font-serif italic text-3xl text-white mb-2">Build a Tiny Phone for Your Person</h3>
+        <p class="text-xs text-zinc-400 leading-relaxed mb-5">
+          Customize your names, anniversary counter, Polaroids, handwritten back-notes, song, and love letter in 3 minutes. Share via private link or QR code.
+        </p>
+
+        <div class="space-y-2.5 mb-6 text-xs text-zinc-300">
+          <div class="flex items-center gap-2.5 bg-white/[0.04] rounded-xl p-2.5 border border-white/[0.06]">
+            <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+            <span>4 Required fields + Smart US English defaults ready to go</span>
+          </div>
+          <div class="flex items-center gap-2.5 bg-white/[0.04] rounded-xl p-2.5 border border-white/[0.06]">
+            <svg class="w-4 h-4 text-rose-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+            <span>Works smoothly on iOS Safari, Threads, Instagram & Android</span>
+          </div>
+        </div>
+
+        <div class="flex gap-2.5">
+          <button id="trigger-editor-hook-btn" type="button" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold text-xs tracking-wide shadow-lg shadow-rose-500/25 active:scale-[0.98] transition flex items-center justify-center gap-2">
+            <span>Launch Live Editor</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         MODAL 3: FULLSCREEN PHOTO LIGHTBOX MODAL
+         ======================================================================== -->
+    <div id="photo-lightbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/90 backdrop-blur-lg transition-opacity duration-300 opacity-0" aria-hidden="true" role="dialog">
+      <div id="photo-lightbox-card" class="relative w-full max-w-[420px] rounded-3xl overflow-hidden bg-zinc-950 border border-white/15 shadow-2xl transform scale-95 transition-all duration-300 flex flex-col">
+        <div class="relative w-full h-[380px] bg-black">
+          <img id="lightbox-img" src="" alt="Fullscreen memory" class="w-full h-full object-cover" />
+          <button id="close-lightbox-btn" type="button" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center transition active:scale-95" aria-label="Close fullscreen view">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="p-4 bg-zinc-900/90 text-left">
+          <p id="lightbox-caption" class="font-serif italic text-2xl text-white"></p>
+          <div class="mt-1 flex items-center justify-between text-xs text-zinc-400 font-mono">
+            <span id="lightbox-location"></span>
+            <span id="lightbox-date"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         FLOATING DEMO BAR (BOTTOM CTA) — SCROLL-REVEAL ONLY NEAR PAGE BOTTOM
+         Hidden automatically if ?mode=paid or window.COUPLE_DATA.isPaid === true
+         Positioned cleanly above the navigation dock when visible
+         ======================================================================== -->
+    <div id="demo-cta-bar" class="fixed z-40 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[390px] ios-glass-card rounded-2xl px-3.5 py-2.5 flex items-center justify-between gap-3 border border-white/15 shadow-2xl translate-y-16 opacity-0 pointer-events-none" style="bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/25 to-amber-500/25 border border-rose-400/30 flex items-center justify-center text-rose-300 shrink-0">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+        </div>
+        <p class="text-xs font-medium text-zinc-200 truncate">Want to make one for your person?</p>
+      </div>
+      <button id="open-customize-btn" type="button" class="shrink-0 px-3.5 py-2 rounded-xl bg-white text-zinc-950 font-semibold text-xs hover:bg-zinc-100 active:scale-95 transition shadow-sm">
+        Create Yours
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Hidden Real HTML5 Audio Element for Widget 2 -->
+  <audio id="loveos-audio" preload="metadata" crossorigin="anonymous"></audio>
+
+  <!-- ==========================================================================
+       APPLICATION LOGIC, SOUND ENGINE & LIVE RENDERER
+       ========================================================================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      /* ------------------------------------------------------------------------
+         1. SUBTLE WEB AUDIO API SOUND EFFECTS & HAPTIC VIBRATION ENGINE
+         ------------------------------------------------------------------------ */
+      let audioCtx = null;
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+      }
+
+      // Haptic Vibration for Supported Mobile Devices (Android Chrome, etc.)
+      function triggerHaptic(type) {
+        if (typeof navigator !== "undefined" && navigator.vibrate) {
+          try {
+            if (type === "tap" || type === "light") {
+              navigator.vibrate(12);
+            } else if (type === "flip" || type === "envelope" || type === "medium") {
+              navigator.vibrate(22);
+            } else if (type === "check") {
+              navigator.vibrate([16, 35, 22]);
+            } else if (type === "celebrate") {
+              navigator.vibrate([30, 50, 30, 50, 40]);
+            }
+          } catch (e) {}
+        }
+      }
+
+      // Subtle tactile UI sounds (zero external audio files required)
+      function playUiSound(type) {
+        triggerHaptic(type);
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          if (type === "chat-send" || type === "chat-receive") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            const startFreq = type === "chat-send" ? 580 : 440;
+            const endFreq = type === "chat-send" ? 860 : 620;
+            osc.frequency.setValueAtTime(startFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.065);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(0.05, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.08);
+          } else if (type === "tap" || type === "word-tick") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(type === "word-tick" ? 340 : 520, now);
+            gain.gain.setValueAtTime(0.025, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.035);
+          } else if (type === "flip" || type === "envelope") {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(480, now + 0.09);
+            gain.gain.setValueAtTime(0.035, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.11);
+          } else if (type === "check") {
+            // Warm two-note completion chime
+            [523.25, 659.25].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+              gain.gain.setValueAtTime(0.04, now + idx * 0.07);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.07 + 0.18);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now + idx * 0.07);
+              osc.stop(now + idx * 0.07 + 0.19);
+            });
+          }
+        } catch (err) {
+          // Ignore audio context restrictions if not yet interacted
+        }
+      }
+
+      // Generate a real playable WAV Blob (Warm Lo-Fi Rhodes Chord Loop) as an offline/CORS-proof HTML5 Audio fallback
+      let fallbackWavBlobUrl = null;
+      function getFallbackWarmAudioBlobUrl() {
+        if (fallbackWavBlobUrl) return fallbackWavBlobUrl;
+        const sampleRate = 22050;
+        const durationSeconds = 24;
+        const numSamples = sampleRate * durationSeconds;
+        const buffer = new ArrayBuffer(44 + numSamples * 2);
+        const view = new DataView(buffer);
+
+        function writeString(offset, str) {
+          for (let i = 0; i < str.length; i++) {
+            view.setUint8(offset + i, str.charCodeAt(i));
+          }
+        }
+
+        writeString(0, "RIFF");
+        view.setUint32(4, 36 + numSamples * 2, true);
+        writeString(8, "WAVE");
+        writeString(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); // PCM
+        view.setUint16(22, 1, true); // Mono
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeString(36, "data");
+        view.setUint32(40, numSamples * 2, true);
+
+        // 4 warm nostalgic chords (Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+        const chords = [
+          [174.61, 220.00, 261.63, 329.63],
+          [164.81, 196.00, 246.94, 293.66],
+          [146.83, 174.61, 220.00, 261.63],
+          [130.81, 164.81, 196.00, 246.94]
+        ];
+
+        for (let i = 0; i < numSamples; i++) {
+          const t = i / sampleRate;
+          const chordIdx = Math.floor((t / 6) % chords.length);
+          const chordT = t % 6;
+          const freqs = chords[chordIdx];
+
+          const attack = Math.min(1, chordT / 0.25);
+          const decay = Math.exp(-chordT * 0.42);
+          const env = attack * decay;
+
+          const tremolo = 0.88 + 0.12 * Math.sin(2 * Math.PI * 4.2 * t);
+          let sample = 0;
+          for (let f = 0; f < freqs.length; f++) {
+            sample += Math.sin(2 * Math.PI * freqs[f] * t) * 0.22;
+            sample += Math.sin(2 * Math.PI * (freqs[f] * 2) * t) * 0.04 * Math.exp(-chordT * 1.2);
+          }
+
+          const vinylDust = (Math.random() * 2 - 1) * 0.004;
+          const finalVal = Math.max(-1, Math.min(1, sample * env * tremolo + vinylDust));
+          view.setInt16(44 + i * 2, finalVal * 32767, true);
+        }
+
+        const blob = new Blob([buffer], { type: "audio/wav" });
+        fallbackWavBlobUrl = URL.createObjectURL(blob);
+        return fallbackWavBlobUrl;
+      }
+
+      /* ------------------------------------------------------------------------
+         2. APPLICATION STATE & TIMERS
+         ------------------------------------------------------------------------ */
+      let clockInterval = null;
+      let counterInterval = null;
+      let chatReplayTimeouts = [];
+      let secretRevealTimeouts = [];
+      let activeMilestoneId = null;
+      let activeChatTab = "first-texts"; // 'first-texts' | 'unsent-drafts'
+      let expandedDraftIds = new Set();
+      let activePolaroidIndex = 0;
+      let flippedPolaroidIndices = new Set();
+      let secretIsRevealed = false;
+      let secretIsAnimating = false;
+      let isDynamicIslandExpanded = false;
+      let currentIslandActivity = "default"; // 'default' | 'music' | 'memory' | 'letter'
+      let introDismissed = false;
+
+      // Unique couple-scoped checklist key (prevents collision between couples)
+      function getScopedChecklistStorageKey() {
+        const data = window.COUPLE_DATA || {};
+        const p = String(data.partnerName || "partner").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+        const c = String(data.creatorName || "creator").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+        return `loveos_checklist_${c}_${p}_v2`;
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function formatTimeMMSS(seconds) {
+        if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return mins + ":" + (secs < 10 ? "0" : "") + secs;
+      }
+
+      function getSavedChecklistState() {
+        try {
+          const key = getScopedChecklistStorageKey();
+          let raw = localStorage.getItem(key);
+          if (!raw) {
+            raw = localStorage.getItem("loveos_future_checklist_v1");
+          }
+          if (!raw) return {};
+          return JSON.parse(raw) || {};
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function saveChecklistState(stateMap) {
+        try {
+          const key = getScopedChecklistStorageKey();
+          localStorage.setItem(key, JSON.stringify(stateMap));
+        } catch (e) {}
+      }
+
+      /* ------------------------------------------------------------------------
+         3. SCROLL-TRIGGERED DEMO BAR (ONLY VISIBLE WHEN SCROLLED TO BOTTOM)
+         ------------------------------------------------------------------------ */
+      function syncDemoBarVisibility(data) {
+        const demoBar = document.getElementById("demo-cta-bar");
+        if (!demoBar) return;
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPaidParam = urlParams.get("mode") === "paid";
+        const isPaidConfig = Boolean(data && data.isPaid === true);
+
+        if (isPaidParam || isPaidConfig) {
+          demoBar.classList.add("hidden");
+          return;
+        } else {
+          demoBar.classList.remove("hidden");
+        }
+
+        // Show only when scrolled towards bottom; hide when scrolling back up
+        const handleScroll = () => {
+          if (demoBar.classList.contains("hidden")) return;
+          const scrollPos = window.innerHeight + window.scrollY;
+          const threshold = document.documentElement.scrollHeight - 480;
+
+          if (scrollPos >= threshold) {
+            demoBar.classList.remove("translate-y-16", "opacity-0", "pointer-events-none");
+            demoBar.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+          } else {
+            demoBar.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+            demoBar.classList.add("translate-y-16", "opacity-0", "pointer-events-none");
+          }
+        };
+
+        window.removeEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+      }
+
+      /* ------------------------------------------------------------------------
+         4. DYNAMIC ISLAND CONTROLLER (AT AUTHENTIC TOP STATUS ROW)
+         ------------------------------------------------------------------------ */
+      function setIslandActivity(activityName) {
+        currentIslandActivity = activityName;
+        updateDynamicIslandContent();
+      }
+
+      function toggleDynamicIsland() {
+        isDynamicIslandExpanded = !isDynamicIslandExpanded;
+        playUiSound("tap");
+        updateDynamicIslandContent();
+      }
+
+      function collapseDynamicIsland() {
+        if (isDynamicIslandExpanded) {
+          isDynamicIslandExpanded = false;
+          updateDynamicIslandContent();
+        }
+      }
+
+      function updateDynamicIslandContent() {
+        const island = document.getElementById("dynamic-island-el");
+        if (!island) return;
+
+        const audio = document.getElementById("loveos-audio");
+        const isAudioPlaying = audio && !audio.paused && !audio.ended;
+        const data = window.COUPLE_DATA || {};
+
+        if (isDynamicIslandExpanded) {
+          island.classList.add("is-expanded");
+
+          if (isAudioPlaying || currentIslandActivity === "music") {
+            // A. Music Activity Expanded
+            island.innerHTML = `
+              <div class="flex items-center justify-between gap-3 w-full">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="relative w-10 h-10 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center shrink-0 shadow-md">
+                    <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400"></div>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(data.songData?.title || "Our Song")}</p>
+                    <p class="text-[11px] text-zinc-400 truncate">${escapeHtml(data.songData?.artist || "Now Playing")}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+                  <div class="flex items-center gap-1 h-4 px-1.5">
+                    <span class="island-wave-bar wave-b1 ${isAudioPlaying ? '' : 'paused'}"></span>
+                    <span class="island-wave-bar wave-b2 ${isAudioPlaying ? '' : 'paused'}"></span>
+                    <span class="island-wave-bar wave-b3 ${isAudioPlaying ? '' : 'paused'}"></span>
+                    <span class="island-wave-bar wave-b4 ${isAudioPlaying ? '' : 'paused'}"></span>
+                  </div>
+                  <button id="island-play-toggle" type="button" class="w-8 h-8 rounded-full bg-white text-zinc-950 flex items-center justify-center shadow-md active:scale-90 transition">
+                    ${isAudioPlaying ? `
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                    ` : `
+                      <svg class="w-3.5 h-3.5 translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                    `}
+                  </button>
+                </div>
+              </div>
+              <div class="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-zinc-400">
+                <span class="font-mono text-[10px] text-rose-300">VINYL STREAM</span>
+                <button type="button" class="island-jump-link text-white font-medium hover:underline" data-target="section-music">Jump to Vinyl Deck &rarr;</button>
+              </div>
+            `;
+          } else if (currentIslandActivity === "memory") {
+            // B. Memory Activity Expanded
+            const photos = data.polaroidPhotos || [];
+            const photo = photos[activePolaroidIndex] || photos[0];
+            island.innerHTML = `
+              <div class="flex items-center justify-between gap-3 w-full">
+                <div class="flex items-center gap-3 min-w-0">
+                  <img src="${escapeHtml(photo.imageUrl)}" alt="memory" class="w-10 h-10 rounded-xl object-cover border border-white/20 shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100x100/18181b/f4f4f5?text=Us';" />
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(photo.caption || "Scrapbook Memory")}</p>
+                    <p class="text-[11px] text-zinc-400 truncate">${escapeHtml(photo.location || photo.date || "")}</p>
+                  </div>
+                </div>
+                <button type="button" class="island-jump-link shrink-0 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-[11px] font-medium" data-target="section-photos">
+                  View
+                </button>
+              </div>
+              <div class="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                <span>POLAROID ${activePolaroidIndex + 1} OF ${photos.length}</span>
+                <span class="text-rose-300">Tap photo to flip</span>
+              </div>
+            `;
+          } else if (currentIslandActivity === "letter") {
+            // C. Letter Activity Expanded
+            island.innerHTML = `
+              <div class="flex items-center justify-between gap-3 w-full">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold text-white truncate">Open When Envelopes</p>
+                    <p class="text-[11px] text-zinc-400 truncate">4 Sealed Letters for ${escapeHtml(data.partnerName)}</p>
+                  </div>
+                </div>
+                <button type="button" class="island-jump-link shrink-0 px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-200 text-[11px] font-medium" data-target="section-notes">
+                  Read
+                </button>
+              </div>
+            `;
+          } else {
+            // D. Default State Expanded
+            island.innerHTML = `
+              <div class="flex items-center justify-between gap-3 w-full">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(data.partnerName)} &amp; ${escapeHtml(data.creatorName)}</p>
+                    <p class="text-[11px] text-zinc-400 truncate">Every moment led to you</p>
+                  </div>
+                </div>
+                <button type="button" class="island-jump-link shrink-0 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px] font-medium" data-target="section-home">
+                  Top &uarr;
+                </button>
+              </div>
+            `;
+          }
+
+          // Bind internal jump links & play toggle
+          island.querySelectorAll(".island-jump-link").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const targetId = btn.getAttribute("data-target");
+              const el = document.getElementById(targetId);
+              if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+              collapseDynamicIsland();
+            });
+          });
+
+          const islandPlayBtn = island.querySelector("#island-play-toggle");
+          if (islandPlayBtn && audio) {
+            islandPlayBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              getAudioContext();
+              if (audio.paused) {
+                audio.play().catch(() => {
+                  audio.src = getFallbackWarmAudioBlobUrl();
+                  audio.play().catch(() => {});
+                });
+              } else {
+                audio.pause();
+              }
+            });
+          }
+
+        } else {
+          // Collapsed Pill State (Directly between Status Time & Battery Icon)
+          island.classList.remove("is-expanded");
+
+          if (isAudioPlaying) {
+            island.innerHTML = `
+              <div class="flex items-center gap-1.5 px-2.5 py-0.5 text-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                <span class="font-mono text-[9px] uppercase text-zinc-300 tracking-wider truncate max-w-[85px]">${escapeHtml(data.songData?.title || "Playing")}</span>
+                <div class="flex items-center gap-0.5 h-2.5">
+                  <span class="island-wave-bar wave-b1"></span>
+                  <span class="island-wave-bar wave-b2"></span>
+                  <span class="island-wave-bar wave-b3"></span>
+                </div>
+              </div>
+            `;
+          } else {
+            island.innerHTML = `
+              <div class="flex items-center gap-1.5 px-3 py-0.5 text-xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                <span class="font-mono text-[10px] tracking-widest uppercase text-zinc-400">LoveOS</span>
+              </div>
+            `;
+          }
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         5. CELEBRATION HEARTS BURST (WHEN CHECKLIST REACHES 100%)
+         ------------------------------------------------------------------------ */
+      function triggerCelebrationHearts() {
+        playUiSound("check");
+        triggerHaptic("celebrate");
+
+        const heartColors = ["#f43f5e", "#fb7185", "#f59e0b", "#fbbf24", "#fda4af", "#ffffff"];
+        const container = document.createElement("div");
+        container.id = "celebration-hearts-container";
+        container.className = "fixed inset-0 pointer-events-none z-50 overflow-hidden";
+        document.body.appendChild(container);
+
+        const heartSvg = (color) => `
+          <svg class="w-full h-full drop-shadow-lg" viewBox="0 0 24 24" fill="${color}">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        `;
+
+        for (let i = 0; i < 34; i++) {
+          const heart = document.createElement("div");
+          heart.className = "celebration-heart";
+          const size = Math.floor(Math.random() * 22) + 16;
+          const left = Math.floor(Math.random() * 88) + 6;
+          const bottom = Math.floor(Math.random() * 25) + 10;
+          const floatX = (Math.random() - 0.5) * 150;
+          const floatRot = (Math.random() - 0.5) * 55;
+          const floatScale = Math.random() * 0.6 + 0.9;
+          const floatDur = (Math.random() * 1.2 + 2.0).toFixed(2);
+          const color = heartColors[Math.floor(Math.random() * heartColors.length)];
+
+          heart.style.width = size + "px";
+          heart.style.height = size + "px";
+          heart.style.left = left + "%";
+          heart.style.bottom = bottom + "%";
+          heart.style.setProperty("--float-x", floatX + "px");
+          heart.style.setProperty("--float-rot", floatRot + "deg");
+          heart.style.setProperty("--float-scale", floatScale);
+          heart.style.setProperty("--float-dur", floatDur + "s");
+          heart.innerHTML = heartSvg(color);
+
+          container.appendChild(heart);
+        }
+
+        setTimeout(() => {
+          container.remove();
+        }, 3400);
+      }
+
+      /* ------------------------------------------------------------------------
+         6. CINEMATIC FIRST-OPEN INTRO CONTROLLER
+         ------------------------------------------------------------------------ */
+      function setupCinematicIntro(partnerName) {
+        const intro = document.getElementById("cinematic-intro");
+        const enterBtn = document.getElementById("enter-loveos-btn");
+        const skipBtn = document.getElementById("skip-intro-btn");
+        const nameEl = document.getElementById("intro-partner-name");
+
+        if (nameEl && partnerName) {
+          nameEl.textContent = `For ${partnerName}`;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get("preview") === "true";
+        const hasSeenIntro = sessionStorage.getItem("loveos_intro_passed");
+        if (hasSeenIntro === "true" || introDismissed || isPreview) {
+          if (intro) intro.classList.add("hidden");
+          return;
+        }
+
+        const dismissIntro = () => {
+          if (!intro || introDismissed) return;
+          introDismissed = true;
+          sessionStorage.setItem("loveos_intro_passed", "true");
+          playUiSound("tap");
+          intro.classList.add("intro-dismissed");
+          setTimeout(() => {
+            intro.classList.add("hidden");
+          }, 650);
+        };
+
+        if (enterBtn) enterBtn.addEventListener("click", dismissIntro);
+        if (skipBtn) skipBtn.addEventListener("click", dismissIntro);
+        if (intro) {
+          intro.addEventListener("click", (e) => {
+            if (e.target === intro) dismissIntro();
+          });
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         7. BUILD FULL UI HTML INSIDE #loveos-app
+         ------------------------------------------------------------------------ */
+      window.renderLoveOS = function (customData) {
+        if (customData && typeof customData === "object") {
+          window.COUPLE_DATA = Object.assign({}, window.COUPLE_DATA, customData);
+        }
+        const data = window.COUPLE_DATA;
+        const app = document.getElementById("loveos-app");
+        if (!app) return;
+
+        syncDemoBarVisibility(data);
+
+        // Ensure default active milestone is set to the first item
+        const milestones = Array.isArray(data.milestones) ? data.milestones : [];
+        if (!activeMilestoneId && milestones.length > 0) {
+          activeMilestoneId = milestones[0].id;
+        }
+
+        const photos = Array.isArray(data.polaroidPhotos) ? data.polaroidPhotos : [];
+        if (activePolaroidIndex >= photos.length) {
+          activePolaroidIndex = 0;
+        }
+
+        // Calculate word count for Notes App
+        const letterText = String(data.mainLoveLetter || "").trim();
+        const wordCount = letterText ? letterText.split(/\s+/).length : 0;
+
+        app.innerHTML = `
+          <!-- ==================================================================
+               TOP STATUS BAR WITH INTEGRATED DYNAMIC ISLAND (AT THE VERY TOP)
+               ================================================================== -->
+          <header class="pt-0.5 select-none relative z-30">
+            <!-- iOS Status Bar Row -->
+            <div class="relative flex items-center justify-between px-3 pt-0.5 pb-1 text-xs font-semibold tracking-tight text-zinc-200 min-h-[36px]">
+              <!-- Left: iOS Status Time -->
+              <div class="flex items-center gap-1.5 w-16 shrink-0">
+                <span id="ios-status-time" class="font-mono text-[13px] font-semibold">9:41</span>
+              </div>
+
+              <!-- Center: Real Dynamic Island Pill (Placed at authentic top center) -->
+              <div id="dynamic-island-container" class="dynamic-island-wrapper flex-1 mx-1.5 flex justify-center">
+                <div
+                  id="dynamic-island-el"
+                  class="dynamic-island-pill rounded-full flex items-center justify-center transition-all duration-300"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Dynamic Island. Tap to expand controls."
+                >
+                  <!-- Rendered dynamically via updateDynamicIslandContent() -->
+                </div>
+              </div>
+
+              <!-- Right: Cellular, Wi-Fi, Battery SVG Icons -->
+              <div class="flex items-center justify-end gap-1.5 w-16 shrink-0 text-zinc-200">
+                <!-- Cellular Signal SVG -->
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/>
+                </svg>
+                <!-- Wi-Fi SVG -->
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/>
+                </svg>
+                <!-- Battery SVG -->
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="16" height="10" x="2" y="7" rx="2" ry="2"/>
+                  <line x1="22" x2="22" y1="11" y2="13"/>
+                  <rect width="11" height="6" x="4" y="9" rx="1" fill="currentColor" stroke="none"/>
+                </svg>
+              </div>
+            </div>
+          </header>
+
+          <!-- ==================================================================
+               SECTION 1: LOCKSCREEN HEADER, RELATIONSHIP COUNTER & MILESTONES
+               ================================================================== -->
+          <section id="section-home" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
+            <!-- Subtle Top Lock Icon & Tag -->
+            <div class="flex items-center justify-between mb-3">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.07] text-[11px] text-zinc-300">
+                <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Unlocked by ${escapeHtml(data.creatorName)} &amp; ${escapeHtml(data.partnerName)}</span>
+              </div>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">SINCE ${escapeHtml((data.anniversaryDate || "").slice(0, 10))}</span>
+            </div>
+
+            <!-- Emotional Headline -->
+            <h1 class="font-serif italic text-[28px] sm:text-[31px] leading-[1.15] text-zinc-100 tracking-tight mb-4">
+              For ${escapeHtml(data.partnerName)} — every little moment led me to you.
+            </h1>
+
+            <!-- Live Ticking Relationship Counter (Days, Hours, Minutes, Seconds) -->
+            <div class="grid grid-cols-4 gap-2 p-2.5 rounded-2xl bg-black/40 border border-white/[0.06]">
+              <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02]">
+                <span id="counter-days" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">000</span>
+                <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Days</span>
+              </div>
+              <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02]">
+                <span id="counter-hours" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">00</span>
+                <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Hours</span>
+              </div>
+              <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02]">
+                <span id="counter-mins" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">00</span>
+                <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Mins</span>
+              </div>
+              <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-rose-500/[0.08] border border-rose-500/20">
+                <span id="counter-secs" class="font-mono text-xl sm:text-2xl font-semibold text-rose-300 tracking-tight">00</span>
+                <span class="font-mono text-[10px] uppercase tracking-widest text-rose-300/80 mt-0.5">Secs</span>
+              </div>
+            </div>
+
+            <!-- Horizontal Interactive Milestone Pills -->
+            <div class="mt-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Our Core Milestones</span>
+                <span class="text-[11px] text-zinc-500">Tap a pill to view</span>
+              </div>
+              <div id="milestone-pills-row" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                ${milestones.map((m) => {
+                  const isActive = m.id === activeMilestoneId;
+                  return `
+                    <button
+                      type="button"
+                      data-milestone-id="${escapeHtml(m.id)}"
+                      class="milestone-pill-btn ios-pill shrink-0 px-3.5 py-2 rounded-full text-xs font-medium flex items-center gap-1.5 ${isActive ? 'active-pill' : 'text-zinc-300 hover:text-white'}"
+                    >
+                      <svg class="w-3.5 h-3.5 ${isActive ? 'text-rose-400' : 'text-zinc-400'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                      </svg>
+                      <span>${escapeHtml(m.label)}</span>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+
+              <!-- Animated Milestone Detail Card -->
+              <div id="milestone-detail-card" class="mt-2.5 rounded-2xl bg-white/[0.04] border border-white/[0.08] p-3.5 transition-all duration-300">
+                <!-- Populated dynamically by updateMilestoneDetail() -->
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               SECTION 2: MINI VINYL & AUDIO MEMORY DECK (REAL HTML5 AUDIO)
+               ================================================================== -->
+          <section id="section-music" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Mini Vinyl &amp; Memory Deck</h2>
+              </div>
+              <span id="audio-status-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 uppercase tracking-wider">Paused</span>
+            </div>
+
+            <!-- Vinyl Disc + Track Metadata + Play Controls -->
+            <div class="flex items-center gap-4">
+              <!-- Spinning Mini Vinyl Record -->
+              <div class="relative w-20 h-20 shrink-0 flex items-center justify-center">
+                <div id="vinyl-disc-el" class="vinyl-disc vinyl-grooves w-20 h-20 rounded-full flex items-center justify-center relative border border-white/10">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center shadow-inner">
+                    <div class="w-2 h-2 rounded-full bg-obsidian"></div>
+                  </div>
+                </div>
+                <!-- Tonearm SVG Overlay -->
+                <svg id="vinyl-tonearm" class="w-7 h-7 absolute -top-1 -right-1 text-zinc-400 transition-transform duration-500 origin-top-right pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="2"/>
+                  <path d="M18 7v7l-5 5"/>
+                </svg>
+              </div>
+
+              <!-- Song Title, Artist & Scrubber -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0">
+                    <h3 class="text-base font-semibold text-white truncate">${escapeHtml(data.songData?.title || "Our Song")}</h3>
+                    <p class="text-xs text-zinc-400 truncate mt-0.5">${escapeHtml(data.songData?.artist || `${data.creatorName} & ${data.partnerName}`)}</p>
+                  </div>
+
+                  <!-- Play / Pause Button -->
+                  <button id="audio-play-btn" type="button" class="w-11 h-11 rounded-2xl bg-white text-zinc-950 flex items-center justify-center shadow-lg hover:bg-zinc-100 active:scale-95 transition shrink-0" aria-label="Play or Pause">
+                    <!-- Play Icon -->
+                    <svg id="icon-play" class="w-5 h-5 translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="6 3 20 12 6 21 6 3"/>
+                    </svg>
+                    <!-- Pause Icon -->
+                    <svg id="icon-pause" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Seekable Progress Bar & Running Timestamp -->
+                <div class="mt-2.5">
+                  <input id="audio-seek-slider" type="range" min="0" max="100" value="0" step="0.1" class="audio-scrubber w-full" aria-label="Seek song progress" />
+                  <div class="flex items-center justify-between font-mono text-[11px] text-zinc-400 -mt-1">
+                    <span id="audio-current-time">0:00</span>
+                    <span id="audio-duration">0:24</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto-rotating Memory Note Banner below Player -->
+            <div id="memory-note-box" class="mt-3.5 pt-3 border-t border-white/[0.07] flex items-start gap-2.5 cursor-pointer group" title="Tap to cycle memory note">
+              <div class="w-6 h-6 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0 mt-0.5">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-amber-300/90">Memory Note</span>
+                  <span id="memory-note-index" class="font-mono text-[10px] text-zinc-500 group-hover:text-zinc-300 transition">1 / ${(data.songData?.memoryNotes || []).length || 1} • Tap for next</span>
+                </div>
+                <p id="memory-note-text" class="text-xs text-zinc-300 italic mt-0.5 leading-relaxed transition-opacity duration-300">
+                  "${escapeHtml((data.songData?.memoryNotes && data.songData.memoryNotes[0]) || "")}"
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               SECTION 3: "HOW IT STARTED" — iMESSAGE REPLAY & UNSENT DRAFTS
+               ================================================================== -->
+          <section id="section-messages" class="ios-glass-card rounded-3xl p-5 reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-iosBlue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">How It Started</h2>
+              </div>
+              <span class="font-mono text-[10px] text-zinc-500">iMessage Archive</span>
+            </div>
+
+            <!-- iOS Segmented Control: First Texts vs Unsent Drafts -->
+            <div class="grid grid-cols-2 p-1 rounded-2xl bg-black/50 border border-white/[0.07] mb-4">
+              <button
+                type="button"
+                id="tab-btn-first-texts"
+                class="py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activeChatTab === 'first-texts' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-400 hover:text-zinc-200'}"
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>First Texts</span>
+              </button>
+              <button
+                type="button"
+                id="tab-btn-unsent-drafts"
+                class="py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activeChatTab === 'unsent-drafts' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-400 hover:text-zinc-200'}"
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+                <span>Unsent Drafts (${(data.unsentDrafts || []).length})</span>
+              </button>
+            </div>
+
+            <!-- TAB PANEL A: First Texts (iMessage Simulation) -->
+            <div id="panel-first-texts" class="${activeChatTab === 'first-texts' ? 'block' : 'hidden'}">
+              <div class="flex items-center justify-between px-3 py-2 rounded-2xl bg-white/[0.03] border border-white/[0.06] mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-iosBlue to-indigo-400 flex items-center justify-center text-white font-semibold text-xs shadow">
+                    ${escapeHtml((data.partnerName || "M").charAt(0))}
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-white">${escapeHtml(data.partnerName)}</div>
+                    <div class="text-[10px] text-zinc-400">iMessage • Late Night</div>
+                  </div>
+                </div>
+                <button
+                  id="replay-chat-btn"
+                  type="button"
+                  class="px-3 py-1.5 rounded-xl bg-iosBlue/20 hover:bg-iosBlue/30 border border-iosBlue/40 text-blue-300 text-[11px] font-semibold flex items-center gap-1.5 active:scale-95 transition"
+                >
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                  </svg>
+                  <span>Replay Our First Chat</span>
+                </button>
+              </div>
+
+              <div id="imessage-stream" class="space-y-2.5 min-h-[240px] max-h-[320px] overflow-y-auto no-scrollbar px-1 py-2"></div>
+            </div>
+
+            <!-- TAB PANEL B: Unsent Drafts -->
+            <div id="panel-unsent-drafts" class="${activeChatTab === 'unsent-drafts' ? 'block' : 'hidden'} space-y-2.5">
+              <p class="text-xs text-zinc-400 mb-2">
+                Messages I typed out in the beginning when I was too nervous to actually hit send. Tap a draft to read the full confession:
+              </p>
+              <div id="unsent-drafts-list" class="space-y-2.5">
+                ${(data.unsentDrafts || []).map((draft) => {
+                  const isExpanded = expandedDraftIds.has(draft.id);
+                  return `
+                    <div
+                      data-draft-id="${escapeHtml(draft.id)}"
+                      class="unsent-draft-card rounded-2xl bg-white/[0.04] hover:bg-white/[0.06] border border-white/[0.08] p-3.5 cursor-pointer transition active:scale-[0.99]"
+                    >
+                      <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                        <span class="font-medium text-rose-300/90">${escapeHtml(draft.context)}</span>
+                        <span class="font-mono text-[10px] text-zinc-500">${escapeHtml(draft.date)}</span>
+                      </div>
+                      <p class="text-xs text-zinc-200 leading-relaxed">
+                        ${isExpanded ? escapeHtml(draft.fullText) : escapeHtml(draft.preview)}
+                      </p>
+                      <div class="mt-2 flex items-center justify-between">
+                        <span class="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+                          <svg class="w-3 h-3 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
+                          </svg>
+                          Not Delivered
+                        </span>
+                        <span class="text-[11px] font-medium text-iosBlue flex items-center gap-1">
+                          <span>${isExpanded ? "Show less" : "Tap to read full draft"}</span>
+                          <svg class="w-3 h-3 transition-transform ${isExpanded ? 'rotate-180' : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               SECTION 4: 3D POLAROID CAMERA ROLL (SWIPEABLE & FLIPPABLE)
+               ================================================================== -->
+          <section id="section-photos" class="ios-glass-card rounded-3xl p-5 reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Polaroid Camera Roll</h2>
+              </div>
+
+              <!-- Tap photo to flip indicator -->
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.06] text-[11px] text-zinc-300">
+                <span>Swipe or tap to flip</span>
+                <svg class="w-3.5 h-3.5 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Active 3D Polaroid Card Stage with Touch Swipe Handler -->
+            <div id="polaroid-stage-container"></div>
+
+            <!-- Memory Progress Indicator Dots -->
+            <div class="mt-3 flex items-center justify-center gap-1.5" id="polaroid-dots-container">
+              ${photos.map((_, idx) => `
+                <span class="polaroid-dot transition-all duration-300 ${idx === activePolaroidIndex ? 'w-5 h-1.5 bg-rose-400 rounded-full' : 'w-1.5 h-1.5 bg-zinc-600 rounded-full'}"></span>
+              `).join("")}
+            </div>
+
+            <!-- Thumbnail Strip / Film Selector -->
+            <div class="mt-3 flex items-center justify-between gap-2">
+              <button id="polaroid-prev-btn" type="button" class="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] flex items-center justify-center text-zinc-200 active:scale-95 transition" aria-label="Previous photo">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </button>
+
+              <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                ${photos.map((photo, idx) => `
+                  <button
+                    type="button"
+                    data-polaroid-thumb="${idx}"
+                    class="polaroid-thumb-btn relative w-11 h-11 rounded-lg overflow-hidden border-2 transition ${idx === activePolaroidIndex ? 'border-rose-400 scale-105 shadow-md' : 'border-white/15 opacity-55 hover:opacity-85'}"
+                    aria-label="View Polaroid ${idx + 1}"
+                  >
+                    <img
+                      src="${escapeHtml(photo.imageUrl)}"
+                      alt="${escapeHtml(photo.caption || 'Memory')}"
+                      class="w-full h-full object-cover"
+                      onerror="this.onerror=null;this.src='https://placehold.co/600x600/18181b/f4f4f5?text=Our+Memory';"
+                    />
+                  </button>
+                `).join("")}
+              </div>
+
+              <button id="polaroid-next-btn" type="button" class="w-9 h-9 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] flex items-center justify-center text-zinc-200 active:scale-95 transition" aria-label="Next photo">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </button>
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               SECTION 5: "OPEN WHEN..." MOOD ENVELOPES (2x2 GRID)
+               ================================================================== -->
+          <section id="section-notes-letters" class="ios-glass-card rounded-3xl p-5 reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">"Open When..." Envelopes</h2>
+              </div>
+              <span class="font-mono text-[10px] text-zinc-500">4 Sealed Letters</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              ${(data.openWhenEnvelopes || []).map((env, index) => `
+                <button
+                  type="button"
+                  data-envelope-idx="${index}"
+                  class="envelope-card group text-left rounded-2xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] hover:from-white/[0.1] hover:to-white/[0.05] border border-white/[0.1] p-3.5 flex flex-col justify-between min-h-[136px] relative shadow-lg"
+                >
+                  <!-- 3D Realistic Envelope Flap SVG Geometry -->
+                  <svg class="envelope-flap absolute inset-x-0 top-0 w-full h-11 text-white/[0.09] pointer-events-none" viewBox="0 0 200 52" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M0 0 L100 40 L200 0" />
+                  </svg>
+
+                  <!-- Top Wax Seal Badge with Realistic Gradient -->
+                  <div class="flex items-center justify-between w-full relative z-10">
+                    <span class="font-mono text-[10px] text-zinc-400 tracking-wider">0${index + 1}</span>
+                    <div class="wax-seal">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Envelope Label -->
+                  <div class="mt-4 relative z-10">
+                    <h3 class="font-serif italic text-lg leading-snug text-zinc-100 group-hover:text-rose-200 transition">
+                      ${escapeHtml(env.title)}
+                    </h3>
+                    <p class="text-[11px] text-zinc-400 mt-0.5 line-clamp-1">${escapeHtml(env.subtitle || "Tap to unseal")}</p>
+                  </div>
+                </button>
+              `).join("")}
+            </div>
+          </section>
+
+          <!-- ==================================================================
+               SECTION 6: 3AM NOTES APP CONFESSION, SECRET REVEAL & FUTURE CHECKLIST
+               ================================================================== -->
+          <section id="section-notes" class="ios-glass-card rounded-3xl overflow-hidden border border-white/[0.09] reveal-on-scroll">
+            <div class="px-5 pt-4 pb-3 border-b border-white/[0.07] flex items-center justify-between bg-white/[0.02]">
+              <div class="flex items-center gap-1.5 text-notesAmber text-xs font-medium">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+                <span>iCloud Notes</span>
+              </div>
+              <div class="font-mono text-[10px] text-zinc-400">
+                Edited 3:12 AM • ${wordCount} words
+              </div>
+              <div class="flex items-center gap-2 text-notesAmber">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Main Love Letter Content -->
+            <div class="p-5 notes-paper-bg">
+              <div class="mb-3">
+                <span class="inline-block px-2 py-0.5 rounded bg-notesAmber/15 border border-notesAmber/30 text-notesAmber font-mono text-[10px] uppercase tracking-wider">
+                  Pinned Note • For ${escapeHtml(data.partnerName)}
+                </span>
+                <h2 class="font-serif italic text-2xl sm:text-3xl text-white mt-2">
+                  Things I don't say out loud enough
+                </h2>
+              </div>
+
+              <div class="text-[14.5px] leading-[1.8] text-zinc-200 whitespace-pre-line font-sans">
+${escapeHtml(data.mainLoveLetter)}
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-white/[0.07] flex items-center justify-between">
+                <span class="font-hand text-2xl text-amber-300">— Always yours, ${escapeHtml(data.creatorName)}</span>
+                <span class="font-mono text-[10px] text-zinc-500">Locked with Face ID</span>
+              </div>
+
+              <!-- Interactive Secret Confession Reveal Box -->
+              <div class="mt-5 rounded-2xl bg-black/50 border border-notesAmber/30 p-4 shadow-inner">
+                <button
+                  id="secret-reveal-btn"
+                  type="button"
+                  class="w-full text-left flex items-center justify-between gap-3 group"
+                >
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-notesAmber/15 border border-notesAmber/30 flex items-center justify-center text-notesAmber shrink-0">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-xs font-semibold text-amber-200 group-hover:text-white transition">
+                        There's one thing I never told you...
+                      </p>
+                      <p id="secret-reveal-sublabel" class="text-[11px] text-zinc-400">
+                        ${secretIsRevealed ? "Tap to replay word-by-word" : "(Tap to reveal hidden note)"}
+                      </p>
+                    </div>
+                  </div>
+                  <svg class="w-4 h-4 text-notesAmber shrink-0 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6"/>
+                  </svg>
+                </button>
+
+                <div
+                  id="secret-confession-output"
+                  class="${secretIsRevealed ? 'mt-3 pt-3 border-t border-white/[0.08]' : 'hidden'} text-xs sm:text-sm italic text-amber-100/95 leading-relaxed font-serif text-lg sm:text-xl"
+                >
+                  ${secretIsRevealed ? escapeHtml(data.secretConfession) : ""}
+                </div>
+              </div>
+
+              <!-- Our Shared Future Checklist (Persisted in localStorage with unique couple key) -->
+              <div class="mt-6 pt-5 border-t border-white/[0.08]">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-notesAmber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-200">Our Shared Future Checklist</h3>
+                  </div>
+                  <span id="checklist-progress-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-notesAmber/15 text-amber-300 border border-notesAmber/30">
+                    0 / 0 Done
+                  </span>
+                </div>
+
+                <div id="future-checklist-container" class="space-y-2">
+                  <!-- Populated by renderFutureChecklist() -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Subtle Footer Colophon -->
+          <footer class="pt-2 pb-6 text-center select-none">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+              Handcrafted on LoveOS • Made with care for ${escapeHtml(data.partnerName)}
+            </p>
+          </footer>
+        `;
+
+        // Initialize sub-renders & event bindings
+        startStatusClock();
+        startRelationshipCounter(data.anniversaryDate);
+        updateMilestoneDetail();
+        initAudioPlayer(data.songData);
+        renderChatBubbles(false);
+        renderPolaroidStage();
+        renderFutureChecklist();
+        updateDynamicIslandContent();
+        bindWidgetEvents();
+        initScrollReveals();
+      };
+
+      /* ------------------------------------------------------------------------
+         8. WIDGET 1 HELPERS: REAL-TIME CLOCK, COUNTER & MILESTONES
+         ------------------------------------------------------------------------ */
+      function startStatusClock() {
+        if (clockInterval) clearInterval(clockInterval);
+        const updateClock = () => {
+          const el = document.getElementById("ios-status-time");
+          if (!el) return;
+          const now = new Date();
+          let hours = now.getHours();
+          const mins = now.getMinutes();
+          hours = hours % 12 || 12;
+          el.textContent = hours + ":" + (mins < 10 ? "0" : "") + mins;
+        };
+        updateClock();
+        clockInterval = setInterval(updateClock, 10000);
+      }
+
+      function startRelationshipCounter(anniversaryIso) {
+        if (counterInterval) clearInterval(counterInterval);
+        const startTime = new Date(anniversaryIso || "2024-10-14T19:30:00").getTime();
+
+        const tick = () => {
+          const now = Date.now();
+          const diffMs = Math.max(0, now - startTime);
+          const totalSeconds = Math.floor(diffMs / 1000);
+
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const mins = Math.floor((totalSeconds % 3600) / 60);
+          const secs = totalSeconds % 60;
+
+          const dEl = document.getElementById("counter-days");
+          const hEl = document.getElementById("counter-hours");
+          const mEl = document.getElementById("counter-mins");
+          const sEl = document.getElementById("counter-secs");
+
+          if (dEl) dEl.textContent = String(days).padStart(2, "0");
+          if (hEl) hEl.textContent = String(hours).padStart(2, "0");
+          if (mEl) mEl.textContent = String(mins).padStart(2, "0");
+          if (sEl) sEl.textContent = String(secs).padStart(2, "0");
+        };
+
+        tick();
+        counterInterval = setInterval(tick, 1000);
+      }
+
+      function updateMilestoneDetail() {
+        const container = document.getElementById("milestone-detail-card");
+        if (!container) return;
+        const milestones = window.COUPLE_DATA.milestones || [];
+        const item = milestones.find((m) => m.id === activeMilestoneId) || milestones[0];
+        if (!item) return;
+
+        container.innerHTML = `
+          <div class="flex items-center justify-between text-[11px] mb-1.5">
+            <div class="flex items-center gap-1.5 text-rose-300 font-semibold">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>${escapeHtml(item.location || item.label)}</span>
+            </div>
+            <span class="font-mono text-[10px] text-zinc-400 px-2 py-0.5 rounded-md bg-black/40 border border-white/[0.05]">
+              ${escapeHtml(item.date)}
+            </span>
+          </div>
+          <p class="text-xs text-zinc-200 leading-relaxed">${escapeHtml(item.story)}</p>
+        `;
+      }
+
+      /* ------------------------------------------------------------------------
+         9. WIDGET 2 HELPERS: REAL HTML5 AUDIO + AUTO MEMORY NOTE SYNC
+         ------------------------------------------------------------------------ */
+      let activeMemoryNoteIdx = 0;
+
+      function initAudioPlayer(songData) {
+        const audio = document.getElementById("loveos-audio");
+        if (!audio) return;
+
+        const targetUrl = (songData && songData.audioUrl) ? songData.audioUrl : getFallbackWarmAudioBlobUrl();
+        if (audio.dataset.loadedSrc !== targetUrl) {
+          audio.src = targetUrl;
+          audio.dataset.loadedSrc = targetUrl;
+        }
+
+        audio.onerror = function () {
+          const fallbackUrl = getFallbackWarmAudioBlobUrl();
+          if (audio.src !== fallbackUrl) {
+            audio.src = fallbackUrl;
+            audio.load();
+          }
+        };
+
+        const syncPlayerUI = () => {
+          const isPlaying = !audio.paused && !audio.ended;
+          const disc = document.getElementById("vinyl-disc-el");
+          const tonearm = document.getElementById("vinyl-tonearm");
+          const iconPlay = document.getElementById("icon-play");
+          const iconPause = document.getElementById("icon-pause");
+          const badge = document.getElementById("audio-status-badge");
+
+          if (disc) disc.classList.toggle("is-playing", isPlaying);
+          if (tonearm) tonearm.style.transform = isPlaying ? "rotate(18deg)" : "rotate(0deg)";
+          if (iconPlay) iconPlay.classList.toggle("hidden", isPlaying);
+          if (iconPause) iconPause.classList.toggle("hidden", !isPlaying);
+          if (badge) {
+            badge.textContent = isPlaying ? "Spinning" : "Paused";
+            badge.className = isPlaying
+              ? "font-mono text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider"
+              : "font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 uppercase tracking-wider";
+          }
+          updateDynamicIslandContent();
+        };
+
+        audio.onloadedmetadata = function () {
+          const durEl = document.getElementById("audio-duration");
+          if (durEl && Number.isFinite(audio.duration)) {
+            durEl.textContent = formatTimeMMSS(audio.duration);
+          }
+        };
+
+        audio.ontimeupdate = function () {
+          const curEl = document.getElementById("audio-current-time");
+          const durEl = document.getElementById("audio-duration");
+          const slider = document.getElementById("audio-seek-slider");
+
+          if (curEl) curEl.textContent = formatTimeMMSS(audio.currentTime);
+          if (durEl && Number.isFinite(audio.duration) && audio.duration > 0) {
+            durEl.textContent = formatTimeMMSS(audio.duration);
+            if (slider && !slider.dataset.dragging) {
+              slider.value = ((audio.currentTime / audio.duration) * 100).toFixed(2);
+            }
+
+            const notes = (window.COUPLE_DATA.songData && window.COUPLE_DATA.songData.memoryNotes) || [];
+            if (notes.length > 0) {
+              const computedIdx = Math.floor(audio.currentTime / 6) % notes.length;
+              if (computedIdx !== activeMemoryNoteIdx) {
+                activeMemoryNoteIdx = computedIdx;
+                updateMemoryNoteDisplay(activeMemoryNoteIdx);
+              }
+            }
+          }
+        };
+
+        audio.onplay = syncPlayerUI;
+        audio.onpause = syncPlayerUI;
+        audio.onended = function () {
+          audio.currentTime = 0;
+          syncPlayerUI();
+        };
+
+        syncPlayerUI();
+      }
+
+      function updateMemoryNoteDisplay(idx) {
+        const notes = (window.COUPLE_DATA.songData && window.COUPLE_DATA.songData.memoryNotes) || [];
+        if (!notes.length) return;
+        const safeIdx = ((idx % notes.length) + notes.length) % notes.length;
+        const textEl = document.getElementById("memory-note-text");
+        const indexEl = document.getElementById("memory-note-index");
+        if (textEl) {
+          textEl.style.opacity = "0";
+          setTimeout(() => {
+            textEl.textContent = `"${notes[safeIdx]}"`;
+            textEl.style.opacity = "1";
+          }, 150);
+        }
+        if (indexEl) {
+          indexEl.textContent = `${safeIdx + 1} / ${notes.length} • Tap for next`;
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         10. WIDGET 3 HELPERS: iMESSAGE REPLAY & TYPING ANIMATION
+         ------------------------------------------------------------------------ */
+      function clearChatReplayTimers() {
+        chatReplayTimeouts.forEach((t) => clearTimeout(t));
+        chatReplayTimeouts = [];
+      }
+
+      function createBubbleElement(msg) {
+        const isMe = msg.sender === "me";
+        const wrapper = document.createElement("div");
+        wrapper.className = `flex flex-col ${isMe ? "items-end" : "items-start"} chat-bubble-anim`;
+
+        wrapper.innerHTML = `
+          <div class="max-w-[82%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm ${
+            isMe
+              ? "bg-iosBlue text-white rounded-br-sm"
+              : "bg-iosBubbleGray text-zinc-100 rounded-bl-sm border border-white/[0.06]"
+          }">
+            ${escapeHtml(msg.text)}
+          </div>
+          <div class="mt-1 px-1 flex items-center gap-1.5 text-[10px] font-mono text-zinc-500">
+            <span>${escapeHtml(msg.time || "")}</span>
+            ${msg.status ? `<span>• ${escapeHtml(msg.status)}</span>` : ""}
+          </div>
+        `;
+        return wrapper;
+      }
+
+      function createTypingIndicatorElement(isMe) {
+        const wrapper = document.createElement("div");
+        wrapper.id = "imessage-typing-indicator";
+        wrapper.className = `flex ${isMe ? "justify-end" : "justify-start"} chat-bubble-anim`;
+        wrapper.innerHTML = `
+          <div class="px-3.5 py-2.5 rounded-2xl bg-iosBubbleGray border border-white/[0.07] inline-flex items-center gap-1 shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-zinc-300 typing-dot-1"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-zinc-300 typing-dot-2"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-zinc-300 typing-dot-3"></span>
+          </div>
+        `;
+        return wrapper;
+      }
+
+      function renderChatBubbles(animateReplay) {
+        clearChatReplayTimers();
+        const stream = document.getElementById("imessage-stream");
+        if (!stream) return;
+
+        const messages = window.COUPLE_DATA.chatReplay || [];
+        stream.innerHTML = "";
+
+        if (!animateReplay) {
+          messages.forEach((msg) => {
+            stream.appendChild(createBubbleElement(msg));
+          });
+          stream.scrollTop = stream.scrollHeight;
+          return;
+        }
+
+        let cumulativeDelay = 100;
+        messages.forEach((msg) => {
+          const isMe = msg.sender === "me";
+
+          const t1 = setTimeout(() => {
+            const existingTyping = document.getElementById("imessage-typing-indicator");
+            if (existingTyping) existingTyping.remove();
+            stream.appendChild(createTypingIndicatorElement(isMe));
+            stream.scrollTop = stream.scrollHeight;
+          }, cumulativeDelay);
+          chatReplayTimeouts.push(t1);
+
+          cumulativeDelay += 680;
+
+          const t2 = setTimeout(() => {
+            const existingTyping = document.getElementById("imessage-typing-indicator");
+            if (existingTyping) existingTyping.remove();
+            stream.appendChild(createBubbleElement(msg));
+            playUiSound(isMe ? "chat-send" : "chat-receive");
+            stream.scrollTop = stream.scrollHeight;
+          }, cumulativeDelay);
+          chatReplayTimeouts.push(t2);
+
+          cumulativeDelay += 480;
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         11. WIDGET 4 HELPERS: 3D POLAROID CAMERA ROLL & TOUCH SWIPE
+         ------------------------------------------------------------------------ */
+      function renderPolaroidStage() {
+        const container = document.getElementById("polaroid-stage-container");
+        if (!container) return;
+
+        const photos = window.COUPLE_DATA.polaroidPhotos || [];
+        const currentPhoto = photos[activePolaroidIndex];
+        if (!currentPhoto) return;
+
+        const isFlipped = flippedPolaroidIndices.has(activePolaroidIndex);
+
+        container.innerHTML = `
+          <div class="polaroid-scene w-full h-[385px] cursor-pointer select-none" id="active-polaroid-card">
+            <div class="polaroid-card-inner ${isFlipped ? "is-flipped" : ""}" id="active-polaroid-inner">
+              
+              <!-- FRONT OF POLAROID (#faf8f5 warm paper) -->
+              <div class="polaroid-face polaroid-front p-3.5 pb-5 shadow-2xl flex flex-col justify-between border border-zinc-300/80">
+                <div class="relative w-full h-[280px] rounded-lg overflow-hidden bg-zinc-900 shadow-inner group">
+                  <img
+                    src="${escapeHtml(currentPhoto.imageUrl)}"
+                    alt="${escapeHtml(currentPhoto.caption || "Polaroid memory")}"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onerror="this.onerror=null;this.src='https://placehold.co/800x800/18181b/f4f4f5?text=Our+Polaroid';"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                  <div class="absolute bottom-2.5 right-3 font-mono text-[10px] tracking-widest text-amber-300/95 drop-shadow pointer-events-none">
+                    ${escapeHtml(currentPhoto.date || "")}
+                  </div>
+
+                  <button
+                    type="button"
+                    id="trigger-lightbox-btn"
+                    class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center transition active:scale-95 shadow-md"
+                    title="View fullscreen"
+                    aria-label="View fullscreen photo"
+                  >
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="pt-3 px-1 flex items-end justify-between text-zinc-900">
+                  <div>
+                    <p class="font-hand text-2xl font-bold leading-none text-zinc-900">
+                      ${escapeHtml(currentPhoto.caption || "Us")}
+                    </p>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-1 flex items-center gap-1">
+                      <svg class="w-3 h-3 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span>${escapeHtml(currentPhoto.location || "")}</span>
+                    </p>
+                  </div>
+                  <span class="font-mono text-[10px] text-zinc-400">
+                    ${activePolaroidIndex + 1} / ${photos.length}
+                  </span>
+                </div>
+              </div>
+
+              <!-- BACK OF POLAROID (Handwritten Caveat Note) -->
+              <div class="polaroid-face polaroid-back p-6 shadow-2xl flex flex-col justify-between border border-zinc-300/80 text-zinc-900">
+                <div class="flex items-center justify-between border-b border-zinc-300/80 pb-3">
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+                    ${escapeHtml(currentPhoto.date || "")}
+                  </span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-rose-700 font-semibold">
+                    ${escapeHtml(currentPhoto.location || "")}
+                  </span>
+                </div>
+
+                <div class="my-auto py-4">
+                  <p class="font-hand text-[26px] leading-[1.35] text-zinc-800">
+                    "${escapeHtml(currentPhoto.backNote || "")}"
+                  </p>
+                </div>
+
+                <div class="pt-3 border-t border-zinc-300/80 flex items-center justify-between text-zinc-500">
+                  <span class="font-hand text-xl text-zinc-700">— ${escapeHtml(window.COUPLE_DATA.creatorName)}</span>
+                  <span class="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider">
+                    <span>Tap to flip back</span>
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        document.querySelectorAll(".polaroid-thumb-btn").forEach((btn) => {
+          const idx = Number(btn.getAttribute("data-polaroid-thumb"));
+          if (idx === activePolaroidIndex) {
+            btn.className = "polaroid-thumb-btn relative w-11 h-11 rounded-lg overflow-hidden border-2 transition border-rose-400 scale-105 shadow-md";
+          } else {
+            btn.className = "polaroid-thumb-btn relative w-11 h-11 rounded-lg overflow-hidden border-2 transition border-white/15 opacity-55 hover:opacity-85";
+          }
+        });
+
+        const dotsContainer = document.getElementById("polaroid-dots-container");
+        if (dotsContainer) {
+          dotsContainer.innerHTML = photos.map((_, idx) => `
+            <span class="polaroid-dot transition-all duration-300 ${idx === activePolaroidIndex ? 'w-5 h-1.5 bg-rose-400 rounded-full' : 'w-1.5 h-1.5 bg-zinc-600 rounded-full'}"></span>
+          `).join("");
+        }
+
+        const cardEl = document.getElementById("active-polaroid-card");
+        const innerEl = document.getElementById("active-polaroid-inner");
+        const lightboxBtn = document.getElementById("trigger-lightbox-btn");
+
+        if (cardEl && innerEl) {
+          let touchStartX = 0;
+          let touchStartY = 0;
+          let touchStartTime = 0;
+
+          cardEl.addEventListener("touchstart", (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+            touchStartY = e.changedTouches[0].clientY;
+            touchStartTime = Date.now();
+          }, { passive: true });
+
+          cardEl.addEventListener("touchend", (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            const timeDiff = Date.now() - touchStartTime;
+
+            if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) && timeDiff < 600) {
+              if (diffX < 0) {
+                playUiSound("tap");
+                activePolaroidIndex = (activePolaroidIndex + 1) % photos.length;
+                renderPolaroidStage();
+              } else {
+                playUiSound("tap");
+                activePolaroidIndex = (activePolaroidIndex - 1 + photos.length) % photos.length;
+                renderPolaroidStage();
+              }
+              return;
+            }
+
+            if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+              if (lightboxBtn && (e.target === lightboxBtn || lightboxBtn.contains(e.target))) {
+                return;
+              }
+              playUiSound("flip");
+              if (flippedPolaroidIndices.has(activePolaroidIndex)) {
+                flippedPolaroidIndices.delete(activePolaroidIndex);
+                innerEl.classList.remove("is-flipped");
+              } else {
+                flippedPolaroidIndices.add(activePolaroidIndex);
+                innerEl.classList.add("is-flipped");
+              }
+            }
+          });
+
+          cardEl.addEventListener("click", (e) => {
+            if (lightboxBtn && (e.target === lightboxBtn || lightboxBtn.contains(e.target))) {
+              return;
+            }
+            playUiSound("flip");
+            if (flippedPolaroidIndices.has(activePolaroidIndex)) {
+              flippedPolaroidIndices.delete(activePolaroidIndex);
+              innerEl.classList.remove("is-flipped");
+            } else {
+              flippedPolaroidIndices.add(activePolaroidIndex);
+              innerEl.classList.add("is-flipped");
+            }
+          });
+        }
+
+        if (lightboxBtn) {
+          lightboxBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openPhotoLightbox(currentPhoto);
+          });
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         12. PHOTO LIGHTBOX CONTROLLER
+         ------------------------------------------------------------------------ */
+      function openPhotoLightbox(photo) {
+        const modal = document.getElementById("photo-lightbox-modal");
+        const card = document.getElementById("photo-lightbox-card");
+        const img = document.getElementById("lightbox-img");
+        const caption = document.getElementById("lightbox-caption");
+        const loc = document.getElementById("lightbox-location");
+        const dt = document.getElementById("lightbox-date");
+
+        if (!modal || !card || !img) return;
+        playUiSound("tap");
+
+        img.src = photo.imageUrl;
+        if (caption) caption.textContent = photo.caption || "Our Memory";
+        if (loc) loc.textContent = photo.location || "";
+        if (dt) dt.textContent = photo.date || "";
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        requestAnimationFrame(() => {
+          modal.classList.remove("opacity-0");
+          card.classList.remove("scale-95");
+          card.classList.add("scale-100");
+        });
+      }
+
+      function closePhotoLightbox() {
+        const modal = document.getElementById("photo-lightbox-modal");
+        const card = document.getElementById("photo-lightbox-card");
+        if (!modal || !card) return;
+
+        playUiSound("tap");
+        modal.classList.add("opacity-0");
+        card.classList.remove("scale-100");
+        card.classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.remove("flex");
+          modal.classList.add("hidden");
+        }, 250);
+      }
+
+      /* ------------------------------------------------------------------------
+         13. WIDGET 6 HELPERS: SECRET REVEAL & FUTURE CHECKLIST (LOCALSTORAGE)
+         ------------------------------------------------------------------------ */
+      function triggerSecretReveal() {
+        const output = document.getElementById("secret-confession-output");
+        const sublabel = document.getElementById("secret-reveal-sublabel");
+        if (!output || secretIsAnimating) return;
+
+        secretRevealTimeouts.forEach((t) => clearTimeout(t));
+        secretRevealTimeouts = [];
+
+        const text = String(window.COUPLE_DATA.secretConfession || "").trim();
+        const words = text.split(/\s+/);
+
+        output.innerHTML = "";
+        output.classList.remove("hidden");
+        output.className = "mt-3 pt-3 border-t border-white/[0.08] text-amber-100/95 leading-relaxed font-serif italic text-lg sm:text-xl";
+        secretIsAnimating = true;
+        secretIsRevealed = true;
+
+        if (sublabel) {
+          sublabel.textContent = "Revealing word by word...";
+        }
+
+        const totalWords = words.length;
+        const finalSentenceStartIndex = Math.max(0, totalWords - 12);
+
+        words.forEach((word, idx) => {
+          const t = setTimeout(() => {
+            const span = document.createElement("span");
+            span.className = "revealed-word mr-1.5";
+            if (idx >= finalSentenceStartIndex) {
+              span.classList.add("confession-highlight");
+            }
+            span.textContent = word;
+            output.appendChild(span);
+
+            if (idx % 2 === 0) playUiSound("word-tick");
+
+            if (idx === totalWords - 1) {
+              secretIsAnimating = false;
+              if (sublabel) sublabel.textContent = "Tap to replay word-by-word";
+            }
+          }, idx * 75);
+          secretRevealTimeouts.push(t);
+        });
+      }
+
+      function renderFutureChecklist() {
+        const container = document.getElementById("future-checklist-container");
+        const badge = document.getElementById("checklist-progress-badge");
+        if (!container) return;
+
+        const list = window.COUPLE_DATA.futureChecklist || [];
+        const savedMap = getSavedChecklistState();
+
+        let completedCount = 0;
+
+        container.innerHTML = list.map((item) => {
+          const savedItem = savedMap[item.id];
+          const isChecked = savedItem ? Boolean(savedItem.checked) : Boolean(item.defaultChecked);
+          const checkedDate = savedItem ? savedItem.checkedDate : item.checkedDate;
+
+          if (isChecked) completedCount++;
+
+          return `
+            <button
+              type="button"
+              data-checklist-id="${escapeHtml(item.id)}"
+              class="checklist-item-btn w-full text-left rounded-2xl p-3 border transition flex items-start gap-3 active:scale-[0.99] ${
+                isChecked
+                  ? "bg-notesAmber/[0.08] border-notesAmber/30 text-zinc-200"
+                  : "bg-white/[0.03] hover:bg-white/[0.05] border-white/[0.07] text-zinc-300"
+              }"
+            >
+              <div class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition ${
+                isChecked
+                  ? "bg-notesAmber border-notesAmber text-zinc-950 shadow-sm"
+                  : "border-zinc-500 bg-transparent"
+              }">
+                ${isChecked ? `
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6 9 17l-5-5"/>
+                  </svg>
+                ` : ""}
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-medium leading-snug ${isChecked ? "line-through text-zinc-400" : "text-zinc-100"}">
+                  ${escapeHtml(item.title)}
+                </p>
+                <div class="mt-1 flex items-center gap-2 font-mono text-[10px]">
+                  <span class="text-zinc-500 uppercase">${escapeHtml(item.category || "Dream")}</span>
+                  ${isChecked && checkedDate ? `
+                    <span class="text-amber-300/90">• Checked ${escapeHtml(checkedDate)}</span>
+                  ` : ""}
+                </div>
+              </div>
+            </button>
+          `;
+        }).join("");
+
+        if (badge) {
+          badge.textContent = `${completedCount} / ${list.length} Done`;
+        }
+
+        // Bind click listeners for checklist items
+        container.querySelectorAll(".checklist-item-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-checklist-id");
+            const currentSaved = getSavedChecklistState();
+            const targetDefault = list.find((i) => i.id === id);
+            const currentlyChecked = currentSaved[id]
+              ? Boolean(currentSaved[id].checked)
+              : Boolean(targetDefault && targetDefault.defaultChecked);
+
+            const nextChecked = !currentlyChecked;
+            const formattedToday = new Date().toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric"
+            });
+
+            currentSaved[id] = {
+              checked: nextChecked,
+              checkedDate: nextChecked ? formattedToday : null
+            };
+
+            saveChecklistState(currentSaved);
+
+            // Check if this action completes 100% of checklist
+            let newCompletedCount = 0;
+            list.forEach((i) => {
+              const itemState = currentSaved[i.id];
+              const isItemChecked = itemState ? Boolean(itemState.checked) : Boolean(i.defaultChecked);
+              if (isItemChecked) newCompletedCount++;
+            });
+
+            if (nextChecked && newCompletedCount === list.length && list.length > 0) {
+              triggerCelebrationHearts();
+            } else {
+              playUiSound(nextChecked ? "check" : "tap");
+            }
+
+            renderFutureChecklist();
+          });
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         14. SCROLL-TRIGGERED REVEALS & INTERSECTION OBSERVER
+         ------------------------------------------------------------------------ */
+      function initScrollReveals() {
+        if (!("IntersectionObserver" in window)) {
+          document.querySelectorAll(".reveal-on-scroll").forEach((el) => el.classList.add("is-revealed"));
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-revealed");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+          observer.observe(el);
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         15. BIND INTERACTIVE EVENTS ACROSS ALL WIDGETS
+         ------------------------------------------------------------------------ */
+      function bindWidgetEvents() {
+        // Dynamic Island Tap to Expand / Collapse
+        const islandPill = document.getElementById("dynamic-island-el");
+        if (islandPill) {
+          islandPill.addEventListener("click", () => {
+            toggleDynamicIsland();
+          });
+        }
+
+        // Milestone Pill Clicks
+        document.querySelectorAll(".milestone-pill-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            playUiSound("tap");
+            activeMilestoneId = btn.getAttribute("data-milestone-id");
+            document.querySelectorAll(".milestone-pill-btn").forEach((b) => {
+              const isMatch = b.getAttribute("data-milestone-id") === activeMilestoneId;
+              b.classList.toggle("active-pill", isMatch);
+            });
+            updateMilestoneDetail();
+          });
+        });
+
+        // Audio Play/Pause, Seek & Memory Note Tap
+        const playBtn = document.getElementById("audio-play-btn");
+        const audio = document.getElementById("loveos-audio");
+        const seekSlider = document.getElementById("audio-seek-slider");
+        const memoryBox = document.getElementById("memory-note-box");
+
+        if (playBtn && audio) {
+          playBtn.addEventListener("click", () => {
+            getAudioContext();
+            if (audio.paused) {
+              audio.play().catch(() => {
+                audio.src = getFallbackWarmAudioBlobUrl();
+                audio.play().catch(() => {});
+              });
+            } else {
+              audio.pause();
+            }
+          });
+        }
+
+        if (seekSlider && audio) {
+          seekSlider.addEventListener("input", () => {
+            seekSlider.dataset.dragging = "true";
+            if (Number.isFinite(audio.duration) && audio.duration > 0) {
+              const previewTime = (Number(seekSlider.value) / 100) * audio.duration;
+              const curEl = document.getElementById("audio-current-time");
+              if (curEl) curEl.textContent = formatTimeMMSS(previewTime);
+            }
+          });
+          seekSlider.addEventListener("change", () => {
+            if (Number.isFinite(audio.duration) && audio.duration > 0) {
+              audio.currentTime = (Number(seekSlider.value) / 100) * audio.duration;
+            }
+            delete seekSlider.dataset.dragging;
+          });
+        }
+
+        if (memoryBox) {
+          memoryBox.addEventListener("click", () => {
+            playUiSound("tap");
+            const notes = (window.COUPLE_DATA.songData && window.COUPLE_DATA.songData.memoryNotes) || [];
+            if (notes.length > 0) {
+              activeMemoryNoteIdx = (activeMemoryNoteIdx + 1) % notes.length;
+              updateMemoryNoteDisplay(activeMemoryNoteIdx);
+            }
+          });
+        }
+
+        // Widget 3: Tabs (First Texts vs Unsent Drafts), Replay Button, Draft Expand
+        const tabFirstTexts = document.getElementById("tab-btn-first-texts");
+        const tabUnsentDrafts = document.getElementById("tab-btn-unsent-drafts");
+        const panelFirstTexts = document.getElementById("panel-first-texts");
+        const panelUnsentDrafts = document.getElementById("panel-unsent-drafts");
+        const replayChatBtn = document.getElementById("replay-chat-btn");
+
+        if (tabFirstTexts && tabUnsentDrafts) {
+          tabFirstTexts.addEventListener("click", () => {
+            playUiSound("tap");
+            activeChatTab = "first-texts";
+            tabFirstTexts.className = "py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-zinc-800 text-white shadow";
+            tabUnsentDrafts.className = "py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 text-zinc-400 hover:text-zinc-200";
+            if (panelFirstTexts) panelFirstTexts.classList.remove("hidden");
+            if (panelUnsentDrafts) panelUnsentDrafts.classList.add("hidden");
+          });
+
+          tabUnsentDrafts.addEventListener("click", () => {
+            playUiSound("tap");
+            activeChatTab = "unsent-drafts";
+            tabUnsentDrafts.className = "py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-zinc-800 text-white shadow";
+            tabFirstTexts.className = "py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 text-zinc-400 hover:text-zinc-200";
+            if (panelUnsentDrafts) panelUnsentDrafts.classList.remove("hidden");
+            if (panelFirstTexts) panelFirstTexts.classList.add("hidden");
+          });
+        }
+
+        if (replayChatBtn) {
+          replayChatBtn.addEventListener("click", () => {
+            playUiSound("tap");
+            renderChatBubbles(true);
+          });
+        }
+
+        document.querySelectorAll(".unsent-draft-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            playUiSound("tap");
+            const id = card.getAttribute("data-draft-id");
+            if (expandedDraftIds.has(id)) {
+              expandedDraftIds.delete(id);
+            } else {
+              expandedDraftIds.add(id);
+            }
+            window.renderLoveOS();
+          });
+        });
+
+        // Widget 4: Polaroid Prev / Next / Thumbnails
+        const prevBtn = document.getElementById("polaroid-prev-btn");
+        const nextBtn = document.getElementById("polaroid-next-btn");
+        const photos = window.COUPLE_DATA.polaroidPhotos || [];
+
+        if (prevBtn && photos.length > 0) {
+          prevBtn.addEventListener("click", () => {
+            playUiSound("tap");
+            activePolaroidIndex = (activePolaroidIndex - 1 + photos.length) % photos.length;
+            setIslandActivity("memory");
+            renderPolaroidStage();
+          });
+        }
+
+        if (nextBtn && photos.length > 0) {
+          nextBtn.addEventListener("click", () => {
+            playUiSound("tap");
+            activePolaroidIndex = (activePolaroidIndex + 1) % photos.length;
+            setIslandActivity("memory");
+            renderPolaroidStage();
+          });
+        }
+
+        document.querySelectorAll(".polaroid-thumb-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            playUiSound("tap");
+            activePolaroidIndex = Number(btn.getAttribute("data-polaroid-thumb")) || 0;
+            setIslandActivity("memory");
+            renderPolaroidStage();
+          });
+        });
+
+        // Widget 5: "Open When..." Mood Envelopes
+        document.querySelectorAll(".envelope-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            playUiSound("envelope");
+            const idx = Number(card.getAttribute("data-envelope-idx")) || 0;
+            const envData = (window.COUPLE_DATA.openWhenEnvelopes || [])[idx];
+            if (!envData) return;
+
+            setIslandActivity("letter");
+            card.classList.add("opening");
+            setTimeout(() => {
+              card.classList.remove("opening");
+              openEnvelopeModal(envData);
+            }, 260);
+          });
+        });
+
+        // Widget 6: Secret Confession Reveal Button
+        const secretBtn = document.getElementById("secret-reveal-btn");
+        if (secretBtn) {
+          secretBtn.addEventListener("click", () => {
+            playUiSound("tap");
+            triggerSecretReveal();
+          });
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         16. MODAL CONTROLLERS (ENVELOPE MODAL, CUSTOMIZE STUDIO & LIGHTBOX)
+         ------------------------------------------------------------------------ */
+      function openEnvelopeModal(envData) {
+        const modal = document.getElementById("envelope-modal");
+        const card = document.getElementById("envelope-modal-card");
+        const tagEl = document.getElementById("modal-env-tag");
+        const titleEl = document.getElementById("modal-env-title");
+        const bodyEl = document.getElementById("modal-env-body");
+        const signoffEl = document.getElementById("modal-env-signoff");
+
+        if (!modal || !card) return;
+
+        if (tagEl) tagEl.textContent = envData.tag || "OPEN WHEN";
+        if (titleEl) titleEl.textContent = envData.title || "";
+        if (bodyEl) bodyEl.textContent = envData.letter || "";
+        if (signoffEl) signoffEl.textContent = envData.signOff || `With love, ${window.COUPLE_DATA.creatorName}`;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        requestAnimationFrame(() => {
+          modal.classList.remove("opacity-0");
+          card.classList.remove("scale-95");
+          card.classList.add("scale-100");
+        });
+      }
+
+      function closeEnvelopeModal() {
+        const modal = document.getElementById("envelope-modal");
+        const card = document.getElementById("envelope-modal-card");
+        if (!modal || !card) return;
+
+        playUiSound("tap");
+        modal.classList.add("opacity-0");
+        card.classList.remove("scale-100");
+        card.classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.remove("flex");
+          modal.classList.add("hidden");
+        }, 250);
+      }
+
+      function setupGlobalModalsAndHooks() {
+        const envModal = document.getElementById("envelope-modal");
+        const closeEnvBtn = document.getElementById("close-envelope-modal");
+        if (closeEnvBtn) closeEnvBtn.addEventListener("click", closeEnvelopeModal);
+        if (envModal) {
+          envModal.addEventListener("click", (e) => {
+            if (e.target === envModal) closeEnvelopeModal();
+          });
+        }
+
+        // Fullscreen Photo Lightbox Modal
+        const lightboxModal = document.getElementById("photo-lightbox-modal");
+        const closeLightboxBtn = document.getElementById("close-lightbox-btn");
+        if (closeLightboxBtn) closeLightboxBtn.addEventListener("click", closePhotoLightbox);
+        if (lightboxModal) {
+          lightboxModal.addEventListener("click", (e) => {
+            if (e.target === lightboxModal) closePhotoLightbox();
+          });
+        }
+
+        // Customize Yours Studio Modal
+        const openCustBtn = document.getElementById("open-customize-btn");
+        const custModal = document.getElementById("customize-modal");
+        const custCard = document.getElementById("customize-modal-card");
+        const closeCustBtn = document.getElementById("close-customize-modal");
+        const triggerEditorBtn = document.getElementById("trigger-editor-hook-btn");
+
+        const openCust = () => {
+          if (!custModal || !custCard) return;
+          playUiSound("tap");
+          custModal.classList.remove("hidden");
+          custModal.classList.add("flex");
+          requestAnimationFrame(() => {
+            custModal.classList.remove("opacity-0");
+            custCard.classList.remove("translate-y-4");
+          });
+        };
+
+        const closeCust = () => {
+          if (!custModal || !custCard) return;
+          playUiSound("tap");
+          custModal.classList.add("opacity-0");
+          custCard.classList.add("translate-y-4");
+          setTimeout(() => {
+            custModal.classList.remove("flex");
+            custModal.classList.add("hidden");
+          }, 250);
+        };
+
+        if (openCustBtn) openCustBtn.addEventListener("click", openCust);
+        if (closeCustBtn) closeCustBtn.addEventListener("click", closeCust);
+        if (custModal) {
+          custModal.addEventListener("click", (e) => {
+            if (e.target === custModal) closeCust();
+          });
+        }
+        if (triggerEditorBtn) {
+          triggerEditorBtn.addEventListener("click", () => {
+            closeCust();
+            window.dispatchEvent(new CustomEvent("loveos:open-editor", { detail: window.COUPLE_DATA }));
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage({ type: "LOVEOS_OPEN_EDITOR" }, "*");
+            } else {
+              window.location.href = "/editor";
+            }
+          });
+        }
+        }
+
+        // Global Escape Key to Close Open Modals / Dynamic Island
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            closeEnvelopeModal();
+            closePhotoLightbox();
+            closeCust();
+            collapseDynamicIsland();
+          }
+        });
+
+        // Click outside Dynamic Island to collapse
+        document.addEventListener("click", (e) => {
+          const islandContainer = document.getElementById("dynamic-island-container");
+          if (islandContainer && !islandContainer.contains(e.target)) {
+            collapseDynamicIsland();
+          }
+        });
+
+        // Floating Navigation Dock Smooth Scrolling
+        document.querySelectorAll(".nav-dock-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            playUiSound("tap");
+            const targetId = btn.getAttribute("data-nav-target");
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        });
+
+        // Live Editor Hook: Listen for postMessage updates from Editor Drawer
+        window.addEventListener("message", (event) => {
+          const msg = event.data;
+          if (!msg || typeof msg !== "object") return;
+
+          if (msg.type === "SCROLL_TO_SECTION" && msg.target) {
+            const intro = document.getElementById("cinematic-intro");
+            if (intro) intro.classList.add("hidden");
+            const targetEl = document.getElementById(msg.target);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              targetEl.style.transition = "box-shadow 0.4s ease, border-color 0.4s ease";
+              targetEl.style.borderColor = "rgba(244, 63, 94, 0.7)";
+              targetEl.style.boxShadow = "0 0 35px rgba(244, 63, 94, 0.35)";
+              setTimeout(() => {
+                targetEl.style.borderColor = "";
+                targetEl.style.boxShadow = "";
+              }, 1200);
+            }
+          } else if (msg.type === "UPDATE_COUPLE_DATA" && msg.payload) {
+            window.renderLoveOS(msg.payload);
+          } else if (msg.type === "RENDER_LOVEOS" && msg.data) {
+            window.renderLoveOS(msg.data);
+          } else if (msg.partnerName || msg.creatorName || msg.anniversaryDate) {
+            window.renderLoveOS(msg);
+          }
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         17. INITIALIZE ON DOM READY
+         ------------------------------------------------------------------------ */
+      window.addEventListener("DOMContentLoaded", () => {
+        if (typeof window !== "undefined" && window.__SERVER_PROJECT__ && window.__SERVER_PROJECT__.config) {
+          window.COUPLE_DATA = Object.assign({}, window.COUPLE_DATA, window.__SERVER_PROJECT__.config);
+          if (window.__SERVER_PROJECT__.status === "paid") {
+            window.COUPLE_DATA.isPaid = true;
+          }
+        }
+        setupGlobalModalsAndHooks();
+        setupCinematicIntro(window.COUPLE_DATA.partnerName);
+        window.renderLoveOS(window.COUPLE_DATA);
+      });
+    })();
+  </script>
+</body>
+</html>

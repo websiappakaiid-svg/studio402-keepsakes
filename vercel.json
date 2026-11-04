@@ -5,6 +5,8 @@
     }
   },
   "rewrites": [
+    { "source": "/", "destination": "/editor-loveos.html" },
+    { "source": "/editor", "destination": "/editor-loveos.html" },
     { "source": "/v/:slug*", "destination": "/api" },
     { "source": "/api/:path*", "destination": "/api" }
   ]

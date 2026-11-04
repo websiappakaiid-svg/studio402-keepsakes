@@ -1,8 +1,9 @@
 /**
- * studio.402 Keepsake Engine — Production Backend
+ * ourpage Keepsake Engine — Production Backend (Modular Multi-Template Architecture)
  * 
  * Features:
- * - Supabase Cloud PostgreSQL with fallback to local store (db.js)
+ * - Strict Supabase Cloud PostgreSQL with isolated per-template tables (db.js)
+ * - Template 1: LoveOS (iOS Romantic Keepsake)
  * - Live WhatsApp Alerts via Fonnte / CallMeBot (notifications.js)
  * - Auto-filled Gumroad checkout URLs & Gumroad Ping Webhook
  * - Automated 1-hour abandoned draft monitoring & follow-up engine
@@ -53,25 +54,17 @@ const notifications = require('./notifications.js');
 // Configuration
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
-const ADMIN_KEY = process.env.ADMIN_KEY || 'studio402_admin_secret_2026';
-const GUMROAD_PRODUCT_URL = process.env.GUMROAD_PRODUCT_URL || 'https://studio402.gumroad.com/l/keepsake';
-const APP_URL = process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
+const ADMIN_KEY = process.env.ADMIN_KEY || '577811Bjs!';
+const GUMROAD_PRODUCT_URL = process.env.GUMROAD_PRODUCT_URL || 'https://threadsmith13.gumroad.com/l/filkd';
+const APP_URL = process.env.APP_URL || 'https://ourpage-keepsakes.vercel.app';
 
-// Template file resolution map
+// =============================================================================
+// MODULAR TEMPLATE RESOLUTION MAP
+// =============================================================================
 const TEMPLATE_MAP = {
-  'spotilove': 'vinyl.html',
-  'spotilove_ultra_1000_10_studio_edition.html': 'vinyl.html',
-  'vinyl': 'vinyl.html',
-  'vinyl.html': 'vinyl.html',
-  'netlove': 'cinema.html',
-  'netlove_interactive_streaming_bandersnatch_app.html': 'cinema.html',
-  'cinema': 'cinema.html',
-  'cinema.html': 'cinema.html',
-  'lovebox': 'camera.html',
-  'lovebox_98_instant_polaroid_camera_retro_game_gadget.html': 'camera.html',
-  'camera': 'camera.html',
-  'camera.html': 'camera.html',
-  'retro': 'camera.html'
+  'loveos': 'loveos.html',
+  'loveos.html': 'loveos.html',
+  'love-os': 'loveos.html'
 };
 
 const MIME_TYPES = {
@@ -95,10 +88,10 @@ const MIME_TYPES = {
 const RESERVED_SLUGS = new Set([
   'admin', 'api', 'app', 'login', 'dashboard', 'preview',
   'editor', 'v', 'data', 'static', 'assets', 'favicon.ico',
-  'gumroad-webhook', 'webhook', 'index', 'health', 'ping', 'cron'
+  'gumroad-webhook', 'webhook', 'index', 'health', 'ping', 'cron',
+  'loveos', 'ourpage'
 ]);
 
-// Helper: Escape HTML strings
 function escapeHtml(str) {
   if (typeof str !== 'string') return '';
   return str
@@ -109,7 +102,6 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-// Helper: HTTP Response senders
 function sendJson(res, statusCode, data) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
@@ -128,13 +120,12 @@ function sendText(res, statusCode, text, contentType = 'text/plain; charset=utf-
   res.end(text);
 }
 
-// Helper: Parse Request Body (JSON or URL-encoded)
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
     req.on('data', chunk => {
       body += chunk;
-      if (body.length > 10 * 1024 * 1024) { // 10MB limit
+      if (body.length > 10 * 1024 * 1024) {
         reject(new Error('Request payload too large'));
       }
     });
@@ -160,7 +151,6 @@ function parseBody(req) {
   });
 }
 
-// Helper: Validate Admin Authorization
 function authenticateAdmin(req) {
   const headerKey = req.headers['x-admin-key'];
   if (headerKey && headerKey === ADMIN_KEY) return true;
@@ -174,14 +164,13 @@ function authenticateAdmin(req) {
   return false;
 }
 
-// Helper: Build Pre-filled Mailto Link for Abandoned Draft Follow-up
 function buildFollowupMailto(email, slug, previewUrl) {
   const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${APP_URL}${previewUrl}`;
-  const subject = encodeURIComponent('Special Gift: Your private keepsake is ready to unlock (15% off inside) ✨');
+  const subject = encodeURIComponent('Your private keepsake is ready to unlock (15% off inside) ✨');
   const body = encodeURIComponent(
 `Hi there,
 
-I noticed you created a romantic digital keepsake for your partner at studio.402:
+I noticed you created a romantic digital keepsake for your partner on ourpage:
 Preview Link: ${fullPreview}
 
 Your personalized songs, photos, and secret notes are currently saved safely in your private draft.
@@ -195,7 +184,7 @@ ${GUMROAD_PRODUCT_URL}?email=${encodeURIComponent(email)}&wanted=true&project_sl
 If you need any custom edits or have questions, just reply directly to this email!
 
 Warm regards,
-studio.402 Keepsakes Team`
+ourpage Keepsakes Team`
   );
 
   return `mailto:${email}?subject=${subject}&body=${body}`;
@@ -206,16 +195,15 @@ studio.402 Keepsakes Team`
 // =============================================================================
 async function checkAbandonedDrafts() {
   try {
-    const abandoned = await db.getAbandonedDrafts(1); // older than 1 hour
+    const abandoned = await db.getAbandonedDrafts(1);
     if (abandoned.length === 0) return 0;
 
-    console.log(`[studio.402 Cron] Found ${abandoned.length} abandoned draft(s) older than 1 hour.`);
+    console.log(`[ourpage Cron] Found ${abandoned.length} abandoned draft(s) older than 1 hour.`);
     
     for (const project of abandoned) {
       const previewUrl = `/v/${project.slug}`;
       const mailtoLink = buildFollowupMailto(project.email, project.slug, previewUrl);
 
-      // Send live WhatsApp reminder
       await notifications.notifyAbandonedDraft({
         email: project.email,
         slug: project.slug,
@@ -224,13 +212,12 @@ async function checkAbandonedDrafts() {
         mailtoLink: mailtoLink
       });
 
-      // Mark followup_sent = true in DB
-      await db.markFollowupSent(project.id);
+      await db.markFollowupSent(project.id, project.template);
     }
 
     return abandoned.length;
   } catch (err) {
-    console.error('[studio.402 Cron] Error checking abandoned drafts:', err.message);
+    console.error('[ourpage Cron] Error checking abandoned drafts:', err.message);
     return 0;
   }
 }
@@ -244,7 +231,6 @@ async function handleRequest(req, res) {
   const method = req.method.toUpperCase();
   const searchParams = new URLSearchParams(parsedUrl.query);
 
-  // Handle CORS Preflight
   if (method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
@@ -293,22 +279,22 @@ async function handleRequest(req, res) {
           ok: false,
           slug: rawSlug,
           available: false,
-          error: `The link name "${rawSlug}" is already claimed. Try adding numbers or your anniversary date.`
+          error: `The link address "${rawSlug}" is already taken. Try adding special dates or your anniversary.`
         });
       }
     } catch (err) {
-      console.error('[studio.402] check-slug DB error:', err);
+      console.error('[ourpage] check-slug DB error:', err);
       return sendJson(res, 500, { ok: false, error: 'Database check failed' });
     }
   }
 
   // POST /api/save-draft
-  if (pathname === '/api/save-draft' && method === 'POST') {
+  if ((pathname === '/api/save-draft' || pathname === '/api/loveos/save-draft') && method === 'POST') {
     try {
       const body = await parseBody(req);
       const email = (body.email || '').trim().toLowerCase();
       let slug = (body.slug || '').trim().toLowerCase();
-      const template = (body.template || 'spotilove').trim();
+      const template = (body.template || 'loveos').trim().toLowerCase();
       const configData = body.configData || body.config || {};
 
       if (!email || !email.includes('@')) {
@@ -324,11 +310,10 @@ async function handleRequest(req, res) {
         slug = `${slug}-${crypto.randomBytes(2).toString('hex')}`;
       }
 
-      // Generate Unique ID & 6-Digit Retrieval Code
       const id = body.id || `proj_${Date.now()}_${crypto.randomBytes(3).toString('hex')}`;
-      const designCode = body.designCode || `ST-${Math.floor(100000 + Math.random() * 900000)}`;
+      const designCode = body.designCode || `OP-${Math.floor(100000 + Math.random() * 900000)}`;
 
-      // Save to Database (Supabase Cloud or Local Store)
+      // Save directly into Supabase Cloud
       const saved = await db.saveDraft({
         id,
         slug,
@@ -341,27 +326,28 @@ async function handleRequest(req, res) {
       const previewUrl = `/v/${saved.slug}`;
       const checkoutUrl = `${GUMROAD_PRODUCT_URL}?email=${encodeURIComponent(saved.email)}&wanted=true&project_id=${encodeURIComponent(saved.id)}&project_slug=${encodeURIComponent(saved.slug)}`;
 
-      // Send Instant WhatsApp Alert to Admin
+      // Send Instant WhatsApp Alert to Seller via Fonnte
       notifications.notifyNewDraft({
         email: saved.email,
         slug: saved.slug,
         previewUrl: previewUrl,
-        template: saved.template,
+        template: 'LoveOS (iOS Keepsake)',
         designCode: saved.designCode,
         checkoutUrl: checkoutUrl
-      }).catch(e => console.warn('[studio.402] Notification error:', e.message));
+      }).catch(e => console.warn('[ourpage] Notification error:', e.message));
 
       return sendJson(res, 200, {
         ok: true,
         id: saved.id,
         slug: saved.slug,
+        template: saved.template,
         designCode: saved.designCode,
         status: saved.status,
         previewUrl: previewUrl,
         checkoutUrl: checkoutUrl
       });
     } catch (err) {
-      console.error('[studio.402] Error in /api/save-draft:', err);
+      console.error('[ourpage] Error in /api/save-draft:', err);
       return sendJson(res, 500, { ok: false, error: err.message || 'Internal server error saving draft.' });
     }
   }
@@ -389,7 +375,6 @@ async function handleRequest(req, res) {
         return sendJson(res, 404, { ok: false, error: 'Project not found.' });
       }
 
-      // Check Expiration
       if (project.expiresAt) {
         const isExpired = new Date(project.expiresAt).getTime() < Date.now();
         if (isExpired) {
@@ -419,7 +404,7 @@ async function handleRequest(req, res) {
         configData: cleanConfig
       });
     } catch (err) {
-      console.error('[studio.402] Error in /api/project:', err);
+      console.error('[ourpage] Error in /api/project:', err);
       return sendJson(res, 500, { ok: false, error: 'Error fetching project.' });
     }
   }
@@ -431,7 +416,6 @@ async function handleRequest(req, res) {
       const buyerEmail = (body.email || body.buyer_email || '').trim().toLowerCase();
       const rawPrice = body.price ? `$${(Number(body.price) / 100).toFixed(2)}` : '$19.00 USD';
 
-      // Parse custom params from Gumroad
       let urlParams = {};
       if (body.url_params) {
         if (typeof body.url_params === 'object') urlParams = body.url_params;
@@ -461,9 +445,8 @@ async function handleRequest(req, res) {
         ''
       );
 
-      console.log(`[studio.402 Gumroad] Ping received for email: "${buyerEmail}", slug: "${targetSlug}"`);
+      console.log(`[ourpage Gumroad] Ping received for email: "${buyerEmail}", slug: "${targetSlug}"`);
 
-      // Match project in Database
       const project = await db.findProjectForGumroadWebhook({
         slug: targetSlug,
         id: targetId,
@@ -471,38 +454,33 @@ async function handleRequest(req, res) {
       });
 
       if (!project) {
-        console.warn('[studio.402 Gumroad] Could not match project for webhook:', { targetSlug, targetId, buyerEmail });
+        console.warn('[ourpage Gumroad] Could not match project for webhook:', { targetSlug, targetId, buyerEmail });
         return sendJson(res, 200, { ok: true, matched: false, message: 'Webhook received but project not found.' });
       }
 
-      // Upgrade project to PAID: 30 days retention (or 365 days if bundle)
-      const isBundle = String(body.product_name || '').toLowerCase().includes('bundle') || 
-                       String(project.template).toLowerCase().includes('bundle') || 
-                       Number(body.price) > 2500;
-      const retentionDays = isBundle ? 365 : 30;
+      // Upgrade project to PAID: 365 days retention
+      const retentionDays = 365;
       const expiresAt = new Date(Date.now() + retentionDays * 24 * 60 * 60 * 1000).toISOString();
 
-      // Clear watermark in configData
       const updatedConfig = { ...project.configData, isPreviewDraft: false };
 
       const activated = await db.updateProjectStatus(project.id, {
         status: 'paid',
         expiresAt: expiresAt,
         configData: updatedConfig
-      });
+      }, project.template);
 
       const liveUrl = `/v/${activated.slug}`;
 
-      // Dispatch 2nd WhatsApp notification: Order Paid!
       notifications.notifyPaidOrder({
         email: activated.email,
         slug: activated.slug,
         liveUrl: liveUrl,
         price: rawPrice,
-        template: activated.template
-      }).catch(e => console.warn('[studio.402] WA error:', e.message));
+        template: 'LoveOS (iOS Keepsake)'
+      }).catch(e => console.warn('[ourpage] WA error:', e.message));
 
-      console.log(`[studio.402 Gumroad] Project "${activated.slug}" successfully activated!`);
+      console.log(`[ourpage Gumroad] Project "${activated.slug}" successfully activated!`);
       return sendJson(res, 200, {
         ok: true,
         matched: true,
@@ -511,12 +489,12 @@ async function handleRequest(req, res) {
         status: 'paid'
       });
     } catch (err) {
-      console.error('[studio.402] Error processing Gumroad webhook:', err);
+      console.error('[ourpage] Error processing Gumroad webhook:', err);
       return sendJson(res, 500, { ok: false, error: err.message });
     }
   }
 
-  // GET or POST /api/cron/check-abandoned (Automated 1-Hour Follow-up Monitor)
+  // GET or POST /api/cron/check-abandoned
   if (pathname === '/api/cron/check-abandoned') {
     try {
       const processedCount = await checkAbandonedDrafts();
@@ -526,17 +504,17 @@ async function handleRequest(req, res) {
         message: `Processed ${processedCount} abandoned draft(s) older than 1 hour.`
       });
     } catch (err) {
-      console.error('[studio.402] Cron error:', err);
+      console.error('[ourpage] Cron error:', err);
       return sendJson(res, 500, { ok: false, error: err.message });
     }
   }
 
-  // POST /api/admin/test-wa (Send live test WhatsApp ping to admin phone)
+  // POST /api/admin/test-wa
   if (pathname === '/api/admin/test-wa' && method === 'POST') {
     if (!authenticateAdmin(req)) {
       return sendJson(res, 401, { ok: false, error: 'Unauthorized: Invalid admin key' });
     }
-    const testMsg = `🧪 *[studio.402] TEST KONEKSI WHATSAPP BERHASIL!*\n-----------------------------------\nNotifikasi real-time WhatsApp Anda telah aktif & terhubung dengan server studio.402.\nWaktu: ${new Date().toLocaleTimeString('id-ID')} WIB.`;
+    const testMsg = `🧪 *[ourpage] TEST KONEKSI WHATSAPP BERHASIL!*\n-----------------------------------\nNotifikasi real-time WhatsApp OurPage aktif & terhubung.\nWaktu: ${new Date().toLocaleTimeString('id-ID')} WIB.`;
     await notifications.sendWhatsApp(testMsg);
     return sendJson(res, 200, { ok: true, message: 'Test message dispatched to WhatsApp.' });
   }
@@ -553,20 +531,17 @@ async function handleRequest(req, res) {
 
       const allProjects = await db.getAllProjects({ search, status: filterStatus });
       
-      // Calculate KPIs
       const rawAll = await db.getAllProjects();
       const totalDrafts = rawAll.filter(p => p.status === 'draft').length;
       const totalPaid = rawAll.filter(p => p.status === 'paid').length;
       const totalLeads = rawAll.length;
       const conversionRate = totalLeads > 0 ? ((totalPaid / totalLeads) * 100).toFixed(1) : '0.0';
 
-      // Revenue: $19.00 per single, $27.99 per bundle
       let estimatedRevenue = 0;
       rawAll.filter(p => p.status === 'paid').forEach(p => {
-        estimatedRevenue += p.template.includes('bundle') ? 27.99 : 19.00;
+        estimatedRevenue += 19.00;
       });
 
-      // Abandoned leads count (>1 hour unpaid)
       const oneHourAgo = Date.now() - 60 * 60 * 1000;
       const abandonedCount = rawAll.filter(p => 
         p.status === 'draft' && new Date(p.createdAt).getTime() <= oneHourAgo
@@ -584,12 +559,12 @@ async function handleRequest(req, res) {
           conversionRate,
           estimatedRevenue: estimatedRevenue.toFixed(2),
           abandonedCount,
-          isUsingSupabase: db.isUsingSupabase()
+          isUsingSupabase: true
         },
         projects: allProjects
       });
     } catch (err) {
-      console.error('[studio.402] Error in /api/admin/projects:', err);
+      console.error('[ourpage] Error in /api/admin/projects:', err);
       return sendJson(res, 500, { ok: false, error: 'Error loading admin data.' });
     }
   }
@@ -612,11 +587,10 @@ async function handleRequest(req, res) {
       const updateData = {};
       if (status) updateData.status = status;
 
-      // Handle extendDays or status = 'paid'
       if (body.extendDays) {
         updateData.expiresAt = new Date(Date.now() + Number(body.extendDays) * 24 * 60 * 60 * 1000).toISOString();
       } else if (status === 'paid') {
-        updateData.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        updateData.expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString();
       }
 
       const updated = await db.updateProjectStatus(identifier, updateData);
@@ -630,7 +604,7 @@ async function handleRequest(req, res) {
         message: `Project "${updated.slug}" updated to ${updated.status}.`
       });
     } catch (err) {
-      console.error('[studio.402] Error in update-status:', err);
+      console.error('[ourpage] Error in update-status:', err);
       return sendJson(res, 500, { ok: false, error: 'Error updating project.' });
     }
   }
@@ -650,9 +624,8 @@ async function handleRequest(req, res) {
       const project = await db.getProjectBySlug(slug);
 
       if (!project) {
-        // Keepsake 404
         const notFoundHtml = `<!DOCTYPE html>
-<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Not Found — studio.402</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"><style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#09090b;color:#f4f4f5;}</style></head>
+<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Not Found — ourpage</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"><style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#08080a;color:#f4f4f5;}</style></head>
 <body class="min-h-screen flex items-center justify-center p-4">
   <div class="max-w-md w-full bg-[#121215] border border-zinc-800 rounded-3xl p-8 text-center space-y-5 shadow-2xl">
     <div class="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto text-zinc-400 font-mono text-base font-bold">404</div>
@@ -663,22 +636,20 @@ async function handleRequest(req, res) {
         return sendText(res, 404, notFoundHtml, 'text/html; charset=utf-8');
       }
 
-      // Check Expiration
       if (project.expiresAt && new Date(project.expiresAt).getTime() < Date.now()) {
         const expiredHtml = `<!DOCTYPE html>
-<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Expired — studio.402</title><script src="https://cdn.tailwindcss.com"></script><style>body{background-color:#09090b;color:#f4f4f5;font-family:sans-serif;}</style></head>
+<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Expired — ourpage</title><script src="https://cdn.tailwindcss.com"></script><style>body{background-color:#08080a;color:#f4f4f5;font-family:sans-serif;}</style></head>
 <body class="min-h-screen flex items-center justify-center p-4">
   <div class="max-w-md w-full bg-[#121215] border border-zinc-800 rounded-3xl p-8 text-center space-y-4">
     <h1 class="text-xl font-bold text-white">This Keepsake Has Expired</h1>
-    <p class="text-xs text-zinc-400">The 30-day hosting window for &ldquo;${escapeHtml(project.slug)}&rdquo; has concluded.</p>
-    <a href="/editor.html" class="inline-block py-2.5 px-5 rounded-xl bg-white text-zinc-950 font-bold text-xs mt-3">Renew Keepsake</a>
+    <p class="text-xs text-zinc-400">The hosting window for &ldquo;${escapeHtml(project.slug)}&rdquo; has concluded.</p>
+    <a href="/editor" class="inline-block py-2.5 px-5 rounded-xl bg-white text-zinc-950 font-bold text-xs mt-3">Renew Keepsake</a>
   </div>
 </body></html>`;
         return sendText(res, 410, expiredHtml, 'text/html; charset=utf-8');
       }
 
-      // Resolve template
-      const templateFile = TEMPLATE_MAP[project.template] || TEMPLATE_MAP['vinyl'];
+      const templateFile = TEMPLATE_MAP[project.template] || 'loveos.html';
       const templatePath = path.join(ROOT_DIR, templateFile);
 
       if (!fs.existsSync(templatePath)) {
@@ -699,7 +670,7 @@ async function handleRequest(req, res) {
 
       // Server Data Injection into <head>
       const injectionScript = `
-  <!-- studio.402 Server Hydration -->
+  <!-- ourpage Server Hydration -->
   <script>
     window.__SERVER_PROJECT__ = ${JSON.stringify(cleanProject)};
   </script>
@@ -725,7 +696,7 @@ async function handleRequest(req, res) {
       });
       return res.end(htmlContent);
     } catch (err) {
-      console.error('[studio.402] Error rendering /v/:slug:', err);
+      console.error('[ourpage] Error rendering /v/:slug:', err);
       return sendText(res, 500, 'Error rendering keepsake memory.');
     }
   }
@@ -735,17 +706,15 @@ async function handleRequest(req, res) {
   // ---------------------------------------------------------------------------
   let safePath = pathname;
   if (safePath === '/' || safePath === '') {
-    safePath = fs.existsSync(path.join(ROOT_DIR, 'index.html')) ? '/index.html' : '/editor.html';
-  } else if (safePath === '/editor') {
-    safePath = '/editor.html';
+    safePath = '/editor-loveos.html';
+  } else if (safePath === '/editor' || safePath === '/editor.html') {
+    safePath = '/editor-loveos.html';
+  } else if (safePath === '/editor-loveos') {
+    safePath = '/editor-loveos.html';
   } else if (safePath === '/admin') {
     safePath = '/admin.html';
-  } else if (safePath === '/spotilove' || safePath === '/vinyl') {
-    safePath = '/vinyl.html';
-  } else if (safePath === '/netlove' || safePath === '/cinema') {
-    safePath = '/cinema.html';
-  } else if (safePath === '/lovebox' || safePath === '/camera') {
-    safePath = '/camera.html';
+  } else if (safePath === '/loveos') {
+    safePath = '/loveos.html';
   }
 
   const normalizedPath = path.normalize(safePath).replace(/^(\.\.[\/\\])+/, '');
@@ -766,45 +735,47 @@ async function handleRequest(req, res) {
 
     const stream = fs.createReadStream(filePath);
     stream.on('error', (err) => {
-      console.error('[studio.402] Stream error:', err);
+      console.error('[ourpage] Stream error:', err);
       if (!res.headersSent) sendText(res, 500, 'Internal Server Error');
     });
     return stream.pipe(res);
   }
 
-  return sendText(res, 404, '404 Not Found — studio.402');
+  return sendText(res, 404, '404 Not Found — ourpage');
 }
 
 // Create HTTP Server
 const server = http.createServer(handleRequest);
 
-// Periodic Cron Job for Standalone Server Mode (checks abandoned drafts every 15 mins)
+// Standalone Server Mode (Cron checks abandoned drafts every 15 mins)
 let cronTimer = null;
 if (!process.env.VERCEL) {
   cronTimer = setInterval(() => {
-    checkAbandonedDrafts().catch(e => console.warn('[studio.402 Cron Timer]', e.message));
+    checkAbandonedDrafts().catch(e => console.warn('[ourpage Cron Timer]', e.message));
   }, 15 * 60 * 1000);
+  if (cronTimer.unref) cronTimer.unref();
 }
 
-// Start Server if not on Vercel
-if (!process.env.VERCEL) {
+// Start Server if directly executed
+if (!process.env.VERCEL && require.main === module) {
   server.listen(PORT, HOST, () => {
     console.log(`
   ==============================================================
-   studio.402 Keepsake Server is Running
+   ourpage LoveOS Keepsake Server Running
    --------------------------------------------------------------
-   URL:             http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}
-   Editor:          http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/editor.html
+   Main App:        http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}
+   LoveOS Editor:   http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/editor-loveos.html
+   Template View:   http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/loveos.html
    Admin Portal:    http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/admin.html
-   Database Mode:   ${db.isUsingSupabase() ? 'Supabase Cloud PostgreSQL' : 'Local Store Fallback (data/projects.json)'}
-   WhatsApp Engine: ${process.env.FONNTE_TOKEN ? 'Fonnte Connected' : (process.env.CALLMEBOT_PHONE ? 'CallMeBot Connected' : 'Mock Console Mode')}
+   Admin Password:  ${ADMIN_KEY}
+   Database Mode:   Strict Supabase Cloud PostgreSQL (loveos_projects)
+   WhatsApp Engine: ${process.env.FONNTE_TOKEN ? 'Fonnte Connected' : 'Mock Mode'}
    Abandoned Cron:  Active (Every 15 mins)
   ==============================================================
     `);
   });
 }
 
-// Graceful Shutdown
 process.on('SIGTERM', () => {
   if (cronTimer) clearInterval(cronTimer);
   server.close(() => process.exit(0));
