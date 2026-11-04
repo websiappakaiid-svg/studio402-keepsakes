@@ -228,6 +228,13 @@ async function checkAbandonedDrafts() {
 // MAIN REQUEST HANDLER
 // =============================================================================
 async function handleRequest(req, res) {
+  if (req.url && (req.url.includes('/debug-vercel') || req.url.includes('/api/debug-vercel'))) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      url: req.url,
+      headers: req.headers
+    }, null, 2));
+  }
   const parsedUrl = url.parse(req.url, true);
   const matchedPath = req.headers['x-matched-path'] || '';
   let pathname = parsedUrl.pathname || '/';

@@ -8,9 +8,9 @@
     { "source": "/", "destination": "/loveos.html" },
     { "source": "/editor", "destination": "/editor-loveos.html" },
     { "source": "/editor-loveos", "destination": "/editor-loveos.html" },
-    { "source": "/admin", "destination": "/api?route=admin" },
-    { "source": "/admin.html", "destination": "/api?route=admin" },
-    { "source": "/v/:slug*", "destination": "/api?slug=:slug*" },
-    { "source": "/api/:path*", "destination": "/api/:path*" }
+    { "source": "/admin", "destination": "/api" },
+    { "source": "/admin.html", "destination": "/api" },
+    { "source": "/v/:slug*", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api" }
   ]
 }
