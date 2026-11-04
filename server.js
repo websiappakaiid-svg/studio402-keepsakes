@@ -229,7 +229,22 @@ async function checkAbandonedDrafts() {
 // =============================================================================
 async function handleRequest(req, res) {
   const parsedUrl = url.parse(req.url, true);
-  const pathname = parsedUrl.pathname || '/';
+  const matchedPath = req.headers['x-matched-path'] || '';
+  let pathname = parsedUrl.pathname || '/';
+
+  // Normalize Vercel serverless rewrites (when destination is /api)
+  if (pathname === '/api') {
+    if (parsedUrl.query && parsedUrl.query.route === 'admin') {
+      pathname = '/admin';
+    } else if (parsedUrl.query && parsedUrl.query.slug) {
+      pathname = `/v/${parsedUrl.query.slug}`;
+    }
+  } else if (matchedPath.startsWith('/admin')) {
+    pathname = '/admin';
+  } else if (matchedPath.startsWith('/v/')) {
+    pathname = matchedPath.split('?')[0];
+  }
+
   const method = req.method.toUpperCase();
   const searchParams = new URLSearchParams(parsedUrl.query);
 
