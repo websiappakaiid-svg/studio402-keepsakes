@@ -161,6 +161,8 @@ function authenticateAdmin(req) {
   const parsedUrl = url.parse(req.url, true);
   if (parsedUrl.query && parsedUrl.query.key === ADMIN_KEY) return true;
 
+  if (req.headers.cookie && req.headers.cookie.includes('ourpage_admin=' + encodeURIComponent(ADMIN_KEY))) return true;
+
   return false;
 }
 
@@ -705,14 +707,33 @@ async function handleRequest(req, res) {
   // 3. STATIC FILE SERVING
   // ---------------------------------------------------------------------------
   let safePath = pathname;
-  if (safePath === '/' || safePath === '') {
-    safePath = '/editor-loveos.html';
-  } else if (safePath === '/editor' || safePath === '/editor.html') {
-    safePath = '/editor-loveos.html';
-  } else if (safePath === '/editor-loveos') {
-    safePath = '/editor-loveos.html';
-  } else if (safePath === '/admin') {
+
+  // Domain & URL Security Check for Admin Portal
+  if (safePath === '/admin' || safePath === '/admin.html') {
+    const adminDomain = process.env.ADMIN_DOMAIN ? process.env.ADMIN_DOMAIN.toLowerCase() : null;
+    const host = (req.headers.host || '').split(':')[0].toLowerCase();
+
+    // If an ADMIN_DOMAIN is configured (e.g. admin.ourpage.id), enforce host match
+    if (adminDomain && host !== adminDomain && !host.includes('localhost') && !host.includes('127.0.0.1')) {
+      return sendText(res, 404, 'Not Found');
+    }
+
+    // Require valid admin credentials (key in query, header, or cookie)
+    if (!authenticateAdmin(req)) {
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      return res.end('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body style="background:#09090b;color:#71717a;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h1 style="font-size:3rem;color:#f43f5e;margin:0 0 1rem 0;">404</h1><p>Halaman tidak ditemukan.</p></div></body></html>');
+    }
+
+    // Valid admin: set secure session cookie and serve admin portal
+    res.setHeader('Set-Cookie', `ourpage_admin=${encodeURIComponent(ADMIN_KEY)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
     safePath = '/admin.html';
+  } else if (safePath === '/' || safePath === '') {
+    // Root URL serves the live interactive LoveOS showcase demo (Viral Funnel)
+    safePath = '/loveos.html';
+  } else if (safePath === '/editor' || safePath === '/editor.html' || safePath === '/editor-loveos') {
+    safePath = '/editor-loveos.html';
+  } else if (safePath === '/loveos') {
+    safePath = '/loveos.html';
   } else if (safePath === '/loveos') {
     safePath = '/loveos.html';
   }

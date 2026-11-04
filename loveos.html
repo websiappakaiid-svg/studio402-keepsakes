@@ -446,6 +446,18 @@
       }
     }
   </style>
+
+  <script>
+    if (window.location.search.includes('preview=true') || (window.self !== window.top)) {
+      document.documentElement.classList.add('in-preview-mode');
+    }
+  </script>
+  <style>
+    .in-preview-mode #cinematic-intro { display: none !important; opacity: 0 !important; pointer-events: none !important; visibility: hidden !important; }
+    .in-preview-mode #demo-cta-bar { display: none !important; }
+    .in-preview-mode #demo-bottom-cta { display: none !important; }
+  </style>
+
 </head>
 
 <body class="bg-obsidian text-zinc-100 antialiased selection:bg-rose-500/30 selection:text-rose-200">
@@ -895,9 +907,10 @@
         </div>
         <p class="text-xs font-medium text-zinc-200 truncate">Want to make one for your person?</p>
       </div>
-      <button id="open-customize-btn" type="button" class="shrink-0 px-3.5 py-2 rounded-xl bg-white text-zinc-950 font-semibold text-xs hover:bg-zinc-100 active:scale-95 transition shadow-sm">
-        Create Yours
-      </button>
+      <a href="/editor" id="open-customize-btn" class="shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs hover:brightness-110 active:scale-95 transition shadow-md flex items-center gap-1.5 no-underline">
+        <span>Buat Milikmu</span>
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
     </div>
 
   </div>
@@ -1151,288 +1164,14 @@
         const demoBar = document.getElementById("demo-cta-bar");
         if (!demoBar) return;
         const urlParams = new URLSearchParams(window.location.search);
-        const isPaidParam = urlParams.get("mode") === "paid";
-        const isPaidConfig = Boolean(data && data.isPaid === true);
-
-        if (isPaidParam || isPaidConfig) {
-          demoBar.classList.add("hidden");
-          return;
-        } else {
-          demoBar.classList.remove("hidden");
-        }
-
-        // Show only when scrolled towards bottom; hide when scrolling back up
-        const handleScroll = () => {
-          if (demoBar.classList.contains("hidden")) return;
-          const scrollPos = window.innerHeight + window.scrollY;
-          const threshold = document.documentElement.scrollHeight - 480;
-
-          if (scrollPos >= threshold) {
-            demoBar.classList.remove("translate-y-16", "opacity-0", "pointer-events-none");
-            demoBar.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
-          } else {
-            demoBar.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
-            demoBar.classList.add("translate-y-16", "opacity-0", "pointer-events-none");
-          }
-        };
-
-        window.removeEventListener("scroll", handleScroll);
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        handleScroll();
-      }
-
-      /* ------------------------------------------------------------------------
-         4. DYNAMIC ISLAND CONTROLLER (AT AUTHENTIC TOP STATUS ROW)
-         ------------------------------------------------------------------------ */
-      function setIslandActivity(activityName) {
-        currentIslandActivity = activityName;
-        updateDynamicIslandContent();
-      }
-
-      function toggleDynamicIsland() {
-        isDynamicIslandExpanded = !isDynamicIslandExpanded;
-        playUiSound("tap");
-        updateDynamicIslandContent();
-      }
-
-      function collapseDynamicIsland() {
-        if (isDynamicIslandExpanded) {
-          isDynamicIslandExpanded = false;
-          updateDynamicIslandContent();
-        }
-      }
-
-      function updateDynamicIslandContent() {
-        const island = document.getElementById("dynamic-island-el");
-        if (!island) return;
-
-        const audio = document.getElementById("loveos-audio");
-        const isAudioPlaying = audio && !audio.paused && !audio.ended;
-        const data = window.COUPLE_DATA || {};
-
-        if (isDynamicIslandExpanded) {
-          island.classList.add("is-expanded");
-
-          if (isAudioPlaying || currentIslandActivity === "music") {
-            // A. Music Activity Expanded
-            island.innerHTML = `
-              <div class="flex items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-3 min-w-0">
-                  <div class="relative w-10 h-10 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center shrink-0 shadow-md">
-                    <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400"></div>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(data.songData?.title || "Our Song")}</p>
-                    <p class="text-[11px] text-zinc-400 truncate">${escapeHtml(data.songData?.artist || "Now Playing")}</p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-2 shrink-0">
-                  <div class="flex items-center gap-1 h-4 px-1.5">
-                    <span class="island-wave-bar wave-b1 ${isAudioPlaying ? '' : 'paused'}"></span>
-                    <span class="island-wave-bar wave-b2 ${isAudioPlaying ? '' : 'paused'}"></span>
-                    <span class="island-wave-bar wave-b3 ${isAudioPlaying ? '' : 'paused'}"></span>
-                    <span class="island-wave-bar wave-b4 ${isAudioPlaying ? '' : 'paused'}"></span>
-                  </div>
-                  <button id="island-play-toggle" type="button" class="w-8 h-8 rounded-full bg-white text-zinc-950 flex items-center justify-center shadow-md active:scale-90 transition">
-                    ${isAudioPlaying ? `
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                    ` : `
-                      <svg class="w-3.5 h-3.5 translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-                    `}
-                  </button>
-                </div>
-              </div>
-              <div class="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-zinc-400">
-                <span class="font-mono text-[10px] text-rose-300">VINYL STREAM</span>
-                <button type="button" class="island-jump-link text-white font-medium hover:underline" data-target="section-music">Jump to Vinyl Deck &rarr;</button>
-              </div>
-            `;
-          } else if (currentIslandActivity === "memory") {
-            // B. Memory Activity Expanded
-            const photos = data.polaroidPhotos || [];
-            const photo = photos[activePolaroidIndex] || photos[0];
-            island.innerHTML = `
-              <div class="flex items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-3 min-w-0">
-                  <img src="${escapeHtml(photo.imageUrl)}" alt="memory" class="w-10 h-10 rounded-xl object-cover border border-white/20 shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100x100/18181b/f4f4f5?text=Us';" />
-                  <div class="min-w-0">
-                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(photo.caption || "Scrapbook Memory")}</p>
-                    <p class="text-[11px] text-zinc-400 truncate">${escapeHtml(photo.location || photo.date || "")}</p>
-                  </div>
-                </div>
-                <button type="button" class="island-jump-link shrink-0 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-[11px] font-medium" data-target="section-photos">
-                  View
-                </button>
-              </div>
-              <div class="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-zinc-400">
-                <span>POLAROID ${activePolaroidIndex + 1} OF ${photos.length}</span>
-                <span class="text-rose-300">Tap photo to flip</span>
-              </div>
-            `;
-          } else if (currentIslandActivity === "letter") {
-            // C. Letter Activity Expanded
-            island.innerHTML = `
-              <div class="flex items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-semibold text-white truncate">Open When Envelopes</p>
-                    <p class="text-[11px] text-zinc-400 truncate">4 Sealed Letters for ${escapeHtml(data.partnerName)}</p>
-                  </div>
-                </div>
-                <button type="button" class="island-jump-link shrink-0 px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-200 text-[11px] font-medium" data-target="section-notes">
-                  Read
-                </button>
-              </div>
-            `;
-          } else {
-            // D. Default State Expanded
-            island.innerHTML = `
-              <div class="flex items-center justify-between gap-3 w-full">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-semibold text-white truncate">${escapeHtml(data.partnerName)} &amp; ${escapeHtml(data.creatorName)}</p>
-                    <p class="text-[11px] text-zinc-400 truncate">Every moment led to you</p>
-                  </div>
-                </div>
-                <button type="button" class="island-jump-link shrink-0 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px] font-medium" data-target="section-home">
-                  Top &uarr;
-                </button>
-              </div>
-            `;
-          }
-
-          // Bind internal jump links & play toggle
-          island.querySelectorAll(".island-jump-link").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              const targetId = btn.getAttribute("data-target");
-              const el = document.getElementById(targetId);
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-              collapseDynamicIsland();
-            });
-          });
-
-          const islandPlayBtn = island.querySelector("#island-play-toggle");
-          if (islandPlayBtn && audio) {
-            islandPlayBtn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              getAudioContext();
-              if (audio.paused) {
-                audio.play().catch(() => {
-                  audio.src = getFallbackWarmAudioBlobUrl();
-                  audio.play().catch(() => {});
-                });
-              } else {
-                audio.pause();
-              }
-            });
-          }
-
-        } else {
-          // Collapsed Pill State (Directly between Status Time & Battery Icon)
-          island.classList.remove("is-expanded");
-
-          if (isAudioPlaying) {
-            island.innerHTML = `
-              <div class="flex items-center gap-1.5 px-2.5 py-0.5 text-xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
-                <span class="font-mono text-[9px] uppercase text-zinc-300 tracking-wider truncate max-w-[85px]">${escapeHtml(data.songData?.title || "Playing")}</span>
-                <div class="flex items-center gap-0.5 h-2.5">
-                  <span class="island-wave-bar wave-b1"></span>
-                  <span class="island-wave-bar wave-b2"></span>
-                  <span class="island-wave-bar wave-b3"></span>
-                </div>
-              </div>
-            `;
-          } else {
-            island.innerHTML = `
-              <div class="flex items-center gap-1.5 px-3 py-0.5 text-xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                <span class="font-mono text-[10px] tracking-widest uppercase text-zinc-400">LoveOS</span>
-              </div>
-            `;
-          }
-        }
-      }
-
-      /* ------------------------------------------------------------------------
-         5. CELEBRATION HEARTS BURST (WHEN CHECKLIST REACHES 100%)
-         ------------------------------------------------------------------------ */
-      function triggerCelebrationHearts() {
-        playUiSound("check");
-        triggerHaptic("celebrate");
-
-        const heartColors = ["#f43f5e", "#fb7185", "#f59e0b", "#fbbf24", "#fda4af", "#ffffff"];
-        const container = document.createElement("div");
-        container.id = "celebration-hearts-container";
-        container.className = "fixed inset-0 pointer-events-none z-50 overflow-hidden";
-        document.body.appendChild(container);
-
-        const heartSvg = (color) => `
-          <svg class="w-full h-full drop-shadow-lg" viewBox="0 0 24 24" fill="${color}">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-        `;
-
-        for (let i = 0; i < 34; i++) {
-          const heart = document.createElement("div");
-          heart.className = "celebration-heart";
-          const size = Math.floor(Math.random() * 22) + 16;
-          const left = Math.floor(Math.random() * 88) + 6;
-          const bottom = Math.floor(Math.random() * 25) + 10;
-          const floatX = (Math.random() - 0.5) * 150;
-          const floatRot = (Math.random() - 0.5) * 55;
-          const floatScale = Math.random() * 0.6 + 0.9;
-          const floatDur = (Math.random() * 1.2 + 2.0).toFixed(2);
-          const color = heartColors[Math.floor(Math.random() * heartColors.length)];
-
-          heart.style.width = size + "px";
-          heart.style.height = size + "px";
-          heart.style.left = left + "%";
-          heart.style.bottom = bottom + "%";
-          heart.style.setProperty("--float-x", floatX + "px");
-          heart.style.setProperty("--float-rot", floatRot + "deg");
-          heart.style.setProperty("--float-scale", floatScale);
-          heart.style.setProperty("--float-dur", floatDur + "s");
-          heart.innerHTML = heartSvg(color);
-
-          container.appendChild(heart);
-        }
-
-        setTimeout(() => {
-          container.remove();
-        }, 3400);
-      }
-
-      /* ------------------------------------------------------------------------
-         6. CINEMATIC FIRST-OPEN INTRO CONTROLLER
-         ------------------------------------------------------------------------ */
-      function setupCinematicIntro(partnerName) {
-        const intro = document.getElementById("cinematic-intro");
-        const enterBtn = document.getElementById("enter-loveos-btn");
-        const skipBtn = document.getElementById("skip-intro-btn");
-        const nameEl = document.getElementById("intro-partner-name");
-
-        if (nameEl && partnerName) {
-          nameEl.textContent = `For ${partnerName}`;
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const isPreview = urlParams.get("preview") === "true";
+        const isPreview = urlParams.get("preview") === "true" || (window.self !== window.top);
         const hasSeenIntro = sessionStorage.getItem("loveos_intro_passed");
         if (hasSeenIntro === "true" || introDismissed || isPreview) {
-          if (intro) intro.classList.add("hidden");
+          if (intro) {
+            intro.style.display = "none";
+            intro.classList.remove("flex");
+            intro.classList.add("hidden");
+          }
           return;
         }
 
@@ -1443,6 +1182,8 @@
           playUiSound("tap");
           intro.classList.add("intro-dismissed");
           setTimeout(() => {
+            intro.style.display = "none";
+            intro.classList.remove("flex");
             intro.classList.add("hidden");
           }, 650);
         };
@@ -1996,6 +1737,25 @@ ${escapeHtml(data.mainLoveLetter)}
               </div>
             </div>
           </section>
+
+          <!-- VIRAL DEMO BOTTOM CONVERSION CARD (VISIBLE IN DEMO ONLY) -->
+          ${!data.isPaid ? `
+          <div id="demo-bottom-cta" class="ios-glass-card rounded-3xl p-5 text-center space-y-4 border-rose-500/30 bg-gradient-to-b from-rose-950/20 via-black to-zinc-950 my-4 shadow-xl">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 mx-auto flex items-center justify-center text-white shadow-lg shadow-rose-950/50">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-base font-bold text-white tracking-tight">Suka dengan Keepsake Ini?</h3>
+              <p class="text-xs text-zinc-300 leading-relaxed max-w-xs mx-auto">
+                Bikin hadiah digital eksklusif versi kalian berdua hanya dalam 2 menit. Foto, lagu, chat romantis &amp; surat rahasia siap tayang!
+              </p>
+            </div>
+            <a href="/editor" class="inline-flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/60 hover:brightness-110 active:scale-95 transition no-underline">
+              <span>Mulai Buat Milikmu Sekarang</span>
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+          ` : ''}
 
           <!-- Subtle Footer Colophon -->
           <footer class="pt-2 pb-6 text-center select-none">
@@ -2962,7 +2722,6 @@ ${escapeHtml(data.mainLoveLetter)}
             }
           });
         }
-        }
 
         // Global Escape Key to Close Open Modals / Dynamic Island
         window.addEventListener("keydown", (e) => {
@@ -3036,6 +2795,11 @@ ${escapeHtml(data.mainLoveLetter)}
         setupGlobalModalsAndHooks();
         setupCinematicIntro(window.COUPLE_DATA.partnerName);
         window.renderLoveOS(window.COUPLE_DATA);
+        if (window.parent && window.parent !== window) {
+          try {
+            window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
+          } catch(e) {}
+        }
       });
     })();
   </script>

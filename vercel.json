@@ -5,9 +5,33 @@
     }
   },
   "rewrites": [
-    { "source": "/", "destination": "/editor-loveos.html" },
-    { "source": "/editor", "destination": "/editor-loveos.html" },
-    { "source": "/v/:slug*", "destination": "/api" },
-    { "source": "/api/:path*", "destination": "/api" }
+    {
+      "source": "/",
+      "destination": "/loveos.html"
+    },
+    {
+      "source": "/editor",
+      "destination": "/editor-loveos.html"
+    },
+    {
+      "source": "/editor-loveos",
+      "destination": "/editor-loveos.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/api"
+    },
+    {
+      "source": "/admin.html",
+      "destination": "/api"
+    },
+    {
+      "source": "/v/:slug*",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api"
+    }
   ]
 }

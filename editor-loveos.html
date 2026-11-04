@@ -124,11 +124,11 @@
           <span>1. Data Inti</span>
         </button>
         <button type="button" onclick="scrollToSection('sec-photos', 'section-photos')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">2. Foto Polaroid</button>
-        <button type="button" onclick="scrollToSection('sec-letter', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">3. Surat Cinta</button>
+        <button type="button" onclick="scrollToSection('sec-letter', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">3. Surat Cinta</button>
         <button type="button" onclick="scrollToSection('sec-music', 'section-music')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">4. Musik</button>
-        <button type="button" onclick="scrollToSection('sec-milestones', 'section-home')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">5. Timeline</button>
+        <button type="button" onclick="scrollToSection('sec-milestones', 'section-messages')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">5. Timeline</button>
         <button type="button" onclick="scrollToSection('sec-chat', 'section-messages')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">6. Chat iMessage</button>
-        <button type="button" onclick="scrollToSection('sec-drafts', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">7. Catatan Rahasia</button>
+        <button type="button" onclick="scrollToSection('sec-drafts', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">7. Catatan Rahasia</button>
         <button type="button" onclick="scrollToSection('sec-envelopes', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">8. Amplop Cinta</button>
         <button type="button" onclick="scrollToSection('sec-extras', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">9. Bucket List</button>
       </div>
@@ -388,26 +388,22 @@
     </div>
 
     <!-- RIGHT PANEL: LIVE INTERACTIVE PHONE PREVIEW STAGE -->
-    <div id="panel-preview" class="hidden lg:flex flex-1 h-[calc(100vh-3.5rem)] bg-[#050507] items-center justify-center p-4 relative overflow-hidden">
+    <div id="panel-preview" class="hidden lg:flex flex-1 h-[calc(100vh-3.5rem)] bg-[#050507] items-center justify-center p-0 lg:p-4 relative overflow-hidden">
       <!-- Ambient Studio Lighting -->
       <div class="absolute w-[500px] h-[500px] rounded-full bg-rose-500/10 blur-[120px] pointer-events-none"></div>
       <div class="absolute w-[350px] h-[350px] rounded-full bg-amber-500/5 blur-[100px] pointer-events-none -bottom-10 -right-10"></div>
 
       <!-- Sync Status Pill Badge -->
-      <div class="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 backdrop-blur-md text-[11px] font-mono text-zinc-300 shadow-lg">
+      <div class="hidden lg:flex absolute top-4 right-4 z-20 items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 backdrop-blur-md text-[11px] font-mono text-zinc-300 shadow-lg">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>Live Sync Active</span>
       </div>
 
-      <!-- iPhone Liquid Glass Enclosure -->
-      <div class="relative w-full max-w-[420px] h-[92vh] max-h-[860px] rounded-[50px] p-2.5 bg-gradient-to-b from-zinc-700/60 via-zinc-900 to-black shadow-2xl border border-white/10 flex flex-col items-center justify-center">
-        <!-- Dynamic Island Notch Shell -->
-        <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-30 pointer-events-none flex items-center justify-center">
-          <div class="w-3 h-3 rounded-full bg-[#0a0a0f] border border-white/10 ml-auto mr-3"></div>
-        </div>
+      <!-- iPhone Enclosure (Desktop mockup / Mobile full-bleed for iOS) -->
+      <div class="relative w-full h-full lg:w-[390px] lg:h-[844px] lg:max-h-[min(844px,calc(100vh-5rem))] rounded-none lg:rounded-[48px] p-0 lg:p-2.5 bg-black lg:bg-gradient-to-b lg:from-zinc-700/70 lg:via-zinc-900 lg:to-black lg:shadow-2xl lg:border lg:border-white/15 flex flex-col items-center justify-center transition-all duration-300">
 
         <!-- Display Screen / Iframe Container -->
-        <div class="w-full h-full rounded-[42px] overflow-hidden bg-black relative shadow-inner">
+        <div class="w-full h-full rounded-none lg:rounded-[40px] overflow-hidden bg-black relative shadow-inner">
           <iframe 
             id="loveos-preview-iframe" 
             src="/loveos.html?preview=true" 
@@ -784,6 +780,20 @@
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       populateFormWithData(currentFormData);
+
+      // Global Form Live Sync Triggers
+      const formScrollContainer = document.getElementById('form-scroll-container');
+      if (formScrollContainer) {
+        formScrollContainer.addEventListener('input', () => syncFormToPreview());
+        formScrollContainer.addEventListener('change', () => syncFormToPreview());
+      }
+
+      // Receive ready state from preview iframe
+      window.addEventListener('message', (event) => {
+        if (event.data && (event.data.type === 'PREVIEW_READY' || event.data.type === 'LOVEOS_READY')) {
+          syncFormToPreview(true);
+        }
+      });
 
       const iframe = document.getElementById('loveos-preview-iframe');
       iframe.addEventListener('load', () => {

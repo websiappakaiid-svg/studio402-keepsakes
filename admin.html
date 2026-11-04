@@ -417,6 +417,12 @@
     // AUTH HANDLERS
     // -------------------------------------------------------------------------
     function initAuth() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const keyParam = urlParams.get('key');
+      if (keyParam) {
+        currentAdminKey = keyParam;
+        sessionStorage.setItem(STORAGE_KEY, currentAdminKey);
+      }
       if (currentAdminKey) {
         verifyAndLoadData();
       } else {
