@@ -56,7 +56,7 @@ const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 const ADMIN_KEY = process.env.ADMIN_KEY || '577811Bjs!';
 const GUMROAD_PRODUCT_URL = process.env.GUMROAD_PRODUCT_URL || 'https://threadsmith13.gumroad.com/l/filkd';
-const APP_URL = process.env.APP_URL || 'https://ourpage-keepsakes.vercel.app';
+const APP_URL = process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
 
 // =============================================================================
 // MODULAR TEMPLATE RESOLUTION MAP

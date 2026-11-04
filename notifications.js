@@ -11,7 +11,7 @@ const getFonnteToken = () => process.env.FONNTE_TOKEN || '';
 const getAdminPhone = () => process.env.ADMIN_WHATSAPP_PHONE || '';
 const getCallmebotPhone = () => process.env.CALLMEBOT_PHONE || '';
 const getCallmebotKey = () => process.env.CALLMEBOT_API_KEY || '';
-const getAppUrl = () => process.env.APP_URL || 'https://ourpage-keepsakes.vercel.app';
+const getAppUrl = () => process.env.APP_URL || 'https://studio402-keepsakes.vercel.app';
 
 /**
  * Universal WhatsApp Sender
