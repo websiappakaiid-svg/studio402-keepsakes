@@ -16,6 +16,9 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- LoveOS Keepsake Gift Card Generator -->
+  <script src="/loveos-giftcard.js"></script>
+
   <style>
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -96,6 +99,17 @@
         <span>Reset Demo</span>
       </button>
 
+      <!-- LoveOS Keepsake Gift Card PNG Download Button -->
+      <button 
+        type="button" 
+        onclick="downloadGiftCardFromEditor()" 
+        class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-xs text-rose-300 hover:text-white hover:bg-rose-500/20 transition active:scale-95"
+        title="Download LoveOS Keepsake Gift Card (PNG)"
+      >
+        <i data-lucide="gift" class="w-3.5 h-3.5 text-rose-400"></i>
+        <span>Gift Card PNG</span>
+      </button>
+
       <!-- Primary High-Conversion Save Button -->
       <button 
         type="button" 
@@ -131,6 +145,10 @@
         <button type="button" onclick="scrollToSection('sec-drafts', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">7. Catatan Rahasia</button>
         <button type="button" onclick="scrollToSection('sec-envelopes', 'section-notes-letters')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">8. Amplop Cinta</button>
         <button type="button" onclick="scrollToSection('sec-extras', 'section-notes')" class="sec-pill px-3 py-1 rounded-lg text-zinc-400 hover:text-white whitespace-nowrap transition">9. Bucket List</button>
+        <button type="button" onclick="scrollToSection('sec-voucher', 'section-voucher')" class="sec-pill px-3 py-1 rounded-lg text-rose-400 hover:text-rose-300 whitespace-nowrap transition flex items-center gap-1">
+          <i data-lucide="ticket" class="w-3 h-3"></i>
+          <span>10. Love Voucher</span>
+        </button>
       </div>
 
       <!-- Scrollable Form Body -->
@@ -236,7 +254,7 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2 text-indigo-400 font-semibold text-sm">
               <i data-lucide="music" class="w-4 h-4"></i>
-              <span>4. Musik &amp; Audio Player</span>
+              <span>4. Musik &amp; Audio Player (Safe iOS/Android)</span>
             </div>
             <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
               OPSIONAL • Preset Ready
@@ -246,22 +264,100 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label class="block text-xs font-medium text-zinc-400 mb-1">Judul Lagu</label>
-              <input type="text" id="input-song-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+              <input type="text" id="input-song-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Golden Hour Romance" oninput="syncFormToPreview()">
             </div>
             <div>
               <label class="block text-xs font-medium text-zinc-400 mb-1">Artis / Keterangan</label>
-              <input type="text" id="input-song-artist" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
+              <input type="text" id="input-song-artist" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 transition" placeholder="Our Private Track" oninput="syncFormToPreview()">
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-medium text-zinc-400 mb-1">Link MP3 Musik</label>
-            <input type="url" id="input-song-url" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-indigo-500 transition" oninput="syncFormToPreview()">
-            <div class="flex flex-wrap gap-1.5 mt-2">
-              <span class="text-[10px] text-zinc-500 self-center">Preset Audio:</span>
-              <button type="button" onclick="setAudioPreset('lofi')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Lofi Night</button>
-              <button type="button" onclick="setAudioPreset('acoustic')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Acoustic Romance</button>
-              <button type="button" onclick="setAudioPreset('piano')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition">Soft Piano</button>
+          <!-- Opsi A: 5 Built-in Romantic Tracks -->
+          <div class="space-y-2 pt-1">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-zinc-300">
+                Pilihan A: 5 Built-in Romantic Tracks (Anti-Macet)
+              </label>
+              <span class="text-[10px] font-mono text-emerald-400">100% Play di iOS/Android</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button type="button" onclick="setAudioTrack(1, 'Golden Hour Piano', 'Acoustic Piano &amp; Warm Chords')" class="p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 hover:border-indigo-500/50 text-left transition flex items-center gap-2.5 group">
+                <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold group-hover:scale-105 transition">01</span>
+                <div class="min-w-0 flex-1 leading-tight">
+                  <div class="text-xs font-medium text-white truncate">Golden Hour Piano</div>
+                  <div class="text-[10px] text-zinc-500 truncate">/audio/song1.mp3</div>
+                </div>
+              </button>
+              <button type="button" onclick="setAudioTrack(2, 'Cozy Sunset Guitar', 'Soft Fingerpicking Romance')" class="p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 hover:border-indigo-500/50 text-left transition flex items-center gap-2.5 group">
+                <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold group-hover:scale-105 transition">02</span>
+                <div class="min-w-0 flex-1 leading-tight">
+                  <div class="text-xs font-medium text-white truncate">Cozy Sunset Guitar</div>
+                  <div class="text-[10px] text-zinc-500 truncate">/audio/song2.mp3</div>
+                </div>
+              </button>
+              <button type="button" onclick="setAudioTrack(3, 'Midnight Lofi Stars', 'Chill Midnight Bedroom Beats')" class="p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 hover:border-indigo-500/50 text-left transition flex items-center gap-2.5 group">
+                <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold group-hover:scale-105 transition">03</span>
+                <div class="min-w-0 flex-1 leading-tight">
+                  <div class="text-xs font-medium text-white truncate">Midnight Lofi Stars</div>
+                  <div class="text-[10px] text-zinc-500 truncate">/audio/song3.mp3</div>
+                </div>
+              </button>
+              <button type="button" onclick="setAudioTrack(4, 'Cinematic String Hug', 'Warm Strings &amp; Orchestral Glow')" class="p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 hover:border-indigo-500/50 text-left transition flex items-center gap-2.5 group">
+                <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold group-hover:scale-105 transition">04</span>
+                <div class="min-w-0 flex-1 leading-tight">
+                  <div class="text-xs font-medium text-white truncate">Cinematic String Hug</div>
+                  <div class="text-[10px] text-zinc-500 truncate">/audio/song4.mp3</div>
+                </div>
+              </button>
+            </div>
+            <button type="button" onclick="setAudioTrack(5, 'Warm Nostalgia Bells', 'Gentle Music Box Memories')" class="w-full p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 hover:border-indigo-500/50 text-left transition flex items-center gap-2.5 group">
+              <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-xs font-bold group-hover:scale-105 transition">05</span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="text-xs font-medium text-white truncate">Warm Nostalgia Bells</div>
+                <div class="text-[10px] text-zinc-500 truncate">/audio/song5.mp3 (Soft Ambient Bell Chimes)</div>
+              </div>
+            </button>
+          </div>
+
+          <!-- Opsi B: Upload Custom MP3 / Paste Audio URL -->
+          <div class="space-y-2 pt-2 border-t border-zinc-800/80">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-zinc-300">
+                Pilihan B: Upload MP3 Sendiri / URL Kustom
+              </label>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input type="url" id="input-song-url" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-white font-mono focus:outline-none focus:border-indigo-500 transition" placeholder="https://... atau pilih upload" oninput="syncFormToPreview()">
+              
+              <label class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs cursor-pointer flex items-center gap-1.5 transition active:scale-95 flex-shrink-0 shadow-sm">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Upload MP3</span>
+                <input type="file" id="input-audio-file" accept="audio/mpeg,audio/mp3,audio/wav,audio/m4a,audio/*" class="hidden" onchange="handleAudioUpload(event)">
+              </label>
+            </div>
+            <div id="audio-upload-status" class="text-[11px] font-mono text-zinc-500 hidden"></div>
+
+            <!-- Downloader Shortcut Helpers (SpotifyDown, Cobalt, SSSTik) -->
+            <div class="p-3 rounded-xl bg-zinc-950 border border-zinc-800/90 space-y-2">
+              <div class="text-[11px] font-medium text-zinc-400 flex items-center gap-1.5">
+                <i data-lucide="help-circle" class="w-3.5 h-3.5 text-zinc-500"></i>
+                <span>Belum punya file MP3? Unduh lagu favorit dalam 10 detik:</span>
+              </div>
+              <div class="flex flex-wrap gap-2 pt-0.5">
+                <a href="https://spotifydown.com/" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] text-emerald-400 font-medium flex items-center gap-1 transition">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>SpotifyDown ↗</span>
+                </a>
+                <a href="https://cobalt.tools/" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] text-sky-400 font-medium flex items-center gap-1 transition">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>Cobalt (YouTube/Reels) ↗</span>
+                </a>
+                <a href="https://ssstik.io/" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-[11px] text-rose-400 font-medium flex items-center gap-1 transition">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>SSSTik (TikTok MP3) ↗</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -369,6 +465,37 @@
               </button>
             </div>
             <div id="checklist-container" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- SEC 10: SCRATCH-TO-REVEAL LOVE VOUCHER [OPSIONAL]                   -->
+        <!-- ------------------------------------------------------------------- -->
+        <section id="sec-voucher" class="glass-card rounded-2xl p-4 sm:p-5 space-y-4" onfocusin="syncScrollToPreview('section-voucher')">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <i data-lucide="ticket" class="w-4 h-4"></i>
+              <span>10. Scratch-to-Reveal Love Voucher</span>
+            </div>
+            <span class="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              OPSIONAL • Interactive
+            </span>
+          </div>
+          <p class="text-xs text-zinc-400">Voucher gosok rahasia dengan lapisan foil perak metalik yang bisa digosok jari di layar HP pasangan Anda.</p>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">Judul Voucher</label>
+              <input type="text" id="input-voucher-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition" placeholder="Secret Date Night Voucher" oninput="syncFormToPreview()">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">Hadiah / Isi Janji Manis (Voucher Reward)</label>
+              <textarea id="input-voucher-reward" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-rose-500 transition leading-relaxed" placeholder="Good for: 1 Late-Night Food Run, Cozy Movie Marathon &amp; Unlimited Back Scratches" oninput="syncFormToPreview()"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1">Kode Klaim (Claim / Promo Code)</label>
+              <input type="text" id="input-voucher-code" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs font-mono uppercase text-rose-300 focus:outline-none focus:border-rose-500 transition" placeholder="REDEEM-ANYTIME" oninput="syncFormToPreview()">
+            </div>
           </div>
         </section>
 
@@ -513,18 +640,56 @@
           class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs tracking-wide uppercase flex items-center justify-center gap-2 shadow-lg shadow-rose-950/40 hover:brightness-110 transition"
         >
           <i data-lucide="unlock" class="w-4 h-4"></i>
-          <span>Buka Live Selamanya ($19 USD)</span>
+          <span>Buka Live Selamanya • <span class="line-through opacity-70 font-normal">$35</span> $18 USD One-Time</span>
         </a>
+
+        <!-- Download Keepsake Gift Card PNG -->
+        <button 
+          type="button" 
+          onclick="downloadGiftCardFromEditor()" 
+          class="w-full py-2.5 px-4 rounded-xl bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 text-rose-300 font-semibold text-xs flex items-center justify-center gap-2 transition"
+        >
+          <i data-lucide="gift" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span>Unduh LoveOS Gift Card (PNG)</span>
+        </button>
 
         <a 
           id="modal-view-link" 
           href="#" 
           target="_blank" 
-          class="w-full py-2.5 px-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs flex items-center justify-center gap-2 transition"
+          class="w-full py-2 px-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs flex items-center justify-center gap-2 transition"
         >
           <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
           <span>Lihat Draf di Tab Baru</span>
         </a>
+      </div>
+
+      <!-- Studio Editions Showcase -->
+      <div class="p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 text-left space-y-2">
+        <div class="text-[10px] font-mono uppercase text-zinc-400 tracking-wider font-semibold">OurPage Studio Series</div>
+        <div class="space-y-1.5 text-xs">
+          <div class="flex items-center justify-between p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-200">
+            <div class="flex items-center gap-2 font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              <span>LoveOS Edition</span>
+            </div>
+            <span class="font-mono text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-bold">AVAILABLE NOW • $18</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/60 text-zinc-400">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
+              <span>Netlove Streaming</span>
+            </div>
+            <span class="font-mono text-[10px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded-full">COMING SOON</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/60 text-zinc-400">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
+              <span>Spotilove Vinyl</span>
+            </div>
+            <span class="font-mono text-[10px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded-full">COMING SOON</span>
+          </div>
+        </div>
       </div>
 
       <p class="text-[11px] text-zinc-500 pt-1">
@@ -700,6 +865,11 @@
         }
       ],
       secretConfession: "Sometimes when you're half-asleep next to me, I stay awake a little longer just looking at you and quietly thanking the universe that out of eight billion people, I somehow got lucky enough to hold you.",
+      scratchVoucher: {
+        title: "Secret Date Night Voucher",
+        reward: "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches",
+        code: "REDEEM-ANYTIME"
+      },
       futureChecklist: [
         {
           id: "dream-1",
@@ -758,20 +928,60 @@
     }
 
     // -------------------------------------------------------------------------
-    // AUDIO PRESETS
+    // AUDIO PRESETS & SAFE MUSIC HANDLERS (iOS & Android Compatible)
     // -------------------------------------------------------------------------
-    const AUDIO_PRESETS = {
-      lofi: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
-      acoustic: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=warm-acoustic-guitar-11003.mp3",
-      piano: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c078021c.mp3?filename=romantic-piano-10886.mp3"
+    const AUDIO_TRACKS = {
+      1: { url: "/audio/song1.mp3", title: "Golden Hour Piano", artist: "Acoustic Piano & Warm Chords" },
+      2: { url: "/audio/song2.mp3", title: "Cozy Sunset Guitar", artist: "Soft Fingerpicking Romance" },
+      3: { url: "/audio/song3.mp3", title: "Midnight Lofi Stars", artist: "Chill Midnight Bedroom Beats" },
+      4: { url: "/audio/song4.mp3", title: "Cinematic String Hug", artist: "Warm Strings & Orchestral Glow" },
+      5: { url: "/audio/song5.mp3", title: "Warm Nostalgia Bells", artist: "Gentle Music Box Memories" }
     };
 
+    function setAudioTrack(trackNum, title, desc) {
+      const track = AUDIO_TRACKS[trackNum] || { url: `/audio/song${trackNum}.mp3`, title, artist: desc };
+      document.getElementById('input-song-url').value = track.url;
+      if (track.title) document.getElementById('input-song-title').value = track.title;
+      if (track.artist) document.getElementById('input-song-artist').value = track.artist;
+      syncFormToPreview(true);
+      syncScrollToPreview('section-music');
+    }
+
     function setAudioPreset(key) {
-      if (AUDIO_PRESETS[key]) {
-        document.getElementById('input-song-url').value = AUDIO_PRESETS[key];
-        syncFormToPreview();
+      const presets = {
+        lofi: "/audio/song3.mp3",
+        acoustic: "/audio/song2.mp3",
+        piano: "/audio/song1.mp3"
+      };
+      if (presets[key]) {
+        document.getElementById('input-song-url').value = presets[key];
+        syncFormToPreview(true);
         syncScrollToPreview('section-music');
       }
+    }
+
+    function handleAudioUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('audio-upload-status');
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+        statusEl.textContent = `Loading "${file.name}"...`;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        document.getElementById('input-song-url').value = dataUrl;
+        const cleanName = file.name.replace(/\.[^/.]+$/, '');
+        document.getElementById('input-song-title').value = cleanName;
+        if (statusEl) {
+          statusEl.textContent = `✓ "${file.name}" loaded (${Math.round(file.size / 1024)} KB)`;
+          statusEl.className = 'text-[11px] font-mono text-emerald-400 font-semibold';
+        }
+        syncFormToPreview(true);
+        syncScrollToPreview('section-music');
+      };
+      reader.readAsDataURL(file);
     }
 
     // -------------------------------------------------------------------------
@@ -835,6 +1045,11 @@
       document.getElementById('input-secret-confession').value = data.secretConfession || '';
       renderChecklistInputs(data.futureChecklist || []);
 
+      const sv = data.scratchVoucher || DEFAULT_LOVEOS_DATA.scratchVoucher;
+      if (document.getElementById('input-voucher-title')) document.getElementById('input-voucher-title').value = sv.title || '';
+      if (document.getElementById('input-voucher-reward')) document.getElementById('input-voucher-reward').value = sv.reward || '';
+      if (document.getElementById('input-voucher-code')) document.getElementById('input-voucher-code').value = sv.code || '';
+
       lucide.createIcons();
     }
 
@@ -859,6 +1074,7 @@
                 <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event, ${idx})">
               </label>
             </div>
+            <div id="photo-badge-${idx}" class="text-[10px] font-mono mt-1 hidden"></div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div>
@@ -1121,6 +1337,12 @@
       const secretConfession = document.getElementById('input-secret-confession')?.value || '';
       const futureChecklist = extractChecklistData();
 
+      const scratchVoucher = {
+        title: document.getElementById('input-voucher-title')?.value.trim() || 'Secret Date Night Voucher',
+        reward: document.getElementById('input-voucher-reward')?.value.trim() || 'Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches',
+        code: document.getElementById('input-voucher-code')?.value.trim().toUpperCase() || 'REDEEM-ANYTIME'
+      };
+
       return {
         partnerName,
         creatorName,
@@ -1135,6 +1357,7 @@
         openWhenEnvelopes,
         secretConfession,
         futureChecklist,
+        scratchVoucher,
         isPaid: false
       };
     }
@@ -1187,21 +1410,103 @@
       else syncDebounceTimer = setTimeout(doSync, 60);
     }
 
-    function handlePhotoUpload(event, idx) {
+    // -------------------------------------------------------------------------
+    // AUTOMATIC IMAGE COMPRESSION TO .WEBP (MAX 900PX, 78% QUALITY)
+    // -------------------------------------------------------------------------
+    function compressImageToWebP(file, maxSize = 900, quality = 0.78) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width;
+            let h = img.height;
+            if (w > maxSize || h > maxSize) {
+              if (w > h) {
+                h = Math.round((h * maxSize) / w);
+                w = maxSize;
+              } else {
+                w = Math.round((w * maxSize) / h);
+                h = maxSize;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+
+            let dataUrl = '';
+            try {
+              dataUrl = canvas.toDataURL('image/webp', quality);
+            } catch (_) {}
+            if (!dataUrl || !dataUrl.startsWith('data:image/webp')) {
+              dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+
+            const sizeKB = Math.round((dataUrl.length * 3 / 4) / 1024);
+            resolve({
+              dataUrl,
+              sizeKB,
+              format: dataUrl.startsWith('data:image/webp') ? 'WebP' : 'JPEG'
+            });
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handlePhotoUpload(event, idx) {
       const file = event.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
+      const badge = document.getElementById(`photo-badge-${idx}`);
+      if (badge) {
+        badge.classList.remove('hidden');
+        badge.textContent = 'Mengompres ke WebP...';
+        badge.className = 'text-[10px] font-mono text-zinc-400';
+      }
+
+      try {
+        const { dataUrl, sizeKB, format } = await compressImageToWebP(file, 900, 0.78);
         const input = document.getElementById(`photo-url-${idx}`);
         if (input) {
           input.value = dataUrl;
+          if (badge) {
+            badge.textContent = `Compressed to ${sizeKB} KB ${format} ✓`;
+            badge.className = 'text-[10px] font-mono text-emerald-400 font-semibold';
+          }
           syncFormToPreview(true);
           syncScrollToPreview('section-photos');
         }
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error('Image compression failed:', err);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const input = document.getElementById(`photo-url-${idx}`);
+          if (input) {
+            input.value = e.target.result;
+            syncFormToPreview(true);
+            syncScrollToPreview('section-photos');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Download Keepsake Gift Card PNG directly from Editor
+    function downloadGiftCardFromEditor() {
+      if (typeof LoveOSGiftCard === 'undefined') {
+        alert('Modul Gift Card generator sedang disiapkan. Mohon tunggu beberapa detik.');
+        return;
+      }
+      const data = extractFormData();
+      const liveUrl = `${window.location.origin}/v/${data.slug || 'alex-mia'}`;
+      LoveOSGiftCard.downloadGiftCard(data, liveUrl)
+        .catch(err => console.error('Gift card download error:', err));
     }
 
     function handleSlugInput(val) {

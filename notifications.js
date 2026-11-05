@@ -138,7 +138,7 @@ async function notifyPaidOrder({ email, slug, liveUrl, price, template }) {
   const msg = 
 `🎉 *[ourpage] ORDER LUNAS & AKTIF!*
 ---------------------------------------
-💰 *Nilai Pembayaran:* ${price || '$19.00 USD'}
+💰 *Nilai Pembayaran:* ${price || '$18.00 USD'}
 👤 *Email Pembeli:* ${email}
 ✨ *Link Keepsake Aktif:* ${fullLive}
 🎨 *Template:* ${template || 'LoveOS (iOS Keepsake)'}

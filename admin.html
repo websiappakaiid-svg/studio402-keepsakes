@@ -16,6 +16,9 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- LoveOS Keepsake Gift Card Generator -->
+  <script src="/loveos-giftcard.js"></script>
+
   <style>
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -652,10 +655,20 @@
                 <span>Preview</span>
               </a>
 
+              <button 
+                onclick="downloadGiftCardAdmin('${p.id}')" 
+                class="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition active:scale-95"
+              >
+                <i data-lucide="gift" class="w-3.5 h-3.5"></i>
+                <span>Gift Card</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 pt-0.5">
               ${!isPaid ? `
                 <button 
                   onclick="openFollowupModal('${p.id}')" 
-                  class="py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
+                  class="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
                 >
                   <i data-lucide="send" class="w-3.5 h-3.5"></i>
                   <span>Email Follow-up</span>
@@ -663,10 +676,10 @@
               ` : `
                 <button 
                   onclick="copyCheckoutLink('${p.slug}', '${p.email}')" 
-                  class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
+                  class="w-full py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
                 >
                   <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                  <span>Salin Link</span>
+                  <span>Salin Link Checkout</span>
                 </button>
               `}
             </div>
@@ -742,6 +755,14 @@
                 >
                   <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                 </a>
+
+                <button 
+                  onclick="downloadGiftCardAdmin('${p.id}')" 
+                  title="Unduh Keepsake QR Gift Card (PNG)" 
+                  class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 transition"
+                >
+                  <i data-lucide="gift" class="w-3.5 h-3.5"></i>
+                </button>
 
                 ${!isPaid ? `
                   <button 
@@ -901,6 +922,24 @@ ourpage Keepsakes Team`;
       navigator.clipboard.writeText(text).then(() => {
         showToast('Teks email follow-up disalin ke clipboard!');
       });
+    }
+
+    // Download Keepsake Gift Card PNG
+    function downloadGiftCardAdmin(projectId) {
+      const project = projectsData.find(p => p.id === projectId);
+      if (!project) return;
+      if (typeof LoveOSGiftCard === 'undefined') {
+        showToast('Modul Gift Card belum siap', false);
+        return;
+      }
+      const liveUrl = `${window.location.origin}/v/${project.slug}`;
+      showToast(`Menyiapkan Keepsake Gift Card untuk /v/${project.slug}...`);
+      LoveOSGiftCard.downloadGiftCard(project.configData || project.config || {}, liveUrl)
+        .then(() => showToast('Gift Card PNG berhasil diunduh!'))
+        .catch(err => {
+          console.error(err);
+          showToast('Gagal men-generate kartu', false);
+        });
     }
 
     // Initialize on page load

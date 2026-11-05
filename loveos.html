@@ -458,6 +458,7 @@
     .in-preview-mode #demo-bottom-cta { display: none !important; }
   </style>
 
+  <script src="/loveos-giftcard.js"></script>
 </head>
 
 <body class="bg-obsidian text-zinc-100 antialiased selection:bg-rose-500/30 selection:text-rose-200">
@@ -510,6 +511,11 @@
       /* ========================================================================
          [SMART DEFAULT - Otomatis Terisi Kalimat Bahasa Inggris US yang Natural & Opsional Diedit]
          ======================================================================== */
+      scratchVoucher: {
+        title: "Secret Date Night Voucher",
+        reward: "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches",
+        code: "REDEEM-ANYTIME"
+      },
       isPaid: false,
 
       songData: {
@@ -688,45 +694,79 @@
   <!-- ==========================================================================
        CINEMATIC FIRST-OPEN EXPERIENCE (INTRO OVERLAY)
        ========================================================================== -->
-  <div id="cinematic-intro" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#08080a] select-none" aria-modal="true" role="dialog">
-    <div class="relative w-full max-w-[390px] text-center flex flex-col items-center">
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#08080a] select-none" aria-modal="true" role="dialog">
+    <div class="relative w-full max-w-[360px] text-center flex flex-col items-center">
       <!-- Breathing Ambient Light Behind Heart -->
-      <div class="w-24 h-24 rounded-full bg-rose-500/20 blur-2xl absolute -top-4"></div>
+      <div class="w-24 h-24 rounded-full bg-rose-500/20 blur-2xl absolute -top-4 pointer-events-none"></div>
 
       <!-- Glowing Heart Icon -->
-      <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500/25 to-amber-500/20 border border-rose-400/30 flex items-center justify-center text-rose-400 shadow-xl intro-heart-anim mb-6">
-        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+      <div class="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500/25 to-amber-500/20 border border-rose-400/30 flex items-center justify-center text-rose-400 shadow-xl intro-heart-anim mb-3">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
         </svg>
       </div>
 
       <!-- Recipient's Name in Elegant Instrument Serif -->
-      <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-rose-300/80 mb-2">A Private Space</p>
-      <h1 id="intro-partner-name" class="font-serif italic text-4xl sm:text-5xl text-zinc-100 tracking-tight leading-tight mb-3">
+      <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-rose-300/80 mb-1">A Private Keepsake</p>
+      <h1 id="intro-partner-name" class="font-serif italic text-3xl sm:text-4xl text-zinc-100 tracking-tight leading-tight mb-1">
         For Mia
       </h1>
 
       <!-- Short Emotional Introduction -->
-      <p class="text-sm text-zinc-400 leading-relaxed max-w-[300px] mb-8 font-sans">
+      <p class="text-xs text-zinc-400 leading-relaxed max-w-[280px] mb-3.5 font-sans">
         “A little place, made just for us.”
       </p>
 
-      <!-- Obvious Enter Button -->
-      <button
-        id="enter-loveos-btn"
-        type="button"
-        class="w-full max-w-[260px] py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-semibold text-xs tracking-wider uppercase shadow-xl shadow-rose-950/50 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2 border border-white/20"
-      >
-        <span>Open LoveOS</span>
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-        </svg>
-      </button>
+      <!-- ====================================================================
+           PASSCODE GATE SYSTEM: iOS LOCKSCREEN PIN KEYPAD (MMDD)
+           ==================================================================== -->
+      <div id="passcode-gate-container" class="w-full max-w-[280px] flex flex-col items-center space-y-3">
+        <!-- 4 Passcode Dots Indicator -->
+        <div id="passcode-dots-row" class="flex items-center justify-center gap-3.5 transition-transform duration-200">
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+        </div>
 
-      <!-- Skip / Tap Hint -->
-      <button id="skip-intro-btn" type="button" class="mt-4 text-[11px] font-mono text-zinc-500 hover:text-zinc-300 transition">
-        Tap anywhere to enter
-      </button>
+        <p id="passcode-hint-text" class="text-[11px] font-mono text-zinc-400 tracking-wide">
+          Enter our anniversary passcode (MMDD)
+        </p>
+
+        <!-- 3x4 iOS Lockscreen Circular Keypad -->
+        <div class="grid grid-cols-3 gap-3 w-full max-w-[250px] pt-0.5">
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="1">1</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="2">2</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="3">3</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="4">4</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="5">5</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="6">6</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="7">7</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="8">8</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="9">9</button>
+          <button type="button" id="pin-clear-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white font-mono text-xs flex items-center justify-center transition uppercase tracking-wider" aria-label="Clear Passcode">Clear</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="0">0</button>
+          <button type="button" id="pin-backspace-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white flex items-center justify-center transition active:scale-95" aria-label="Backspace">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bypass Unlock Button -->
+        <button
+          id="enter-loveos-btn"
+          type="button"
+          class="mt-1.5 text-xs font-mono text-zinc-400 hover:text-rose-300 transition flex items-center gap-1.5 py-1.5 px-3 rounded-lg hover:bg-white/[0.04]"
+        >
+          <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+          </svg>
+          <span>Or Tap Here to Unlock Instantly</span>
+        </button>
+
+        <button id="skip-intro-btn" type="button" class="hidden"></button>
+      </div>
     </div>
   </div>
 
@@ -844,18 +884,41 @@
           Customize your names, anniversary counter, Polaroids, handwritten back-notes, song, and love letter in 3 minutes. Share via private link or QR code.
         </p>
 
-        <div class="space-y-2.5 mb-6 text-xs text-zinc-300">
-          <div class="flex items-center gap-2.5 bg-white/[0.04] rounded-xl p-2.5 border border-white/[0.06]">
-            <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6 9 17l-5-5"/>
-            </svg>
-            <span>4 Required fields + Smart US English defaults ready to go</span>
+        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-rose-950/40 via-zinc-900 to-black border border-rose-500/30 mb-4">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-bold text-rose-300 uppercase tracking-wider font-mono">Special Studio Edition</span>
+            <span class="text-[11px] font-mono line-through text-zinc-500">$35 USD</span>
           </div>
-          <div class="flex items-center gap-2.5 bg-white/[0.04] rounded-xl p-2.5 border border-white/[0.06]">
-            <svg class="w-4 h-4 text-rose-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6 9 17l-5-5"/>
-            </svg>
-            <span>Works smoothly on iOS Safari, Threads, Instagram & Android</span>
+          <div class="flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-white tracking-tight">$18 USD</span>
+            <span class="text-xs text-rose-400 font-medium">One-Time (Studio Bundle)</span>
+          </div>
+          <p class="text-[11px] text-zinc-400 mt-1">Permanent keepsake link, all 6 interactive apps + LoveOS Gift Card generator included.</p>
+        </div>
+
+        <!-- Studio Editions -->
+        <div class="space-y-2 mb-4 text-xs font-mono">
+          <div class="text-[11px] text-zinc-400 uppercase tracking-widest font-semibold">Studio Series</div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.06] border border-rose-500/30">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-white font-semibold">LoveOS Tiny Phone</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">Available Now • $18</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] opacity-60">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-zinc-600"></span>
+              <span class="text-zinc-400">Netlove Series</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 text-[10px]">Coming Soon</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] opacity-60">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-zinc-600"></span>
+              <span class="text-zinc-400">Spotilove Vinyl</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 text-[10px]">Coming Soon</span>
           </div>
         </div>
 
@@ -908,12 +971,45 @@
         <p class="text-xs font-medium text-zinc-200 truncate">Want to make one for your person?</p>
       </div>
       <a href="/editor" id="open-customize-btn" class="shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs hover:brightness-110 active:scale-95 transition shadow-md flex items-center gap-1.5 no-underline">
-        <span>Buat Milikmu</span>
+        <span>Make Yours • $18</span>
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </a>
     </div>
 
   </div>
+
+  
+    <!-- ========================================================================
+         MODAL 4: LOVEOS KEEPSAKE QR GIFT CARD PREVIEW & DOWNLOAD MODAL
+         ======================================================================== -->
+    <div id="giftcard-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity duration-300 opacity-0" aria-hidden="true" role="dialog">
+      <div id="giftcard-modal-card" class="relative w-full max-w-[420px] rounded-3xl overflow-hidden bg-[#101014] border border-white/15 p-5 shadow-2xl transform scale-95 transition-all duration-300 flex flex-col items-center space-y-4">
+        <div class="flex items-center justify-between w-full">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+            <span class="font-mono text-xs font-bold text-white uppercase tracking-wider">LoveOS Gift Card</span>
+          </div>
+          <button id="close-giftcard-modal-btn" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center transition">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Canvas Preview Container -->
+        <div id="giftcard-preview-container" class="w-full max-h-[55vh] overflow-hidden rounded-2xl border border-white/10 shadow-inner flex items-center justify-center bg-black">
+          <canvas id="giftcard-live-preview-canvas" class="w-full h-auto max-h-[55vh] object-contain rounded-2xl"></canvas>
+        </div>
+
+        <div class="w-full space-y-2">
+          <button id="btn-download-giftcard-png" type="button" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/50 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download LoveOS Gift Card (PNG)</span>
+          </button>
+          <p class="text-[10px] font-mono text-zinc-500 text-center">
+            Format: High-Res 1080x1350px • Ready for Instagram or Print
+          </p>
+        </div>
+      </div>
+    </div>
 
   <!-- Hidden Real HTML5 Audio Element for Widget 2 -->
   <audio id="loveos-audio" preload="metadata" crossorigin="anonymous"></audio>
@@ -1679,7 +1775,7 @@ ${escapeHtml(data.mainLoveLetter)}
 
               <div class="mt-4 pt-3 border-t border-white/[0.07] flex items-center justify-between">
                 <span class="font-hand text-2xl text-amber-300">— Always yours, ${escapeHtml(data.creatorName)}</span>
-                <span class="font-mono text-[10px] text-zinc-500">Locked with Face ID</span>
+                <span class="font-mono text-[10px] text-zinc-500">Saved at 3:12 AM • Never deleting this</span>
               </div>
 
               <!-- Interactive Secret Confession Reveal Box -->
@@ -1738,6 +1834,54 @@ ${escapeHtml(data.mainLoveLetter)}
             </div>
           </section>
 
+          
+          <!-- ==================================================================
+               SECTION 7: INTERACTIVE SCRATCH-TO-REVEAL LOVE VOUCHER
+               ================================================================== -->
+          <section id="section-voucher" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Secret Love Voucher</h2>
+              </div>
+              <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
+                Scratch to Unlock
+              </span>
+            </div>
+
+            <!-- Scratch Card Outer Container -->
+            <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0d0d12]">
+              <!-- Underlying Voucher Reward (Revealed underneath) -->
+              <div id="voucher-underlying-content" class="p-5 sm:p-6 text-center space-y-3 bg-gradient-to-b from-rose-950/30 via-zinc-950 to-black select-none">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-400/30 text-amber-300 text-[10px] font-mono tracking-widest uppercase shadow-sm">
+                  <span>✦ COUPLE'S GOLDEN TICKET ✦</span>
+                </div>
+                <h3 id="voucher-display-title" class="font-serif italic text-2xl sm:text-3xl text-white tracking-tight leading-snug">
+                  ${escapeHtml(data.scratchVoucher?.title || "Secret Date Night Voucher")}
+                </h3>
+                <div class="max-w-[280px] mx-auto p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
+                  <p id="voucher-display-reward" class="text-xs text-zinc-200 leading-relaxed font-sans">
+                    ${escapeHtml(data.scratchVoucher?.reward || "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches")}
+                  </p>
+                </div>
+                <div class="pt-1 flex items-center justify-center gap-2">
+                  <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Redeem Code:</span>
+                  <span id="voucher-display-code" class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 tracking-widest">
+                    ${escapeHtml(data.scratchVoucher?.code || "REDEEM-ANYTIME")}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Interactive Scratch Layer Canvas -->
+              <canvas id="scratch-voucher-canvas" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-none z-10 transition-opacity duration-700"></canvas>
+            </div>
+            <p class="text-[10px] font-mono text-center text-zinc-500 mt-2.5">
+              Use your finger or cursor to scratch off the foil layer
+            </p>
+          </section>
+
           <!-- VIRAL DEMO BOTTOM CONVERSION CARD (VISIBLE IN DEMO ONLY) -->
           ${!data.isPaid ? `
           <div id="demo-bottom-cta" class="ios-glass-card rounded-3xl p-5 text-center space-y-4 border-rose-500/30 bg-gradient-to-b from-rose-950/20 via-black to-zinc-950 my-4 shadow-xl">
@@ -1758,10 +1902,20 @@ ${escapeHtml(data.mainLoveLetter)}
           ` : ''}
 
           <!-- Subtle Footer Colophon -->
-          <footer class="pt-2 pb-6 text-center select-none">
+          <footer class="pt-2 pb-6 text-center select-none space-y-3">
+            <button id="open-giftcard-btn" type="button" class="w-full max-w-[340px] mx-auto py-3 px-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-zinc-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
+              <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
+              <span>Download LoveOS Gift Card (PNG)</span>
+            </button>
+
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
               Handcrafted on LoveOS • Made with care for ${escapeHtml(data.partnerName)}
             </p>
+
+            <button id="lock-screen-btn" type="button" class="text-[10px] font-mono text-zinc-500 hover:text-rose-300 transition inline-flex items-center gap-1 mx-auto py-1 px-2.5 rounded-lg hover:bg-white/[0.04]">
+              <svg class="w-3 h-3 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>Lock Screen (Test PIN)</span>
+            </button>
           </footer>
         `;
 
@@ -1773,6 +1927,7 @@ ${escapeHtml(data.mainLoveLetter)}
         renderChatBubbles(false);
         renderPolaroidStage();
         renderFutureChecklist();
+        initScratchVoucherWidget(data.scratchVoucher);
         updateDynamicIslandContent();
         bindWidgetEvents();
         initScrollReveals();
@@ -2643,6 +2798,171 @@ ${escapeHtml(data.mainLoveLetter)}
       function closeEnvelopeModal() {
         const modal = document.getElementById("envelope-modal");
         const card = document.getElementById("envelope-modal-card");
+        if (!modal || !card) return;
+
+        playUiSound("tap");
+        modal.classList.add("opacity-0");
+        card.classList.remove("scale-100");
+        card.classList.add("scale-95");
+        setTimeout(() => {
+          modal.classList.remove("flex");
+          modal.classList.add("hidden");
+        }, 250);
+      }
+
+      
+      /* ------------------------------------------------------------------------
+         18. INTERACTIVE SCRATCH VOUCHER WIDGET CONTROLLER
+         ------------------------------------------------------------------------ */
+      function initScratchVoucherWidget(voucherData) {
+        const canvas = document.getElementById("scratch-voucher-canvas");
+        const pill = document.getElementById("voucher-status-pill");
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        const width = canvas.offsetWidth || 340;
+        const height = canvas.offsetHeight || 190;
+        const dpr = window.devicePixelRatio || 2;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        // Metallic Rose-Gold / Platinum Foil Gradient
+        const grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, "#d8b4a6");
+        grad.addColorStop(0.35, "#e5cfc3");
+        grad.addColorStop(0.7, "#c9a191");
+        grad.addColorStop(1, "#b58776");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Sparkle patterns
+        ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+        for (let i = 0; i < 40; i++) {
+          const rx = (i * 37) % width;
+          const ry = (i * 23) % height;
+          ctx.fillRect(rx, ry, 2.5, 2.5);
+        }
+
+        // Foil Text
+        ctx.fillStyle = "#26262b";
+        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.textAlign = "center";
+        ctx.fillText("✦ SCRATCH WITH FINGER TO REVEAL ✦", width / 2, height / 2 - 8);
+
+        ctx.fillStyle = "#52525b";
+        ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText("Special Romantic Voucher", width / 2, height / 2 + 16);
+
+        let isScratching = false;
+        let scratchedCount = 0;
+        let isRevealed = false;
+
+        const scratchAt = (clientX, clientY) => {
+          if (isRevealed) return;
+          const rect = canvas.getBoundingClientRect();
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.beginPath();
+          ctx.arc(x, y, 24, 0, Math.PI * 2);
+          ctx.fill();
+
+          scratchedCount++;
+          if (scratchedCount % 10 === 0) {
+            checkScratched();
+          }
+        };
+
+        const checkScratched = () => {
+          if (isRevealed) return;
+          try {
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            let transparentPixels = 0;
+            const step = 32;
+            let sampled = 0;
+
+            for (let i = 3; i < data.length; i += 4 * step) {
+              sampled++;
+              if (data[i] < 128) {
+                transparentPixels++;
+              }
+            }
+
+            const percent = (transparentPixels / sampled) * 100;
+            if (percent > 45) {
+              isRevealed = true;
+              canvas.style.opacity = "0";
+              canvas.style.pointerEvents = "none";
+
+              if (pill) {
+                pill.className = "font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider animate-pulse";
+                pill.textContent = "UNLOCKED & ACTIVE ✓";
+              }
+
+              playUiSound("check");
+              triggerCelebrationHearts();
+            }
+          } catch(e) {}
+        };
+
+        canvas.addEventListener("mousedown", (e) => {
+          isScratching = true;
+          scratchAt(e.clientX, e.clientY);
+        });
+        window.addEventListener("mouseup", () => isScratching = false);
+        canvas.addEventListener("mousemove", (e) => {
+          if (isScratching) scratchAt(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener("touchstart", (e) => {
+          isScratching = true;
+          if (e.touches && e.touches[0]) {
+            scratchAt(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+        canvas.addEventListener("touchmove", (e) => {
+          if (isScratching && e.touches && e.touches[0]) {
+            scratchAt(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+        canvas.addEventListener("touchend", () => isScratching = false);
+      }
+
+      /* ------------------------------------------------------------------------
+         19. LOVEOS GIFT CARD MODAL CONTROLLERS
+         ------------------------------------------------------------------------ */
+      function openGiftCardModal() {
+        const modal = document.getElementById("giftcard-modal");
+        const card = document.getElementById("giftcard-modal-card");
+        const canvas = document.getElementById("giftcard-live-preview-canvas");
+        if (!modal || !card) return;
+
+        playUiSound("tap");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        requestAnimationFrame(() => {
+          modal.classList.remove("opacity-0");
+          card.classList.remove("scale-95");
+          card.classList.add("scale-100");
+        });
+
+        if (canvas && window.LoveOSGiftCard) {
+          window.LoveOSGiftCard.generateCanvas(window.COUPLE_DATA).then((fullCanvas) => {
+            canvas.width = fullCanvas.width;
+            canvas.height = fullCanvas.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(fullCanvas, 0, 0);
+          }).catch(console.error);
+        }
+      }
+
+      function closeGiftCardModal() {
+        const modal = document.getElementById("giftcard-modal");
+        const card = document.getElementById("giftcard-modal-card");
         if (!modal || !card) return;
 
         playUiSound("tap");

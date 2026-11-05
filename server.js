@@ -437,7 +437,7 @@ async function handleRequest(req, res) {
     try {
       const body = await parseBody(req);
       const buyerEmail = (body.email || body.buyer_email || '').trim().toLowerCase();
-      const rawPrice = body.price ? `$${(Number(body.price) / 100).toFixed(2)}` : '$19.00 USD';
+      const rawPrice = body.price ? `$${(Number(body.price) / 100).toFixed(2)}` : '$18.00 USD';
 
       let urlParams = {};
       if (body.url_params) {
@@ -562,7 +562,7 @@ async function handleRequest(req, res) {
 
       let estimatedRevenue = 0;
       rawAll.filter(p => p.status === 'paid').forEach(p => {
-        estimatedRevenue += 19.00;
+        estimatedRevenue += 18.00;
       });
 
       const oneHourAgo = Date.now() - 60 * 60 * 1000;
@@ -707,7 +707,7 @@ async function handleRequest(req, res) {
   <div id="studio-draft-pill" class="studio-draft-pill" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;background:rgba(24,24,27,0.92);backdrop-filter:blur(12px);border:1px solid rgba(245,158,11,0.5);color:#fbbf24;padding:6px 14px;border-radius:9999px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.5);display:flex;align-items:center;gap:8px;pointer-events:auto;">
     <span style="display:inline-block;width:6px;height:6px;border-radius:9999px;background:#f59e0b;"></span>
     <span>DRAFT PREVIEW &bull; UNPAID</span>
-    <a href="${GUMROAD_PRODUCT_URL}?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}" style="background:#f59e0b;color:#09090b;padding:2px 8px;border-radius:6px;text-decoration:none;font-weight:800;margin-left:4px;">UNLOCK LIVE ($19)</a>
+    <a href="${GUMROAD_PRODUCT_URL}?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}" style="background:#f59e0b;color:#09090b;padding:2px 8px;border-radius:6px;text-decoration:none;font-weight:800;margin-left:4px;">UNLOCK LIVE ($18)</a>
   </div>
 `;
         htmlContent = htmlContent.replace(/<body[^>]*>/i, `$&${draftBanner}`);

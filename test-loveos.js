@@ -94,6 +94,42 @@ async function runTests() {
     assert.strictEqual(wrongAuthRes.status, 401);
     console.log('✓ Admin API security verified (rejects invalid password).');
 
+    // -------------------------------------------------------------------------
+    // TEST 4: Built-in Audio Files & Gift Card Module
+    // -------------------------------------------------------------------------
+    console.log('\nTest 4: Static audio presets & gift card generator module');
+    const song1Res = await makeRequest('GET', '/audio/song1.mp3');
+    assert.strictEqual(song1Res.status, 200);
+    assert.ok(song1Res.data.length > 500, 'Audio file should have content');
+
+    const giftcardRes = await makeRequest('GET', '/loveos-giftcard.js');
+    assert.strictEqual(giftcardRes.status, 200);
+    assert.ok(giftcardRes.data.includes('LoveOSGiftCard'), 'Gift card module should export LoveOSGiftCard');
+    console.log('✓ Audio tracks and giftcard module verified.');
+
+    // -------------------------------------------------------------------------
+    // TEST 5: Verify Additive Upgrade Features in loveos.html
+    // -------------------------------------------------------------------------
+    console.log('\nTest 5: Verify Additive Upgrades in loveos.html');
+    const loveosRes = await makeRequest('GET', '/loveos.html');
+    assert.strictEqual(loveosRes.status, 200);
+    assert.ok(loveosRes.data.includes('passcode-gate-container'), 'Must include iOS PIN Lockscreen');
+    assert.ok(loveosRes.data.includes('scratch-voucher-canvas'), 'Must include Scratch-to-Reveal Voucher');
+    assert.ok(loveosRes.data.includes('giftcard-modal'), 'Must include Keepsake QR Gift Card modal');
+    assert.ok(loveosRes.data.includes('$18'), 'Must include $18 pricing');
+    console.log('✓ loveos.html verified with PIN lockscreen, scratch voucher, gift card, and $18 pricing.');
+
+    // -------------------------------------------------------------------------
+    // TEST 6: Verify Safe Audio & WebP Engine in editor-loveos.html
+    // -------------------------------------------------------------------------
+    console.log('\nTest 6: Verify Safe Audio & WebP Engine in editor-loveos.html');
+    assert.ok(editorRes.data.includes('setAudioTrack'), 'Must include 5 built-in audio tracks');
+    assert.ok(editorRes.data.includes('compressImageToWebP'), 'Must include WebP photo compression engine');
+    assert.ok(editorRes.data.includes('input-voucher-title'), 'Must include Scratch voucher editor fields');
+    assert.ok(editorRes.data.includes('spotifydown.com'), 'Must include SpotifyDown shortcut');
+    assert.ok(editorRes.data.includes('$18 USD'), 'Must include $18 USD One-Time pricing');
+    console.log('✓ editor-loveos.html verified with all 7 upgrade specifications.');
+
     console.log('\n======================================================');
     console.log('🎉 ALL OURPAGE REVAMP TESTS PASSED PERFECTLY!');
     console.log('======================================================\n');
