@@ -114,6 +114,7 @@ async function runTests() {
     const loveosRes = await makeRequest('GET', '/loveos.html');
     assert.strictEqual(loveosRes.status, 200);
     assert.ok(loveosRes.data.includes('passcode-gate-container'), 'Must include iOS PIN Lockscreen');
+    assert.ok(loveosRes.data.includes('YYYYMMDD'), 'Must include 8-digit YYYYMMDD PIN');
     assert.ok(loveosRes.data.includes('scratch-voucher-canvas'), 'Must include Scratch-to-Reveal Voucher');
     assert.ok(loveosRes.data.includes('giftcard-modal'), 'Must include Keepsake QR Gift Card modal');
     assert.ok(loveosRes.data.includes('$18'), 'Must include $18 pricing');

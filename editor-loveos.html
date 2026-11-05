@@ -20,11 +20,19 @@
   <script src="/loveos-giftcard.js"></script>
 
   <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: #08080a;
       color: #f4f4f5;
       overflow-x: hidden;
+      touch-action: manipulation;
+    }
+    button, a, input, select, textarea, [role="button"] {
+      touch-action: manipulation;
     }
     .font-serif {
       font-family: 'Instrument Serif', Georgia, serif;
@@ -188,7 +196,11 @@
               Tanggal &amp; Waktu Jadian / Momen Pertama <span class="text-rose-400">*</span>
             </label>
             <input type="datetime-local" id="input-anniversary-date" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition" required oninput="syncFormToPreview()">
-            <p class="text-[11px] text-zinc-500 mt-1">Otomatis menghitung waktu berjalan live (Tahun, Hari, Jam, Menit, Detik).</p>
+            <div class="flex items-center gap-2 mt-1.5 p-2 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              <span>Passcode PIN Otomatis: <strong id="calculated-pin-display" class="text-rose-300 font-bold">20241014</strong> (8-Digit: YYYYMMDD)</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 mt-1">Otomatis menghitung live counter &amp; menjadi PIN 8-digit pembuka LoveOS.</p>
           </div>
 
           <div>
@@ -1397,6 +1409,18 @@
       
       const doSync = () => {
         const payload = extractFormData();
+
+        // Update calculated PIN badge
+        if (payload.anniversaryDate) {
+          const d = new Date(payload.anniversaryDate);
+          if (!isNaN(d.getTime())) {
+            const pad = n => String(n).padStart(2, '0');
+            const pin = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+            const pinEl = document.getElementById('calculated-pin-display');
+            if (pinEl) pinEl.textContent = pin;
+          }
+        }
+
         const iframe = document.getElementById('loveos-preview-iframe');
         if (iframe && iframe.contentWindow) {
           iframe.contentWindow.postMessage({
