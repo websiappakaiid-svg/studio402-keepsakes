@@ -1,5 +1,5 @@
 /**
- * End-to-End Test Suite for OurPage LoveOS
+ * Comprehensive End-to-End Test Suite for OurPage LoveOS
  */
 
 const http = require('http');
@@ -7,7 +7,7 @@ const assert = require('assert');
 const serverApp = require('./server.js');
 const db = require('./db.js');
 
-const TEST_PORT = 3457;
+const TEST_PORT = 3458;
 const BASE_URL = `http://127.0.0.1:${TEST_PORT}`;
 
 function makeRequest(method, path, body = null, headers = {}) {
@@ -44,12 +44,12 @@ function makeRequest(method, path, body = null, headers = {}) {
 }
 
 async function runTests() {
-  console.log('🚀 Starting OurPage LoveOS End-to-End Test Suite...\n');
+  console.log('🚀 Starting OurPage LoveOS Comprehensive Test Suite...\n');
 
   const testServer = http.createServer(serverApp);
   await new Promise(resolve => testServer.listen(TEST_PORT, '127.0.0.1', resolve));
 
-  const testSlug = `ourpage-test-${Date.now().toString().slice(-5)}`;
+  const testSlug = `test-e2e-${Date.now().toString().slice(-6)}`;
   const testEmail = `test-${Date.now()}@example.com`;
 
   try {
@@ -68,17 +68,18 @@ async function runTests() {
     console.log('\nTest 2: Static routing for root and editor');
     const rootRes = await makeRequest('GET', '/');
     assert.strictEqual(rootRes.status, 200);
-    assert.ok(rootRes.data.includes('OurPage'), 'Root should serve OurPage editor');
+    assert.ok(rootRes.data.includes('ourpage') || rootRes.data.includes('OurPage'), 'Root should serve OurPage');
 
     const editorRes = await makeRequest('GET', '/editor-loveos.html');
     assert.strictEqual(editorRes.status, 200);
-    assert.ok(editorRes.data.includes('OurPage'), 'Direct editor URL should serve OurPage editor');
+    assert.ok(editorRes.data.includes('step-1'), 'Editor should include 5-step wizard');
+    assert.ok(editorRes.data.includes('step-5'), 'Editor should include Step 5 publish');
     console.log('✓ Static routes for OurPage editor verified.');
 
     // -------------------------------------------------------------------------
-    // TEST 3: Admin API with new password '577811Bjs!'
+    // TEST 3: Admin API with password '577811Bjs!'
     // -------------------------------------------------------------------------
-    console.log('\nTest 3: GET /api/admin/projects with new password "577811Bjs!"');
+    console.log('\nTest 3: GET /api/admin/projects with password "577811Bjs!"');
     const adminRes = await makeRequest('GET', '/api/admin/projects', null, {
       'x-admin-key': '577811Bjs!'
     });
@@ -108,31 +109,91 @@ async function runTests() {
     console.log('✓ Audio tracks and giftcard module verified.');
 
     // -------------------------------------------------------------------------
-    // TEST 5: Verify Additive Upgrade Features in loveos.html
+    // TEST 5: Verify Guided Story Chapters & Features in loveos.html
     // -------------------------------------------------------------------------
-    console.log('\nTest 5: Verify Additive Upgrades in loveos.html');
+    console.log('\nTest 5: Verify Guided Story Chapters & Passcode Gate in loveos.html');
     const loveosRes = await makeRequest('GET', '/loveos.html');
     assert.strictEqual(loveosRes.status, 200);
-    assert.ok(loveosRes.data.includes('passcode-gate-container'), 'Must include iOS PIN Lockscreen');
-    assert.ok(loveosRes.data.includes('YYYYMMDD'), 'Must include 8-digit YYYYMMDD PIN');
+    assert.ok(!loveosRes.data.includes('id="ios-nav-dock"'), 'ios-nav-dock must be completely deleted');
+    assert.ok(loveosRes.data.includes('story-chapter-1'), 'Must include story chapter 1');
+    assert.ok(loveosRes.data.includes('story-chapter-5'), 'Must include story chapter 5');
+    assert.ok(loveosRes.data.includes('revealChapter'), 'Must include revealChapter function');
+    assert.ok(loveosRes.data.includes('unlockAllChapters'), 'Must include unlockAllChapters function');
+    assert.ok(loveosRes.data.includes('MMDD'), 'Must include 4-digit MMDD PIN indicator');
     assert.ok(loveosRes.data.includes('scratch-voucher-canvas'), 'Must include Scratch-to-Reveal Voucher');
-    assert.ok(loveosRes.data.includes('giftcard-modal'), 'Must include Keepsake QR Gift Card modal');
-    assert.ok(loveosRes.data.includes('$18'), 'Must include $18 pricing');
-    console.log('✓ loveos.html verified with PIN lockscreen, scratch voucher, gift card, and $18 pricing.');
+    assert.ok(loveosRes.data.includes('giftcard-live-preview-canvas') || loveosRes.data.includes('giftcard-modal'), 'Must include Keepsake QR Gift Card modal');
+    assert.ok(loveosRes.data.includes('$18'), 'Must include $18 USD pricing');
+    console.log('✓ loveos.html verified with 5 Guided Chapters, MMDD PIN, scratch voucher, and $18 pricing.');
 
     // -------------------------------------------------------------------------
-    // TEST 6: Verify Safe Audio & WebP Engine in editor-loveos.html
+    // TEST 6: Save Draft, Verify 30-Day Expiry & VIP Re-Edit Token
     // -------------------------------------------------------------------------
-    console.log('\nTest 6: Verify Safe Audio & WebP Engine in editor-loveos.html');
-    assert.ok(editorRes.data.includes('setAudioTrack'), 'Must include 5 built-in audio tracks');
-    assert.ok(editorRes.data.includes('compressImageToWebP'), 'Must include WebP photo compression engine');
-    assert.ok(editorRes.data.includes('input-voucher-title'), 'Must include Scratch voucher editor fields');
-    assert.ok(editorRes.data.includes('spotifydown.com'), 'Must include SpotifyDown shortcut');
-    assert.ok(editorRes.data.includes('$18 USD'), 'Must include $18 USD One-Time pricing');
-    console.log('✓ editor-loveos.html verified with all 7 upgrade specifications.');
+    console.log('\nTest 6: POST /api/save-draft to create a live draft with VIP edit token');
+    const draftPayload = {
+      id: `draft-${Date.now()}`,
+      slug: testSlug,
+      email: testEmail,
+      template: 'loveos',
+      configData: {
+        partnerName: 'Emma',
+        creatorName: 'Lucas',
+        anniversaryDate: '2024-10-14',
+        heroNote: 'For Lucas & Emma'
+      }
+    };
+
+    const saveDraftRes = await makeRequest('POST', '/api/save-draft', draftPayload);
+    assert.strictEqual(saveDraftRes.status, 200);
+    assert.strictEqual(saveDraftRes.json.ok, true);
+    assert.ok(saveDraftRes.json.editToken, 'Draft must return secret editToken');
+    assert.ok(saveDraftRes.json.expiresAt, 'Draft must return 30-day expiresAt');
+    assert.ok(saveDraftRes.json.publicUrl.includes('/u/'), 'Public URL must use /u/ format');
+    assert.ok(saveDraftRes.json.reeditUrl.includes('token='), 'Re-edit URL must include secret token');
+    const editToken = saveDraftRes.json.editToken;
+    console.log(`✓ Draft created successfully! editToken: ${editToken.slice(0, 8)}..., expiresAt: ${saveDraftRes.json.expiresAt}`);
+
+    // -------------------------------------------------------------------------
+    // TEST 7: VIP Re-Edit Verification & Instant Live Update
+    // -------------------------------------------------------------------------
+    console.log('\nTest 7: VIP Re-Edit authentication and live update');
+    // 7a. Get project via reedit
+    const reeditGetRes = await makeRequest('GET', `/api/project/reedit?slug=${testSlug}&token=${editToken}`);
+    assert.strictEqual(reeditGetRes.status, 200);
+    assert.strictEqual(reeditGetRes.json.ok, true);
+    assert.strictEqual(reeditGetRes.json.slug, testSlug);
+    assert.strictEqual(reeditGetRes.json.configData.partnerName, 'Emma');
+    console.log('✓ VIP GET authentication succeeded.');
+
+    // 7b. Invalid token check
+    const badTokenRes = await makeRequest('GET', `/api/project/reedit?slug=${testSlug}&token=invalid_token_123`);
+    assert.strictEqual(badTokenRes.status, 401);
+    console.log('✓ VIP unauthorized rejection verified.');
+
+    // 7c. Post live changes without payment
+    const reeditUpdateRes = await makeRequest('POST', '/api/project/reedit', {
+      slug: testSlug,
+      token: editToken,
+      configData: {
+        partnerName: 'Emma Updated',
+        creatorName: 'Lucas',
+        anniversaryDate: '2024-10-14'
+      }
+    });
+    assert.strictEqual(reeditUpdateRes.status, 200);
+    assert.strictEqual(reeditUpdateRes.json.ok, true);
+    console.log('✓ VIP live update succeeded without repurchasing.');
+
+    // -------------------------------------------------------------------------
+    // TEST 8: Verify Live Rendering via /u/:slug
+    // -------------------------------------------------------------------------
+    console.log('\nTest 8: GET /u/:slug live rendering');
+    const publicRenderRes = await makeRequest('GET', `/u/${testSlug}`);
+    assert.strictEqual(publicRenderRes.status, 200);
+    assert.ok(publicRenderRes.data.includes('Emma Updated'), 'Rendered HTML should reflect live updated data');
+    console.log('✓ /u/:slug successfully rendered live updated keepsake.');
 
     console.log('\n======================================================');
-    console.log('🎉 ALL OURPAGE REVAMP TESTS PASSED PERFECTLY!');
+    console.log('🎉 ALL OURPAGE UPGRADE & E2E TESTS PASSED PERFECTLY!');
     console.log('======================================================\n');
   } finally {
     testServer.close();

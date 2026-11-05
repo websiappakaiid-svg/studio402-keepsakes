@@ -440,6 +440,21 @@
     }
 
     /* ==========================================================================
+       GUIDED STORY CHAPTERS
+       ========================================================================== */
+    .story-chapter {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      will-change: opacity, transform;
+    }
+    .story-chapter.chapter-hidden {
+      display: none !important;
+    }
+    .chapter-continue-btn {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ==========================================================================
        ACCESSIBILITY & REDUCED MOTION
        ========================================================================== */
     @media (prefers-reduced-motion: reduce) {
@@ -727,39 +742,35 @@
       </p>
 
       <!-- ====================================================================
-           PASSCODE GATE SYSTEM: iOS LOCKSCREEN PIN KEYPAD (8-DIGIT YYYYMMDD)
+           PASSCODE GATE SYSTEM: iOS LOCKSCREEN PIN KEYPAD (4-DIGIT MMDD)
            ==================================================================== -->
       <div id="passcode-gate-container" class="w-full max-w-[280px] flex flex-col items-center space-y-3">
-        <!-- 8 Passcode Dots Indicator (Anniversary Date with Year) -->
-        <div id="passcode-dots-row" class="flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-200 py-1">
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
-          <span class="passcode-dot w-3 h-3 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+        <!-- 4 Passcode Dots Indicator (Anniversary Date MMDD) -->
+        <div id="passcode-dots-row" class="flex items-center justify-center gap-3 transition-transform duration-200 py-1">
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
+          <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
         </div>
 
         <p id="passcode-hint-text" class="text-[11px] font-mono text-zinc-400 tracking-wide text-center">
-          Enter our anniversary passcode (YYYYMMDD)
+          Enter our anniversary passcode (MMDD)
         </p>
 
         <!-- 3x4 iOS Lockscreen Circular Keypad -->
         <div class="grid grid-cols-3 gap-3 w-full max-w-[250px] pt-0.5">
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="1">1</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="2">2</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="3">3</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="4">4</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="5">5</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="6">6</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="7">7</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="8">8</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="9">9</button>
-          <button type="button" id="pin-clear-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white font-mono text-xs flex items-center justify-center transition uppercase tracking-wider" aria-label="Clear Passcode">Clear</button>
-          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm" data-key="0">0</button>
-          <button type="button" id="pin-backspace-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white flex items-center justify-center transition active:scale-95" aria-label="Backspace">
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="1">1</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="2">2</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="3">3</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="4">4</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="5">5</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="6">6</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="7">7</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="8">8</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="9">9</button>
+          <button type="button" id="pin-clear-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white font-mono text-xs flex items-center justify-center transition uppercase tracking-wider select-none" style="touch-action: manipulation;" aria-label="Clear Passcode">Clear</button>
+          <button type="button" class="pin-key w-16 h-16 rounded-full bg-white/[0.06] hover:bg-white/[0.12] active:bg-rose-500/30 active:scale-95 border border-white/10 text-white font-mono text-xl flex items-center justify-center transition shadow-sm select-none" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" data-key="0">0</button>
+          <button type="button" id="pin-backspace-btn" class="w-16 h-16 rounded-full text-zinc-400 hover:text-white flex items-center justify-center transition active:scale-95 select-none" style="touch-action: manipulation;" aria-label="Backspace">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/>
             </svg>
@@ -798,49 +809,9 @@
     </div>
 
     <!-- Main Mobile App Shell: Locked to max-w-[430px] mx-auto min-h-dvh -->
-    <main id="loveos-app" class="relative z-10 w-full max-w-[430px] mx-auto min-h-dvh pb-36 px-4 pt-1 flex flex-col gap-5 sm:border-x sm:border-white/[0.06] sm:shadow-2xl">
+    <main id="loveos-app" class="relative z-10 w-full max-w-[430px] mx-auto min-h-dvh pb-24 px-4 pt-1 flex flex-col gap-5 sm:border-x sm:border-white/[0.06] sm:shadow-2xl">
       <!-- Dynamic Content Injected by window.renderLoveOS() -->
     </main>
-
-    <!-- ========================================================================
-         FLOATING iOS LIQUID GLASS NAVIGATION DOCK
-         ======================================================================== -->
-    <nav id="ios-nav-dock" class="fixed z-40 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[390px] ios-dock-glass rounded-2xl p-1.5 flex items-center justify-around shadow-2xl transition-all duration-300" style="bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));" aria-label="Quick Navigation">
-      <button type="button" data-nav-target="section-home" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Home">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        <span>Home</span>
-      </button>
-
-      <button type="button" data-nav-target="section-music" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Music">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span>Music</span>
-      </button>
-
-      <button type="button" data-nav-target="section-messages" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Messages">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        <span>Messages</span>
-      </button>
-
-      <button type="button" data-nav-target="section-photos" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Photos">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-        </svg>
-        <span>Memories</span>
-      </button>
-
-      <button type="button" data-nav-target="section-notes" class="nav-dock-btn flex-1 py-2 rounded-xl flex flex-col items-center justify-center gap-1 text-zinc-400 hover:text-white transition active:scale-95 text-[10px] font-medium" aria-label="Go to Notes & Letters">
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
-        </svg>
-        <span>Notes</span>
-      </button>
-    </nav>
 
     <!-- ========================================================================
          MODAL 1: "OPEN WHEN..." LETTER SHEET MODAL
@@ -972,9 +943,9 @@
     <!-- ========================================================================
          FLOATING DEMO BAR (BOTTOM CTA) — SCROLL-REVEAL ONLY NEAR PAGE BOTTOM
          Hidden automatically if ?mode=paid or window.COUPLE_DATA.isPaid === true
-         Positioned cleanly above the navigation dock when visible
+         Positioned cleanly at the bottom of the screen
          ======================================================================== -->
-    <div id="demo-cta-bar" class="fixed z-40 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[390px] ios-glass-card rounded-2xl px-3.5 py-2.5 flex items-center justify-between gap-3 border border-white/15 shadow-2xl translate-y-16 opacity-0 pointer-events-none" style="bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));">
+    <div id="demo-cta-bar" class="fixed z-40 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[390px] ios-glass-card rounded-2xl px-3.5 py-2.5 flex items-center justify-between gap-3 border border-white/15 shadow-2xl translate-y-16 opacity-0 pointer-events-none transition-all duration-300" style="bottom: calc(1rem + env(safe-area-inset-bottom, 0px));">
       <div class="flex items-center gap-2.5 min-w-0">
         <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500/25 to-amber-500/25 border border-rose-400/30 flex items-center justify-center text-rose-300 shrink-0">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -1267,7 +1238,7 @@
       }
 
       /* ------------------------------------------------------------------------
-         3. SCROLL-TRIGGERED DEMO BAR (ONLY VISIBLE WHEN SCROLLED TO BOTTOM)
+         3. SCROLL-TRIGGERED DEMO BAR (ONLY VISIBLE WHEN USER SCROLLS DOWN)
          ------------------------------------------------------------------------ */
       function syncDemoBarVisibility(data) {
         const demoBar = document.getElementById("demo-cta-bar");
@@ -1277,30 +1248,27 @@
 
         if (isPreview || (data && data.isPaid === true)) {
           demoBar.classList.add("hidden");
+          demoBar.style.display = "none";
           return;
         }
 
-        // Show demo bar after 3 seconds
-        setTimeout(() => {
-          if (!demoBar.classList.contains("hidden")) {
-            demoBar.classList.remove("translate-y-16", "opacity-0", "pointer-events-none");
-            demoBar.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
-          }
-        }, 3000);
+        demoBar.classList.remove("hidden");
+        demoBar.style.display = "";
 
         const handleScroll = () => {
-          if (demoBar.classList.contains("hidden")) return;
-          const scrollPos = window.innerHeight + window.scrollY;
-          const threshold = document.documentElement.scrollHeight - 480;
-
-          if (scrollPos >= threshold) {
+          if (!demoBar || demoBar.classList.contains("hidden")) return;
+          if (window.scrollY > 200) {
             demoBar.classList.remove("translate-y-16", "opacity-0", "pointer-events-none");
             demoBar.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+          } else {
+            demoBar.classList.add("translate-y-16", "opacity-0", "pointer-events-none");
+            demoBar.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
           }
         };
 
         window.removeEventListener("scroll", handleScroll);
         window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
       }
 
       /* ------------------------------------------------------------------------
@@ -1469,22 +1437,21 @@
           nameEl.textContent = `For ${partnerName}`;
         }
 
-        // Derive 8-digit PIN from Anniversary Date: YYYYMMDD
+        // Derive 4-digit PIN from Anniversary Date: MMDD
         const dateStr = window.COUPLE_DATA.anniversaryDate || "2024-10-14T19:30:00";
         const dateObj = new Date(dateStr);
-        let targetPIN = "20241014";
-        let altPIN = "14102024"; // Accept DDMMYYYY as well for seamless UX
+        let targetPIN = "1014";
+        let altPIN = "1410"; // Accept DDMM as well for seamless UX
         if (!isNaN(dateObj.getTime())) {
           const pad = n => String(n).padStart(2, '0');
-          const yyyy = String(dateObj.getFullYear());
           const mm = pad(dateObj.getMonth() + 1);
           const dd = pad(dateObj.getDate());
-          targetPIN = `${yyyy}${mm}${dd}`;
-          altPIN = `${dd}${mm}${yyyy}`;
+          targetPIN = `${mm}${dd}`;
+          altPIN = `${dd}${mm}`;
         }
 
         if (hintEl) {
-          hintEl.textContent = `Enter anniversary passcode (YYYYMMDD • e.g. ${targetPIN})`;
+          hintEl.textContent = `Enter anniversary passcode (MMDD • e.g. ${targetPIN})`;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -1575,10 +1542,10 @@
             e.stopPropagation();
             playUiSound("tap");
             const digit = btn.getAttribute("data-key");
-            if (enteredPIN.length < 8) {
+            if (enteredPIN.length < 4) {
               enteredPIN += digit;
               updateDots();
-              if (enteredPIN.length === 8) {
+              if (enteredPIN.length === 4) {
                 verifyPIN();
               }
             }
@@ -1663,6 +1630,50 @@
       }
 
       /* ------------------------------------------------------------------------
+         GUIDED STORY CHAPTERS CONTROLLER
+         ------------------------------------------------------------------------ */
+      window.activeStoryChapter = 1;
+
+      window.revealChapter = function (chapterNum) {
+        playUiSound("tap");
+        const nextChapter = document.getElementById("story-chapter-" + chapterNum);
+        if (!nextChapter) return;
+        nextChapter.classList.remove("chapter-hidden");
+
+        const prevBtnWrap = document.getElementById("continue-chapter-" + (chapterNum - 1));
+        if (prevBtnWrap) {
+          prevBtnWrap.style.display = "none";
+        }
+
+        window.activeStoryChapter = Math.max(window.activeStoryChapter, chapterNum);
+        const progLabel = document.getElementById("chapter-progress-label");
+        if (progLabel) progLabel.textContent = chapterNum + " OF 5";
+
+        if (chapterNum >= 5) {
+          const unlockBtn = document.getElementById("unlock-all-chapters-btn");
+          if (unlockBtn) unlockBtn.textContent = "All Chapters Unlocked ✓";
+        }
+
+        setTimeout(() => {
+          nextChapter.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 80);
+      };
+
+      window.unlockAllChapters = function () {
+        playUiSound("chime");
+        for (let i = 1; i <= 5; i++) {
+          const ch = document.getElementById("story-chapter-" + i);
+          if (ch) ch.classList.remove("chapter-hidden");
+          const btn = document.getElementById("continue-chapter-" + i);
+          if (btn) btn.style.display = "none";
+        }
+        const progLabel = document.getElementById("chapter-progress-label");
+        if (progLabel) progLabel.textContent = "ALL (5 OF 5)";
+        const unlockBtn = document.getElementById("unlock-all-chapters-btn");
+        if (unlockBtn) unlockBtn.textContent = "All Chapters Unlocked ✓";
+      };
+
+      /* ------------------------------------------------------------------------
          7. BUILD FULL UI HTML INSIDE #loveos-app
          ------------------------------------------------------------------------ */
       window.renderLoveOS = function (customData) {
@@ -1733,7 +1744,23 @@
                 </svg>
               </div>
             </div>
+
+            <!-- Chapter Progression Indicator Row -->
+            <div class="flex items-center justify-between px-3.5 pt-1.5 pb-0.5">
+              <div class="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                <span>CHAPTER <span id="chapter-progress-label">1 OF 5</span></span>
+              </div>
+              <button id="unlock-all-chapters-btn" type="button" onclick="window.unlockAllChapters()" class="text-[10px] font-mono text-rose-300 hover:text-white py-1 px-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-rose-500/25 transition active:scale-95 flex items-center gap-1 shadow-sm">
+                <span>Unlock All Sections</span>
+              </button>
+            </div>
           </header>
+
+          <!-- ==================================================================
+               STORY CHAPTER 1: THE SPARK & SOUNDTRACK
+               ================================================================== -->
+          <div id="story-chapter-1" class="story-chapter flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 1: LOCKSCREEN HEADER, RELATIONSHIP COUNTER & MILESTONES
@@ -1887,6 +1914,19 @@
             </div>
           </section>
 
+          <!-- Chapter 1 Continue Button -->
+          <div id="continue-chapter-1" class="chapter-continue-wrap pt-2 pb-1">
+            <button type="button" onclick="window.revealChapter(2)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+              <span>See How It Started &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             STORY CHAPTER 2: OUR FIRST TEXTS & UNSENT DRAFTS
+             ================================================================== -->
+        <div id="story-chapter-2" class="story-chapter chapter-hidden flex flex-col gap-5">
+
           <!-- ==================================================================
                SECTION 3: "HOW IT STARTED" — iMESSAGE REPLAY & UNSENT DRAFTS
                ================================================================== -->
@@ -1993,6 +2033,19 @@
             </div>
           </section>
 
+          <!-- Chapter 2 Continue Button -->
+          <div id="continue-chapter-2" class="chapter-continue-wrap pt-2 pb-1">
+            <button type="button" onclick="window.revealChapter(3)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+              <span>Open Our Camera Roll &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             STORY CHAPTER 3: 3D POLAROID MEMORIES
+             ================================================================== -->
+        <div id="story-chapter-3" class="story-chapter chapter-hidden flex flex-col gap-5">
+
           <!-- ==================================================================
                SECTION 4: 3D POLAROID CAMERA ROLL (SWIPEABLE & FLIPPABLE)
                ================================================================== -->
@@ -2058,6 +2111,19 @@
             </div>
           </section>
 
+          <!-- Chapter 3 Continue Button -->
+          <div id="continue-chapter-3" class="chapter-continue-wrap pt-2 pb-1">
+            <button type="button" onclick="window.revealChapter(4)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+              <span>Unseal Your Letters &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             STORY CHAPTER 4: OPEN WHEN LETTERS & SECRET VOUCHER
+             ================================================================== -->
+        <div id="story-chapter-4" class="story-chapter chapter-hidden flex flex-col gap-5">
+
           <!-- ==================================================================
                SECTION 5: "OPEN WHEN..." MOOD ENVELOPES (2x2 GRID)
                ================================================================== -->
@@ -2105,6 +2171,66 @@
               `).join("")}
             </div>
           </section>
+
+          <!-- ==================================================================
+               SECTION 7: INTERACTIVE SCRATCH-TO-REVEAL LOVE VOUCHER
+               ================================================================== -->
+          <section id="section-voucher" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
+            <div class="flex items-center justify-between mb-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
+                </svg>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Secret Love Voucher</h2>
+              </div>
+              <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
+                Scratch to Unlock
+              </span>
+            </div>
+
+            <!-- Scratch Card Outer Container -->
+            <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0d0d12]">
+              <!-- Underlying Voucher Reward (Revealed underneath) -->
+              <div id="voucher-underlying-content" class="p-5 sm:p-6 text-center space-y-3 bg-gradient-to-b from-rose-950/30 via-zinc-950 to-black select-none">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-400/30 text-amber-300 text-[10px] font-mono tracking-widest uppercase shadow-sm">
+                  <span>✦ COUPLE'S GOLDEN TICKET ✦</span>
+                </div>
+                <h3 id="voucher-display-title" class="font-serif italic text-2xl sm:text-3xl text-white tracking-tight leading-snug">
+                  ${escapeHtml(data.scratchVoucher?.title || "Secret Date Night Voucher")}
+                </h3>
+                <div class="max-w-[280px] mx-auto p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
+                  <p id="voucher-display-reward" class="text-xs text-zinc-200 leading-relaxed font-sans">
+                    ${escapeHtml(data.scratchVoucher?.reward || "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches")}
+                  </p>
+                </div>
+                <div class="pt-1 flex items-center justify-center gap-2">
+                  <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Redeem Code:</span>
+                  <span id="voucher-display-code" class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 tracking-widest">
+                    ${escapeHtml(data.scratchVoucher?.code || "REDEEM-ANYTIME")}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Interactive Scratch Layer Canvas -->
+              <canvas id="scratch-voucher-canvas" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-none z-10 transition-opacity duration-700"></canvas>
+            </div>
+            <p class="text-[10px] font-mono text-center text-zinc-500 mt-2.5">
+              Use your finger or cursor to scratch off the foil layer
+            </p>
+          </section>
+
+          <!-- Chapter 4 Continue Button -->
+          <div id="continue-chapter-4" class="chapter-continue-wrap pt-2 pb-1">
+            <button type="button" onclick="window.revealChapter(5)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+              <span>Read My 3AM Note &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             STORY CHAPTER 5 (FINALE): 3AM CONFESSION, WORDS & CHECKLIST
+             ================================================================== -->
+        <div id="story-chapter-5" class="story-chapter chapter-hidden flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 6: 3AM NOTES APP CONFESSION, SECRET REVEAL & FUTURE CHECKLIST
@@ -2203,54 +2329,6 @@ ${escapeHtml(data.mainLoveLetter)}
             </div>
           </section>
 
-          
-          <!-- ==================================================================
-               SECTION 7: INTERACTIVE SCRATCH-TO-REVEAL LOVE VOUCHER
-               ================================================================== -->
-          <section id="section-voucher" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
-            <div class="flex items-center justify-between mb-3.5">
-              <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
-                </svg>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Secret Love Voucher</h2>
-              </div>
-              <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
-                Scratch to Unlock
-              </span>
-            </div>
-
-            <!-- Scratch Card Outer Container -->
-            <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0d0d12]">
-              <!-- Underlying Voucher Reward (Revealed underneath) -->
-              <div id="voucher-underlying-content" class="p-5 sm:p-6 text-center space-y-3 bg-gradient-to-b from-rose-950/30 via-zinc-950 to-black select-none">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-400/30 text-amber-300 text-[10px] font-mono tracking-widest uppercase shadow-sm">
-                  <span>✦ COUPLE'S GOLDEN TICKET ✦</span>
-                </div>
-                <h3 id="voucher-display-title" class="font-serif italic text-2xl sm:text-3xl text-white tracking-tight leading-snug">
-                  ${escapeHtml(data.scratchVoucher?.title || "Secret Date Night Voucher")}
-                </h3>
-                <div class="max-w-[280px] mx-auto p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
-                  <p id="voucher-display-reward" class="text-xs text-zinc-200 leading-relaxed font-sans">
-                    ${escapeHtml(data.scratchVoucher?.reward || "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches")}
-                  </p>
-                </div>
-                <div class="pt-1 flex items-center justify-center gap-2">
-                  <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Redeem Code:</span>
-                  <span id="voucher-display-code" class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 tracking-widest">
-                    ${escapeHtml(data.scratchVoucher?.code || "REDEEM-ANYTIME")}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Interactive Scratch Layer Canvas -->
-              <canvas id="scratch-voucher-canvas" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-none z-10 transition-opacity duration-700"></canvas>
-            </div>
-            <p class="text-[10px] font-mono text-center text-zinc-500 mt-2.5">
-              Use your finger or cursor to scratch off the foil layer
-            </p>
-          </section>
-
           <!-- VIRAL DEMO BOTTOM CONVERSION CARD (VISIBLE IN DEMO ONLY) -->
           ${!data.isPaid ? `
           <div id="demo-bottom-cta" class="ios-glass-card rounded-3xl p-5 text-center space-y-4 border-rose-500/30 bg-gradient-to-b from-rose-950/20 via-black to-zinc-950 my-4 shadow-xl">
@@ -2258,13 +2336,13 @@ ${escapeHtml(data.mainLoveLetter)}
               <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             </div>
             <div class="space-y-1">
-              <h3 class="text-base font-bold text-white tracking-tight">Suka dengan Keepsake Ini?</h3>
+              <h3 class="text-base font-bold text-white tracking-tight">Want to Make One for Your Person?</h3>
               <p class="text-xs text-zinc-300 leading-relaxed max-w-xs mx-auto">
-                Bikin hadiah digital eksklusif versi kalian berdua hanya dalam 2 menit. Foto, lagu, chat romantis &amp; surat rahasia siap tayang!
+                Create your own private tiny phone keepsake in under 3 minutes. Your photos, soundtrack, heartfelt chats &amp; secret love letters ready to share for $18 USD.
               </p>
             </div>
             <a href="/editor" class="inline-flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/60 hover:brightness-110 active:scale-95 transition no-underline">
-              <span>Mulai Buat Milikmu Sekarang</span>
+              <span>Create Yours Now — $18 USD</span>
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>
@@ -2274,7 +2352,7 @@ ${escapeHtml(data.mainLoveLetter)}
           <footer class="pt-2 pb-6 text-center select-none space-y-3">
             <button id="open-giftcard-btn" type="button" class="w-full max-w-[340px] mx-auto py-3 px-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-zinc-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
               <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
-              <span>Download LoveOS Gift Card (PNG)</span>
+              <span>Download Our Keepsake QR Card (PNG)</span>
             </button>
 
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
@@ -2286,6 +2364,7 @@ ${escapeHtml(data.mainLoveLetter)}
               <span>Lock Screen (Test PIN)</span>
             </button>
           </footer>
+        </div>
         `;
 
         // Initialize sub-renders & event bindings

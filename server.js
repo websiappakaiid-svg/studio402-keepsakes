@@ -243,11 +243,11 @@ async function handleRequest(req, res) {
     if (parsedUrl.query && parsedUrl.query.route === 'admin') {
       pathname = '/admin';
     } else if (parsedUrl.query && parsedUrl.query.slug) {
-      pathname = `/v/${parsedUrl.query.slug}`;
+      pathname = `/u/${parsedUrl.query.slug}`;
     }
   } else if (matchedPath.startsWith('/admin')) {
     pathname = '/admin';
-  } else if (matchedPath.startsWith('/v/')) {
+  } else if (matchedPath.startsWith('/v/') || matchedPath.startsWith('/u/')) {
     pathname = matchedPath.split('?')[0];
   }
 
@@ -346,7 +346,9 @@ async function handleRequest(req, res) {
         designCode
       });
 
-      const previewUrl = `/v/${saved.slug}`;
+      const previewUrl = `/u/${saved.slug}`;
+      const publicUrl = `/u/${saved.slug}`;
+      const reeditUrl = `/editor-loveos.html?slug=${saved.slug}&token=${saved.editToken}`;
       const checkoutUrl = `${GUMROAD_PRODUCT_URL}?email=${encodeURIComponent(saved.email)}&wanted=true&project_id=${encodeURIComponent(saved.id)}&project_slug=${encodeURIComponent(saved.slug)}`;
 
       // Send Instant WhatsApp Alert to Seller via Fonnte
@@ -354,6 +356,9 @@ async function handleRequest(req, res) {
         email: saved.email,
         slug: saved.slug,
         previewUrl: previewUrl,
+        publicUrl: publicUrl,
+        reeditUrl: reeditUrl,
+        editToken: saved.editToken,
         template: 'LoveOS (iOS Keepsake)',
         designCode: saved.designCode,
         checkoutUrl: checkoutUrl
@@ -363,10 +368,14 @@ async function handleRequest(req, res) {
         ok: true,
         id: saved.id,
         slug: saved.slug,
+        editToken: saved.editToken,
+        expiresAt: saved.expiresAt,
         template: saved.template,
         designCode: saved.designCode,
         status: saved.status,
         previewUrl: previewUrl,
+        publicUrl: publicUrl,
+        reeditUrl: reeditUrl,
         checkoutUrl: checkoutUrl
       });
     } catch (err) {
@@ -375,8 +384,75 @@ async function handleRequest(req, res) {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // VIP RE-EDIT ROUTES (Must precede generic /api/project/:slug)
+  // ---------------------------------------------------------------------------
+  // GET /api/project/reedit?slug=...&token=... (Authenticate & Load VIP Re-Edit Session)
+  if ((pathname === '/api/project/reedit' || pathname.endsWith('/reedit')) && method === 'GET') {
+    const slugParam = (searchParams.get('slug') || '').trim().toLowerCase();
+    const tokenParam = (searchParams.get('token') || '').trim();
+
+    if (!slugParam || !tokenParam) {
+      return sendJson(res, 400, { ok: false, error: 'Both project slug and secret re-edit token are required.' });
+    }
+
+    try {
+      const project = await db.verifyAndGetReEditProject(slugParam, tokenParam);
+      if (!project) {
+        return sendJson(res, 401, { ok: false, error: 'Invalid or unauthorized VIP re-edit link. Please check your URL.' });
+      }
+
+      if (project.expiresAt && new Date(project.expiresAt).getTime() < Date.now()) {
+        return sendJson(res, 410, { ok: false, error: 'This keepsake hosting window has expired. Re-edits are closed.' });
+      }
+
+      return sendJson(res, 200, {
+        ok: true,
+        slug: project.slug,
+        email: project.email,
+        template: project.template,
+        status: project.status,
+        expiresAt: project.expiresAt,
+        config: project.configData,
+        configData: project.configData,
+        editToken: tokenParam
+      });
+    } catch (err) {
+      console.error('[ourpage] VIP re-edit auth error:', err);
+      return sendJson(res, 500, { ok: false, error: 'Failed to verify VIP re-edit access.' });
+    }
+  }
+
+  // POST /api/project/reedit or PUT /api/projects/:slug/reedit (Save Live Edits Instantly Without Repayment)
+  if ((pathname === '/api/project/reedit' || pathname.endsWith('/reedit')) && (method === 'POST' || method === 'PUT')) {
+    try {
+      const body = await parseBody(req);
+      const slugParam = (body.slug || searchParams.get('slug') || '').trim().toLowerCase();
+      const tokenParam = (body.token || body.editToken || searchParams.get('token') || '').trim();
+      const configData = body.configData || body.config || {};
+
+      if (!slugParam || !tokenParam) {
+        return sendJson(res, 400, { ok: false, error: 'Slug and secret VIP token are required.' });
+      }
+
+      const updated = await db.updateReEditProject(slugParam, tokenParam, configData);
+      console.log(`[ourpage VIP] Live project "${updated.slug}" updated successfully via VIP token.`);
+
+      return sendJson(res, 200, {
+        ok: true,
+        slug: updated.slug,
+        status: updated.status,
+        publicUrl: `/u/${updated.slug}`,
+        message: 'Your keepsake changes have been saved & updated live instantly!'
+      });
+    } catch (err) {
+      console.error('[ourpage] Error saving VIP re-edit:', err);
+      return sendJson(res, 401, { ok: false, error: err.message || 'Unauthorized re-edit update.' });
+    }
+  }
+
   // GET /api/project/:slug or GET /api/project?slug=...
-  if ((pathname.startsWith('/api/project/') || pathname === '/api/project') && method === 'GET') {
+  if ((pathname.startsWith('/api/project/') || pathname === '/api/project') && pathname !== '/api/project/reedit' && !pathname.endsWith('/reedit') && method === 'GET') {
     let slugParam = '';
     if (pathname.startsWith('/api/project/')) {
       slugParam = pathname.split('/api/project/')[1].split('/')[0].split('?')[0];
@@ -493,12 +569,16 @@ async function handleRequest(req, res) {
         configData: updatedConfig
       }, project.template);
 
-      const liveUrl = `/v/${activated.slug}`;
+      const liveUrl = `/u/${activated.slug}`;
+      const reeditUrl = `/editor-loveos.html?slug=${activated.slug}&token=${activated.editToken}`;
 
       notifications.notifyPaidOrder({
         email: activated.email,
         slug: activated.slug,
         liveUrl: liveUrl,
+        publicUrl: liveUrl,
+        reeditUrl: reeditUrl,
+        editToken: activated.editToken,
         price: rawPrice,
         template: 'LoveOS (iOS Keepsake)'
       }).catch(e => console.warn('[ourpage] WA error:', e.message));
@@ -509,7 +589,9 @@ async function handleRequest(req, res) {
         matched: true,
         activated: true,
         slug: activated.slug,
-        status: 'paid'
+        status: 'paid',
+        publicUrl: liveUrl,
+        reeditUrl: reeditUrl
       });
     } catch (err) {
       console.error('[ourpage] Error processing Gumroad webhook:', err);
@@ -537,7 +619,7 @@ async function handleRequest(req, res) {
     if (!authenticateAdmin(req)) {
       return sendJson(res, 401, { ok: false, error: 'Unauthorized: Invalid admin key' });
     }
-    const testMsg = `🧪 *[ourpage] TEST KONEKSI WHATSAPP BERHASIL!*\n-----------------------------------\nNotifikasi real-time WhatsApp OurPage aktif & terhubung.\nWaktu: ${new Date().toLocaleTimeString('id-ID')} WIB.`;
+    const testMsg = `🧪 *[ourpage] WHATSAPP CONNECTION TEST SUCCESSFUL!*\n-----------------------------------\nReal-time WhatsApp alerts are active & connected.\nTimestamp: ${new Date().toISOString()}`;
     await notifications.sendWhatsApp(testMsg);
     return sendJson(res, 200, { ok: true, message: 'Test message dispatched to WhatsApp.' });
   }
@@ -633,10 +715,11 @@ async function handleRequest(req, res) {
   }
 
   // ---------------------------------------------------------------------------
-  // 2. DYNAMIC KEEPSAKE RENDERING (/v/:slug)
+  // 2. DYNAMIC KEEPSAKE RENDERING (/v/:slug and /u/:slug)
   // ---------------------------------------------------------------------------
-  if (pathname.startsWith('/v/')) {
-    const slug = pathname.split('/v/')[1].split('/')[0].split('?')[0].trim().toLowerCase();
+  if (pathname.startsWith('/v/') || pathname.startsWith('/u/')) {
+    const prefix = pathname.startsWith('/u/') ? '/u/' : '/v/';
+    const slug = pathname.split(prefix)[1].split('/')[0].split('?')[0].trim().toLowerCase();
 
     if (!slug) {
       res.writeHead(302, { 'Location': '/' });
@@ -653,7 +736,7 @@ async function handleRequest(req, res) {
   <div class="max-w-md w-full bg-[#121215] border border-zinc-800 rounded-3xl p-8 text-center space-y-5 shadow-2xl">
     <div class="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto text-zinc-400 font-mono text-base font-bold">404</div>
     <div class="space-y-1.5"><h1 class="text-xl font-bold text-white tracking-tight">Keepsake Page Not Found</h1><p class="text-xs text-zinc-400 font-mono">The link &ldquo;${escapeHtml(slug)}&rdquo; has not been created yet or has expired.</p></div>
-    <div class="pt-3 flex flex-col gap-2"><a href="/" class="py-3 px-5 rounded-xl bg-white text-zinc-950 font-bold text-xs hover:bg-zinc-200 transition">Create Your Keepsake</a></div>
+    <div class="pt-3 flex flex-col gap-2"><a href="/editor" class="py-3 px-5 rounded-xl bg-white text-zinc-950 font-bold text-xs hover:bg-zinc-200 transition">Create Your Keepsake</a></div>
   </div>
 </body></html>`;
         return sendText(res, 404, notFoundHtml, 'text/html; charset=utf-8');
@@ -661,12 +744,18 @@ async function handleRequest(req, res) {
 
       if (project.expiresAt && new Date(project.expiresAt).getTime() < Date.now()) {
         const expiredHtml = `<!DOCTYPE html>
-<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Expired — ourpage</title><script src="https://cdn.tailwindcss.com"></script><style>body{background-color:#08080a;color:#f4f4f5;font-family:sans-serif;}</style></head>
+<html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Keepsake Capsule Concluded — ourpage</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Instrument+Serif:italic@0,1&display=swap" rel="stylesheet"><style>body{background-color:#08080a;color:#f4f4f5;font-family:'Plus Jakarta Sans',sans-serif;}</style></head>
 <body class="min-h-screen flex items-center justify-center p-4">
-  <div class="max-w-md w-full bg-[#121215] border border-zinc-800 rounded-3xl p-8 text-center space-y-4">
-    <h1 class="text-xl font-bold text-white">This Keepsake Has Expired</h1>
-    <p class="text-xs text-zinc-400">The hosting window for &ldquo;${escapeHtml(project.slug)}&rdquo; has concluded.</p>
-    <a href="/editor" class="inline-block py-2.5 px-5 rounded-xl bg-white text-zinc-950 font-bold text-xs mt-3">Renew Keepsake</a>
+  <div class="max-w-md w-full bg-[#121215] border border-white/10 rounded-3xl p-8 text-center space-y-5 shadow-2xl relative overflow-hidden">
+    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-rose-400/30 flex items-center justify-center mx-auto text-rose-400 text-2xl">⏳</div>
+    <div class="space-y-2">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[10px] font-mono text-zinc-400 uppercase tracking-widest">30-Day Cloud Window Concluded</div>
+      <h1 class="text-2xl font-serif italic text-white tracking-tight">This Keepsake Capsule is Locked</h1>
+      <p class="text-xs text-zinc-400 font-sans leading-relaxed">The 30-day live cloud hosting period for &ldquo;<span class="text-zinc-200 font-mono">${escapeHtml(project.slug)}</span>&rdquo; has reached its scheduled expiration date.</p>
+    </div>
+    <div class="pt-2 flex flex-col gap-2">
+      <a href="/editor" class="py-3 px-5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs hover:brightness-110 transition shadow-lg shadow-rose-950/40">Renew or Create New Keepsake ($18)</a>
+    </div>
   </div>
 </body></html>`;
         return sendText(res, 410, expiredHtml, 'text/html; charset=utf-8');

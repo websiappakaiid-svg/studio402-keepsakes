@@ -110,40 +110,49 @@ async function sendWhatsApp(message) {
 /**
  * 1. Notification: New Lead Saved Draft
  */
-async function notifyNewDraft({ email, slug, previewUrl, template, designCode, checkoutUrl }) {
+async function notifyNewDraft({ email, slug, previewUrl, publicUrl, reeditUrl, editToken, template, designCode, checkoutUrl }) {
   const base = getAppUrl();
-  const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${base}${previewUrl}`;
-  
+  const fullPublic = (publicUrl || previewUrl || `/u/${slug}`).startsWith('http') ? (publicUrl || previewUrl) : `${base}${publicUrl || previewUrl || `/u/${slug}`}`;
+  const fullReEdit = (reeditUrl || (editToken ? `/editor-loveos.html?slug=${slug}&token=${editToken}` : '')).startsWith('http') 
+    ? (reeditUrl || `/editor-loveos.html?slug=${slug}&token=${editToken}`) 
+    : `${base}${reeditUrl || (editToken ? `/editor-loveos.html?slug=${slug}&token=${editToken}` : '')}`;
+
   const msg = 
-`💌 *[ourpage] LEAD BARU MASUK!*
+`💌 *[ourpage] NEW LEAD INCOMING!*
 ---------------------------------------
-👤 *Email Pembeli:* ${email}
-🔗 *Link Preview:* ${fullPreview}
+👤 *Customer Email:* ${email}
+🔗 *1. Public Gift Link:* ${fullPublic}
+🔑 *2. VIP Re-Edit Link:* ${fullReEdit}
 🎨 *Template:* ${template || 'LoveOS (iOS Keepsake)'}
-🏷️ *Kode Desain:* ${designCode || 'OP-100'}
-💳 *Link Checkout:* ${checkoutUrl}
+🏷️ *Design Code:* ${designCode || 'OP-100'}
+💳 *Gumroad Checkout:* ${checkoutUrl}
 ---------------------------------------
-Calon pembeli baru saja mengunci draf dan siap melakukan checkout Gumroad.`;
+Customer locked their draft and is proceeding to $18 Gumroad checkout.`;
 
   return sendWhatsApp(msg);
 }
 
 /**
- * 2. Notification: Order Paid & Live (Gumroad Webhook)
+ * 2. Notification: Order Paid & Live (Gumroad Webhook or Admin Activation)
  */
-async function notifyPaidOrder({ email, slug, liveUrl, price, template }) {
+async function notifyPaidOrder({ email, slug, liveUrl, publicUrl, reeditUrl, editToken, price, template }) {
   const base = getAppUrl();
-  const fullLive = liveUrl.startsWith('http') ? liveUrl : `${base}${liveUrl}`;
-  
+  const fullPublic = (publicUrl || liveUrl || `/u/${slug}`).startsWith('http') ? (publicUrl || liveUrl) : `${base}${publicUrl || liveUrl || `/u/${slug}`}`;
+  const fullReEdit = (reeditUrl || (editToken ? `/editor-loveos.html?slug=${slug}&token=${editToken}` : '')).startsWith('http') 
+    ? (reeditUrl || `/editor-loveos.html?slug=${slug}&token=${editToken}`) 
+    : `${base}${reeditUrl || (editToken ? `/editor-loveos.html?slug=${slug}&token=${editToken}` : '')}`;
+
   const msg = 
-`🎉 *[ourpage] ORDER LUNAS & AKTIF!*
+`🎉 *[ourpage] ORDER VERIFIED & ACTIVE!*
 ---------------------------------------
-💰 *Nilai Pembayaran:* ${price || '$18.00 USD'}
-👤 *Email Pembeli:* ${email}
-✨ *Link Keepsake Aktif:* ${fullLive}
+💰 *Revenue:* ${price || '$18.00 USD'}
+👤 *Customer Email:* ${email}
+✨ *1. Public Gift Link:* ${fullPublic}
+🔑 *2. VIP Re-Edit Link:* ${fullReEdit}
 🎨 *Template:* ${template || 'LoveOS (iOS Keepsake)'}
+⏳ *Cloud Retention:* 30-Day VIP Active
 ---------------------------------------
-Pembayaran terverifikasi via Gumroad Ping. Watermark preview telah dihapus otomatis dan link aktif permanen!`;
+Payment verified via Gumroad Ping. Watermark removed & 2 access links generated for customer!`;
 
   return sendWhatsApp(msg);
 }
@@ -154,16 +163,16 @@ Pembayaran terverifikasi via Gumroad Ping. Watermark preview telah dihapus otoma
 async function notifyAbandonedDraft({ email, slug, previewUrl, createdAt, mailtoLink }) {
   const base = getAppUrl();
   const fullPreview = previewUrl.startsWith('http') ? previewUrl : `${base}${previewUrl}`;
-  const createdDate = new Date(createdAt).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
+  const createdDate = new Date(createdAt).toLocaleString('en-US', { timeZone: 'America/New_York' });
 
   const msg = 
-`⏰ *[ourpage] FOLLOW-UP: LEAD BELUM CHECKOUT (>1 JAM)*
+`⏰ *[ourpage] FOLLOW-UP: ABANDONED DRAFT (>1 HOUR)*
 ---------------------------------------
-👤 *Email Pembeli:* ${email}
-🔗 *Link Preview Draf:* ${fullPreview}
-📅 *Waktu Pembuatan:* ${createdDate} WIB
+👤 *Customer Email:* ${email}
+🔗 *Draft Preview:* ${fullPreview}
+📅 *Created At:* ${createdDate} EST
 ---------------------------------------
-👉 *Klik link berikut untuk langsung kirim email penawaran diskon 15%:*
+👉 *Click to dispatch 15% discount follow-up email (FOREVER15):*
 ${mailtoLink}`;
 
   return sendWhatsApp(msg);

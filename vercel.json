@@ -11,6 +11,7 @@
     { "source": "/admin", "destination": "/api" },
     { "source": "/admin.html", "destination": "/api" },
     { "source": "/v/:slug*", "destination": "/api" },
+    { "source": "/u/:slug*", "destination": "/api" },
     { "source": "/api/(.*)", "destination": "/api" }
   ]
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>ourpage / Operations Dashboard &amp; Leads</title>
+  <title>ourpage / Operations &amp; Leads Dashboard</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -67,7 +67,7 @@
             ourpage
             <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">OPERATIONS</span>
           </h2>
-          <p class="text-xs text-zinc-400 mt-0.5">Commercial keepsakes &amp; leads management</p>
+          <p class="text-xs text-zinc-400 mt-0.5">Commercial keepsakes, VIP access &amp; leads</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
             <input 
               type="password" 
               id="auth-key-input" 
-              placeholder="Enter server admin key..." 
+              placeholder="Enter administrator password..." 
               autocomplete="current-password"
               required
               class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition"
@@ -105,7 +105,7 @@
       </form>
 
       <div class="pt-2 border-t border-zinc-900 flex items-center justify-between text-[11px] font-mono text-zinc-600">
-        <span>Session stored in browser</span>
+        <span>Session protected via browser storage</span>
         <span>ourpage &bull; 2026</span>
       </div>
     </div>
@@ -138,7 +138,7 @@
         <!-- Trigger Abandoned Scan (>1h) -->
         <button 
           onclick="triggerScanAbandoned()" 
-          title="Scan drafts older than 1 hour and send WA reminders"
+          title="Scan drafts older than 1 hour and send reminders"
           class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 transition text-xs font-mono"
         >
           <i data-lucide="clock" class="w-3.5 h-3.5"></i>
@@ -152,13 +152,13 @@
           class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition text-xs font-mono"
         >
           <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
-          <span class="hidden md:inline">Test WA</span>
+          <span class="hidden md:inline">Test WhatsApp</span>
         </button>
 
         <!-- Refresh Button -->
         <button 
           onclick="fetchDashboardData()" 
-          title="Reload data"
+          title="Reload latest database records"
           class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white transition text-xs font-mono"
         >
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refresh-icon"></i>
@@ -194,7 +194,7 @@
             </div>
           </div>
           <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono tracking-tight" id="metric-drafts">0</div>
-          <p class="text-[10px] text-zinc-500 font-mono">Draf tersimpan (belum bayar)</p>
+          <p class="text-[10px] text-zinc-500 font-mono">Saved drafts (unpaid leads)</p>
         </div>
 
         <!-- Metric 2: Active Paid Keepsakes -->
@@ -206,19 +206,19 @@
             </div>
           </div>
           <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono tracking-tight" id="metric-paid">0</div>
-          <p class="text-[10px] text-zinc-500 font-mono">Lunas &amp; aktif permanen</p>
+          <p class="text-[10px] text-zinc-500 font-mono">Paid &amp; active capsules ($18 USD)</p>
         </div>
 
         <!-- Metric 3: Abandoned Drafts (>1 Hour) -->
         <div class="p-4 sm:p-5 rounded-2xl bg-[#121215] border border-zinc-800/80 relative overflow-hidden space-y-1.5">
           <div class="flex items-center justify-between text-zinc-400">
-            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Perlu Follow-up</span>
+            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold">Needs Follow-up</span>
             <div class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
               <i data-lucide="bell" class="w-3.5 h-3.5"></i>
             </div>
           </div>
           <div class="text-2xl sm:text-3xl font-extrabold text-rose-400 font-mono tracking-tight" id="metric-abandoned">0</div>
-          <p class="text-[10px] text-zinc-500 font-mono">Draf tertinggal &gt; 1 jam</p>
+          <p class="text-[10px] text-zinc-500 font-mono">Drafts abandoned &gt; 1 hour</p>
         </div>
 
         <!-- Metric 4: Estimated Revenue -->
@@ -230,7 +230,7 @@
             </div>
           </div>
           <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono tracking-tight" id="metric-revenue">$0.00</div>
-          <p class="text-[10px] text-zinc-500 font-mono" id="metric-conversion">Konversi: 0.0%</p>
+          <p class="text-[10px] text-zinc-500 font-mono" id="metric-conversion">Conversion: 0.0%</p>
         </div>
 
       </section>
@@ -245,7 +245,7 @@
           <input 
             type="text" 
             id="table-search-input" 
-            placeholder="Cari email, slug /v/..., atau kode ST-..." 
+            placeholder="Search by email, slug (/u/...), or code..." 
             oninput="renderProjectsList()" 
             class="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2 text-xs text-zinc-200 placeholder-zinc-500 font-mono focus:outline-none focus:border-zinc-600 transition"
           />
@@ -253,10 +253,10 @@
 
         <!-- Filter Segmented Tabs -->
         <div class="flex items-center gap-1 p-1 bg-zinc-950 rounded-xl border border-zinc-800 text-xs font-mono overflow-x-auto">
-          <button onclick="setFilter('all')" id="filter-tab-all" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition whitespace-nowrap">Semua</button>
+          <button onclick="setFilter('all')" id="filter-tab-all" class="px-3 py-1.5 rounded-lg bg-zinc-800 text-white font-semibold transition whitespace-nowrap">All</button>
           <button onclick="setFilter('paid')" id="filter-tab-paid" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Paid</button>
-          <button onclick="setFilter('draft')" id="filter-tab-draft" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Draft</button>
-          <button onclick="setFilter('abandoned')" id="filter-tab-abandoned" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Perlu Follow-up</button>
+          <button onclick="setFilter('draft')" id="filter-tab-draft" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Drafts</button>
+          <button onclick="setFilter('abandoned')" id="filter-tab-abandoned" class="px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white transition whitespace-nowrap">Abandoned (>1h)</button>
         </div>
       </section>
 
@@ -275,11 +275,11 @@
           <table class="w-full text-left border-collapse min-w-[760px]">
             <thead>
               <tr class="border-b border-zinc-800 text-[11px] font-mono text-zinc-400 uppercase tracking-wider bg-zinc-950/60">
-                <th class="py-3 px-4">Custom Link (/v/...)</th>
-                <th class="py-3 px-4">Pembeli (Email)</th>
+                <th class="py-3 px-4">Keepsake Link</th>
+                <th class="py-3 px-4">Buyer (Email)</th>
                 <th class="py-3 px-4">Template</th>
-                <th class="py-3 px-4">Status &amp; Waktu</th>
-                <th class="py-3 px-4 text-right">Aksi Cepat</th>
+                <th class="py-3 px-4">Status &amp; Retention</th>
+                <th class="py-3 px-4 text-right">Quick Actions</th>
               </tr>
             </thead>
             <tbody id="projects-table-body" class="divide-y divide-zinc-800/60 text-sm">
@@ -287,7 +287,7 @@
                 <td colspan="5" class="py-14 text-center text-zinc-500 font-mono text-xs">
                   <div class="inline-flex items-center gap-2">
                     <i data-lucide="loader" class="w-4 h-4 animate-spin text-zinc-400"></i>
-                    <span>Memuat data proyek dari database...</span>
+                    <span>Loading keepsake projects from database...</span>
                   </div>
                 </td>
               </tr>
@@ -298,8 +298,8 @@
 
       <!-- FOOTER -->
       <footer class="pt-4 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-600 font-mono gap-2">
-        <div>ourpage Keepsake Engine &bull; Zero Emojis Policy &bull; Fonnte WhatsApp &amp; Supabase DB</div>
-        <div>Protected Endpoint &bull; Auth via sessionStorage</div>
+        <div>ourpage Keepsake Engine &bull; Zero Emojis Policy &bull; Supabase Live DB</div>
+        <div>Protected Operations Dashboard &bull; $18 USD One-Time</div>
       </footer>
 
     </main>
@@ -313,7 +313,7 @@
       <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
         <div class="flex items-center gap-2">
           <i data-lucide="mail" class="w-4 h-4 text-amber-400"></i>
-          <span class="font-bold text-sm text-white font-mono">Draf Email Follow-up (15% Diskon)</span>
+          <span class="font-bold text-sm text-white font-mono">Follow-up Email Draft (15% Off Promo)</span>
         </div>
         <button onclick="closeEmailModal()" class="w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -322,16 +322,16 @@
 
       <div class="space-y-2 text-xs font-mono">
         <div>
-          <span class="text-zinc-500">Kepada:</span>
+          <span class="text-zinc-500">To:</span>
           <span id="modal-email-recipient" class="text-zinc-200 font-bold ml-1"></span>
         </div>
         <div>
-          <span class="text-zinc-500">Subjek:</span>
+          <span class="text-zinc-500">Subject:</span>
           <span id="modal-email-subject" class="text-zinc-300 ml-1">Special Gift: Your private keepsake is ready to unlock (15% off inside)</span>
         </div>
       </div>
 
-      <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-300 leading-relaxed font-sans max-h-56 overflow-y-auto whitespace-pre-wrap" id="modal-email-body"></div>
+      <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-xs text-zinc-300 leading-relaxed font-sans max-h-64 overflow-y-auto whitespace-pre-wrap font-mono" id="modal-email-body"></div>
 
       <div class="grid grid-cols-2 gap-2 pt-2">
         <button 
@@ -339,7 +339,7 @@
           class="py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-mono text-xs flex items-center justify-center gap-1.5 transition"
         >
           <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-          <span>Salin Teks Email</span>
+          <span>Copy Email Text</span>
         </button>
         <a 
           id="modal-direct-mailto" 
@@ -347,7 +347,7 @@
           class="py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold font-mono text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-amber-400/10"
         >
           <i data-lucide="send" class="w-3.5 h-3.5"></i>
-          <span>Buka di Mail / Gmail</span>
+          <span>Open in Mail Client</span>
         </a>
       </div>
     </div>
@@ -403,17 +403,26 @@
       }, 3500);
     }
 
-    // Format Relative Time (e.g. "12m ago", "2h ago")
+    // Format Relative Time (e.g. "Just now", "15m ago", "2h ago", "3d ago")
     function formatTimeAgo(dateString) {
       if (!dateString) return '-';
       const sec = Math.floor((Date.now() - new Date(dateString).getTime()) / 1000);
-      if (sec < 60) return 'Baru saja';
+      if (sec < 60) return 'Just now';
       const min = Math.floor(sec / 60);
-      if (min < 60) return `${min} menit lalu`;
+      if (min < 60) return `${min}m ago`;
       const hrs = Math.floor(min / 60);
-      if (hrs < 24) return `${hrs} jam lalu`;
+      if (hrs < 24) return `${hrs}h ago`;
       const days = Math.floor(hrs / 24);
-      return `${days} hari lalu`;
+      return `${days}d ago`;
+    }
+
+    // Format Expiry countdown or date
+    function formatExpiry(expiresAt) {
+      if (!expiresAt) return '30-day retention';
+      const diffMs = new Date(expiresAt).getTime() - Date.now();
+      if (diffMs <= 0) return 'Expired';
+      const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      return `${days}d remaining`;
     }
 
     // -------------------------------------------------------------------------
@@ -442,7 +451,7 @@
 
       const submitBtn = document.getElementById('auth-submit-btn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Memverifikasi...</span>`;
+      submitBtn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Verifying...</span>`;
       lucide.createIcons();
 
       currentAdminKey = inputVal;
@@ -468,7 +477,7 @@
       document.getElementById('auth-key-input').value = '';
       document.getElementById('dashboard-app').classList.add('hidden');
       document.getElementById('auth-gate').classList.remove('hidden');
-      showToast('Sesi dashboard terkunci');
+      showToast('Dashboard session locked.');
     }
 
     // -------------------------------------------------------------------------
@@ -514,7 +523,7 @@
         return true;
       } catch (err) {
         console.error('[ourpage Admin]', err);
-        showToast('Gagal memuat data dari server', false);
+        showToast('Failed to load data from server.', false);
         return false;
       } finally {
         if (refreshIcon) refreshIcon.classList.remove('animate-spin');
@@ -523,7 +532,7 @@
 
     async function fetchDashboardData() {
       await verifyAndLoadData();
-      showToast('Data dashboard berhasil diperbarui');
+      showToast('Dashboard data refreshed.');
     }
 
     function updateMetricsView() {
@@ -532,7 +541,7 @@
       document.getElementById('metric-paid').innerText = activeStats.totalPaid ?? 0;
       document.getElementById('metric-abandoned').innerText = activeStats.abandonedCount ?? 0;
       document.getElementById('metric-revenue').innerText = `$${activeStats.estimatedRevenue ?? '0.00'}`;
-      document.getElementById('metric-conversion').innerText = `Konversi: ${activeStats.conversionRate ?? '0.0'}%`;
+      document.getElementById('metric-conversion').innerText = `Conversion: ${activeStats.conversionRate ?? '0.0'}%`;
     }
 
     // -------------------------------------------------------------------------
@@ -589,11 +598,11 @@
       if (filtered.length === 0) {
         const emptyHtml = `
           <div class="py-12 text-center text-zinc-500 font-mono text-xs bg-[#121215] rounded-2xl border border-zinc-800/80 p-6">
-            Tidak ada data proyek yang sesuai kriteria filter saat ini.
+            No keepsake projects match the selected filter criteria.
           </div>
         `;
         mobileContainer.innerHTML = emptyHtml;
-        tableBody.innerHTML = `<tr><td colspan="5" class="py-14 text-center text-zinc-500 font-mono text-xs">Tidak ada data proyek yang sesuai kriteria filter.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5" class="py-14 text-center text-zinc-500 font-mono text-xs">No keepsake projects match the selected filter.</td></tr>`;
         return;
       }
 
@@ -603,14 +612,16 @@
         const isPaid = p.status === 'paid';
         const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
         const timeAgo = formatTimeAgo(p.createdAt);
+        const expiryText = formatExpiry(p.expiresAt);
+        const editToken = p.editToken || (p.configData && p.configData.editToken) || '';
 
         return `
           <div class="p-4 rounded-2xl bg-[#121215] border ${isAbandoned ? 'border-amber-500/40 bg-gradient-to-b from-amber-500/[0.04] to-transparent' : 'border-zinc-800/80'} space-y-3.5 shadow-lg">
             <!-- Header Card -->
             <div class="flex items-start justify-between gap-2">
               <div class="space-y-0.5">
-                <a href="/v/${p.slug}" target="_blank" class="font-mono text-sm font-bold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
-                  <span>/v/${p.slug}</span>
+                <a href="/u/${p.slug}" target="_blank" class="font-mono text-sm font-bold text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                  <span>/u/${p.slug}</span>
                   <i data-lucide="external-link" class="w-3.5 h-3.5 text-zinc-500"></i>
                 </a>
                 <div class="text-xs text-zinc-400 font-mono flex items-center gap-1">
@@ -641,18 +652,22 @@
             <!-- Meta Strip -->
             <div class="flex items-center justify-between text-[11px] font-mono text-zinc-500 pt-1 border-t border-zinc-900">
               <span class="px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">${tInfo.name}</span>
-              <span>${timeAgo}</span>
+              <span class="flex items-center gap-2">
+                <span>${timeAgo}</span>
+                <span>&bull;</span>
+                <span class="${isPaid ? 'text-emerald-400' : 'text-zinc-400'}">${expiryText}</span>
+              </span>
             </div>
 
-            <!-- Action Buttons Row (Mobile Ergonomic) -->
+            <!-- Action Buttons Row 1 -->
             <div class="grid grid-cols-2 gap-2 pt-1">
               <a 
-                href="/v/${p.slug}" 
+                href="/u/${p.slug}" 
                 target="_blank" 
                 class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition active:scale-95"
               >
                 <i data-lucide="eye" class="w-3.5 h-3.5 text-zinc-400"></i>
-                <span>Preview</span>
+                <span>Open Live</span>
               </a>
 
               <button 
@@ -660,39 +675,56 @@
                 class="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition active:scale-95"
               >
                 <i data-lucide="gift" class="w-3.5 h-3.5"></i>
-                <span>Gift Card</span>
+                <span>Gift Card PNG</span>
               </button>
             </div>
 
-            <div class="grid grid-cols-1 gap-2 pt-0.5">
+            <!-- Action Buttons Row 2: Copy Links -->
+            <div class="grid grid-cols-2 gap-2 pt-0.5">
+              <button 
+                onclick="copyPublicLink('${p.slug}')" 
+                class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
+              >
+                <i data-lucide="link" class="w-3.5 h-3.5 text-zinc-400"></i>
+                <span>Copy Public</span>
+              </button>
+
+              <button 
+                onclick="copyReEditLink('${p.slug}', '${editToken}')" 
+                class="py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
+              >
+                <i data-lucide="edit-3" class="w-3.5 h-3.5 text-violet-400"></i>
+                <span>Copy VIP Edit</span>
+              </button>
+            </div>
+
+            <!-- Action Buttons Row 3: Follow-up & Activation -->
+            <div class="space-y-2 pt-0.5">
               ${!isPaid ? `
                 <button 
                   onclick="openFollowupModal('${p.id}')" 
                   class="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
                 >
                   <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                  <span>Email Follow-up</span>
+                  <span>Send Follow-up (15% Off Code)</span>
+                </button>
+                <button 
+                  onclick="manualActivate('${p.id}', '${p.slug}')" 
+                  class="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
+                >
+                  <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                  <span>Activate (+30 Days / PAID)</span>
                 </button>
               ` : `
                 <button 
                   onclick="copyCheckoutLink('${p.slug}', '${p.email}')" 
-                  class="w-full py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
+                  class="w-full py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 text-xs font-mono flex items-center justify-center gap-1.5 transition active:scale-95"
                 >
-                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                  <span>Salin Link Checkout</span>
+                  <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+                  <span>Copy Checkout URL</span>
                 </button>
               `}
             </div>
-
-            ${!isPaid ? `
-              <button 
-                onclick="manualActivate('${p.id}', '${p.slug}')" 
-                class="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition active:scale-95"
-              >
-                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
-                <span>Aktivasi Manual (Jadikan Paid +30 Hari)</span>
-              </button>
-            ` : ''}
           </div>
         `;
       }).join('');
@@ -703,15 +735,18 @@
         const isPaid = p.status === 'paid';
         const isAbandoned = !isPaid && new Date(p.createdAt).getTime() <= oneHourAgo;
         const timeAgo = formatTimeAgo(p.createdAt);
+        const expiryText = formatExpiry(p.expiresAt);
+        const editToken = p.editToken || (p.configData && p.configData.editToken) || '';
 
         return `
           <tr class="hover:bg-zinc-900/50 transition">
             <!-- Slug -->
             <td class="py-3.5 px-4 font-mono font-bold">
-              <a href="/v/${p.slug}" target="_blank" class="text-white hover:text-emerald-400 flex items-center gap-1.5 transition">
-                <span>/v/${p.slug}</span>
+              <a href="/u/${p.slug}" target="_blank" class="text-white hover:text-emerald-400 flex items-center gap-1.5 transition">
+                <span>/u/${p.slug}</span>
                 <i data-lucide="external-link" class="w-3.5 h-3.5 text-zinc-500"></i>
               </a>
+              <div class="text-[10px] text-zinc-500 font-mono font-normal">Design: ${p.designCode || 'OP-LOVE'}</div>
             </td>
 
             <!-- Email -->
@@ -726,39 +761,61 @@
               </span>
             </td>
 
-            <!-- Status & Created -->
+            <!-- Status & Expiry -->
             <td class="py-3.5 px-4 space-y-1">
-              ${isPaid ? `
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-[10px] font-mono font-bold text-emerald-400">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> PAID (Aktif)
-                </span>
-              ` : (isAbandoned ? `
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-950 border border-amber-800 text-[10px] font-mono font-bold text-amber-400 animate-pulse">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> FOLLOW-UP (>1H)
-                </span>
-              ` : `
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-[10px] font-mono text-zinc-300">
-                  <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span> DRAFT
-                </span>
-              `)}
-              <div class="text-[10px] font-mono text-zinc-500">${timeAgo}</div>
+              <div>
+                ${isPaid ? `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-[10px] font-mono font-bold text-emerald-400">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> PAID (Active)
+                  </span>
+                ` : (isAbandoned ? `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-950 border border-amber-800 text-[10px] font-mono font-bold text-amber-400 animate-pulse">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> FOLLOW-UP (>1H)
+                  </span>
+                ` : `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-700 text-[10px] font-mono text-zinc-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span> DRAFT
+                  </span>
+                `)}
+              </div>
+              <div class="text-[10px] font-mono text-zinc-500 flex items-center gap-1.5">
+                <span>Created ${timeAgo}</span>
+                <span>&bull;</span>
+                <span class="${isPaid ? 'text-emerald-400' : 'text-zinc-400'}">${expiryText}</span>
+              </div>
             </td>
 
             <!-- Quick Actions -->
             <td class="py-3.5 px-4 text-right">
               <div class="inline-flex items-center justify-end gap-1.5">
                 <a 
-                  href="/v/${p.slug}" 
+                  href="/u/${p.slug}" 
                   target="_blank" 
-                  title="Buka Live Preview" 
+                  title="Open Live Keepsake (/u/${p.slug})" 
                   class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition"
                 >
                   <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                 </a>
 
                 <button 
+                  onclick="copyPublicLink('${p.slug}')" 
+                  title="Copy Public Gift Link" 
+                  class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition"
+                >
+                  <i data-lucide="link" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <button 
+                  onclick="copyReEditLink('${p.slug}', '${editToken}')" 
+                  title="Copy VIP Re-Edit Link" 
+                  class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-violet-400 hover:text-violet-300 transition"
+                >
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+
+                <button 
                   onclick="downloadGiftCardAdmin('${p.id}')" 
-                  title="Unduh Keepsake QR Gift Card (PNG)" 
+                  title="Download Keepsake QR Gift Card (PNG)" 
                   class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 transition"
                 >
                   <i data-lucide="gift" class="w-3.5 h-3.5"></i>
@@ -767,14 +824,14 @@
                 ${!isPaid ? `
                   <button 
                     onclick="openFollowupModal('${p.id}')" 
-                    title="Kirim Email Follow-up (15% Diskon)" 
+                    title="Send Follow-up Email (15% Off Promo)" 
                     class="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition"
                   >
-                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
                   </button>
                   <button 
                     onclick="manualActivate('${p.id}', '${p.slug}')" 
-                    title="Aktivasi Manual (Jadikan Paid +30 Hari)" 
+                    title="Activate (+30 Days / PAID)" 
                     class="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 transition"
                   >
                     <i data-lucide="zap" class="w-3.5 h-3.5"></i>
@@ -782,10 +839,10 @@
                 ` : `
                   <button 
                     onclick="copyCheckoutLink('${p.slug}', '${p.email}')" 
-                    title="Salin Link Checkout" 
+                    title="Copy Checkout Link" 
                     class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white transition"
                   >
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
                   </button>
                 `}
               </div>
@@ -800,8 +857,26 @@
     // -------------------------------------------------------------------------
     // ACTION CONTROLLERS
     // -------------------------------------------------------------------------
+    function copyPublicLink(slug) {
+      const publicUrl = `${window.location.origin}/u/${slug}`;
+      navigator.clipboard.writeText(publicUrl).then(() => {
+        showToast(`Public link copied: /u/${slug}`);
+      }).catch(() => {
+        prompt('Copy public gift link:', publicUrl);
+      });
+    }
+
+    function copyReEditLink(slug, token) {
+      const reeditUrl = `${window.location.origin}/editor-loveos.html?slug=${encodeURIComponent(slug)}&token=${encodeURIComponent(token)}`;
+      navigator.clipboard.writeText(reeditUrl).then(() => {
+        showToast('VIP re-edit link copied to clipboard!');
+      }).catch(() => {
+        prompt('Copy VIP re-edit link:', reeditUrl);
+      });
+    }
+
     async function manualActivate(id, slug) {
-      if (!confirm(`Konfirmasi aktivasi manual untuk "/v/${slug}"?\nStatus akan diubah menjadi PAID dan aktif 30 hari.`)) {
+      if (!confirm(`Confirm manual activation for "/u/${slug}"?\nStatus will be updated to PAID with 30-day active retention.`)) {
         return;
       }
 
@@ -812,64 +887,64 @@
             'Content-Type': 'application/json',
             'x-admin-key': currentAdminKey
           },
-          body: JSON.stringify({ id, status: 'paid' })
+          body: JSON.stringify({ id, status: 'paid', extendDays: 30 })
         });
 
         const data = await res.json();
         if (data.ok) {
-          showToast(`Proyek /v/${slug} berhasil diaktifkan (PAID)!`);
+          showToast(`Project /u/${slug} successfully activated (PAID)!`);
           await verifyAndLoadData();
         } else {
-          showToast(data.error || 'Gagal mengubah status', false);
+          showToast(data.error || 'Failed to update project status.', false);
         }
       } catch (err) {
-        showToast('Error koneksi saat aktivasi', false);
+        showToast('Connection error during activation.', false);
       }
     }
 
     async function sendTestWhatsApp() {
       try {
-        showToast('Mengirim pesan tes WhatsApp...');
+        showToast('Sending test WhatsApp notification...');
         const res = await fetch('/api/admin/test-wa', {
           method: 'POST',
           headers: { 'x-admin-key': currentAdminKey }
         });
         const data = await res.json();
         if (data.ok) {
-          showToast('Pesan WhatsApp tes terkirim!');
+          showToast('Test WhatsApp message sent successfully!');
         } else {
-          showToast(data.error || 'Gagal mengirim WA', false);
+          showToast(data.error || 'Failed to send WhatsApp message.', false);
         }
       } catch (err) {
-        showToast('Error koneksi WA', false);
+        showToast('WhatsApp connection error.', false);
       }
     }
 
     async function triggerScanAbandoned() {
       try {
-        showToast('Memindai draf tertinggal (>1 jam)...');
+        showToast('Scanning abandoned drafts (>1 hour old)...');
         const res = await fetch('/api/cron/check-abandoned', {
           method: 'POST',
           headers: { 'x-admin-key': currentAdminKey }
         });
         const data = await res.json();
         if (data.ok) {
-          showToast(`Selesai! ${data.processedCount || 0} pengingat WA diproses.`);
+          showToast(`Scan complete! ${data.processedCount || 0} reminder(s) processed.`);
           await verifyAndLoadData();
         } else {
-          showToast(data.error || 'Gagal memindai', false);
+          showToast(data.error || 'Scan failed.', false);
         }
       } catch (err) {
-        showToast('Error koneksi pemindaian', false);
+        showToast('Scan connection error.', false);
       }
     }
 
     function copyCheckoutLink(slug, email) {
       const checkoutUrl = `https://ourpage.gumroad.com/l/keepsake?email=${encodeURIComponent(email)}&wanted=true&project_slug=${encodeURIComponent(slug)}`;
       navigator.clipboard.writeText(checkoutUrl).then(() => {
-        showToast('Link checkout disalin ke clipboard');
+        showToast('Checkout link copied to clipboard.');
       }).catch(() => {
-        prompt('Salin link checkout berikut:', checkoutUrl);
+        prompt('Copy checkout link:', checkoutUrl);
       });
     }
 
@@ -879,24 +954,29 @@
       if (!project) return;
       selectedFollowupProject = project;
 
-      const fullPreview = `${window.location.origin}/v/${project.slug}`;
+      const fullPreview = `${window.location.origin}/u/${project.slug}`;
+      const editToken = project.editToken || (project.configData && project.configData.editToken) || '';
+      const reeditLink = `${window.location.origin}/editor-loveos.html?slug=${encodeURIComponent(project.slug)}&token=${encodeURIComponent(editToken)}`;
       const checkoutLink = `https://ourpage.gumroad.com/l/keepsake?email=${encodeURIComponent(project.email)}&wanted=true&project_slug=${encodeURIComponent(project.slug)}`;
 
       const emailText = 
 `Hi there,
 
 I noticed you created a romantic digital keepsake for your partner at ourpage:
-Preview Link: ${fullPreview}
+Public Preview Link: ${fullPreview}
 
 Your personalized songs, photos, and secret notes are currently saved safely in your private draft.
 
-To help you surprise your partner this week, here is an exclusive 15% discount code for checkout:
-Code: FOREVER15 (Save 15% at checkout)
+To help you surprise your person, here is an exclusive 15% discount code for checkout:
+Promo Code: FOREVER15 (Save 15% at checkout)
 
 Complete your keepsake here:
 ${checkoutLink}
 
-If you need any custom edits or have questions, just reply directly to this email!
+Need to make adjustments? You can resume editing anytime with your private VIP editor link:
+${reeditLink}
+
+If you have any questions or need custom adjustments, simply reply directly to this email!
 
 Warm regards,
 ourpage Keepsakes Team`;
@@ -904,7 +984,7 @@ ourpage Keepsakes Team`;
       document.getElementById('modal-email-recipient').innerText = project.email;
       document.getElementById('modal-email-body').innerText = emailText;
 
-      const subject = encodeURIComponent('Special Gift: Your private keepsake is ready to unlock (15% off inside) ✨');
+      const subject = encodeURIComponent('Special Gift: Your private keepsake is ready to unlock (15% off inside)');
       const body = encodeURIComponent(emailText);
       document.getElementById('modal-direct-mailto').href = `mailto:${project.email}?subject=${subject}&body=${body}`;
 
@@ -920,7 +1000,7 @@ ourpage Keepsakes Team`;
     function copyFollowupEmailText() {
       const text = document.getElementById('modal-email-body').innerText;
       navigator.clipboard.writeText(text).then(() => {
-        showToast('Teks email follow-up disalin ke clipboard!');
+        showToast('Follow-up email copied to clipboard!');
       });
     }
 
@@ -929,16 +1009,16 @@ ourpage Keepsakes Team`;
       const project = projectsData.find(p => p.id === projectId);
       if (!project) return;
       if (typeof LoveOSGiftCard === 'undefined') {
-        showToast('Modul Gift Card belum siap', false);
+        showToast('Gift Card module is still initializing...', false);
         return;
       }
-      const liveUrl = `${window.location.origin}/v/${project.slug}`;
-      showToast(`Menyiapkan Keepsake Gift Card untuk /v/${project.slug}...`);
+      const liveUrl = `${window.location.origin}/u/${project.slug}`;
+      showToast(`Generating Keepsake Gift Card for /u/${project.slug}...`);
       LoveOSGiftCard.downloadGiftCard(project.configData || project.config || {}, liveUrl)
-        .then(() => showToast('Gift Card PNG berhasil diunduh!'))
+        .then(() => showToast('Gift Card PNG downloaded successfully!'))
         .catch(err => {
           console.error(err);
-          showToast('Gagal men-generate kartu', false);
+          showToast('Failed to generate gift card.', false);
         });
     }
 

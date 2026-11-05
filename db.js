@@ -69,21 +69,28 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 console.log('[ourpage DB] Connected directly to Supabase Cloud PostgreSQL');
 
+const crypto = require('crypto');
+
 function normalizeProjectRow(p, defaultTemplate = 'loveos') {
   if (!p) return null;
   const config = p.config_data || p.configData || p.config || {};
+  const configObj = typeof config === 'string' ? JSON.parse(config) : (config || {});
+  const editToken = p.edit_token || p.editToken || configObj.editToken || null;
+  const expiresAt = p.expires_at || p.expiresAt || configObj.expiresAt || null;
+
   return {
     id: p.id,
     slug: p.slug,
     email: p.email,
     template: p.template || defaultTemplate,
     designCode: p.design_code || p.designCode || (p.id ? `OP-${p.id.slice(-6).toUpperCase()}` : 'OP-100000'),
-    configData: typeof config === 'string' ? JSON.parse(config) : config,
+    configData: configObj,
     status: p.status || 'draft',
     followupSent: Boolean(p.followup_sent || p.followupSent),
     createdAt: p.created_at || p.createdAt || new Date().toISOString(),
     updatedAt: p.updated_at || p.updatedAt || new Date().toISOString(),
-    expiresAt: p.expires_at || p.expiresAt || null
+    expiresAt: expiresAt,
+    editToken: editToken
   };
 }
 
@@ -192,16 +199,25 @@ async function saveDraft({ id, slug, email, template = 'loveos', configData, des
   const cleanSlug = String(slug).trim().toLowerCase();
   const cleanEmail = String(email || '').trim().toLowerCase();
   const cleanTemplate = String(template || 'loveos').trim().toLowerCase();
-  const payloadConfig = configData || {};
+  const payloadConfig = Object.assign({}, configData || {});
+
+  // Generate 16-byte VIP Re-Edit secret token and 30-day default expiration
+  const editToken = payloadConfig.editToken || crypto.randomBytes(16).toString('hex');
+  const defaultExpiresAt = payloadConfig.expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  payloadConfig.editToken = editToken;
+  payloadConfig.expiresAt = defaultExpiresAt;
 
   const tConf = getTemplateConfig(cleanTemplate);
 
   // Check existing in Supabase template table
   const { data: existing } = await supabase
     .from(tConf.table)
-    .select('id')
+    .select('id, expires_at, status')
     .or(`id.eq.${id},slug.eq.${cleanSlug}`)
     .maybeSingle();
+
+  const finalExpiresAt = (existing && existing.expires_at) ? existing.expires_at : defaultExpiresAt;
+  const finalStatus = (existing && existing.status) ? existing.status : 'draft';
 
   const dbRecord = {
     id: id,
@@ -210,7 +226,8 @@ async function saveDraft({ id, slug, email, template = 'loveos', configData, des
     template: cleanTemplate,
     design_code: designCode || `OP-${id.slice(-6).toUpperCase()}`,
     config_data: payloadConfig,
-    status: 'draft',
+    status: finalStatus,
+    expires_at: finalExpiresAt,
     followup_sent: false,
     updated_at: now
   };
@@ -245,6 +262,58 @@ async function saveDraft({ id, slug, email, template = 'loveos', configData, des
     }
     return normalizeProjectRow(data, tConf.defaultTemplate);
   }
+}
+
+/**
+ * VIP Re-Edit: Verify Slug and Secret Token
+ */
+async function verifyAndGetReEditProject(slug, token, template = null) {
+  if (!slug || !token) return null;
+  const cleanSlug = String(slug).trim().toLowerCase();
+  const cleanToken = String(token).trim();
+
+  const project = await getProjectBySlug(cleanSlug, template);
+  if (!project) return null;
+
+  const validToken = project.editToken || (project.configData && project.configData.editToken);
+  if (!validToken || validToken !== cleanToken) {
+    return null;
+  }
+
+  return project;
+}
+
+/**
+ * VIP Re-Edit: Update Live Project with new Config Data
+ */
+async function updateReEditProject(slug, token, updatedConfig, template = null) {
+  const verified = await verifyAndGetReEditProject(slug, token, template);
+  if (!verified) {
+    throw new Error('Unauthorized or invalid re-edit token.');
+  }
+
+  const now = new Date().toISOString();
+  const mergedConfig = Object.assign({}, verified.configData, updatedConfig);
+  // Ensure token and retention are preserved
+  mergedConfig.editToken = verified.editToken || token;
+  mergedConfig.expiresAt = verified.expiresAt;
+
+  const tConf = getTemplateConfig(verified.template || 'loveos');
+  const { data, error } = await supabase
+    .from(tConf.table)
+    .update({
+      config_data: mergedConfig,
+      updated_at: now
+    })
+    .eq('id', verified.id)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Supabase error updating re-edit: ${error.message}`);
+  }
+
+  return normalizeProjectRow(data, tConf.defaultTemplate);
 }
 
 /**
@@ -393,6 +462,8 @@ module.exports = {
   getProjectById,
   checkSlugAvailable,
   saveDraft,
+  verifyAndGetReEditProject,
+  updateReEditProject,
   updateProjectStatus,
   markFollowupSent,
   getAllProjects,
