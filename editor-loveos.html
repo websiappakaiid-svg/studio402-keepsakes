@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
@@ -20,29 +20,16 @@
   <script src="/loveos-giftcard.js"></script>
 
   <style>
-    /* CRITICAL MOBILE BUG FIX: STRICTLY PREVENT IOS SAFARI VIEWPORT AUTO-ZOOM */
-    @media screen and (max-width: 768px) {
-      input, select, textarea {
-        font-size: 16px !important; /* iOS Safari requires >= 16px to prevent automatic screen zoom */
-      }
-    }
-    input, select, textarea, button, a, [role="button"] {
-      touch-action: manipulation;
-    }
-    html, body {
-      width: 100%;
-      min-height: 100dvh;
-      overscroll-behavior-y: none;
-    }
-
     * {
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
     }
-    body {
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background-color: #F8F6F4;
+      color: #18181B;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #08080a;
-      color: #f4f4f5;
       overflow-x: hidden;
       touch-action: manipulation;
     }
@@ -60,21 +47,50 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #08080a;
+      background: #F8F6F4;
     }
     ::-webkit-scrollbar-thumb {
-      background: #27272a;
+      background: #D4D4D8;
       border-radius: 9999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #3f3f46;
+      background: #A1A1AA;
     }
-    .glass-card {
-      background: rgba(18, 18, 23, 0.82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* Clean Alabaster Card System */
+    .alabaster-card {
+      background: #FFFFFF;
+      border: 1px solid #E6E2DD;
+      border-radius: 28px;
+      box-shadow: 0 4px 20px -2px rgba(24, 24, 27, 0.04), 0 2px 6px -1px rgba(24, 24, 27, 0.02);
     }
+
+    /* CRITICAL MOBILE BUG FIX: Strict 16px Font Size & Large Touch Target */
+    input[type="text"],
+    input[type="email"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      background-color: #FAFAFA !important;
+      border: 1.5px solid #E4E4E7 !important;
+      border-radius: 16px !important;
+      padding: 14px 16px !important;
+      font-size: 16px !important; /* CRITICAL: Prevents iOS Safari & Chrome viewport auto-zoom */
+      color: #18181B !important;
+      line-height: 1.5 !important;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      width: 100%;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #A1A1AA !important;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none !important;
+      background-color: #FFFFFF !important;
+      border-color: #E63946 !important;
+      box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.12) !important;
+    }
+
     .wizard-step {
       display: none;
     }
@@ -86,7 +102,7 @@
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-  </style>
+</style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-[#08080a] selection:bg-rose-500/30 selection:text-rose-200">
@@ -98,49 +114,50 @@
     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
     <span class="font-bold">VIP RE-EDIT MODE ACTIVE:</span>
     <span id="vip-banner-slug" class="underline">/u/...</span>
-    <span class="text-zinc-400 hidden sm:inline">• Free live edits included with your purchase</span>
+    <span class="text-[#71717A] hidden sm:inline">• Free live edits included with your purchase</span>
   </div>
 
   <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
   <!-- 1. TOP HEADER & WORKSPACE NAVIGATION                                      -->
   <!-- ========================================================================= -->
-  <header class="h-16 border-b border-white/[0.08] bg-[#0c0c10]/95 backdrop-blur-xl sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between gap-3">
+  <header class="h-16 border-b border-[#E6E2DD] bg-[#F8F6F4]/95 backdrop-blur-xl sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between gap-3">
     <!-- Branding -->
-    <a href="/" class="flex items-center gap-2.5 group shrink-0">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500/25 to-amber-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 group-hover:scale-105 transition shadow-sm">
-        <i data-lucide="heart" class="w-4 h-4 fill-rose-500/40"></i>
+    <a href="/" class="flex items-center gap-2.5 group shrink-0 no-underline">
+      <div class="w-9 h-9 rounded-xl bg-[#E63946]/10 border border-[#E63946]/25 flex items-center justify-center text-[#E63946] group-hover:scale-105 transition shadow-sm">
+        <i data-lucide="heart" class="w-4 h-4 fill-[#E63946]"></i>
       </div>
       <div class="leading-tight">
         <div class="flex items-center gap-1.5">
-          <span class="font-extrabold text-sm tracking-tight text-white">OurPage</span>
-          <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20 font-bold">LoveOS</span>
+          <span class="font-extrabold text-sm tracking-tight text-[#18181B]">OurPage</span>
+          <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-[#E63946]/10 text-[#E63946] border border-[#E63946]/20 font-bold">LoveOS</span>
         </div>
-        <p class="text-[10px] text-zinc-400 hidden sm:block">Tiny Phone Keepsake Studio</p>
+        <p class="text-[10px] text-[#71717A] hidden sm:block">Tiny Phone Keepsake Studio</p>
       </div>
     </a>
 
     <!-- Step Progress Indicator -->
     <div class="flex items-center gap-2 font-mono text-xs">
-      <span class="text-zinc-500 hidden sm:inline">STEP</span>
-      <span id="top-step-pill" class="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 font-bold text-[11px]">
+      <span class="text-[#71717A] hidden sm:inline">STEP</span>
+      <span id="top-step-pill" class="px-2.5 py-1 rounded-full bg-[#E63946]/10 text-[#E63946] border border-[#E63946]/25 font-bold text-[11px]">
         1 of 5
       </span>
-      <span id="top-step-title" class="text-zinc-300 font-semibold hidden md:inline truncate max-w-[150px]">
-        Basics &amp; Passcode
+      <span id="top-step-title" class="text-[#18181B] font-semibold hidden md:inline truncate max-w-[150px]">
+        Core Details
       </span>
     </div>
 
     <!-- Right Header Actions -->
     <div class="flex items-center gap-2">
-      <!-- Fullscreen Live Preview Modal Button -->
+      <!-- Live Preview Switcher Button -->
       <button 
         type="button" 
-        onclick="openFullscreenPreviewModal()" 
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/[0.05] hover:bg-white/[0.1] text-xs font-semibold text-zinc-200 transition active:scale-95"
-        title="Open Fullscreen Interactive Live Preview"
+        onclick="switchMainMode('preview')" 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E6E2DD] bg-white hover:bg-[#F4F1ED] text-xs font-semibold text-[#18181B] transition active:scale-95 shadow-sm"
+        title="Open Live Preview"
       >
-        <i data-lucide="eye" class="w-3.5 h-3.5 text-amber-300"></i>
-        <span class="hidden sm:inline">Live Preview</span>
+        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-[#E63946]"></i>
+        <span class="hidden sm:inline">Live Phone</span>
       </button>
 
       <!-- Step 5 Jump / Publish Button -->
@@ -148,7 +165,7 @@
         type="button" 
         id="header-publish-btn"
         onclick="goToStep(5)" 
-        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-600 text-white font-bold text-xs tracking-wide shadow-md hover:brightness-110 active:scale-95 transition"
+        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E63946] hover:bg-[#D62839] text-[#18181B] font-bold text-xs tracking-wide shadow-md shadow-[#E63946]/20 active:scale-95 transition"
       >
         <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
         <span id="header-publish-btn-text">Publish ($18)</span>
@@ -158,17 +175,18 @@
 
 
   <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
   <!-- 2. SEGMENTED DUAL-MODE SWITCH (EDIT FORM vs LIVE PHONE)                   -->
   <!-- ========================================================================= -->
-  <nav class="sticky top-16 z-40 bg-[#0a0a0e]/95 backdrop-blur-xl border-b border-white/[0.08] px-3 sm:px-4 py-2">
-    <div class="max-w-md mx-auto grid grid-cols-2 p-1 bg-zinc-950/90 rounded-2xl border border-white/10 shadow-lg">
+  <nav class="sticky top-16 z-40 bg-[#F8F6F4]/95 backdrop-blur-xl border-b border-[#E6E2DD] px-3 sm:px-4 py-2">
+    <div class="max-w-md mx-auto grid grid-cols-2 p-1 bg-[#EAE6E1] rounded-2xl border border-[#DDD8D1] shadow-inner">
       <button 
         type="button" 
         id="mode-tab-edit" 
         onclick="switchMainMode('edit')" 
-        class="py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500/20 to-amber-500/15 border border-rose-500/30 text-rose-200 shadow-sm"
+        class="py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-white text-[#18181B] shadow-sm border border-[#E6E2DD]"
       >
-        <i data-lucide="edit-3" class="w-4 h-4 text-rose-400"></i>
+        <i data-lucide="edit-3" class="w-4 h-4 text-[#E63946]"></i>
         <span>✏️ Edit Form</span>
       </button>
 
@@ -176,11 +194,11 @@
         type="button" 
         id="mode-tab-preview" 
         onclick="switchMainMode('preview')" 
-        class="py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white"
+        class="py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-[#71717A] hover:text-[#18181B]"
       >
-        <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400"></i>
+        <i data-lucide="smartphone" class="w-4 h-4 text-[#E63946]"></i>
         <span>📱 Live Phone</span>
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
       </button>
     </div>
   </nav>
@@ -189,33 +207,25 @@
   <div id="view-mode-edit" class="flex-1 flex flex-col">
 
   <!-- ========================================================================= -->
-  <!-- 2. STEP WIZARD STEPPER BAR (MOBILE FRIENDLY HORIZONTAL SCROLLER)          -->
+    <!-- ========================================================================= -->
+  <!-- 3. STEP WIZARD STEPPER BAR (5 MINIMALIST PILLS)                           -->
   <!-- ========================================================================= -->
-  <nav class="bg-[#0e0e13] border-b border-white/[0.06] px-4 py-2 overflow-x-auto no-scrollbar z-30 sticky top-16">
-    <div class="max-w-2xl mx-auto flex items-center justify-between gap-1 text-xs font-mono">
-      <button type="button" onclick="goToStep(1)" id="step-tab-1" class="step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center font-bold text-rose-300 bg-rose-500/15 border border-rose-500/30 transition flex flex-col items-center gap-0.5">
-        <span class="text-[10px] text-zinc-400">01</span>
-        <span class="truncate">Basics</span>
+  <nav class="bg-[#F8F6F4] border-b border-[#E6E2DD] px-4 py-2.5 overflow-x-auto no-scrollbar z-30 sticky top-28">
+    <div class="max-w-xl mx-auto flex items-center justify-between gap-1.5 text-xs font-mono">
+      <button type="button" onclick="goToStep(1)" id="step-tab-1" class="step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center font-bold text-[#18181B] bg-[#E63946] shadow-sm transition flex items-center justify-center gap-1">
+        <span>1. Names</span>
       </button>
-      <span class="text-zinc-600 text-[10px]">&rsaquo;</span>
-      <button type="button" onclick="goToStep(2)" id="step-tab-2" class="step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center text-zinc-400 hover:text-white transition flex flex-col items-center gap-0.5">
-        <span class="text-[10px] text-zinc-500">02</span>
-        <span class="truncate">Music</span>
+      <button type="button" onclick="goToStep(2)" id="step-tab-2" class="step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center text-[#71717A] bg-white border border-[#E6E2DD] hover:text-[#18181B] transition flex items-center justify-center gap-1">
+        <span>2. Music</span>
       </button>
-      <span class="text-zinc-600 text-[10px]">&rsaquo;</span>
-      <button type="button" onclick="goToStep(3)" id="step-tab-3" class="step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center text-zinc-400 hover:text-white transition flex flex-col items-center gap-0.5">
-        <span class="text-[10px] text-zinc-500">03</span>
-        <span class="truncate">Polaroids</span>
+      <button type="button" onclick="goToStep(3)" id="step-tab-3" class="step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center text-[#71717A] bg-white border border-[#E6E2DD] hover:text-[#18181B] transition flex items-center justify-center gap-1">
+        <span>3. Photos</span>
       </button>
-      <span class="text-zinc-600 text-[10px]">&rsaquo;</span>
-      <button type="button" onclick="goToStep(4)" id="step-tab-4" class="step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center text-zinc-400 hover:text-white transition flex flex-col items-center gap-0.5">
-        <span class="text-[10px] text-zinc-500">04</span>
-        <span class="truncate">Story Details</span>
+      <button type="button" onclick="goToStep(4)" id="step-tab-4" class="step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center text-[#71717A] bg-white border border-[#E6E2DD] hover:text-[#18181B] transition flex items-center justify-center gap-1">
+        <span>4. Texts</span>
       </button>
-      <span class="text-zinc-600 text-[10px]">&rsaquo;</span>
-      <button type="button" onclick="goToStep(5)" id="step-tab-5" class="step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center text-zinc-400 hover:text-white transition flex flex-col items-center gap-0.5">
-        <span class="text-[10px] text-zinc-500">05</span>
-        <span class="truncate">QR Card</span>
+      <button type="button" onclick="goToStep(5)" id="step-tab-5" class="step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center text-[#71717A] bg-white border border-[#E6E2DD] hover:text-[#18181B] transition flex items-center justify-center gap-1">
+        <span>5. Finish</span>
       </button>
     </div>
   </nav>
@@ -229,73 +239,71 @@
     <!-- STEP 1: BASICS & PASSCODE GATE [REQUIRED]                               -->
     <!-- ======================================================================= -->
     <div id="step-1" class="wizard-step active space-y-5">
-      <div class="glass-card rounded-3xl p-5 sm:p-7 space-y-5 border-rose-500/25">
-        <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div class="alabaster-card rounded-3xl p-5 sm:p-7 space-y-5 border-rose-500/25">
+        <div class="flex items-center justify-between border-b border-[#E6E2DD] pb-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300 font-mono text-xs font-bold">1</span>
-              <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Core Couple Details</h2>
+              <h2 class="text-base sm:text-lg font-bold text-[#18181B] tracking-tight">Core Couple Details</h2>
             </div>
-            <p class="text-xs text-zinc-400">Your names and anniversary configure the entire tiny phone experience.</p>
+            <p class="text-xs text-[#71717A]">Your names and anniversary configure the entire tiny phone experience.</p>
           </div>
-          <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold uppercase tracking-wider">
-            [REQUIRED]
-          </span>
+          <span class="px-2.5 py-1 rounded-full bg-[#E63946]/10 text-[#E63946] border border-[#E63946]/20 text-[10px] font-mono font-bold uppercase tracking-wider">Required</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-zinc-200 mb-1.5">
+            <label class="block text-xs font-semibold text-[#27272A] mb-1.5">
               Partner's Name / Nickname <span class="text-rose-400">*</span>
             </label>
             <input 
               type="text" 
               id="input-partner-name" 
-              class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition shadow-inner" 
+              class="w-full bg-white border border-[#E6E2DD] rounded-2xl px-4 py-3 text-sm text-[#18181B] focus:outline-none focus:border-rose-500 transition shadow-inner" 
               placeholder="e.g. Mia" 
               required 
               oninput="updatePINDisplay(); updateQRCardPreview();"
             />
-            <p class="text-[11px] text-zinc-500 mt-1">Displayed on the lockscreen &amp; keepsake cards.</p>
+            <p class="text-[11px] text-[#A1A1AA] mt-1">Displayed on the lockscreen &amp; keepsake cards.</p>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-zinc-200 mb-1.5">
+            <label class="block text-xs font-semibold text-[#27272A] mb-1.5">
               Your Name / Nickname <span class="text-rose-400">*</span>
             </label>
             <input 
               type="text" 
               id="input-creator-name" 
-              class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition shadow-inner" 
+              class="w-full bg-white border border-[#E6E2DD] rounded-2xl px-4 py-3 text-sm text-[#18181B] focus:outline-none focus:border-rose-500 transition shadow-inner" 
               placeholder="e.g. Alex" 
               required 
               oninput="updatePINDisplay(); updateQRCardPreview();"
             />
-            <p class="text-[11px] text-zinc-500 mt-1">Used for letter sign-offs and unsent drafts.</p>
+            <p class="text-[11px] text-[#A1A1AA] mt-1">Used for letter sign-offs and unsent drafts.</p>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-zinc-200 mb-1.5">
+          <label class="block text-xs font-semibold text-[#27272A] mb-1.5">
             Anniversary Date &amp; Time <span class="text-rose-400">*</span>
           </label>
           <input 
             type="datetime-local" 
             id="input-anniversary-date" 
-            class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition shadow-inner font-mono" 
+            class="w-full bg-white border border-[#E6E2DD] rounded-2xl px-4 py-3 text-sm text-[#18181B] focus:outline-none focus:border-rose-500 transition shadow-inner font-mono" 
             required 
             oninput="updatePINDisplay(); updateQRCardPreview();"
           />
 
           <!-- Live Auto-Calculated 4-Digit PIN Preview Card -->
-          <div class="mt-3 p-3.5 rounded-2xl bg-zinc-950/80 border border-rose-500/25 flex items-center justify-between gap-3">
+          <div class="mt-3 p-3.5 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-rose-500/25 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-300 shrink-0">
                 <i data-lucide="lock" class="w-4 h-4"></i>
               </div>
               <div>
-                <p class="text-xs font-semibold text-white">4-Digit Lockscreen Passcode (MMDD)</p>
-                <p class="text-[11px] text-zinc-400">Generated automatically from your anniversary date</p>
+                <p class="text-xs font-semibold text-[#18181B]">4-Digit Lockscreen Passcode (MMDD)</p>
+                <p class="text-[11px] text-[#71717A]">Generated automatically from your anniversary date</p>
               </div>
             </div>
             <div class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 font-mono text-sm font-bold tracking-widest" id="calculated-pin-display">
@@ -310,7 +318,7 @@
         <button 
           type="button" 
           onclick="validateAndGoStep(2)" 
-          class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2"
         >
           <span>Next: Choose Soundtrack</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -322,23 +330,21 @@
     <!-- STEP 2: SOUNDTRACK (5 PRESETS + UPLOAD MP3 + DOWNLOAD TIPS)             -->
     <!-- ======================================================================= -->
     <div id="step-2" class="wizard-step space-y-5">
-      <div class="glass-card rounded-3xl p-5 sm:p-7 space-y-5 border-amber-500/25">
-        <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div class="alabaster-card rounded-3xl p-5 sm:p-7 space-y-5 border-amber-500/25">
+        <div class="flex items-center justify-between border-b border-[#E6E2DD] pb-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 font-mono text-xs font-bold">2</span>
-              <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Romantic Soundtrack</h2>
+              <h2 class="text-base sm:text-lg font-bold text-[#18181B] tracking-tight">Romantic Soundtrack</h2>
             </div>
-            <p class="text-xs text-zinc-400">Plays automatically when your partner unlocks the tiny phone.</p>
+            <p class="text-xs text-[#71717A]">Plays automatically when your partner unlocks the tiny phone.</p>
           </div>
-          <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-semibold uppercase tracking-wider">
-            [PRE-FILLED DEFAULT]
-          </span>
+          <p class="text-xs text-[#71717A] flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#E63946]"></span> Already filled with cute defaults — edit only what you want.</p>
         </div>
 
         <!-- 5 Built-in Romantic Tracks with Preview Button -->
         <div class="space-y-2.5">
-          <label class="block text-xs font-semibold text-zinc-300">
+          <label class="block text-xs font-semibold text-[#3F3F46]">
             Choose from 5 Curated Romantic Tracks:
           </label>
           <div class="grid grid-cols-1 gap-2.5" id="preset-tracks-list">
@@ -350,16 +356,16 @@
         <audio id="editor-audio-previewer" preload="none"></audio>
 
         <!-- Custom Upload or Custom URL -->
-        <div class="pt-2 border-t border-white/[0.08] space-y-3">
+        <div class="pt-2 border-t border-[#E6E2DD] space-y-3">
           <div class="flex items-center justify-between">
-            <label class="block text-xs font-semibold text-zinc-300">
+            <label class="block text-xs font-semibold text-[#3F3F46]">
               Or Upload Your Own MP3 File:
             </label>
-            <span id="custom-audio-badge" class="text-[10px] font-mono text-zinc-500">Max 10 MB (.mp3)</span>
+            <span id="custom-audio-badge" class="text-[10px] font-mono text-[#A1A1AA]">Max 10 MB (.mp3)</span>
           </div>
 
           <div class="flex items-center gap-3">
-            <label class="flex-1 py-3 px-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-zinc-200 transition">
+            <label class="flex-1 py-3 px-4 rounded-2xl bg-white border border-[#E6E2DD] hover:border-zinc-700 cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-[#27272A] transition">
               <i data-lucide="upload" class="w-4 h-4 text-amber-400"></i>
               <span id="upload-audio-btn-label">Choose MP3 From Device</span>
               <input type="file" id="input-audio-file" accept="audio/*" class="hidden" onchange="handleCustomAudioUpload(event)">
@@ -367,12 +373,12 @@
           </div>
 
           <!-- Downloader Helper Links -->
-          <div class="p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-1.5 text-xs">
+          <div class="p-3.5 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-1.5 text-xs">
             <div class="flex items-center gap-1.5 text-amber-300 font-semibold text-[11px] font-mono">
               <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
               <span>Need an MP3 of your favorite song?</span>
             </div>
-            <p class="text-[11px] text-zinc-400">
+            <p class="text-[11px] text-[#71717A]">
               You can easily save any song or audio clip to MP3 using these free tools:
             </p>
             <div class="flex flex-wrap gap-2 pt-1 font-mono text-[10px]">
@@ -394,12 +400,12 @@
           <!-- Song Meta (Title & Artist) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
             <div>
-              <label class="block text-xs font-medium text-zinc-300 mb-1">Song Title</label>
-              <input type="text" id="input-song-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition" placeholder="e.g. Golden Hour Piano">
+              <label class="block text-xs font-medium text-[#3F3F46] mb-1">Song Title</label>
+              <input type="text" id="input-song-title" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3.5 py-2.5 text-sm text-[#18181B] focus:outline-none focus:border-amber-400 transition" placeholder="e.g. Golden Hour Piano">
             </div>
             <div>
-              <label class="block text-xs font-medium text-zinc-300 mb-1">Artist / Subtitle</label>
-              <input type="text" id="input-song-artist" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition" placeholder="e.g. Acoustic Piano Romance">
+              <label class="block text-xs font-medium text-[#3F3F46] mb-1">Artist / Subtitle</label>
+              <input type="text" id="input-song-artist" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3.5 py-2.5 text-sm text-[#18181B] focus:outline-none focus:border-amber-400 transition" placeholder="e.g. Acoustic Piano Romance">
             </div>
           </div>
         </div>
@@ -410,7 +416,7 @@
         <button 
           type="button" 
           onclick="goToStep(1)" 
-          class="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white font-semibold text-xs tracking-wide transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl border border-[#E6E2DD] bg-white/[0.04] hover:bg-white/[0.08] text-[#3F3F46] hover:text-[#18181B] font-semibold text-xs tracking-wide transition flex items-center gap-2"
         >
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Back</span>
@@ -419,7 +425,7 @@
         <button 
           type="button" 
           onclick="goToStep(3)" 
-          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
+          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
         >
           <span>Next: Polaroid Memories</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -431,18 +437,16 @@
     <!-- STEP 3: POLAROID MEMORIES (4 PHOTOS + WEBP AUTO-COMPRESSION)             -->
     <!-- ======================================================================= -->
     <div id="step-3" class="wizard-step space-y-5">
-      <div class="glass-card rounded-3xl p-5 sm:p-7 space-y-5 border-rose-500/25">
-        <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div class="alabaster-card rounded-3xl p-5 sm:p-7 space-y-5 border-rose-500/25">
+        <div class="flex items-center justify-between border-b border-[#E6E2DD] pb-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300 font-mono text-xs font-bold">3</span>
-              <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">4 Polaroid Memories</h2>
+              <h2 class="text-base sm:text-lg font-bold text-[#18181B] tracking-tight">4 Polaroid Memories</h2>
             </div>
-            <p class="text-xs text-zinc-400">Pre-filled with romantic samples. Tap each photo to upload your real memories.</p>
+            <p class="text-xs text-[#71717A]">Pre-filled with romantic samples. Tap each photo to upload your real memories.</p>
           </div>
-          <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-semibold uppercase tracking-wider">
-            [PRE-FILLED DEFAULT]
-          </span>
+          <p class="text-xs text-[#71717A] flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#E63946]"></span> Already filled with cute defaults — edit only what you want.</p>
         </div>
 
         <div id="polaroids-wizard-container" class="space-y-4">
@@ -455,7 +459,7 @@
         <button 
           type="button" 
           onclick="goToStep(2)" 
-          class="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white font-semibold text-xs tracking-wide transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl border border-[#E6E2DD] bg-white/[0.04] hover:bg-white/[0.08] text-[#3F3F46] hover:text-[#18181B] font-semibold text-xs tracking-wide transition flex items-center gap-2"
         >
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Back</span>
@@ -464,7 +468,7 @@
         <button 
           type="button" 
           onclick="goToStep(4)" 
-          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
+          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
         >
           <span>Next: Story Details</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -476,73 +480,73 @@
     <!-- STEP 4: STORY DETAILS (SMART DEFAULTS IN NATURAL ENGLISH)                -->
     <!-- ======================================================================= -->
     <div id="step-4" class="wizard-step space-y-5">
-      <div class="glass-card rounded-3xl p-5 sm:p-7 space-y-6 border-indigo-500/25">
-        <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div class="alabaster-card rounded-3xl p-5 sm:p-7 space-y-6 border-indigo-500/25">
+        <div class="flex items-center justify-between border-b border-[#E6E2DD] pb-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-mono text-xs font-bold">4</span>
-              <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Story &amp; Love Letter Details</h2>
+              <h2 class="text-base sm:text-lg font-bold text-[#18181B] tracking-tight">Story &amp; Love Letter Details</h2>
             </div>
-            <p class="text-xs text-zinc-400">Everything is already written in high-converting romantic English. Customize only what you like.</p>
+            <p class="text-xs text-[#71717A]">Everything is already written in high-converting romantic English. Customize only what you like.</p>
           </div>
           <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-semibold uppercase tracking-wider shrink-0">
-            [PRE-FILLED DEFAULT — Edit only if you want]
+            Already filled with cute defaults — edit only what you want.
           </span>
         </div>
 
         <!-- 4.1 Love Letter & Secret Confession -->
-        <div class="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+        <div class="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-rose-300 uppercase tracking-wider font-mono">3AM Notes Love Letter</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Main Letter</span>
+            <span class="text-[10px] text-[#A1A1AA] font-mono">Main Letter</span>
           </div>
           <textarea 
             id="input-main-letter" 
             rows="6" 
-            class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed font-sans focus:outline-none focus:border-rose-500 transition"
+            class="w-full bg-white border border-[#E6E2DD] rounded-xl p-3 text-xs sm:text-sm text-[#27272A] leading-relaxed font-sans focus:outline-none focus:border-rose-500 transition"
             placeholder="Type your heartfelt love letter..."
           ></textarea>
 
           <div class="pt-2">
-            <label class="block text-xs font-medium text-zinc-300 mb-1">
+            <label class="block text-xs font-medium text-[#3F3F46] mb-1">
               Secret Word-by-Word Reveal Note:
             </label>
             <textarea 
               id="input-secret-confession" 
               rows="2" 
-              class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none focus:border-amber-400 transition"
+              class="w-full bg-white border border-[#E6E2DD] rounded-xl p-3 text-xs text-[#27272A] focus:outline-none focus:border-amber-400 transition"
               placeholder="A secret whisper that types out word-by-word..."
             ></textarea>
           </div>
         </div>
 
         <!-- 4.2 Interactive Scratch Date Voucher -->
-        <div class="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+        <div class="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">Scratch-Off Love Voucher</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Interactive Widget</span>
+            <span class="text-[10px] text-[#A1A1AA] font-mono">Interactive Widget</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-[11px] text-zinc-400 mb-1">Voucher Title</label>
-              <input type="text" id="input-voucher-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+              <label class="block text-[11px] text-[#71717A] mb-1">Voucher Title</label>
+              <input type="text" id="input-voucher-title" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3 py-2 text-xs text-[#18181B] focus:outline-none focus:border-amber-400">
             </div>
             <div>
-              <label class="block text-[11px] text-zinc-400 mb-1">Redeem Code</label>
-              <input type="text" id="input-voucher-code" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-mono font-bold text-rose-300 uppercase focus:outline-none focus:border-amber-400">
+              <label class="block text-[11px] text-[#71717A] mb-1">Redeem Code</label>
+              <input type="text" id="input-voucher-code" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3 py-2 text-xs font-mono font-bold text-rose-300 uppercase focus:outline-none focus:border-amber-400">
             </div>
           </div>
           <div>
-            <label class="block text-[11px] text-zinc-400 mb-1">Reward Description</label>
-            <input type="text" id="input-voucher-reward" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+            <label class="block text-[11px] text-[#71717A] mb-1">Reward Description</label>
+            <input type="text" id="input-voucher-reward" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3 py-2 text-xs text-[#18181B] focus:outline-none focus:border-amber-400">
           </div>
         </div>
 
         <!-- 4.3 Open When Envelopes (Accordion Container) -->
-        <div class="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+        <div class="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">"Open When..." 4 Envelopes</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Mood Letters</span>
+            <span class="text-xs font-bold text-[#3F3F46] uppercase tracking-wider font-mono">"Open When..." 4 Envelopes</span>
+            <span class="text-[10px] text-[#A1A1AA] font-mono">Mood Letters</span>
           </div>
           <div id="envelopes-wizard-container" class="space-y-3">
             <!-- Populated by renderEnvelopeInputs() -->
@@ -550,10 +554,10 @@
         </div>
 
         <!-- 4.4 Milestones & First Texts -->
-        <div class="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] space-y-3">
+        <div class="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">Milestones &amp; First Chat</span>
-            <span class="text-[10px] text-zinc-500 font-mono">Timeline</span>
+            <span class="text-xs font-bold text-[#3F3F46] uppercase tracking-wider font-mono">Milestones &amp; First Chat</span>
+            <span class="text-[10px] text-[#A1A1AA] font-mono">Timeline</span>
           </div>
           <div id="milestones-wizard-container" class="space-y-3">
             <!-- Populated by renderMilestoneInputs() -->
@@ -566,7 +570,7 @@
         <button 
           type="button" 
           onclick="goToStep(3)" 
-          class="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white font-semibold text-xs tracking-wide transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl border border-[#E6E2DD] bg-white/[0.04] hover:bg-white/[0.08] text-[#3F3F46] hover:text-[#18181B] font-semibold text-xs tracking-wide transition flex items-center gap-2"
         >
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Back</span>
@@ -575,7 +579,7 @@
         <button 
           type="button" 
           onclick="goToStep(5)" 
-          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
+          class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2"
         >
           <span>Next: Custom QR Card &amp; Publish</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -587,15 +591,15 @@
     <!-- STEP 5: CUSTOM QR CARD PREVIEW & PUBLISH ($18 USD)                       -->
     <!-- ======================================================================= -->
     <div id="step-5" class="wizard-step space-y-5">
-      <div class="glass-card rounded-3xl p-5 sm:p-7 space-y-6 border-rose-500/30">
+      <div class="alabaster-card rounded-3xl p-5 sm:p-7 space-y-6 border-rose-500/30">
         
-        <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+        <div class="flex items-center justify-between border-b border-[#E6E2DD] pb-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300 font-mono text-xs font-bold">5</span>
-              <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Your Keepsake QR Card &amp; Publish</h2>
+              <h2 class="text-base sm:text-lg font-bold text-[#18181B] tracking-tight">Your Keepsake QR Card &amp; Publish</h2>
             </div>
-            <p class="text-xs text-zinc-400">Review your generated gift card, pick your URL address, and launch live.</p>
+            <p class="text-xs text-[#71717A]">Review your generated gift card, pick your URL address, and launch live.</p>
           </div>
           <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold uppercase tracking-wider">
             $18 USD
@@ -607,15 +611,15 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <i data-lucide="sparkles" class="w-4 h-4 text-rose-400"></i>
-              <span class="text-xs font-bold text-white uppercase tracking-wider font-mono">Keepsake Print &amp; QR Gift Card</span>
+              <span class="text-xs font-bold text-[#18181B] uppercase tracking-wider font-mono">Keepsake Print &amp; QR Gift Card</span>
             </div>
-            <span class="text-[10px] font-mono text-zinc-400">1080 &times; 1350 px</span>
+            <span class="text-[10px] font-mono text-[#71717A]">1080 &times; 1350 px</span>
           </div>
 
           <!-- Canvas Preview Card Container -->
-          <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#0d0d12] flex items-center justify-center p-3 sm:p-4 shadow-2xl">
+          <div class="relative w-full rounded-2xl overflow-hidden border border-[#E6E2DD] bg-[#0d0d12] flex items-center justify-center p-3 sm:p-4 shadow-2xl">
             <div id="qr-canvas-preview-wrapper" class="w-full max-w-[340px] flex items-center justify-center">
-              <canvas id="qr-gift-card-canvas" class="w-full h-auto rounded-xl shadow-lg border border-white/10"></canvas>
+              <canvas id="qr-gift-card-canvas" class="w-full h-auto rounded-xl shadow-lg border border-[#E6E2DD]"></canvas>
             </div>
           </div>
 
@@ -623,16 +627,16 @@
             <button 
               type="button" 
               onclick="downloadGiftCardFromEditor()" 
-              class="flex-1 py-3 px-4 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-200 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
+              class="flex-1 py-3 px-4 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-200 hover:text-[#18181B] text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
             >
               <i data-lucide="download" class="w-4 h-4 text-rose-400"></i>
-              <span>Download Gift Card (PNG)</span>
+              <span>Download Heart QR (PNG)</span>
             </button>
 
             <button 
               type="button" 
               onclick="openFullscreenPreviewModal()" 
-              class="py-3 px-4 rounded-xl border border-white/10 bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95"
+              class="py-3 px-4 rounded-xl border border-[#E6E2DD] bg-white/[0.05] hover:bg-white/[0.1] text-[#27272A] text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95"
             >
               <i data-lucide="eye" class="w-4 h-4 text-amber-300"></i>
               <span>Open Live Preview</span>
@@ -641,18 +645,18 @@
         </div>
 
         <!-- 5.2 Link Slug & Customer Email Setup -->
-        <div class="pt-4 border-t border-white/[0.08] space-y-4">
+        <div class="pt-4 border-t border-[#E6E2DD] space-y-4">
           <!-- Slug Input -->
           <div>
-            <label class="block text-xs font-semibold text-zinc-200 mb-1.5">
+            <label class="block text-xs font-semibold text-[#27272A] mb-1.5">
               Personalized Link Address (Custom Slug) <span class="text-rose-400">*</span>
             </label>
-            <div class="flex items-center rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden focus-within:border-rose-500 transition shadow-inner">
-              <span class="text-xs text-zinc-500 px-3.5 select-none font-mono">ourpage/u/</span>
+            <div class="flex items-center rounded-2xl bg-white border border-[#E6E2DD] overflow-hidden focus-within:border-rose-500 transition shadow-inner">
+              <span class="text-xs text-[#A1A1AA] px-3.5 select-none font-mono">ourpage/u/</span>
               <input 
                 type="text" 
                 id="input-slug" 
-                class="w-full bg-transparent py-3 pr-4 text-sm text-white font-mono lowercase focus:outline-none" 
+                class="w-full bg-transparent py-3 pr-4 text-sm text-[#18181B] font-mono lowercase focus:outline-none" 
                 placeholder="alex-mia" 
                 oninput="handleSlugInput(this.value)"
               />
@@ -662,17 +666,17 @@
 
           <!-- Email Input -->
           <div>
-            <label class="block text-xs font-semibold text-zinc-200 mb-1.5">
+            <label class="block text-xs font-semibold text-[#27272A] mb-1.5">
               Your Email Address <span class="text-rose-400">*</span>
             </label>
             <input 
               type="email" 
               id="input-customer-email" 
-              class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-rose-500 transition shadow-inner" 
+              class="w-full bg-white border border-[#E6E2DD] rounded-2xl px-4 py-3 text-sm text-[#18181B] focus:outline-none focus:border-rose-500 transition shadow-inner" 
               placeholder="alex@example.com" 
               required
             />
-            <p class="text-[11px] text-zinc-400 mt-1">We will send your Public Gift Link and VIP Re-Edit Key here.</p>
+            <p class="text-[11px] text-[#71717A] mt-1">We will send your Public Gift Link and VIP Re-Edit Key here.</p>
           </div>
         </div>
 
@@ -680,13 +684,13 @@
         <div class="p-4 rounded-2xl bg-gradient-to-br from-rose-950/30 via-zinc-950 to-black border border-rose-500/25 space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-rose-300 uppercase tracking-wider font-mono">OurPage Complete Edition</span>
-            <span class="text-xs font-mono line-through text-zinc-500">$35.00 USD</span>
+            <span class="text-xs font-mono line-through text-[#A1A1AA]">$35.00 USD</span>
           </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-3xl font-extrabold text-white tracking-tight">$18.00 USD</span>
+            <span class="text-3xl font-extrabold text-[#18181B] tracking-tight">$18.00 USD</span>
             <span class="text-xs text-rose-400 font-semibold font-mono">ONE-TIME PURCHASE</span>
           </div>
-          <div class="text-[11px] text-zinc-300 space-y-1 pt-1">
+          <div class="text-[11px] text-[#3F3F46] space-y-1 pt-1">
             <p class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">&check;</span> 30-Day active live cloud hosting on fast edge CDN</p>
             <p class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">&check;</span> All 6 interactive widgets (Vinyl player, 3D Polaroids, Envelopes, Love Voucher)</p>
             <p class="flex items-center gap-1.5"><span class="text-emerald-400 font-bold">&check;</span> Printable 1080x1350 Keepsake QR Card (PNG) included</p>
@@ -701,7 +705,7 @@
             type="button" 
             id="btn-publish-checkout" 
             onclick="executePublishFlow()" 
-            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-rose-950/60 hover:brightness-110 active:scale-98 transition flex items-center justify-center gap-2"
+            class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-sm tracking-wide shadow-xl shadow-rose-500/20 hover:brightness-110 active:scale-98 transition flex items-center justify-center gap-2"
           >
             <i data-lucide="lock" class="w-4 h-4"></i>
             <span>Proceed to Secure Checkout — $18 USD</span>
@@ -712,7 +716,7 @@
             type="button" 
             id="btn-reedit-update" 
             onclick="executeReEditUpdate()" 
-            class="hidden w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-emerald-950/60 hover:brightness-110 active:scale-98 transition flex items-center justify-center gap-2"
+            class="hidden w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-[#18181B] font-bold text-sm tracking-wide shadow-xl shadow-emerald-950/60 hover:brightness-110 active:scale-98 transition flex items-center justify-center gap-2"
           >
             <i data-lucide="check-circle" class="w-4 h-4"></i>
             <span>Save &amp; Update Live Web Instantly</span>
@@ -726,7 +730,7 @@
         <button 
           type="button" 
           onclick="goToStep(4)" 
-          class="px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white font-semibold text-xs tracking-wide transition flex items-center gap-2"
+          class="px-5 py-3 rounded-2xl border border-[#E6E2DD] bg-white/[0.04] hover:bg-white/[0.08] text-[#3F3F46] hover:text-[#18181B] font-semibold text-xs tracking-wide transition flex items-center gap-2"
         >
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Back to Story Details</span>
@@ -737,16 +741,17 @@
   </main>
 
     <!-- ======================================================================= -->
+        <!-- ======================================================================= -->
     <!-- STICKY BOTTOM THUMB DOCK (EDIT MODE)                                    -->
     <!-- ======================================================================= -->
-    <div class="sticky bottom-0 z-30 bg-[#0c0c10]/95 backdrop-blur-xl border-t border-white/[0.08] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+    <div class="sticky bottom-0 z-30 bg-[#F8F6F4]/95 backdrop-blur-xl border-t border-[#E6E2DD] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] shadow-lg">
       <div class="max-w-2xl mx-auto flex items-center justify-between gap-2.5">
         <!-- Back Button -->
         <button 
           type="button" 
           id="thumb-btn-prev" 
           onclick="goPreviousStep()" 
-          class="py-2.5 px-3.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-zinc-300 transition flex items-center gap-1.5 active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          class="py-2.5 px-3.5 rounded-xl border border-[#E6E2DD] bg-white hover:bg-[#F4F1ED] text-xs font-semibold text-[#18181B] transition flex items-center gap-1.5 active:scale-95 disabled:opacity-30 disabled:pointer-events-none shadow-sm"
         >
           <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
           <span>Back</span>
@@ -756,10 +761,10 @@
         <button 
           type="button" 
           onclick="switchMainMode('preview')" 
-          class="py-2.5 px-3.5 rounded-xl bg-zinc-900 border border-white/10 text-xs font-mono font-medium text-emerald-300 hover:text-emerald-200 flex items-center gap-1.5 active:scale-95 transition"
+          class="py-2.5 px-3.5 rounded-xl bg-white border border-[#E6E2DD] hover:bg-[#F4F1ED] text-xs font-mono font-semibold text-[#18181B] flex items-center gap-1.5 active:scale-95 transition shadow-sm"
         >
-          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span>Live Phone</span>
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-[#E63946]"></i>
+          <span>Preview Live Web</span>
         </button>
 
         <!-- Next / Publish Button -->
@@ -767,7 +772,7 @@
           type="button" 
           id="thumb-btn-next" 
           onclick="goNextStepFromThumb()" 
-          class="py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-1.5"
+          class="py-2.5 px-4 rounded-xl bg-[#E63946] hover:bg-[#D62839] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-[#E63946]/25 hover:brightness-105 active:scale-95 transition flex items-center gap-1.5"
         >
           <span id="thumb-next-text">Next: Music →</span>
         </button>
@@ -776,29 +781,30 @@
   </div> <!-- END OF #view-mode-edit -->
 
   <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
   <!-- 4. LIVE PHONE PREVIEW VIEW (#view-mode-preview)                           -->
   <!-- ========================================================================= -->
-  <div id="view-mode-preview" class="hidden flex-1 flex flex-col bg-[#050507]">
+  <div id="view-mode-preview" class="hidden flex-1 flex flex-col bg-[#F4F1ED]">
     <!-- Top Bar inside Preview View -->
-    <div class="h-12 bg-[#0e0e13] border-b border-white/[0.08] px-4 flex items-center justify-between shrink-0">
+    <div class="h-12 bg-white border-b border-[#E6E2DD] px-4 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-mono text-xs font-bold text-white tracking-wide">Interactive Phone Preview</span>
-        <span class="text-[10px] text-zinc-400 font-mono hidden sm:inline">• Live Synced</span>
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-mono text-xs font-bold text-[#18181B] tracking-wide">Interactive Phone Preview</span>
+        <span class="text-[10px] text-[#71717A] font-mono hidden sm:inline">• Live Synced</span>
       </div>
       <div class="flex items-center gap-2">
         <button 
           type="button" 
           onclick="refreshPreviewIframe()" 
           title="Reload Preview Frame"
-          class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center transition active:scale-95"
+          class="w-7 h-7 rounded-lg bg-[#F8F6F4] hover:bg-[#EAE6E1] text-[#71717A] hover:text-[#18181B] flex items-center justify-center transition active:scale-95 border border-[#E6E2DD]"
         >
           <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
         </button>
         <button 
           type="button" 
           onclick="switchMainMode('edit')" 
-          class="py-1 px-3 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition active:scale-95"
+          class="py-1 px-3 rounded-xl bg-[#E63946]/10 border border-[#E63946]/20 text-[#E63946] hover:bg-[#E63946]/20 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95"
         >
           <i data-lucide="edit-3" class="w-3 h-3"></i>
           <span>Edit Form</span>
@@ -808,7 +814,7 @@
 
     <!-- Phone Frame Container -->
     <div class="flex-1 w-full flex items-center justify-center p-2 sm:p-4 overflow-hidden">
-      <div class="w-full max-w-[430px] h-[calc(100dvh-135px)] min-h-[520px] max-h-[860px] bg-[#08080a] border border-white/15 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col">
+      <div class="w-full max-w-[430px] h-[calc(100dvh-135px)] min-h-[520px] max-h-[860px] bg-[#141115] border-4 border-[#27272A] rounded-[38px] overflow-hidden shadow-2xl relative flex flex-col">
         <iframe 
           id="loveos-preview-iframe" 
           src="/loveos.html?preview=true" 
@@ -823,9 +829,9 @@
       <button 
         type="button" 
         onclick="switchMainMode('edit')" 
-        class="pointer-events-auto py-2.5 px-5 rounded-full bg-zinc-900/90 border border-rose-500/40 text-rose-200 hover:text-white text-xs font-mono font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 active:scale-95 transition"
+        class="pointer-events-auto py-2.5 px-5 rounded-full bg-white border border-[#E6E2DD] text-[#18181B] hover:text-[#E63946] text-xs font-mono font-bold shadow-xl backdrop-blur-md flex items-center gap-2 active:scale-95 transition"
       >
-        <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-rose-400"></i>
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-[#E63946]"></i>
         <span>Return to Edit Form</span>
       </button>
     </div>
@@ -836,17 +842,17 @@
   <!-- 4. FULLSCREEN INTERACTIVE LIVE PREVIEW MODAL                              -->
   <!-- ========================================================================= -->
   <div id="fullscreen-preview-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md items-center justify-center p-2 sm:p-4 transition-opacity duration-300 opacity-0" aria-hidden="true" role="dialog">
-    <div class="relative w-full max-w-[440px] h-[92vh] max-h-[860px] bg-[#08080a] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+    <div class="relative w-full max-w-[440px] h-[92vh] max-h-[860px] bg-[#08080a] border border-[#E6E2DD] rounded-3xl overflow-hidden shadow-2xl flex flex-col">
       <!-- Modal Top Navigation Bar -->
-      <div class="h-12 border-b border-white/[0.08] bg-[#121215] px-4 flex items-center justify-between shrink-0">
+      <div class="h-12 border-b border-[#E6E2DD] bg-[#121215] px-4 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="font-mono text-xs font-bold text-white tracking-wide">Interactive Phone Preview</span>
+          <span class="font-mono text-xs font-bold text-[#18181B] tracking-wide">Interactive Phone Preview</span>
         </div>
         <button 
           type="button" 
           onclick="closeFullscreenPreviewModal()" 
-          class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center transition active:scale-95"
+          class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-[#3F3F46] hover:text-[#18181B] flex items-center justify-center transition active:scale-95"
           aria-label="Close Preview"
         >
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -869,35 +875,35 @@
   <!-- 5. SUCCESS MODAL (PUBLIC GIFT LINK & VIP RE-EDIT LINK)                    -->
   <!-- ========================================================================= -->
   <div id="success-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md items-center justify-center p-4">
-    <div class="max-w-md w-full glass-card rounded-3xl p-6 sm:p-7 border-rose-500/30 text-center space-y-5 shadow-2xl relative overflow-hidden">
+    <div class="max-w-md w-full alabaster-card rounded-3xl p-6 sm:p-7 border-rose-500/30 text-center space-y-5 shadow-2xl relative overflow-hidden">
       <!-- Confetti Glow Accent -->
       <div class="absolute -top-16 -right-16 w-32 h-32 bg-rose-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 mx-auto flex items-center justify-center text-white shadow-xl shadow-rose-950/60">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 mx-auto flex items-center justify-center text-[#18181B] shadow-xl shadow-rose-500/20">
         <i data-lucide="check" class="w-7 h-7 stroke-[3]"></i>
       </div>
 
       <div class="space-y-1">
-        <h3 id="modal-success-title" class="text-xl font-bold text-white tracking-tight">Your Keepsake is Ready!</h3>
-        <p id="modal-success-subtitle" class="text-xs text-zinc-400">
+        <h3 id="modal-success-title" class="text-xl font-bold text-[#18181B] tracking-tight">Your Keepsake is Ready!</h3>
+        <p id="modal-success-subtitle" class="text-xs text-[#71717A]">
           Save these 2 essential links. They have also been saved safely in your cloud draft.
         </p>
       </div>
 
       <!-- Link 1: Public Partner Gift Link -->
-      <div class="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/10 text-left space-y-1.5">
+      <div class="p-3.5 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] text-left space-y-1.5">
         <div class="flex items-center justify-between text-[11px] font-mono">
           <span class="text-rose-300 font-bold uppercase tracking-wider">1. Public Partner Gift Link</span>
-          <span class="text-zinc-500">Send to partner</span>
+          <span class="text-[#A1A1AA]">Send to partner</span>
         </div>
         <div class="flex items-center gap-2">
-          <p id="modal-public-url" class="font-mono text-xs text-zinc-200 truncate flex-1">
+          <p id="modal-public-url" class="font-mono text-xs text-[#27272A] truncate flex-1">
             https://.../u/alex-mia
           </p>
           <button 
             type="button" 
             onclick="copyLinkToClipboard('modal-public-url', this)" 
-            class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-white transition shrink-0"
+            class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-[#18181B] transition shrink-0"
           >
             Copy
           </button>
@@ -905,19 +911,19 @@
       </div>
 
       <!-- Link 2: VIP Re-Edit Link -->
-      <div class="p-3.5 rounded-2xl bg-zinc-950/80 border border-white/10 text-left space-y-1.5">
+      <div class="p-3.5 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] text-left space-y-1.5">
         <div class="flex items-center justify-between text-[11px] font-mono">
           <span class="text-amber-300 font-bold uppercase tracking-wider">2. VIP Re-Edit Secret Link</span>
-          <span class="text-zinc-500">Keep private</span>
+          <span class="text-[#A1A1AA]">Keep private</span>
         </div>
         <div class="flex items-center gap-2">
-          <p id="modal-reedit-url" class="font-mono text-xs text-zinc-200 truncate flex-1">
+          <p id="modal-reedit-url" class="font-mono text-xs text-[#27272A] truncate flex-1">
             https://.../editor-loveos.html?slug=...&amp;token=...
           </p>
           <button 
             type="button" 
             onclick="copyLinkToClipboard('modal-reedit-url', this)" 
-            class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-white transition shrink-0"
+            class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-[#18181B] transition shrink-0"
           >
             Copy
           </button>
@@ -929,7 +935,7 @@
         <a 
           id="modal-checkout-btn" 
           href="#" 
-          class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/60 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2 no-underline"
+          class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-[#18181B] font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2 no-underline"
         >
           <span>Complete Checkout on Gumroad ($18)</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -942,14 +948,14 @@
             class="py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-95"
           >
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Gift Card (PNG)</span>
+            <span>Heart QR (PNG)</span>
           </button>
 
           <a 
             id="modal-view-public-btn" 
             href="#" 
             target="_blank" 
-            class="py-2.5 px-3 rounded-xl border border-white/10 bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 no-underline"
+            class="py-2.5 px-3 rounded-xl border border-[#E6E2DD] bg-white/[0.05] hover:bg-white/[0.1] text-[#27272A] text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 no-underline"
           >
             <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
             <span>View Live Page</span>
@@ -960,7 +966,7 @@
       <button 
         type="button" 
         onclick="closeSuccessModal()" 
-        class="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition"
+        class="text-xs font-mono text-[#A1A1AA] hover:text-[#3F3F46] transition"
       >
         Close Window
       </button>
@@ -1150,19 +1156,14 @@
       if (stepNum < 1 || stepNum > 5) return;
       currentStep = stepNum;
 
-      // Update Step Tabs
+            // Update 5-Step Stepper Pills
       for (let i = 1; i <= 5; i++) {
-        const stepEl = document.getElementById(`step-${i}`);
-        const tabEl = document.getElementById(`step-tab-${i}`);
-        if (stepEl) {
-          if (i === stepNum) stepEl.classList.add('active');
-          else stepEl.classList.remove('active');
-        }
+        const tabEl = document.getElementById('step-tab-' + i);
         if (tabEl) {
           if (i === stepNum) {
-            tabEl.className = 'step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center font-bold text-rose-300 bg-rose-500/15 border border-rose-500/30 transition flex flex-col items-center gap-0.5';
+            tabEl.className = 'step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center font-bold text-white bg-[#E63946] shadow-sm transition flex items-center justify-center gap-1';
           } else {
-            tabEl.className = 'step-tab flex-1 min-w-[70px] py-1.5 px-2 rounded-xl text-center text-zinc-400 hover:text-white transition flex flex-col items-center gap-0.5';
+            tabEl.className = 'step-tab flex-1 min-w-[72px] py-1.5 px-2 rounded-xl text-center text-[#71717A] bg-white border border-[#E6E2DD] hover:text-[#18181B] transition flex items-center justify-center gap-1';
           }
         }
       }
@@ -1242,14 +1243,14 @@
       container.innerHTML = Object.entries(AUDIO_TRACKS).map(([id, track]) => {
         const isSelected = Number(id) === selectedAudioTrackId;
         return `
-          <div class="p-3 rounded-2xl border transition flex items-center justify-between gap-3 ${isSelected ? 'bg-amber-500/10 border-amber-500/40' : 'bg-zinc-950/70 border-zinc-800 hover:border-zinc-700'}">
+          <div class="p-3 rounded-2xl border transition flex items-center justify-between gap-3 ${isSelected ? 'bg-amber-500/10 border-amber-500/40' : 'bg-[#FAF8F6]/70 border-[#E6E2DD] hover:border-zinc-700'}">
             <div class="flex items-center gap-3 min-w-0 cursor-pointer flex-1" onclick="selectPresetTrack(${id})">
-              <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? 'bg-amber-400 text-zinc-950 font-bold' : 'bg-zinc-800 text-zinc-400'}">
+              <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? 'bg-amber-400 text-zinc-950 font-bold' : 'bg-zinc-800 text-[#71717A]'}">
                 <i data-lucide="music" class="w-4 h-4"></i>
               </div>
               <div class="min-w-0">
-                <p class="text-xs font-semibold text-white truncate">${escapeAttr(track.title)}</p>
-                <p class="text-[11px] text-zinc-400 truncate">${escapeAttr(track.artist)}</p>
+                <p class="text-xs font-semibold text-[#18181B] truncate">${escapeAttr(track.title)}</p>
+                <p class="text-[11px] text-[#71717A] truncate">${escapeAttr(track.artist)}</p>
               </div>
             </div>
 
@@ -1258,7 +1259,7 @@
               type="button" 
               onclick="toggleTrackAudioPreview(${id})" 
               id="preview-btn-${id}" 
-              class="px-2.5 py-1.5 rounded-xl border border-white/10 bg-white/[0.06] hover:bg-white/[0.12] text-xs font-mono text-zinc-200 transition shrink-0 active:scale-95 flex items-center gap-1"
+              class="px-2.5 py-1.5 rounded-xl border border-[#E6E2DD] bg-white/[0.06] hover:bg-white/[0.12] text-xs font-mono text-[#27272A] transition shrink-0 active:scale-95 flex items-center gap-1"
             >
               <i data-lucide="play" class="w-3 h-3 text-amber-300"></i>
               <span>Preview</span>
@@ -1358,44 +1359,44 @@
       const photos = currentFormData.polaroidPhotos || DEFAULT_LOVEOS_DATA.polaroidPhotos;
 
       container.innerHTML = photos.map((photo, idx) => `
-        <div class="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] space-y-3.5">
+        <div class="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E6E2DD] border border-[#E6E2DD] space-y-3.5">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-rose-300 uppercase tracking-wider font-mono">Polaroid #${idx + 1}</span>
-            <span id="photo-badge-${idx}" class="text-[10px] font-mono text-zinc-500">Ready</span>
+            <span id="photo-badge-${idx}" class="text-[10px] font-mono text-[#A1A1AA]">Ready</span>
           </div>
 
           <div class="flex items-start gap-3.5">
             <!-- Thumbnail Preview -->
-            <div class="w-20 h-20 rounded-xl overflow-hidden bg-zinc-900 border border-white/10 shrink-0 relative group">
+            <div class="w-20 h-20 rounded-xl overflow-hidden bg-white border border-[#E6E2DD] shrink-0 relative group">
               <img id="polaroid-img-preview-${idx}" src="${escapeAttr(photo.imageUrl)}" alt="Memory #${idx + 1}" class="w-full h-full object-cover">
             </div>
 
             <!-- Upload Button -->
             <div class="flex-1 space-y-1.5">
-              <label class="inline-flex items-center gap-1.5 py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-semibold text-zinc-200 cursor-pointer transition active:scale-95">
+              <label class="inline-flex items-center gap-1.5 py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-[#E6E2DD] text-xs font-semibold text-[#27272A] cursor-pointer transition active:scale-95">
                 <i data-lucide="image" class="w-3.5 h-3.5 text-rose-400"></i>
                 <span>Upload Photo (Auto-WebP)</span>
                 <input type="file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event, ${idx})">
               </label>
               <input type="hidden" id="photo-url-${idx}" value="${escapeAttr(photo.imageUrl)}">
-              <p class="text-[11px] text-zinc-500">Automatically compressed to fast lightweight WebP.</p>
+              <p class="text-[11px] text-[#A1A1AA]">Automatically compressed to fast lightweight WebP.</p>
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             <div>
-              <label class="block text-[11px] text-zinc-400 mb-1">Caption</label>
-              <input type="text" id="photo-caption-${idx}" value="${escapeAttr(photo.caption)}" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-400" oninput="updateQRCardPreview()">
+              <label class="block text-[11px] text-[#71717A] mb-1">Caption</label>
+              <input type="text" id="photo-caption-${idx}" value="${escapeAttr(photo.caption)}" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3 py-2 text-xs text-[#18181B] focus:outline-none focus:border-rose-400" oninput="updateQRCardPreview()">
             </div>
             <div>
-              <label class="block text-[11px] text-zinc-400 mb-1">Date &amp; Location</label>
-              <input type="text" id="photo-location-${idx}" value="${escapeAttr(photo.location || photo.date)}" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-400">
+              <label class="block text-[11px] text-[#71717A] mb-1">Date &amp; Location</label>
+              <input type="text" id="photo-location-${idx}" value="${escapeAttr(photo.location || photo.date)}" class="w-full bg-white border border-[#E6E2DD] rounded-xl px-3 py-2 text-xs text-[#18181B] focus:outline-none focus:border-rose-400">
             </div>
           </div>
 
           <div>
-            <label class="block text-[11px] text-zinc-400 mb-1">Handwritten Back-Note (Shown when tapped to flip)</label>
-            <textarea id="photo-note-${idx}" rows="2" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs text-zinc-200 focus:outline-none focus:border-rose-400">${escapeAttr(photo.note)}</textarea>
+            <label class="block text-[11px] text-[#71717A] mb-1">Handwritten Back-Note (Shown when tapped to flip)</label>
+            <textarea id="photo-note-${idx}" rows="2" class="w-full bg-white border border-[#E6E2DD] rounded-xl p-2.5 text-xs text-[#27272A] focus:outline-none focus:border-rose-400">${escapeAttr(photo.note)}</textarea>
           </div>
         </div>
       `).join('');
@@ -1456,7 +1457,7 @@
       const badge = document.getElementById(`photo-badge-${idx}`);
       if (badge) {
         badge.textContent = 'Compressing to WebP...';
-        badge.className = 'text-[10px] font-mono text-zinc-400';
+        badge.className = 'text-[10px] font-mono text-[#71717A]';
       }
 
       try {
@@ -1485,13 +1486,13 @@
 
       const envelopes = currentFormData.openWhenEnvelopes || DEFAULT_LOVEOS_DATA.openWhenEnvelopes;
       container.innerHTML = envelopes.map((env, idx) => `
-        <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
+        <div class="p-3 rounded-xl bg-white border border-[#E6E2DD] space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-white">Envelope 0${idx + 1}: ${escapeAttr(env.title)}</span>
+            <span class="text-xs font-semibold text-[#18181B]">Envelope 0${idx + 1}: ${escapeAttr(env.title)}</span>
             <span class="text-[10px] font-mono text-amber-300">${escapeAttr(env.tag)}</span>
           </div>
-          <input type="text" id="env-title-${idx}" value="${escapeAttr(env.title)}" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1.5 text-xs text-white">
-          <textarea id="env-letter-${idx}" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2.5 text-xs text-zinc-200">${escapeAttr(env.letter)}</textarea>
+          <input type="text" id="env-title-${idx}" value="${escapeAttr(env.title)}" class="w-full bg-[#FAF8F6] border border-[#E6E2DD] rounded-lg px-2.5 py-1.5 text-xs text-[#18181B]">
+          <textarea id="env-letter-${idx}" rows="3" class="w-full bg-[#FAF8F6] border border-[#E6E2DD] rounded-lg p-2.5 text-xs text-[#27272A]">${escapeAttr(env.letter)}</textarea>
           <input type="hidden" id="env-id-${idx}" value="${escapeAttr(env.id)}">
           <input type="hidden" id="env-tag-${idx}" value="${escapeAttr(env.tag)}">
           <input type="hidden" id="env-subtitle-${idx}" value="${escapeAttr(env.subtitle)}">
@@ -1506,13 +1507,13 @@
 
       const milestones = currentFormData.milestones || DEFAULT_LOVEOS_DATA.milestones;
       container.innerHTML = milestones.map((m, idx) => `
-        <div class="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
+        <div class="p-3 rounded-xl bg-white border border-[#E6E2DD] space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-white">Milestone 0${idx + 1}</span>
-            <input type="text" id="mile-label-${idx}" value="${escapeAttr(m.label)}" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-rose-300 w-32 font-bold">
+            <span class="text-xs font-semibold text-[#18181B]">Milestone 0${idx + 1}</span>
+            <input type="text" id="mile-label-${idx}" value="${escapeAttr(m.label)}" class="bg-[#FAF8F6] border border-[#E6E2DD] rounded-lg px-2 py-1 text-xs text-rose-300 w-32 font-bold">
           </div>
-          <input type="text" id="mile-date-${idx}" value="${escapeAttr(m.date)}" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-xs text-zinc-400 font-mono">
-          <textarea id="mile-story-${idx}" rows="2" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-2 text-xs text-zinc-200">${escapeAttr(m.story)}</textarea>
+          <input type="text" id="mile-date-${idx}" value="${escapeAttr(m.date)}" class="w-full bg-[#FAF8F6] border border-[#E6E2DD] rounded-lg px-2.5 py-1 text-xs text-[#71717A] font-mono">
+          <textarea id="mile-story-${idx}" rows="2" class="w-full bg-[#FAF8F6] border border-[#E6E2DD] rounded-lg p-2 text-xs text-[#27272A]">${escapeAttr(m.story)}</textarea>
           <input type="hidden" id="mile-id-${idx}" value="${escapeAttr(m.id)}">
         </div>
       `).join('');
@@ -1669,12 +1670,12 @@
 
       if (!clean) {
         fb.textContent = 'Please enter a personalized URL address.';
-        fb.className = 'text-[11px] mt-1.5 font-mono text-zinc-500';
+        fb.className = 'text-[11px] mt-1.5 font-mono text-[#A1A1AA]';
         return;
       }
 
       fb.textContent = 'Checking availability...';
-      fb.className = 'text-[11px] mt-1.5 font-mono text-zinc-400';
+      fb.className = 'text-[11px] mt-1.5 font-mono text-[#71717A]';
 
       if (slugCheckTimer) clearTimeout(slugCheckTimer);
       slugCheckTimer = setTimeout(async () => {
@@ -1690,7 +1691,7 @@
           }
         } catch (_) {
           fb.textContent = `✓ Address format valid`;
-          fb.className = 'text-[11px] mt-1.5 font-mono text-zinc-400';
+          fb.className = 'text-[11px] mt-1.5 font-mono text-[#71717A]';
         }
       }, 300);
 
@@ -1837,14 +1838,14 @@
         if (editView) editView.classList.add('hidden');
         if (previewView) previewView.classList.remove('hidden');
 
-        if (tabEdit) tabEdit.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white';
+        if (tabEdit) tabEdit.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-[#71717A] hover:text-[#18181B]';
         if (tabPreview) tabPreview.className = 'py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-200 shadow-sm';
       } else {
         if (previewView) previewView.classList.add('hidden');
         if (editView) editView.classList.remove('hidden');
 
         if (tabEdit) tabEdit.className = 'py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500/20 to-amber-500/15 border border-rose-500/30 text-rose-200 shadow-sm';
-        if (tabPreview) tabPreview.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white';
+        if (tabPreview) tabPreview.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-[#71717A] hover:text-[#18181B]';
       }
       lucide.createIcons();
     }

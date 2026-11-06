@@ -674,8 +674,8 @@
                 onclick="downloadGiftCardAdmin('${p.id}')" 
                 class="py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition active:scale-95"
               >
-                <i data-lucide="gift" class="w-3.5 h-3.5"></i>
-                <span>Gift Card PNG</span>
+                <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+                <span>Heart QR (PNG)</span>
               </button>
             </div>
 
@@ -815,10 +815,10 @@
 
                 <button 
                   onclick="downloadGiftCardAdmin('${p.id}')" 
-                  title="Download Keepsake QR Gift Card (PNG)" 
+                  title="Download Heart QR Code (PNG)" 
                   class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 transition"
                 >
-                  <i data-lucide="gift" class="w-3.5 h-3.5"></i>
+                  <i data-lucide="heart" class="w-3.5 h-3.5"></i>
                 </button>
 
                 ${!isPaid ? `
@@ -1004,21 +1004,21 @@ ourpage Keepsakes Team`;
       });
     }
 
-    // Download Keepsake Gift Card PNG
+    // Download Heart QR Code PNG
     function downloadGiftCardAdmin(projectId) {
       const project = projectsData.find(p => p.id === projectId);
       if (!project) return;
       if (typeof LoveOSGiftCard === 'undefined') {
-        showToast('Gift Card module is still initializing...', false);
+        showToast('Heart QR module is still initializing...', false);
         return;
       }
       const liveUrl = `${window.location.origin}/u/${project.slug}`;
-      showToast(`Generating Keepsake Gift Card for /u/${project.slug}...`);
+      showToast(`Generating Heart QR for /u/${project.slug}...`);
       LoveOSGiftCard.downloadGiftCard(project.configData || project.config || {}, liveUrl)
-        .then(() => showToast('Gift Card PNG downloaded successfully!'))
+        .then(() => showToast('Heart QR PNG downloaded successfully!'))
         .catch(err => {
           console.error(err);
-          showToast('Failed to generate gift card.', false);
+          showToast('Failed to generate heart QR.', false);
         });
     }
 

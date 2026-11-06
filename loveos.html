@@ -61,7 +61,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      background-color: #08080a;
+      background-color: #141115;
       color: #f4f4f5;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
@@ -88,7 +88,7 @@
 
     /* Core iOS Liquid Glass Surface (Cards) */
     .ios-glass-card {
-      background: rgba(18, 18, 23, 0.76);
+      background: rgba(28, 24, 30, 0.82);
       backdrop-filter: blur(28px) saturate(190%);
       -webkit-backdrop-filter: blur(28px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -101,7 +101,7 @@
 
     /* Floating Dock Glass */
     .ios-dock-glass {
-      background: rgba(15, 15, 20, 0.84);
+      background: rgba(24, 20, 26, 0.88);
       backdrop-filter: blur(30px) saturate(200%);
       -webkit-backdrop-filter: blur(30px) saturate(200%);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -485,7 +485,7 @@
   <script src="/loveos-giftcard.js"></script>
 </head>
 
-<body class="bg-obsidian text-zinc-100 antialiased selection:bg-rose-500/30 selection:text-rose-200">
+<body class="bg-[#141115] text-zinc-100 antialiased selection:bg-rose-500/30 selection:text-rose-200">
 
   <!-- ==========================================================================
        CENTRALIZED CONFIGURATION ARCHITECTURE: window.COUPLE_DATA
@@ -718,7 +718,7 @@
   <!-- ==========================================================================
        CINEMATIC FIRST-OPEN EXPERIENCE (INTRO OVERLAY)
        ========================================================================== -->
-  <div id="cinematic-intro" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#08080a] select-none" aria-modal="true" role="dialog">
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#141115] select-none" aria-modal="true" role="dialog">
     <div class="relative w-full max-w-[360px] text-center flex flex-col items-center">
       <!-- Breathing Ambient Light Behind Heart -->
       <div class="w-24 h-24 rounded-full bg-rose-500/20 blur-2xl absolute -top-4 pointer-events-none"></div>
@@ -731,14 +731,14 @@
       </div>
 
       <!-- Recipient's Name in Elegant Instrument Serif -->
-      <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-rose-300/80 mb-1">A Private Keepsake</p>
+      <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#E63946] mb-1">a tiny phone for us</p>
       <h1 id="intro-partner-name" class="font-serif italic text-3xl sm:text-4xl text-zinc-100 tracking-tight leading-tight mb-1">
         For Mia
       </h1>
 
       <!-- Short Emotional Introduction -->
       <p class="text-xs text-zinc-400 leading-relaxed max-w-[280px] mb-3.5 font-sans">
-        “A little place, made just for us.”
+        every little moment led me to you
       </p>
 
       <!-- ====================================================================
@@ -754,7 +754,7 @@
         </div>
 
         <p id="passcode-hint-text" class="text-[11px] font-mono text-zinc-400 tracking-wide text-center">
-          Enter our anniversary passcode (MMDD)
+          enter our date (MMDD)
         </p>
 
         <!-- 3x4 iOS Lockscreen Circular Keypad -->
@@ -786,7 +786,7 @@
           <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
           </svg>
-          <span>Or Tap Here to Unlock Instantly</span>
+          <span>or tap here to open</span>
         </button>
 
         <button id="skip-intro-btn" type="button" class="hidden"></button>
@@ -797,13 +797,13 @@
   <!-- ==========================================================================
        OUTER VIEWPORT CONTAINER (430px iPhone Frame Lock)
        ========================================================================== -->
-  <div class="relative w-full min-h-dvh bg-obsidian flex justify-center overflow-x-hidden">
+  <div class="relative w-full min-h-dvh bg-[#141115] flex justify-center overflow-x-hidden">
     
     <!-- Multi-Layer Translucent Ambient Glow Behind Container -->
     <div class="pointer-events-none fixed inset-0 overflow-hidden z-0 flex justify-center">
       <div class="w-full max-w-[430px] relative h-full">
-        <div class="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-rose-500/12 blur-[100px]"></div>
-        <div class="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-amber-500/10 blur-[110px]"></div>
+        <div class="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#E63946]/18 blur-[100px]"></div>
+        <div class="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#F26A7E]/12 blur-[110px]"></div>
         <div class="absolute bottom-20 -left-12 w-80 h-80 rounded-full bg-indigo-500/10 blur-[120px]"></div>
       </div>
     </div>
@@ -986,7 +986,7 @@
         <div class="w-full space-y-2">
           <button id="btn-download-giftcard-png" type="button" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/50 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>Download LoveOS Gift Card (PNG)</span>
+            <span>Download Heart QR (PNG)</span>
           </button>
           <p class="text-[10px] font-mono text-zinc-500 text-center">
             Format: High-Res 1080x1350px • Ready for Instagram or Print
@@ -1745,16 +1745,7 @@
               </div>
             </div>
 
-            <!-- Chapter Progression Indicator Row -->
-            <div class="flex items-center justify-between px-3.5 pt-1.5 pb-0.5">
-              <div class="inline-flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-                <span>CHAPTER <span id="chapter-progress-label">1 OF 5</span></span>
-              </div>
-              <button id="unlock-all-chapters-btn" type="button" onclick="window.unlockAllChapters()" class="text-[10px] font-mono text-rose-300 hover:text-white py-1 px-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-rose-500/25 transition active:scale-95 flex items-center gap-1 shadow-sm">
-                <span>Unlock All Sections</span>
-              </button>
-            </div>
+
           </header>
 
           <!-- ==================================================================
@@ -1782,7 +1773,8 @@
               For ${escapeHtml(data.partnerName)} — every little moment led me to you.
             </h1>
 
-            <!-- Live Ticking Relationship Counter (Days, Hours, Minutes, Seconds) -->
+            <div class="text-center pb-2"><span class="font-mono text-xs uppercase tracking-widest text-[#E63946] font-semibold">been yours for</span></div>
+            <!-- Live Ticking Relationship Counter -->
             <div class="grid grid-cols-4 gap-2 p-2.5 rounded-2xl bg-black/40 border border-white/[0.06]">
               <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02]">
                 <span id="counter-days" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">000</span>
@@ -1805,7 +1797,7 @@
             <!-- Horizontal Interactive Milestone Pills -->
             <div class="mt-4">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Our Core Milestones</span>
+                <span class="text-[11px] font-medium uppercase tracking-wider text-zinc-400">our milestones</span>
                 <span class="text-[11px] text-zinc-500">Tap a pill to view</span>
               </div>
               <div id="milestone-pills-row" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -1842,7 +1834,7 @@
                 <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                 </svg>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Mini Vinyl &amp; Memory Deck</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">on repeat</h2>
               </div>
               <span id="audio-status-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 uppercase tracking-wider">Paused</span>
             </div>
@@ -1853,7 +1845,7 @@
               <div class="relative w-20 h-20 shrink-0 flex items-center justify-center">
                 <div id="vinyl-disc-el" class="vinyl-disc vinyl-grooves w-20 h-20 rounded-full flex items-center justify-center relative border border-white/10">
                   <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center shadow-inner">
-                    <div class="w-2 h-2 rounded-full bg-obsidian"></div>
+                    <div class="w-2 h-2 rounded-full bg-[#141115]"></div>
                   </div>
                 </div>
                 <!-- Tonearm SVG Overlay -->
@@ -1914,18 +1906,12 @@
             </div>
           </section>
 
-          <!-- Chapter 1 Continue Button -->
-          <div id="continue-chapter-1" class="chapter-continue-wrap pt-2 pb-1">
-            <button type="button" onclick="window.revealChapter(2)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
-              <span>See How It Started &rarr;</span>
-            </button>
           </div>
-        </div>
 
         <!-- ==================================================================
              STORY CHAPTER 2: OUR FIRST TEXTS & UNSENT DRAFTS
              ================================================================== -->
-        <div id="story-chapter-2" class="story-chapter chapter-hidden flex flex-col gap-5">
+        <div id="story-chapter-2" class="story-chapter flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 3: "HOW IT STARTED" — iMESSAGE REPLAY & UNSENT DRAFTS
@@ -1951,7 +1937,7 @@
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <span>First Texts</span>
+                <span>how it started</span>
               </button>
               <button
                 type="button"
@@ -1961,7 +1947,7 @@
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
                 </svg>
-                <span>Unsent Drafts (${(data.unsentDrafts || []).length})</span>
+                <span>texts i almost sent</span>
               </button>
             </div>
 
@@ -2033,18 +2019,12 @@
             </div>
           </section>
 
-          <!-- Chapter 2 Continue Button -->
-          <div id="continue-chapter-2" class="chapter-continue-wrap pt-2 pb-1">
-            <button type="button" onclick="window.revealChapter(3)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
-              <span>Open Our Camera Roll &rarr;</span>
-            </button>
           </div>
-        </div>
 
         <!-- ==================================================================
              STORY CHAPTER 3: 3D POLAROID MEMORIES
              ================================================================== -->
-        <div id="story-chapter-3" class="story-chapter chapter-hidden flex flex-col gap-5">
+        <div id="story-chapter-3" class="story-chapter flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 4: 3D POLAROID CAMERA ROLL (SWIPEABLE & FLIPPABLE)
@@ -2055,12 +2035,12 @@
                 <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>
                 </svg>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Polaroid Camera Roll</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">camera roll</h2>
               </div>
 
               <!-- Tap photo to flip indicator -->
               <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.06] text-[11px] text-zinc-300">
-                <span>Swipe or tap to flip</span>
+                <span>tap to flip</span>
                 <svg class="w-3.5 h-3.5 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/>
                 </svg>
@@ -2111,18 +2091,12 @@
             </div>
           </section>
 
-          <!-- Chapter 3 Continue Button -->
-          <div id="continue-chapter-3" class="chapter-continue-wrap pt-2 pb-1">
-            <button type="button" onclick="window.revealChapter(4)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
-              <span>Unseal Your Letters &rarr;</span>
-            </button>
           </div>
-        </div>
 
         <!-- ==================================================================
              STORY CHAPTER 4: OPEN WHEN LETTERS & SECRET VOUCHER
              ================================================================== -->
-        <div id="story-chapter-4" class="story-chapter chapter-hidden flex flex-col gap-5">
+        <div id="story-chapter-4" class="story-chapter flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 5: "OPEN WHEN..." MOOD ENVELOPES (2x2 GRID)
@@ -2133,7 +2107,7 @@
                 <svg class="w-4 h-4 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                 </svg>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">"Open When..." Envelopes</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">open when...</h2>
               </div>
               <span class="font-mono text-[10px] text-zinc-500">4 Sealed Letters</span>
             </div>
@@ -2181,10 +2155,10 @@
                 <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
                 </svg>
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">Secret Love Voucher</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">scratch for a date night favor</h2>
               </div>
               <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
-                Scratch to Unlock
+                scratch to reveal
               </span>
             </div>
 
@@ -2219,18 +2193,12 @@
             </p>
           </section>
 
-          <!-- Chapter 4 Continue Button -->
-          <div id="continue-chapter-4" class="chapter-continue-wrap pt-2 pb-1">
-            <button type="button" onclick="window.revealChapter(5)" class="chapter-continue-btn w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-rose-500/25 via-rose-500/40 to-amber-500/25 hover:from-rose-500/35 hover:to-amber-500/35 border border-rose-400/40 text-rose-100 hover:text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/40 transition active:scale-95 flex items-center justify-center gap-2">
-              <span>Read My 3AM Note &rarr;</span>
-            </button>
           </div>
-        </div>
 
         <!-- ==================================================================
              STORY CHAPTER 5 (FINALE): 3AM CONFESSION, WORDS & CHECKLIST
              ================================================================== -->
-        <div id="story-chapter-5" class="story-chapter chapter-hidden flex flex-col gap-5">
+        <div id="story-chapter-5" class="story-chapter flex flex-col gap-5">
 
           <!-- ==================================================================
                SECTION 6: 3AM NOTES APP CONFESSION, SECRET REVEAL & FUTURE CHECKLIST
@@ -2241,10 +2209,10 @@
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="m15 18-6-6 6-6"/>
                 </svg>
-                <span>iCloud Notes</span>
+                <span>notes app</span>
               </div>
               <div class="font-mono text-[10px] text-zinc-400">
-                Edited 3:12 AM • ${wordCount} words
+                edited at 2:14 am
               </div>
               <div class="flex items-center gap-2 text-notesAmber">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -2260,7 +2228,7 @@
                   Pinned Note • For ${escapeHtml(data.partnerName)}
                 </span>
                 <h2 class="font-serif italic text-2xl sm:text-3xl text-white mt-2">
-                  Things I don't say out loud enough
+                  things i don't say out loud enough
                 </h2>
               </div>
 
@@ -2308,7 +2276,7 @@ ${escapeHtml(data.mainLoveLetter)}
                 </div>
               </div>
 
-              <!-- Our Shared Future Checklist (Persisted in localStorage with unique couple key) -->
+              <!-- things we still have to do (Persisted in localStorage with unique couple key) -->
               <div class="mt-6 pt-5 border-t border-white/[0.08]">
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center gap-2">
@@ -2352,7 +2320,7 @@ ${escapeHtml(data.mainLoveLetter)}
           <footer class="pt-2 pb-6 text-center select-none space-y-3">
             <button id="open-giftcard-btn" type="button" class="w-full max-w-[340px] mx-auto py-3 px-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-zinc-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
               <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
-              <span>Download Our Keepsake QR Card (PNG)</span>
+              <span>Download Heart QR (PNG)</span>
             </button>
 
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">

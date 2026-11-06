@@ -1,6 +1,7 @@
 /**
- * LoveOS Keepsake QR Gift Card Generator (1080x1350px Portrait IG / Print)
- * Pure HTML5 Canvas • Luxury Obsidian & Rose Gold Liquid Glass Aesthetic
+ * Heart-Shaped QR Code Generator for OurPage LoveOS
+ * Generates an iconic, camera-scannable Heart QR Code on pure white canvas
+ * Primary Color: #E63946 (Crimson Rose)
  */
 
 (function (root, factory) {
@@ -11,50 +12,28 @@
   }
 })(typeof self !== 'undefined' ? self : this, function () {
 
-  // Helper: Draw rounded rectangle path
-  function roundRect(ctx, x, y, width, height, radius) {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-  }
-
-  // Load image safely with timeout and CORS
-  function loadImage(src, timeoutMs = 3500) {
+  // Load image safely with timeout
+  function loadImage(src, timeoutMs = 4000) {
     return new Promise((resolve) => {
       if (!src) return resolve(null);
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      let timedOut = false;
+      let done = false;
       const timer = setTimeout(() => {
-        timedOut = true;
-        resolve(null);
+        if (!done) { done = true; resolve(null); }
       }, timeoutMs);
 
       img.onload = () => {
-        if (!timedOut) {
-          clearTimeout(timer);
-          resolve(img);
-        }
+        if (!done) { done = true; clearTimeout(timer); resolve(img); }
       };
       img.onerror = () => {
-        if (!timedOut) {
-          clearTimeout(timer);
-          resolve(null);
-        }
+        if (!done) { done = true; clearTimeout(timer); resolve(null); }
       };
       img.src = src;
     });
   }
 
-  // Generate canvas (1080 x 1350)
+  // Draw Heart QR Code on Canvas
   async function generateCanvas(data, targetUrl) {
     const coupleData = data || {};
     const partnerName = coupleData.partnerName || 'Mia';
@@ -63,300 +42,190 @@
     const anniversary = coupleData.anniversaryDate || '2024-10-14';
 
     const origin = (typeof window !== 'undefined' && window.location.origin) ? window.location.origin : 'https://studio402-keepsakes.vercel.app';
-    const finalUrl = targetUrl || `${origin}/v/${slug}`;
+    const finalUrl = targetUrl || `${origin}/u/${slug}`;
 
     const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1350;
+    canvas.width = 1000;
+    canvas.height = 1150;
     const ctx = canvas.getContext('2d');
 
-    // 1. Base Obsidian Background
-    ctx.fillStyle = '#08080a';
-    ctx.fillRect(0, 0, 1080, 1350);
+    // 1. Clean Warm Alabaster Background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, 1000, 1150);
 
-    // 2. Ambient Studio Lighting (Rose & Amber Radial Glows)
-    const glow1 = ctx.createRadialGradient(240, 260, 20, 240, 260, 480);
-    glow1.addColorStop(0, 'rgba(244, 63, 94, 0.18)');
-    glow1.addColorStop(1, 'rgba(244, 63, 94, 0)');
-    ctx.fillStyle = glow1;
-    ctx.fillRect(0, 0, 1080, 1350);
+    // Subtle outer card frame
+    ctx.strokeStyle = '#F0ECE8';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(24, 24, 952, 1102);
 
-    const glow2 = ctx.createRadialGradient(840, 1100, 20, 840, 1100, 520);
-    glow2.addColorStop(0, 'rgba(245, 158, 11, 0.14)');
-    glow2.addColorStop(1, 'rgba(245, 158, 11, 0)');
-    ctx.fillStyle = glow2;
-    ctx.fillRect(0, 0, 1080, 1350);
-
-    // 3. Delicate Liquid Glass Outer Frame
+    // 2. Top Header Typography (US Editorial Natural)
     ctx.save();
-    roundRect(ctx, 48, 48, 984, 1254, 44);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.restore();
+    ctx.textAlign = 'center';
 
-    // 4. Top Header Badge: "LOVEOS PRIVATE ARCHIVE"
-    ctx.save();
-    const badgeW = 440;
-    const badgeH = 38;
-    const badgeX = (1080 - badgeW) / 2;
-    const badgeY = 90;
-    roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 19);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fda4af';
+    // Subtitle pill
+    ctx.fillStyle = '#E63946';
     ctx.font = '600 13px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.letterSpacing = '3px';
-    ctx.fillText('✦ LOVEOS PRIVATE ARCHIVE ✦', 540, badgeY + badgeH / 2 + 1);
+    ctx.fillText('OUR TINY PHONE • PRIVATE ARCHIVE', 500, 75);
+
+    // Title
+    ctx.fillStyle = '#141115';
+    ctx.font = 'ital 52px "Instrument Serif", Georgia, serif';
+    ctx.fillText(`for ${partnerName}`, 500, 130);
+
+    ctx.fillStyle = '#71717A';
+    ctx.font = '400 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('every little moment led me to you', 500, 160);
     ctx.restore();
 
-    // 5. Title & Subtitle
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'italic 74px "Instrument Serif", Georgia, serif';
-    ctx.fillText(`For ${partnerName}`, 540, 198);
-
-    ctx.fillStyle = '#a1a1aa';
-    ctx.font = '500 20px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('“Every little moment led me to you.”', 540, 242);
-    ctx.restore();
-
-    // 6. Polaroid Photo Frame (Tactile #faf8f5 Warm Paper with slight tilt)
-    ctx.save();
-    const polaroidW = 560;
-    const polaroidH = 540;
-    const polaroidX = (1080 - polaroidW) / 2;
-    const polaroidY = 280;
-
-    // Subtle tilt
-    ctx.translate(540, polaroidY + polaroidH / 2);
-    ctx.rotate(-1.2 * Math.PI / 180);
-    ctx.translate(-540, -(polaroidY + polaroidH / 2));
-
-    // Shadow
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-    ctx.shadowBlur = 32;
-    ctx.shadowOffsetY = 16;
-
-    // Paper background
-    roundRect(ctx, polaroidX, polaroidY, polaroidW, polaroidH, 18);
-    ctx.fillStyle = '#faf8f5';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(214, 211, 209, 0.8)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // Reset shadow for image
-    ctx.shadowColor = 'transparent';
-
-    // Photo Box Inside Polaroid
-    const photoW = 504;
-    const photoH = 390;
-    const photoX = polaroidX + (polaroidW - photoW) / 2;
-    const photoY = polaroidY + 28;
-
-    roundRect(ctx, photoX, photoY, photoW, photoH, 10);
-    ctx.save();
-    ctx.clip();
-
-    const photoObj = (coupleData.polaroidPhotos && coupleData.polaroidPhotos[0]) ? coupleData.polaroidPhotos[0] : null;
-    const photoImg = photoObj ? await loadImage(photoObj.imageUrl) : null;
-
-    if (photoImg) {
-      // Draw image cover-fitted
-      const imgRatio = photoImg.width / photoImg.height;
-      const boxRatio = photoW / photoH;
-      let drawW, drawH, drawX, drawY;
-      if (imgRatio > boxRatio) {
-        drawH = photoH;
-        drawW = photoH * imgRatio;
-        drawX = photoX - (drawW - photoW) / 2;
-        drawY = photoY;
-      } else {
-        drawW = photoW;
-        drawH = photoW / imgRatio;
-        drawX = photoX;
-        drawY = photoY - (drawH - photoH) / 2;
-      }
-      ctx.drawImage(photoImg, drawX, drawY, drawW, drawH);
-    } else {
-      // Sunset Gradient Fallback with Heart
-      const fallGrad = ctx.createLinearGradient(photoX, photoY, photoX + photoW, photoY + photoH);
-      fallGrad.addColorStop(0, '#f43f5e');
-      fallGrad.addColorStop(0.6, '#fb7185');
-      fallGrad.addColorStop(1, '#f59e0b');
-      ctx.fillStyle = fallGrad;
-      ctx.fillRect(photoX, photoY, photoW, photoH);
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.font = '48px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('♥', photoX + photoW / 2, photoY + photoH / 2 + 16);
-    }
-
-    // Photo Date Overlay (bottom right corner of photo)
-    if (photoObj && photoObj.date) {
-      ctx.fillStyle = 'rgba(245, 158, 11, 0.95)';
-      ctx.font = '600 12px "JetBrains Mono", monospace';
-      ctx.textAlign = 'right';
-      ctx.fillText(photoObj.date, photoX + photoW - 14, photoY + photoH - 14);
-    }
-    ctx.restore();
-
-    // Polaroid Bottom Handwritten Caption
-    ctx.fillStyle = '#1c1917';
-    ctx.font = '600 32px "Caveat", cursive';
-    ctx.textAlign = 'left';
-    const captionText = (photoObj && photoObj.caption) ? photoObj.caption : 'Our golden hour';
-    ctx.fillText(captionText, photoX + 4, polaroidY + polaroidH - 45);
-
-    // Location / Signoff on right
-    ctx.fillStyle = '#78716c';
-    ctx.font = '500 12px "JetBrains Mono", monospace';
-    ctx.textAlign = 'right';
-    const locText = (photoObj && photoObj.location) ? photoObj.location : `With love, ${creatorName}`;
-    ctx.fillText(locText, photoX + photoW - 4, polaroidY + polaroidH - 45);
-
-    ctx.restore(); // Restore tilt
-
-    // 7. Mini Vinyl Music Bar Widget
-    ctx.save();
-    const musicW = 740;
-    const musicH = 82;
-    const musicX = (1080 - musicW) / 2;
-    const musicY = 865;
-
-    roundRect(ctx, musicX, musicY, musicW, musicH, 22);
-    ctx.fillStyle = 'rgba(24, 24, 27, 0.75)';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // Vinyl Disc
-    const discX = musicX + 46;
-    const discY = musicY + musicH / 2;
-    ctx.beginPath();
-    ctx.arc(discX, discY, 24, 0, Math.PI * 2);
-    ctx.fillStyle = '#09090b';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(discX, discY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#f43f5e';
-    ctx.fill();
-
-    // Track Title & Artist
-    const songData = coupleData.songData || {};
-    const songTitle = songData.title || '2:14 AM in Your Car';
-    const songArtist = songData.artist || `Late Night Tape — ${creatorName} & ${partnerName}`;
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '600 18px "Plus Jakarta Sans", sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(songTitle, musicX + 88, musicY + 36);
-
-    ctx.fillStyle = '#a1a1aa';
-    ctx.font = '400 14px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(songArtist, musicX + 88, musicY + 59);
-
-    // Waveform bars on the right
-    const waveX = musicX + musicW - 54;
-    const waveY = musicY + musicH / 2;
-    ctx.fillStyle = '#f43f5e';
-    const barHeights = [14, 26, 34, 20, 28, 16];
-    barHeights.forEach((h, i) => {
-      roundRect(ctx, waveX - (barHeights.length - i) * 7, waveY - h / 2, 3.5, h, 2);
-      ctx.fill();
-    });
-    ctx.restore();
-
-    // 8. Bottom QR Code & Keepsake Unlock Card
-    ctx.save();
-    const qrCardW = 740;
-    const qrCardH = 240;
-    const qrCardX = (1080 - qrCardW) / 2;
-    const qrCardY = 975;
-
-    roundRect(ctx, qrCardX, qrCardY, qrCardW, qrCardH, 28);
-    ctx.fillStyle = 'rgba(16, 16, 20, 0.85)';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // QR Code Frame (Pure White for Instant Camera Recognition)
-    const qrBoxSize = 180;
-    const qrBoxX = qrCardX + 30;
-    const qrBoxY = qrCardY + (qrCardH - qrBoxSize) / 2;
-
-    roundRect(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 18);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-
-    // Load QR Code Image from clean high-res API (or fallback canvas generator)
-    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=${encodeURIComponent(finalUrl)}&margin=1`;
+    // 3. Heart-Shaped QR Construction
+    // Fetch live high-resolution scannable QR Code (ECC Level High = 30% error tolerance)
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(finalUrl)}&color=230-57-70&bgcolor=255-255-255&margin=2&ecc=H`;
     const qrImg = await loadImage(qrApiUrl);
 
-    if (qrImg) {
-      ctx.drawImage(qrImg, qrBoxX + 10, qrBoxY + 10, qrBoxSize - 20, qrBoxSize - 20);
-    } else {
-      // Fallback: draw stylish placeholder QR block
-      ctx.fillStyle = '#09090b';
-      // Corners
-      ctx.fillRect(qrBoxX + 16, qrBoxY + 16, 42, 42);
-      ctx.fillRect(qrBoxX + qrBoxSize - 58, qrBoxY + 16, 42, 42);
-      ctx.fillRect(qrBoxX + 16, qrBoxY + qrBoxSize - 58, 42, 42);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(qrBoxX + 24, qrBoxY + 24, 26, 26);
-      ctx.fillRect(qrBoxX + qrBoxSize - 50, qrBoxY + 24, 26, 26);
-      ctx.fillRect(qrBoxX + 24, qrBoxY + qrBoxSize - 50, 26, 26);
-      ctx.fillStyle = '#09090b';
-      ctx.fillRect(qrBoxX + 30, qrBoxY + 30, 14, 14);
-      ctx.fillRect(qrBoxX + qrBoxSize - 44, qrBoxY + 30, 14, 14);
-      ctx.fillRect(qrBoxX + 30, qrBoxY + qrBoxSize - 44, 14, 14);
-      // Center Scan Icon
-      ctx.fillStyle = '#f43f5e';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('SCAN', qrBoxX + qrBoxSize / 2, qrBoxY + qrBoxSize / 2 + 6);
+    const centerX = 500;
+    const centerY = 560;
+    const qrSize = 440; // Diamond QR square size
+
+    // Draw the two heart lobes on top (left lobe & right lobe) with decorative QR pixel modules
+    const moduleSize = 16;
+    ctx.fillStyle = '#E63946';
+
+    function drawPixel(gx, gy, w = 1, h = 1) {
+      ctx.fillRect(gx, gy, w * moduleSize, h * moduleSize);
     }
 
-    // Right Column Text beside QR Code
-    const textX = qrBoxX + qrBoxSize + 28;
-    ctx.textAlign = 'left';
+    // A. Left Heart Lobe Decorative QR Grid
+    const leftLobeX = 220;
+    const leftLobeY = 250;
+    
+    // Outer arc of left lobe
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(360, 410, 170, Math.PI * 0.75, Math.PI * 1.95, false);
+    ctx.lineTo(500, 420);
+    ctx.closePath();
+    ctx.clip();
 
-    // Badge
-    ctx.fillStyle = 'rgba(244, 63, 94, 0.9)';
-    ctx.font = '600 13px "JetBrains Mono", monospace';
-    ctx.fillText('LIVE INTERACTIVE KEEPSAKE', textX, qrCardY + 58);
+    // Left lobe QR modules & finder pattern motif
+    // Concentric square motif at left top
+    ctx.fillRect(250, 290, 7 * moduleSize, 7 * moduleSize);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(250 + moduleSize, 290 + moduleSize, 5 * moduleSize, 5 * moduleSize);
+    ctx.fillStyle = '#E63946';
+    ctx.fillRect(250 + 2 * moduleSize, 290 + 2 * moduleSize, 3 * moduleSize, 3 * moduleSize);
 
-    // Call to action
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 24px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Scan with phone camera', textX, qrCardY + 95);
-    ctx.fillText('to unlock our tiny phone', textX, qrCardY + 125);
+    // Pixel patterns in left lobe
+    const leftPixels = [
+      [220, 360], [240, 380], [260, 360], [280, 420], [300, 400], [320, 380],
+      [360, 270], [380, 270], [400, 270], [420, 290], [380, 310], [400, 330],
+      [340, 350], [360, 370], [380, 390], [420, 370], [440, 350], [460, 330],
+      [370, 440], [390, 420], [410, 440], [430, 420], [450, 400], [470, 380],
+      [240, 430], [260, 450], [280, 470], [300, 490], [320, 510],
+      [350, 310], [350, 330], [410, 350], [430, 310], [450, 290], [470, 310],
+      [300, 350], [320, 330], [340, 310], [280, 370], [290, 390],
+      [420, 450], [440, 430], [460, 450], [480, 430], [470, 460]
+    ];
+    leftPixels.forEach(([px, py]) => ctx.fillRect(px, py, moduleSize, moduleSize));
+    ctx.restore();
 
-    // Meta details (Anniversary & Slug)
-    ctx.fillStyle = '#a1a1aa';
-    ctx.font = '500 14px "JetBrains Mono", monospace';
+    // B. Right Heart Lobe Decorative QR Grid
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(640, 410, 170, Math.PI * 1.05, Math.PI * 0.25, false);
+    ctx.lineTo(500, 420);
+    ctx.closePath();
+    ctx.clip();
+
+    // Right lobe concentric square motif
+    ctx.fillRect(630, 290, 7 * moduleSize, 7 * moduleSize);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(630 + moduleSize, 290 + moduleSize, 5 * moduleSize, 5 * moduleSize);
+    ctx.fillStyle = '#E63946';
+    ctx.fillRect(630 + 2 * moduleSize, 290 + 2 * moduleSize, 3 * moduleSize, 3 * moduleSize);
+
+    // Pixel patterns in right lobe
+    const rightPixels = [
+      [540, 270], [560, 270], [580, 270], [600, 290], [560, 310], [580, 330],
+      [520, 350], [540, 370], [560, 390], [600, 370], [620, 350], [640, 330],
+      [510, 440], [530, 420], [550, 440], [570, 420], [590, 400], [610, 380],
+      [720, 360], [740, 380], [760, 360], [700, 420], [680, 400], [660, 380],
+      [740, 430], [720, 450], [700, 470], [680, 490], [660, 510],
+      [530, 310], [550, 330], [590, 350], [610, 310], [630, 290], [650, 310],
+      [680, 350], [660, 330], [640, 310], [700, 370], [710, 390],
+      [520, 450], [540, 430], [560, 450], [580, 430], [530, 460]
+    ];
+    rightPixels.forEach(([px, py]) => ctx.fillRect(px, py, moduleSize, moduleSize));
+    ctx.restore();
+
+    // C. Center Rotated Diamond QR Code (Scannable Core)
+    ctx.save();
+    ctx.translate(centerX, centerY + 40);
+    ctx.rotate(45 * Math.PI / 180);
+
+    if (qrImg) {
+      // Draw actual scannable QR code in diamond orientation
+      ctx.drawImage(qrImg, -qrSize / 2, -qrSize / 2, qrSize, qrSize);
+    } else {
+      // Fallback: draw diamond QR structure
+      ctx.fillStyle = '#E63946';
+      ctx.fillRect(-qrSize / 2, -qrSize / 2, qrSize, qrSize);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(-qrSize / 2 + 16, -qrSize / 2 + 16, qrSize - 32, qrSize - 32);
+      ctx.fillStyle = '#E63946';
+      // 3 Finder patterns
+      const fs = 70;
+      ctx.fillRect(-qrSize / 2 + 20, -qrSize / 2 + 20, fs, fs);
+      ctx.fillRect(qrSize / 2 - 20 - fs, -qrSize / 2 + 20, fs, fs);
+      ctx.fillRect(-qrSize / 2 + 20, qrSize / 2 - 20 - fs, fs, fs);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(-qrSize / 2 + 32, -qrSize / 2 + 32, fs - 24, fs - 24);
+      ctx.fillRect(qrSize / 2 - 20 - fs + 12, -qrSize / 2 + 32, fs - 24, fs - 24);
+      ctx.fillRect(-qrSize / 2 + 32, qrSize / 2 - 20 - fs + 12, fs - 24, fs - 24);
+      ctx.fillStyle = '#E63946';
+      ctx.fillRect(-qrSize / 2 + 42, -qrSize / 2 + 42, fs - 44, fs - 44);
+      ctx.fillRect(qrSize / 2 - 20 - fs + 22, -qrSize / 2 + 42, fs - 44, fs - 44);
+      ctx.fillRect(-qrSize / 2 + 42, qrSize / 2 - 20 - fs + 22, fs - 44, fs - 44);
+    }
+    ctx.restore();
+
+    // 4. Subtle Outer Heart Cutout Mask / Contour (Ensures crisp heart silhouette)
+    ctx.save();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 4;
+    // Clear any modules protruding outside the heart silhouette
+    // Bottom tip cleanup
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.moveTo(100, 600);
+    ctx.lineTo(500, 920);
+    ctx.lineTo(100, 920);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(900, 600);
+    ctx.lineTo(500, 920);
+    ctx.lineTo(900, 920);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // 5. Bottom Instructions (US Minimalist)
+    ctx.save();
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#141115';
+    ctx.font = '700 20px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('scan with phone camera to open', 500, 990);
+
     const dateFormatted = anniversary ? new Date(anniversary).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'October 14, 2024';
-    ctx.fillText(`Since ${dateFormatted} • /v/${slug}`, textX, qrCardY + 168);
+    ctx.fillStyle = '#A1A1AA';
+    ctx.font = '500 13px "JetBrains Mono", monospace';
+    ctx.fillText(`since ${dateFormatted} • /u/${slug}`, 500, 1025);
 
-    ctx.fillStyle = '#71717a';
+    ctx.fillStyle = '#D4D4D8';
     ctx.font = '400 12px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Made with care on OurPage LoveOS', textX, qrCardY + 195);
-
+    ctx.fillText('ourpage loveos', 500, 1060);
     ctx.restore();
 
     return canvas;
@@ -365,8 +234,8 @@
   // Trigger file download
   async function downloadGiftCard(data, targetUrl, customFileName) {
     const coupleData = data || {};
-    const partnerName = (coupleData.partnerName || 'Keepsake').replace(/[^a-zA-Z0-9_-]/g, '');
-    const fileName = customFileName || `LoveOS-Gift-Card-${partnerName}.png`;
+    const partnerName = (coupleData.partnerName || 'Valentine').replace(/[^a-zA-Z0-9_-]/g, '');
+    const fileName = customFileName || `Heart-QR-${partnerName}.png`;
 
     const canvas = await generateCanvas(coupleData, targetUrl);
 
@@ -390,7 +259,8 @@
 
   return {
     generateCanvas,
-    downloadGiftCard
+    downloadGiftCard,
+    generateHeartQRCanvas: generateCanvas,
+    downloadHeartQR: downloadGiftCard
   };
 });
-
