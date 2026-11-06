@@ -27,7 +27,7 @@ function makeRequest(method, path, body = null, headers = {}) {
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
         let json = null;
-        try { json = JSON.parse(data); } catch (_) {}
+        try { json = JSON.parse(data); } catch (_) { }
         resolve({
           status: res.statusCode,
           headers: res.headers,

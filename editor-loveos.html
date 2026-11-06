@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
   <title>OurPage — LoveOS Romantic Keepsake Studio</title>
 
   <!-- Tailwind CSS CDN -->
@@ -20,6 +20,21 @@
   <script src="/loveos-giftcard.js"></script>
 
   <style>
+    /* CRITICAL MOBILE BUG FIX: STRICTLY PREVENT IOS SAFARI VIEWPORT AUTO-ZOOM */
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important; /* iOS Safari requires >= 16px to prevent automatic screen zoom */
+      }
+    }
+    input, select, textarea, button, a, [role="button"] {
+      touch-action: manipulation;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      overscroll-behavior-y: none;
+    }
+
     * {
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
@@ -140,6 +155,38 @@
       </button>
     </div>
   </header>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. SEGMENTED DUAL-MODE SWITCH (EDIT FORM vs LIVE PHONE)                   -->
+  <!-- ========================================================================= -->
+  <nav class="sticky top-16 z-40 bg-[#0a0a0e]/95 backdrop-blur-xl border-b border-white/[0.08] px-3 sm:px-4 py-2">
+    <div class="max-w-md mx-auto grid grid-cols-2 p-1 bg-zinc-950/90 rounded-2xl border border-white/10 shadow-lg">
+      <button 
+        type="button" 
+        id="mode-tab-edit" 
+        onclick="switchMainMode('edit')" 
+        class="py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500/20 to-amber-500/15 border border-rose-500/30 text-rose-200 shadow-sm"
+      >
+        <i data-lucide="edit-3" class="w-4 h-4 text-rose-400"></i>
+        <span>✏️ Edit Form</span>
+      </button>
+
+      <button 
+        type="button" 
+        id="mode-tab-preview" 
+        onclick="switchMainMode('preview')" 
+        class="py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white"
+      >
+        <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400"></i>
+        <span>📱 Live Phone</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- WRAPPER: EDIT MODE VIEW (#view-mode-edit) -->
+  <div id="view-mode-edit" class="flex-1 flex flex-col">
 
   <!-- ========================================================================= -->
   <!-- 2. STEP WIZARD STEPPER BAR (MOBILE FRIENDLY HORIZONTAL SCROLLER)          -->
@@ -689,6 +736,102 @@
 
   </main>
 
+    <!-- ======================================================================= -->
+    <!-- STICKY BOTTOM THUMB DOCK (EDIT MODE)                                    -->
+    <!-- ======================================================================= -->
+    <div class="sticky bottom-0 z-30 bg-[#0c0c10]/95 backdrop-blur-xl border-t border-white/[0.08] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+      <div class="max-w-2xl mx-auto flex items-center justify-between gap-2.5">
+        <!-- Back Button -->
+        <button 
+          type="button" 
+          id="thumb-btn-prev" 
+          onclick="goPreviousStep()" 
+          class="py-2.5 px-3.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold text-zinc-300 transition flex items-center gap-1.5 active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+        >
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Back</span>
+        </button>
+
+        <!-- Center: Quick Switch to Live Phone -->
+        <button 
+          type="button" 
+          onclick="switchMainMode('preview')" 
+          class="py-2.5 px-3.5 rounded-xl bg-zinc-900 border border-white/10 text-xs font-mono font-medium text-emerald-300 hover:text-emerald-200 flex items-center gap-1.5 active:scale-95 transition"
+        >
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Live Phone</span>
+        </button>
+
+        <!-- Next / Publish Button -->
+        <button 
+          type="button" 
+          id="thumb-btn-next" 
+          onclick="goNextStepFromThumb()" 
+          class="py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-rose-950/40 hover:brightness-110 active:scale-95 transition flex items-center gap-1.5"
+        >
+          <span id="thumb-next-text">Next: Music →</span>
+        </button>
+      </div>
+    </div>
+  </div> <!-- END OF #view-mode-edit -->
+
+  <!-- ========================================================================= -->
+  <!-- 4. LIVE PHONE PREVIEW VIEW (#view-mode-preview)                           -->
+  <!-- ========================================================================= -->
+  <div id="view-mode-preview" class="hidden flex-1 flex flex-col bg-[#050507]">
+    <!-- Top Bar inside Preview View -->
+    <div class="h-12 bg-[#0e0e13] border-b border-white/[0.08] px-4 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-mono text-xs font-bold text-white tracking-wide">Interactive Phone Preview</span>
+        <span class="text-[10px] text-zinc-400 font-mono hidden sm:inline">• Live Synced</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button 
+          type="button" 
+          onclick="refreshPreviewIframe()" 
+          title="Reload Preview Frame"
+          class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center transition active:scale-95"
+        >
+          <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+        </button>
+        <button 
+          type="button" 
+          onclick="switchMainMode('edit')" 
+          class="py-1 px-3 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition active:scale-95"
+        >
+          <i data-lucide="edit-3" class="w-3 h-3"></i>
+          <span>Edit Form</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phone Frame Container -->
+    <div class="flex-1 w-full flex items-center justify-center p-2 sm:p-4 overflow-hidden">
+      <div class="w-full max-w-[430px] h-[calc(100dvh-135px)] min-h-[520px] max-h-[860px] bg-[#08080a] border border-white/15 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col">
+        <iframe 
+          id="loveos-preview-iframe" 
+          src="/loveos.html?preview=true" 
+          class="w-full h-full border-none select-none"
+          title="LoveOS Live Preview Frame"
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- Floating Return Pill at Bottom -->
+    <div class="sticky bottom-3 z-30 flex justify-center px-4 pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
+      <button 
+        type="button" 
+        onclick="switchMainMode('edit')" 
+        class="pointer-events-auto py-2.5 px-5 rounded-full bg-zinc-900/90 border border-rose-500/40 text-rose-200 hover:text-white text-xs font-mono font-bold shadow-2xl backdrop-blur-md flex items-center gap-2 active:scale-95 transition"
+      >
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-rose-400"></i>
+        <span>Return to Edit Form</span>
+      </button>
+    </div>
+  </div> <!-- END OF #view-mode-preview -->
+
+
   <!-- ========================================================================= -->
   <!-- 4. FULLSCREEN INTERACTIVE LIVE PREVIEW MODAL                              -->
   <!-- ========================================================================= -->
@@ -1049,6 +1192,7 @@
         audioPrev.pause();
       }
 
+      updateThumbBar(stepNum);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       syncFormToIframe();
     }
@@ -1675,6 +1819,94 @@
     // -------------------------------------------------------------------------
     // 9. INITIALIZATION & VIP RE-EDIT AUTHENTICATOR
     // -------------------------------------------------------------------------
+
+    // -------------------------------------------------------------------------
+    // DUAL-MODE VIEW CONTROLLER (EDIT FORM vs LIVE PHONE)
+    // -------------------------------------------------------------------------
+    let currentMainMode = 'edit';
+
+    function switchMainMode(mode) {
+      currentMainMode = mode;
+      const editView = document.getElementById('view-mode-edit');
+      const previewView = document.getElementById('view-mode-preview');
+      const tabEdit = document.getElementById('mode-tab-edit');
+      const tabPreview = document.getElementById('mode-tab-preview');
+
+      if (mode === 'preview') {
+        syncFormToIframe();
+        if (editView) editView.classList.add('hidden');
+        if (previewView) previewView.classList.remove('hidden');
+
+        if (tabEdit) tabEdit.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white';
+        if (tabPreview) tabPreview.className = 'py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/15 border border-emerald-500/30 text-emerald-200 shadow-sm';
+      } else {
+        if (previewView) previewView.classList.add('hidden');
+        if (editView) editView.classList.remove('hidden');
+
+        if (tabEdit) tabEdit.className = 'py-2.5 px-3 rounded-xl font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500/20 to-amber-500/15 border border-rose-500/30 text-rose-200 shadow-sm';
+        if (tabPreview) tabPreview.className = 'py-2.5 px-3 rounded-xl font-semibold text-xs tracking-wide transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white';
+      }
+      lucide.createIcons();
+    }
+
+    function refreshPreviewIframe() {
+      const iframe = document.getElementById('loveos-preview-iframe');
+      if (iframe) {
+        iframe.src = '/loveos.html?preview=true&t=' + Date.now();
+        setTimeout(syncFormToIframe, 500);
+      }
+    }
+
+    function updateThumbBar(stepNum) {
+      const prevBtn = document.getElementById('thumb-btn-prev');
+      const nextText = document.getElementById('thumb-next-text');
+
+      if (prevBtn) {
+        prevBtn.disabled = (stepNum <= 1);
+      }
+
+      const nextLabels = [
+        "",
+        "Next: Music →",
+        "Next: Polaroids →",
+        "Next: Story Details →",
+        "Next: QR & Publish →",
+        isVipReEditMode ? "Save Live Changes" : "Checkout — $18"
+      ];
+
+      if (nextText) {
+        nextText.textContent = nextLabels[stepNum] || "Next →";
+      }
+    }
+
+    function goPreviousStep() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1);
+      }
+    }
+
+    function goNextStepFromThumb() {
+      if (currentStep === 1) {
+        validateAndGoStep(2);
+      } else if (currentStep < 5) {
+        goToStep(currentStep + 1);
+      } else if (currentStep === 5) {
+        if (isVipReEditMode) {
+          executeReEditUpdate();
+        } else {
+          executePublishFlow();
+        }
+      }
+    }
+
+    // Modal alias so any existing preview triggers jump to live phone view
+    function openFullscreenPreviewModal() {
+      switchMainMode('preview');
+    }
+    function closeFullscreenPreviewModal() {
+      switchMainMode('edit');
+    }
+
     async function initStudio() {
       // 1. Populate defaults in form fields
       document.getElementById('input-partner-name').value = DEFAULT_LOVEOS_DATA.partnerName;
