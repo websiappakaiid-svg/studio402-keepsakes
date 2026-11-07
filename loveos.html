@@ -725,12 +725,12 @@
 
       <!-- Glowing Lock Hero Vector Asset 01 -->
       <div class="relative w-16 h-16 flex items-center justify-center intro-heart-anim mb-3">
-        <img src="/assets/vectors/asset-01-padlock.svg" class="w-full h-full object-contain drop-shadow-[0_8px_20px_rgba(222,67,73,0.45)]" alt="Security Lock" />
+        <img src="/assets/images/asset-01-padlock.webp" class="w-full h-full object-contain drop-shadow-[0_8px_20px_rgba(222,67,73,0.45)]" alt="Security Lock" />
       </div>
 
       <!-- "PRIVATE ARCHIVE" Washi Tape Label (Asset 05) -->
       <div class="mb-2">
-        <img src="/assets/vectors/asset-05-archive-badge.svg" class="h-6 w-auto mx-auto object-contain drop-shadow-sm" alt="Private Archive" />
+        <img src="/assets/images/asset-05-archive-badge.webp" class="h-6 w-auto mx-auto object-contain drop-shadow-sm" alt="Private Archive" />
       </div>
       <h1 id="intro-partner-name" class="font-serif italic text-3xl sm:text-4xl text-zinc-100 tracking-tight leading-tight mb-1">
         For Mia
@@ -753,9 +753,12 @@
           <span class="passcode-dot w-3.5 h-3.5 rounded-full border border-rose-400/50 bg-transparent transition-all duration-200"></span>
         </div>
 
-        <p id="passcode-hint-text" class="text-[11px] font-mono text-zinc-400 tracking-wide text-center">
-          enter our date (MMDD)
-        </p>
+        <div class="flex items-center justify-center gap-1.5">
+          <img src="/assets/images/asset-03-keypad-star.webp" class="w-3.5 h-3.5 object-contain opacity-75" alt="Keypad" />
+          <p id="passcode-hint-text" class="text-[11px] font-mono text-zinc-400 tracking-wide text-center">
+            enter our date (MMDD)
+          </p>
+        </div>
 
         <!-- 3x4 iOS Lockscreen Circular Keypad -->
         <div class="grid grid-cols-3 gap-3 w-full max-w-[250px] pt-0.5">
@@ -783,7 +786,7 @@
           type="button"
           class="mt-1.5 text-xs font-mono text-zinc-400 hover:text-rose-300 transition flex items-center gap-2 py-1.5 px-3.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/10"
         >
-          <img src="/assets/vectors/asset-02-faceid.svg" class="w-4 h-4 object-contain inline-block" alt="FaceID" />
+          <img src="/assets/images/asset-02-faceid.webp" class="w-4 h-4 object-contain inline-block" alt="FaceID" />
           <span>or tap here to open</span>
         </button>
 
@@ -833,10 +836,8 @@
 
         <div class="mt-6 pt-4 border-t border-zinc-200/80 flex items-center justify-between">
           <p id="modal-env-signoff" class="font-hand text-2xl text-rose-700 font-semibold"></p>
-          <div class="w-9 h-9 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-600">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-            </svg>
+          <div class="w-10 h-10 flex items-center justify-center">
+            <img src="/assets/images/asset-22-postage-stamp.webp" class="w-full h-full object-contain drop-shadow" alt="Love Stamp" />
           </div>
         </div>
       </div>
@@ -1739,6 +1740,7 @@
 
               <!-- Right: Cellular, Wi-Fi, Battery SVG Icons -->
               <div class="flex items-center justify-end gap-1.5 w-16 shrink-0 text-zinc-200">
+                <img src="/assets/images/asset-04-status-icons.webp" class="h-3.5 object-contain inline-block mr-1 opacity-90" alt="Status" />
                 <!-- Cellular Signal SVG -->
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                   <path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/>
@@ -1771,7 +1773,7 @@
             <!-- Subtle Top Lock Icon & Tag -->
             <div class="flex items-center justify-between mb-3">
               <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.07] text-[11px] text-zinc-300">
-                <img src="/assets/vectors/asset-01-padlock.svg" class="w-3.5 h-3.5 object-contain" alt="Lock" />
+                <img src="/assets/images/asset-01-padlock.webp" class="w-3.5 h-3.5 object-contain" alt="Lock" />
                 <span>Unlocked by ${escapeHtml(data.creatorName)} &amp; ${escapeHtml(data.partnerName)}</span>
               </div>
               <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">SINCE ${escapeHtml((data.anniversaryDate || "").slice(0, 10))}</span>
@@ -1786,22 +1788,22 @@
             <!-- Live Ticking Relationship Counter with Retro Calendar Notches (Asset 06) -->
             <div class="grid grid-cols-4 gap-2 p-2.5 rounded-2xl bg-black/40 border border-white/[0.06]">
               <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02] relative overflow-hidden">
-                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/vectors/asset-06-flip-notch.svg" class="h-2 w-auto object-contain" alt="Notch" /></div>
+                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/images/asset-06-flip-notch.webp" class="h-2 w-auto object-contain" alt="Notch" /></div>
                 <span id="counter-days" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">000</span>
                 <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Days</span>
               </div>
               <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02] relative overflow-hidden">
-                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/vectors/asset-06-flip-notch.svg" class="h-2 w-auto object-contain" alt="Notch" /></div>
+                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/images/asset-06-flip-notch.webp" class="h-2 w-auto object-contain" alt="Notch" /></div>
                 <span id="counter-hours" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">00</span>
                 <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Hours</span>
               </div>
               <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-white/[0.02] relative overflow-hidden">
-                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/vectors/asset-06-flip-notch.svg" class="h-2 w-auto object-contain" alt="Notch" /></div>
+                <div class="w-full flex justify-center mb-0.5 opacity-60"><img src="/assets/images/asset-06-flip-notch.webp" class="h-2 w-auto object-contain" alt="Notch" /></div>
                 <span id="counter-mins" class="font-mono text-xl sm:text-2xl font-semibold text-white tracking-tight">00</span>
                 <span class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Mins</span>
               </div>
               <div class="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-rose-500/[0.08] border border-rose-500/20 relative overflow-hidden">
-                <div class="w-full flex justify-center mb-0.5 opacity-70"><img src="/assets/vectors/asset-06-flip-notch.svg" class="h-2 w-auto object-contain" alt="Notch" /></div>
+                <div class="w-full flex justify-center mb-0.5 opacity-70"><img src="/assets/images/asset-06-flip-notch.webp" class="h-2 w-auto object-contain" alt="Notch" /></div>
                 <span id="counter-secs" class="font-mono text-xl sm:text-2xl font-semibold text-rose-300 tracking-tight">00</span>
                 <span class="font-mono text-[10px] uppercase tracking-widest text-rose-300/80 mt-0.5">Secs</span>
               </div>
@@ -1816,10 +1818,10 @@
               <div id="milestone-pills-row" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
                 ${milestones.map((m, mIdx) => {
                   const isActive = m.id === activeMilestoneId;
-                  const milestoneSvg = mIdx === 0 ? '/assets/vectors/asset-07-milestone-coffee.svg'
-                    : mIdx === 1 ? '/assets/vectors/asset-08-milestone-cinema.svg'
-                    : mIdx === 2 ? '/assets/vectors/asset-09-milestone-trip.svg'
-                    : '/assets/vectors/asset-10-milestone-kiss.svg';
+                  const milestoneSvg = mIdx === 0 ? '/assets/images/asset-07-milestone-coffee.webp'
+                    : mIdx === 1 ? '/assets/images/asset-08-milestone-cinema.webp'
+                    : mIdx === 2 ? '/assets/images/asset-09-milestone-trip.webp'
+                    : '/assets/images/asset-10-milestone-kiss.webp';
                   return `
                     <button
                       type="button"
@@ -1862,9 +1864,10 @@
                   <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                 </svg>
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">on repeat</h2>
+                <img src="/assets/images/asset-15-music-controls.webp" class="w-4 h-4 object-contain inline-block opacity-75" alt="Music Controls" />
               </div>
               <span id="audio-status-badge" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 uppercase tracking-wider flex items-center gap-1.5 border border-white/10">
-                <img src="/assets/vectors/asset-16-equalizer-bars.svg" class="w-3.5 h-3 object-contain opacity-80" alt="Equalizer" />
+                <img src="/assets/images/asset-16-equalizer-bars.webp" class="w-3.5 h-3 object-contain opacity-80" alt="Equalizer" />
                 <span id="audio-status-text">Paused</span>
               </span>
             </div>
@@ -1875,11 +1878,11 @@
               <div class="relative w-20 h-20 shrink-0 flex items-center justify-center">
                 <div id="vinyl-disc-el" class="vinyl-disc vinyl-grooves w-20 h-20 rounded-full flex items-center justify-center relative border border-white/10 shadow-lg">
                   <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-inner overflow-hidden">
-                    <img src="/assets/vectors/asset-14-vinyl-center-label.svg" class="w-full h-full object-contain" alt="Vinyl Core" />
+                    <img src="/assets/images/asset-14-vinyl-center-label.webp" class="w-full h-full object-contain" alt="Vinyl Core" />
                   </div>
                 </div>
                 <!-- Tonearm SVG Overlay (Asset 13) -->
-                <img id="vinyl-tonearm" src="/assets/vectors/asset-13-turntable-tonearm.svg" class="w-8 h-8 absolute -top-1.5 -right-1.5 transition-transform duration-500 origin-top-right pointer-events-none drop-shadow-md" alt="Tonearm" />
+                <img id="vinyl-tonearm" src="/assets/images/asset-13-turntable-tonearm.webp" class="w-8 h-8 absolute -top-1.5 -right-1.5 transition-transform duration-500 origin-top-right pointer-events-none drop-shadow-md" alt="Tonearm" />
               </div>
 
               <!-- Song Title, Artist & Scrubber -->
@@ -1970,7 +1973,7 @@
             <div id="ios-notification-banner" class="mb-3.5 p-3 rounded-2xl bg-zinc-900/90 backdrop-blur-xl border border-white/15 shadow-xl transition-all duration-300 select-none cursor-pointer hover:border-iosBlue/50 group active:scale-[0.99]" title="Tap to replay message">
               <div class="flex items-center justify-between text-[11px] mb-1">
                 <div class="flex items-center gap-2">
-                  <img src="/assets/vectors/asset-17-messages-icon.svg" class="w-5 h-5 object-contain rounded-[6px] shadow-sm shrink-0" alt="Messages" />
+                  <img src="/assets/images/asset-17-messages-icon.webp" class="w-5 h-5 object-contain rounded-[6px] shadow-sm shrink-0" alt="Messages" />
                   <span class="font-bold text-white uppercase tracking-wider text-[10px]">MESSAGES</span>
                 </div>
                 <span class="text-[10px] text-zinc-400 font-mono">now</span>
@@ -1994,7 +1997,7 @@
                 id="tab-btn-first-texts"
                 class="py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activeChatTab === 'first-texts' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-400 hover:text-zinc-200'}"
               >
-                <img src="/assets/vectors/asset-17-messages-icon.svg" class="w-3.5 h-3.5 object-contain" alt="Chat" />
+                <img src="/assets/images/asset-17-messages-icon.webp" class="w-3.5 h-3.5 object-contain" alt="Chat" />
                 <span>how it started</span>
               </button>
               <button
@@ -2002,7 +2005,7 @@
                 id="tab-btn-unsent-drafts"
                 class="py-2 px-3 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activeChatTab === 'unsent-drafts' ? 'bg-zinc-800 text-white shadow' : 'text-zinc-400 hover:text-zinc-200'}"
               >
-                <img src="/assets/vectors/asset-19-crumpled-letter.svg" class="w-3.5 h-3.5 object-contain" alt="Drafts" />
+                <img src="/assets/images/asset-19-crumpled-letter.webp" class="w-3.5 h-3.5 object-contain" alt="Drafts" />
                 <span>texts i almost sent</span>
               </button>
             </div>
@@ -2100,7 +2103,7 @@
           <section id="section-photos" class="ios-glass-card rounded-3xl p-5 reveal-on-scroll">
             <div class="flex items-center justify-between mb-3.5">
               <div class="flex items-center gap-2">
-                <img src="/assets/vectors/asset-11-polaroid-camera.svg" class="w-5 h-5 object-contain" alt="Camera Roll" />
+                <img src="/assets/images/asset-11-polaroid-camera.webp" class="w-5 h-5 object-contain" alt="Camera Roll" />
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">camera roll</h2>
               </div>
 
@@ -2206,7 +2209,7 @@
                   <div class="flex items-center justify-between w-full relative z-10">
                     <span class="font-mono text-[10px] text-zinc-400 tracking-wider">0${index + 1}</span>
                     <div class="w-7 h-7 flex items-center justify-center">
-                      <img src="/assets/vectors/asset-21-wax-seal.svg" class="w-full h-full object-contain drop-shadow" alt="Wax Seal" />
+                      <img src="/assets/images/asset-21-wax-seal.webp" class="w-full h-full object-contain drop-shadow" alt="Wax Seal" />
                     </div>
                   </div>
 
@@ -2240,7 +2243,7 @@
           <section id="section-voucher" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
             <div class="flex items-center justify-between mb-3.5">
               <div class="flex items-center gap-2">
-                <img src="/assets/vectors/asset-25-scratch-coin.svg" class="w-5 h-5 object-contain" alt="Scratch Coin" />
+                <img src="/assets/images/asset-25-scratch-coin.webp" class="w-5 h-5 object-contain" alt="Scratch Coin" />
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">scratch for a date night favor</h2>
               </div>
               <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
@@ -2269,7 +2272,7 @@
 
                 <!-- Perforated Tear-line Vector Asset 23 -->
                 <div class="my-2.5 flex items-center justify-center">
-                  <img src="/assets/vectors/asset-23-ticket-border.svg" class="w-full max-w-[280px] h-3 object-contain opacity-75" alt="Tear Line" />
+                  <img src="/assets/images/asset-23-ticket-border.webp" class="w-full max-w-[280px] h-3 object-contain opacity-75" alt="Tear Line" />
                 </div>
 
                 <!-- Reward / Terms Box -->
@@ -2287,7 +2290,7 @@
                   </div>
                   <!-- Red Ink Approved Stamp Vector Asset 24 -->
                   <div class="w-20 h-auto flex items-center justify-center">
-                    <img src="/assets/vectors/asset-24-approved-stamp.svg" class="w-full h-auto object-contain rotate-[-4deg] drop-shadow" alt="Approved With Love" />
+                    <img src="/assets/images/asset-24-approved-stamp.webp" class="w-full h-auto object-contain rotate-[-4deg] drop-shadow" alt="Approved With Love" />
                   </div>
                 </div>
               </div>
@@ -2325,14 +2328,14 @@
           <section id="section-notes" class="ios-glass-card rounded-3xl overflow-hidden border border-white/[0.09] reveal-on-scroll">
             <div class="px-5 pt-4 pb-3 border-b border-white/[0.07] flex items-center justify-between bg-white/[0.02]">
               <div class="flex items-center gap-1.5 text-notesAmber text-xs font-medium">
-                <img src="/assets/vectors/asset-26-notes-pen.svg" class="w-4 h-4 object-contain inline-block" alt="Notes Pen" />
+                <img src="/assets/images/asset-26-notes-pen.webp" class="w-4 h-4 object-contain inline-block" alt="Notes Pen" />
                 <span>notes app</span>
               </div>
               <div class="font-mono text-[10px] text-zinc-400">
                 edited at 2:14 am
               </div>
               <div class="flex items-center gap-2 text-notesAmber">
-                <img src="/assets/vectors/asset-26-notes-pen.svg" class="w-4 h-4 object-contain opacity-80" alt="Pen" />
+                <img src="/assets/images/asset-26-notes-pen.webp" class="w-4 h-4 object-contain opacity-80" alt="Pen" />
               </div>
             </div>
 
@@ -2395,14 +2398,14 @@ ${escapeHtml(data.mainLoveLetter)}
               <div class="mt-6 pt-5 border-t border-white/[0.08]">
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center gap-2">
-                    <img src="/assets/vectors/asset-27-reminders-heart.svg" class="w-4 h-4 object-contain inline-block" alt="Checklist" />
+                    <img src="/assets/images/asset-27-reminders-heart.webp" class="w-4 h-4 object-contain inline-block" alt="Checklist" />
                     <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-200">things we still have to do</h3>
                   </div>
                   <div class="flex items-center gap-1.5">
                     <span id="checklist-progress-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-notesAmber/15 text-amber-300 border border-notesAmber/30">
                       0 of 0 completed
                     </span>
-                    <img src="/assets/vectors/asset-28-confetti-popper.svg" class="w-4 h-4 object-contain inline-block opacity-80" alt="Celebration" />
+                    <img src="/assets/images/asset-28-confetti-popper.webp" class="w-4 h-4 object-contain inline-block opacity-80" alt="Celebration" />
                   </div>
                 </div>
 
@@ -2422,7 +2425,7 @@ ${escapeHtml(data.mainLoveLetter)}
               made with all my love • always yours
             </p>
             <button id="lock-screen-btn" type="button" class="text-[10px] font-mono text-zinc-500 hover:text-rose-300 transition inline-flex items-center gap-1.5 mx-auto py-1 px-3 rounded-lg hover:bg-white/[0.04] border border-transparent hover:border-white/10">
-              <img src="/assets/vectors/asset-01-padlock.svg" class="w-3.5 h-3.5 object-contain inline-block" alt="Lock" />
+              <img src="/assets/images/asset-01-padlock.webp" class="w-3.5 h-3.5 object-contain inline-block" alt="Lock" />
               <span>Lock Screen (Test PIN)</span>
             </button>
           </footer>
@@ -2521,7 +2524,7 @@ ${escapeHtml(data.mainLoveLetter)}
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div class="absolute bottom-2 left-2.5 right-2.5 flex items-end justify-between">
                     <span class="text-xs font-serif italic text-white drop-shadow">${escapeHtml(item.location || item.label)}</span>
-                    <img src="/assets/vectors/asset-12-verified-stamp.svg" class="w-16 h-auto object-contain pointer-events-none drop-shadow rotate-[-6deg]" alt="Verified Moment" />
+                    <img src="/assets/images/asset-12-verified-stamp.webp" class="w-16 h-auto object-contain pointer-events-none drop-shadow rotate-[-6deg]" alt="Verified Moment" />
                   </div>
                 </div>
               </div>
@@ -2554,7 +2557,7 @@ ${escapeHtml(data.mainLoveLetter)}
               <div class="pt-2 border-t border-white/[0.07] flex items-center justify-between">
                 <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Photographic Proof</span>
                 <button type="button" id="toggle-milestone-proof-btn" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-medium flex items-center gap-1.5 active:scale-95 transition">
-                  <img src="/assets/vectors/asset-11-polaroid-camera.svg" class="w-3.5 h-3.5 object-contain inline-block" alt="Camera" />
+                  <img src="/assets/images/asset-11-polaroid-camera.webp" class="w-3.5 h-3.5 object-contain inline-block" alt="Camera" />
                   <span>View Photo Proof</span>
                 </button>
               </div>
@@ -2781,10 +2784,10 @@ ${escapeHtml(data.mainLoveLetter)}
               <div class="polaroid-face polaroid-front p-3.5 pb-5 shadow-2xl flex flex-col justify-between border border-zinc-300/80 relative">
                 <!-- Aesthetic Washi Tape & Paperclip Stationery Accents (Asset 20 & 18) -->
                 <div class="absolute -top-3 left-6 z-20 pointer-events-none rotate-[-4deg] opacity-90">
-                  <img src="/assets/vectors/asset-20-washi-tape-pack.svg" class="h-5 w-auto object-contain drop-shadow-sm" alt="Washi Tape" />
+                  <img src="/assets/images/asset-20-washi-tape-pack.webp" class="h-5 w-auto object-contain drop-shadow-sm" alt="Washi Tape" />
                 </div>
                 <div class="absolute -top-2 right-8 z-20 pointer-events-none rotate-[8deg] opacity-90">
-                  <img src="/assets/vectors/asset-18-paperclip.svg" class="w-5 h-5 object-contain drop-shadow-sm" alt="Paperclip" />
+                  <img src="/assets/images/asset-18-paperclip.webp" class="w-5 h-5 object-contain drop-shadow-sm" alt="Paperclip" />
                 </div>
                 <div class="relative w-full h-[280px] rounded-lg overflow-hidden bg-zinc-900 shadow-inner group">
                   <img
@@ -3076,7 +3079,7 @@ ${escapeHtml(data.mainLoveLetter)}
             >
               <div class="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-transform active:scale-125">
                 ${isChecked ? `
-                  <img src="/assets/vectors/asset-27-reminders-heart.svg" class="w-full h-full object-contain drop-shadow" alt="Checked" />
+                  <img src="/assets/images/asset-27-reminders-heart.webp" class="w-full h-full object-contain drop-shadow" alt="Checked" />
                 ` : `
                   <div class="w-4 h-4 rounded-full border-2 border-zinc-500/70 hover:border-rose-400/80 transition-colors"></div>
                 `}
