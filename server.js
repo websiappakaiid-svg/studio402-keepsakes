@@ -311,38 +311,6 @@ async function handleRequest(req, res) {
     }
   }
 
-  // GET & POST /api/save-vector & /api/list-vectors (Local Helper for Vektorin Ciks)
-  if (pathname === '/api/list-vectors' && method === 'GET') {
-    try {
-      const dir = path.join(ROOT_DIR, 'assets', 'vectors');
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      const files = fs.readdirSync(dir).filter(f => f.endsWith('.svg'));
-      return sendJson(res, 200, { ok: true, files });
-    } catch (err) {
-      return sendJson(res, 500, { ok: false, error: err.message });
-    }
-  }
-
-  if (pathname === '/api/save-vector' && method === 'POST') {
-    try {
-      const body = await parseBody(req);
-      const filename = String(body.filename || 'asset.svg').replace(/[^a-zA-Z0-9_.-]/g, '');
-      const content = body.content || '';
-      if (!content.trim().startsWith('<svg')) {
-        return sendJson(res, 400, { ok: false, error: 'Invalid SVG content.' });
-      }
-      const dir = path.join(ROOT_DIR, 'assets', 'vectors');
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      const targetPath = path.join(dir, filename);
-      fs.writeFileSync(targetPath, content, 'utf8');
-      console.log(`[ourpage Vector] Saved ${filename} successfully!`);
-      return sendJson(res, 200, { ok: true, filename, url: `/assets/vectors/${filename}` });
-    } catch (err) {
-      console.error('[ourpage Vector] Error saving vector:', err);
-      return sendJson(res, 500, { ok: false, error: err.message });
-    }
-  }
-
   // POST /api/save-draft
   if ((pathname === '/api/save-draft' || pathname === '/api/loveos/save-draft') && method === 'POST') {
     try {
