@@ -3510,6 +3510,8 @@ ${escapeHtml(data.mainLoveLetter)}
             }
           } else if (msg.type === "UPDATE_COUPLE_DATA" && msg.payload) {
             window.renderLoveOS(msg.payload);
+          } else if (msg.type === "LOVEOS_CONFIG_UPDATE" && msg.config) {
+            window.renderLoveOS(msg.config);
           } else if (msg.type === "RENDER_LOVEOS" && msg.data) {
             window.renderLoveOS(msg.data);
           } else if (msg.partnerName || msg.creatorName || msg.anniversaryDate) {
