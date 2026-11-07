@@ -1048,46 +1048,58 @@
           if (!ctx) return;
           const now = ctx.currentTime;
 
-          if (type === "chat-send" || type === "chat-receive") {
+          if (type === "chat-receive") {
+            // Authentic Apple iMessage chime (crisp dual harmonic sine bell with full volume)
+            [880, 1320].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+              gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+              gain.gain.exponentialRampToValueAtTime(0.24, now + idx * 0.08 + 0.012);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.22);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now + idx * 0.08);
+              osc.stop(now + idx * 0.08 + 0.24);
+            });
+          } else if (type === "chat-send") {
+            // Apple iMessage swoosh send pop
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = "sine";
-            const startFreq = type === "chat-send" ? 580 : 440;
-            const endFreq = type === "chat-send" ? 860 : 620;
-            osc.frequency.setValueAtTime(startFreq, now);
-            osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.065);
-
+            osc.frequency.setValueAtTime(540, now);
+            osc.frequency.exponentialRampToValueAtTime(940, now + 0.07);
             gain.gain.setValueAtTime(0.001, now);
-            gain.gain.exponentialRampToValueAtTime(0.05, now + 0.01);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
-
+            gain.gain.exponentialRampToValueAtTime(0.18, now + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.085);
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.08);
+            osc.stop(now + 0.09);
           } else if (type === "tap" || type === "word-tick") {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = "triangle";
             osc.frequency.setValueAtTime(type === "word-tick" ? 340 : 520, now);
-            gain.gain.setValueAtTime(0.025, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+            gain.gain.setValueAtTime(0.045, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.035);
+            osc.stop(now + 0.04);
           } else if (type === "flip" || type === "envelope") {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = "sine";
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(480, now + 0.09);
-            gain.gain.setValueAtTime(0.035, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(540, now + 0.09);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.11);
+            osc.stop(now + 0.12);
           } else if (type === "check") {
             // Warm two-note completion chime
             [523.25, 659.25].forEach((freq, idx) => {
@@ -1095,12 +1107,12 @@
               const gain = ctx.createGain();
               osc.type = "sine";
               osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-              gain.gain.setValueAtTime(0.04, now + idx * 0.07);
-              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.07 + 0.18);
+              gain.gain.setValueAtTime(0.09, now + idx * 0.07);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.07 + 0.22);
               osc.connect(gain);
               gain.connect(ctx.destination);
               osc.start(now + idx * 0.07);
-              osc.stop(now + idx * 0.07 + 0.19);
+              osc.stop(now + idx * 0.07 + 0.24);
             });
           }
         } catch (err) {
@@ -1181,6 +1193,7 @@
       let chatReplayTimeouts = [];
       let secretRevealTimeouts = [];
       let activeMilestoneId = null;
+      let milestoneProofActive = {}; // milestoneId -> boolean (photo proof toggle)
       let activeChatTab = "first-texts"; // 'first-texts' | 'unsent-drafts'
       let expandedDraftIds = new Set();
       let activePolaroidIndex = 0;
@@ -1823,6 +1836,18 @@
                 <!-- Populated dynamically by updateMilestoneDetail() -->
               </div>
             </div>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-4 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-music').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>listen to our song</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           <!-- ==================================================================
@@ -1904,6 +1929,18 @@
                 </p>
               </div>
             </div>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-3.5 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-messages').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>see how we started</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           </div>
@@ -1925,6 +1962,31 @@
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">How It Started</h2>
               </div>
               <span class="font-mono text-[10px] text-zinc-500">iMessage Archive</span>
+            </div>
+
+            <!-- iOS 18 Dynamic Lockscreen Notification Banner -->
+            <div id="ios-notification-banner" class="mb-3.5 p-3 rounded-2xl bg-zinc-900/90 backdrop-blur-xl border border-white/15 shadow-xl transition-all duration-300 select-none cursor-pointer hover:border-iosBlue/50 group active:scale-[0.99]" title="Tap to replay message">
+              <div class="flex items-center justify-between text-[11px] mb-1">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-[6px] bg-[#34C759] flex items-center justify-center text-white shadow-sm shrink-0">
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                  </div>
+                  <span class="font-bold text-white uppercase tracking-wider text-[10px]">MESSAGES</span>
+                </div>
+                <span class="text-[10px] text-zinc-400 font-mono">now</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold text-white">${escapeHtml(data.partnerName)}</p>
+                <span class="text-[10px] text-iosBlue font-medium group-hover:underline flex items-center gap-0.5">
+                  <span>Replay</span>
+                  <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </span>
+              </div>
+              <p id="ios-banner-preview-text" class="text-xs text-zinc-300 line-clamp-1 mt-0.5">
+                "${escapeHtml((data.chatReplay && data.chatReplay[0] && data.chatReplay[0].text) || "hey... are you free tonight?")}"
+              </p>
             </div>
 
             <!-- iOS Segmented Control: First Texts vs Unsent Drafts -->
@@ -2017,6 +2079,18 @@
                 }).join("")}
               </div>
             </div>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-4 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-photos').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>open our camera roll</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           </div>
@@ -2089,6 +2163,18 @@
                 </svg>
               </button>
             </div>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-4 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-notes-letters').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>unseal your letters</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           </div>
@@ -2117,11 +2203,11 @@
                 <button
                   type="button"
                   data-envelope-idx="${index}"
-                  class="envelope-card group text-left rounded-2xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] hover:from-white/[0.1] hover:to-white/[0.05] border border-white/[0.1] p-3.5 flex flex-col justify-between min-h-[136px] relative shadow-lg"
+                  class="envelope-card group text-left rounded-2xl bg-gradient-to-b from-white/[0.08] via-white/[0.04] to-black/40 hover:from-white/[0.12] hover:to-white/[0.06] border border-amber-300/20 hover:border-rose-400/40 p-3.5 flex flex-col justify-between min-h-[140px] relative shadow-xl active:scale-[0.98] transition-all"
                 >
                   <!-- 3D Realistic Envelope Flap SVG Geometry -->
-                  <svg class="envelope-flap absolute inset-x-0 top-0 w-full h-11 text-white/[0.09] pointer-events-none" viewBox="0 0 200 52" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M0 0 L100 40 L200 0" />
+                  <svg class="envelope-flap absolute inset-x-0 top-0 w-full h-12 text-white/[0.1] pointer-events-none" viewBox="0 0 200 52" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M0 0 L100 42 L200 0" />
                   </svg>
 
                   <!-- Top Wax Seal Badge with Realistic Gradient -->
@@ -2144,44 +2230,77 @@
                 </button>
               `).join("")}
             </div>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-4 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-voucher').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>scratch your surprise</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           <!-- ==================================================================
-               SECTION 7: INTERACTIVE SCRATCH-TO-REVEAL LOVE VOUCHER
+               SECTION 7: INTERACTIVE SCRATCH-TO-REVEAL LOVE VOUCHER (GOLDEN COUPON)
                ================================================================== -->
           <section id="section-voucher" class="ios-glass-card rounded-3xl p-5 relative overflow-hidden reveal-on-scroll">
             <div class="flex items-center justify-between mb-3.5">
               <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
                 </svg>
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-300">scratch for a date night favor</h2>
               </div>
-              <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 uppercase tracking-wider">
+              <span id="voucher-status-pill" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
                 scratch to reveal
               </span>
             </div>
 
             <!-- Scratch Card Outer Container -->
-            <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0d0d12]">
-              <!-- Underlying Voucher Reward (Revealed underneath) -->
-              <div id="voucher-underlying-content" class="p-5 sm:p-6 text-center space-y-3 bg-gradient-to-b from-rose-950/30 via-zinc-950 to-black select-none">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-400/30 text-amber-300 text-[10px] font-mono tracking-widest uppercase shadow-sm">
-                  <span>✦ COUPLE'S GOLDEN TICKET ✦</span>
+            <div class="relative w-full rounded-2xl overflow-hidden border border-amber-400/30 shadow-2xl bg-[#0e0c0f]">
+              <!-- Underlying Voucher Reward (Revealed underneath as Luxury Golden Ticket) -->
+              <div id="voucher-underlying-content" class="p-5 sm:p-6 text-center select-none bg-gradient-to-br from-[#1a1512] via-[#241c16] to-[#120f0d] border border-amber-400/30 relative">
+                <!-- Golden Ticket Top Ribbon -->
+                <div class="flex items-center justify-between border-b border-amber-400/25 pb-2 mb-3">
+                  <span class="font-mono text-[9px] uppercase tracking-widest text-amber-300/80">NO. 004128 • OFFICIAL DATE VOUCHER</span>
+                  <span class="font-mono text-[9px] uppercase tracking-widest text-emerald-400 font-bold flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>100% REDEEMABLE</span>
+                  </span>
                 </div>
-                <h3 id="voucher-display-title" class="font-serif italic text-2xl sm:text-3xl text-white tracking-tight leading-snug">
-                  ${escapeHtml(data.scratchVoucher?.title || "Secret Date Night Voucher")}
+
+                <!-- Golden Entitlement Headline -->
+                <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-400/90 font-semibold mb-1">THIS GOLDEN COUPON ENTITLES</p>
+                <h3 id="voucher-display-title" class="font-serif italic text-2xl sm:text-3xl text-amber-100 tracking-tight leading-snug drop-shadow">
+                  ${escapeHtml(data.scratchVoucher?.title || "Late Night Food Run & Zero Arguments")}
                 </h3>
-                <div class="max-w-[280px] mx-auto p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
-                  <p id="voucher-display-reward" class="text-xs text-zinc-200 leading-relaxed font-sans">
+
+                <!-- Perforated Tear-line -->
+                <div class="my-3 flex items-center justify-center gap-1 text-amber-400/40 text-[9px] font-mono tracking-widest select-none">
+                  <span>✂ - - - - - - - - - - - - - - - - - - - - - ✂</span>
+                </div>
+
+                <!-- Reward / Terms Box -->
+                <div class="max-w-[300px] mx-auto p-3.5 rounded-xl bg-black/45 border border-amber-400/20 backdrop-blur-sm shadow-inner">
+                  <p id="voucher-display-reward" class="text-xs text-amber-100/95 leading-relaxed font-sans font-medium">
                     ${escapeHtml(data.scratchVoucher?.reward || "Good for: 1 Late-Night Food Run, Cozy Movie Marathon & Unlimited Back Scratches")}
                   </p>
                 </div>
-                <div class="pt-1 flex items-center justify-center gap-2">
-                  <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Redeem Code:</span>
-                  <span id="voucher-display-code" class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 tracking-widest">
-                    ${escapeHtml(data.scratchVoucher?.code || "REDEEM-ANYTIME")}
-                  </span>
+
+                <!-- Bottom Bar & Red Wax Approved Stamp -->
+                <div class="mt-3.5 pt-2.5 border-t border-amber-400/25 flex items-center justify-between">
+                  <div class="text-left font-mono text-[9px] text-zinc-400">
+                    <div class="text-zinc-500 uppercase tracking-wider">VALID ANYTIME • NON-EXPIRING</div>
+                    <div class="text-amber-300 font-bold tracking-wider mt-0.5">${escapeHtml(data.scratchVoucher?.code || "REDEEM-ANYTIME")}</div>
+                  </div>
+                  <!-- Red Ink Approved Stamp -->
+                  <div class="px-2.5 py-1 rounded border-2 border-rose-500/80 text-rose-400 font-mono text-[9px] font-extrabold uppercase tracking-widest rotate-[-5deg] shadow-sm bg-rose-500/10">
+                    ★ APPROVED WITH LOVE ★
+                  </div>
                 </div>
               </div>
 
@@ -2191,6 +2310,18 @@
             <p class="text-[10px] font-mono text-center text-zinc-500 mt-2.5">
               Use your finger or cursor to scratch off the foil layer
             </p>
+
+            <!-- Soft Guided Narrative Scroll Bridge -->
+            <div class="mt-4 pt-3 border-t border-white/[0.05] text-center">
+              <button
+                type="button"
+                onclick="document.getElementById('section-notes').scrollIntoView({ behavior: 'smooth' });"
+                class="narrative-guide-btn text-xs font-mono text-zinc-400 hover:text-rose-300 transition-colors inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] active:scale-95"
+              >
+                <span>read my 2am notes</span>
+                <svg class="w-3.5 h-3.5 text-rose-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
           </section>
 
           </div>
@@ -2283,10 +2414,10 @@ ${escapeHtml(data.mainLoveLetter)}
                     <svg class="w-4 h-4 text-notesAmber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                     </svg>
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-200">Our Shared Future Checklist</h3>
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-200">things we still have to do</h3>
                   </div>
                   <span id="checklist-progress-badge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-notesAmber/15 text-amber-300 border border-notesAmber/30">
-                    0 / 0 Done
+                    0 of 0 completed
                   </span>
                 </div>
 
@@ -2297,36 +2428,14 @@ ${escapeHtml(data.mainLoveLetter)}
             </div>
           </section>
 
-          <!-- VIRAL DEMO BOTTOM CONVERSION CARD (VISIBLE IN DEMO ONLY) -->
-          ${!data.isPaid ? `
-          <div id="demo-bottom-cta" class="ios-glass-card rounded-3xl p-5 text-center space-y-4 border-rose-500/30 bg-gradient-to-b from-rose-950/20 via-black to-zinc-950 my-4 shadow-xl">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 mx-auto flex items-center justify-center text-white shadow-lg shadow-rose-950/50">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            </div>
-            <div class="space-y-1">
-              <h3 class="text-base font-bold text-white tracking-tight">Want to Make One for Your Person?</h3>
-              <p class="text-xs text-zinc-300 leading-relaxed max-w-xs mx-auto">
-                Create your own private tiny phone keepsake in under 3 minutes. Your photos, soundtrack, heartfelt chats &amp; secret love letters ready to share for $18 USD.
-              </p>
-            </div>
-            <a href="/editor" class="inline-flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-600 text-white font-bold text-xs uppercase tracking-wider shadow-xl shadow-rose-950/60 hover:brightness-110 active:scale-95 transition no-underline">
-              <span>Create Yours Now — $18 USD</span>
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </div>
-          ` : ''}
-
           <!-- Subtle Footer Colophon -->
-          <footer class="pt-2 pb-6 text-center select-none space-y-3">
-            <button id="open-giftcard-btn" type="button" class="w-full max-w-[340px] mx-auto py-3 px-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-zinc-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
-              <svg class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/></svg>
-              <span>Download Heart QR (PNG)</span>
-            </button>
-
+          <footer class="pt-6 pb-12 text-center select-none space-y-2.5">
+            <div class="flex items-center justify-center gap-2 text-rose-400/50">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-              Handcrafted on LoveOS • Made with care for ${escapeHtml(data.partnerName)}
+              made with all my love • always yours
             </p>
-
             <button id="lock-screen-btn" type="button" class="text-[10px] font-mono text-zinc-500 hover:text-rose-300 transition inline-flex items-center gap-1 mx-auto py-1 px-2.5 rounded-lg hover:bg-white/[0.04]">
               <svg class="w-3 h-3 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <span>Lock Screen (Test PIN)</span>
@@ -2400,23 +2509,82 @@ ${escapeHtml(data.mainLoveLetter)}
         const container = document.getElementById("milestone-detail-card");
         if (!container) return;
         const milestones = window.COUPLE_DATA.milestones || [];
-        const item = milestones.find((m) => m.id === activeMilestoneId) || milestones[0];
+        const mIdx = milestones.findIndex((m) => m.id === activeMilestoneId);
+        const item = mIdx >= 0 ? milestones[mIdx] : milestones[0];
         if (!item) return;
 
-        container.innerHTML = `
-          <div class="flex items-center justify-between text-[11px] mb-1.5">
-            <div class="flex items-center gap-1.5 text-rose-300 font-semibold">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-              </svg>
-              <span>${escapeHtml(item.location || item.label)}</span>
+        const isProof = Boolean(milestoneProofActive[item.id]);
+        const photos = window.COUPLE_DATA.polaroidPhotos || [];
+        const proofImg = item.proofPhoto || item.photoUrl || (photos[Math.max(0, mIdx) % Math.max(1, photos.length)]?.imageUrl) || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80";
+
+        if (isProof) {
+          container.innerHTML = `
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-[11px] border-b border-white/[0.08] pb-2">
+                <div class="flex items-center gap-1.5 text-amber-300 font-semibold font-mono text-[10px] uppercase tracking-wider">
+                  <span>★ MEMORY EVIDENCE #0${mIdx + 1}</span>
+                </div>
+                <span class="font-mono text-[10px] text-zinc-400 px-2 py-0.5 rounded-md bg-black/40 border border-white/[0.05]">
+                  ${escapeHtml(item.date)}
+                </span>
+              </div>
+
+              <!-- Polaroid Evidence Frame -->
+              <div class="relative w-full rounded-xl overflow-hidden bg-zinc-950 border border-white/10 p-2 shadow-inner">
+                <div class="relative w-full h-[180px] rounded-lg overflow-hidden bg-black">
+                  <img src="${escapeHtml(proofImg)}" alt="Evidence of ${escapeHtml(item.label)}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/18181b/f4f4f5?text=Moment+Captured';" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div class="absolute bottom-2 left-2.5 right-2.5 flex items-end justify-between">
+                    <span class="text-xs font-serif italic text-white drop-shadow">${escapeHtml(item.location || item.label)}</span>
+                    <span class="px-2 py-0.5 rounded bg-rose-500/80 text-white font-mono text-[9px] font-bold uppercase tracking-wider shadow">Verified Moment ♡</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <span class="text-[11px] text-zinc-400 italic">"Proof that this actually happened."</span>
+                <button type="button" id="toggle-milestone-proof-btn" class="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-zinc-200 hover:text-white text-[11px] font-medium flex items-center gap-1 active:scale-95 transition">
+                  <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                  <span>Back to Story</span>
+                </button>
+              </div>
             </div>
-            <span class="font-mono text-[10px] text-zinc-400 px-2 py-0.5 rounded-md bg-black/40 border border-white/[0.05]">
-              ${escapeHtml(item.date)}
-            </span>
-          </div>
-          <p class="text-xs text-zinc-200 leading-relaxed">${escapeHtml(item.story)}</p>
-        `;
+          `;
+        } else {
+          container.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between text-[11px] mb-2">
+                <div class="flex items-center gap-1.5 text-rose-300 font-semibold">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span>${escapeHtml(item.location || item.label)}</span>
+                </div>
+                <span class="font-mono text-[10px] text-zinc-400 px-2 py-0.5 rounded-md bg-black/40 border border-white/[0.05]">
+                  ${escapeHtml(item.date)}
+                </span>
+              </div>
+              <p class="text-xs text-zinc-200 leading-relaxed mb-3">${escapeHtml(item.story)}</p>
+
+              <div class="pt-2 border-t border-white/[0.07] flex items-center justify-between">
+                <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Photographic Proof</span>
+                <button type="button" id="toggle-milestone-proof-btn" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-medium flex items-center gap-1.5 active:scale-95 transition">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                  <span>View Photo Proof 📸</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        const toggleBtn = document.getElementById("toggle-milestone-proof-btn");
+        if (toggleBtn) {
+          toggleBtn.onclick = () => {
+            playUiSound("flip");
+            milestoneProofActive[item.id] = !milestoneProofActive[item.id];
+            updateMilestoneDetail();
+          };
+        }
       }
 
       /* ------------------------------------------------------------------------
@@ -2725,6 +2893,18 @@ ${escapeHtml(data.mainLoveLetter)}
           let touchStartX = 0;
           let touchStartY = 0;
           let touchStartTime = 0;
+          let lastTouchEndTime = 0;
+
+          function doPolaroidFlip() {
+            playUiSound("flip");
+            if (flippedPolaroidIndices.has(activePolaroidIndex)) {
+              flippedPolaroidIndices.delete(activePolaroidIndex);
+              innerEl.classList.remove("is-flipped");
+            } else {
+              flippedPolaroidIndices.add(activePolaroidIndex);
+              innerEl.classList.add("is-flipped");
+            }
+          }
 
           cardEl.addEventListener("touchstart", (e) => {
             touchStartX = e.changedTouches[0].clientX;
@@ -2739,7 +2919,9 @@ ${escapeHtml(data.mainLoveLetter)}
             const diffY = touchEndY - touchStartY;
             const timeDiff = Date.now() - touchStartTime;
 
-            if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) && timeDiff < 600) {
+            // Swipe detection (horizontal swipe > 40px)
+            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) && timeDiff < 600) {
+              lastTouchEndTime = Date.now();
               if (diffX < 0) {
                 playUiSound("tap");
                 activePolaroidIndex = (activePolaroidIndex + 1) % photos.length;
@@ -2752,33 +2934,25 @@ ${escapeHtml(data.mainLoveLetter)}
               return;
             }
 
-            if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+            // Mobile Tap detection (< 12px movement)
+            if (Math.abs(diffX) < 12 && Math.abs(diffY) < 12) {
+              lastTouchEndTime = Date.now();
               if (lightboxBtn && (e.target === lightboxBtn || lightboxBtn.contains(e.target))) {
                 return;
               }
-              playUiSound("flip");
-              if (flippedPolaroidIndices.has(activePolaroidIndex)) {
-                flippedPolaroidIndices.delete(activePolaroidIndex);
-                innerEl.classList.remove("is-flipped");
-              } else {
-                flippedPolaroidIndices.add(activePolaroidIndex);
-                innerEl.classList.add("is-flipped");
-              }
+              doPolaroidFlip();
             }
           });
 
           cardEl.addEventListener("click", (e) => {
+            // Prevent synthetic click immediately following touchend from undoing the flip!
+            if (Date.now() - lastTouchEndTime < 450) {
+              return;
+            }
             if (lightboxBtn && (e.target === lightboxBtn || lightboxBtn.contains(e.target))) {
               return;
             }
-            playUiSound("flip");
-            if (flippedPolaroidIndices.has(activePolaroidIndex)) {
-              flippedPolaroidIndices.delete(activePolaroidIndex);
-              innerEl.classList.remove("is-flipped");
-            } else {
-              flippedPolaroidIndices.add(activePolaroidIndex);
-              innerEl.classList.add("is-flipped");
-            }
+            doPolaroidFlip();
           });
         }
 
@@ -2908,16 +3082,20 @@ ${escapeHtml(data.mainLoveLetter)}
                   : "bg-white/[0.03] hover:bg-white/[0.05] border-white/[0.07] text-zinc-300"
               }"
             >
-              <div class="mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition ${
+              <div class="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-transform active:scale-125 ${
                 isChecked
-                  ? "bg-notesAmber border-notesAmber text-zinc-950 shadow-sm"
-                  : "border-zinc-500 bg-transparent"
+                  ? "bg-rose-500 text-white shadow-md shadow-rose-500/40"
+                  : "border border-zinc-500 text-zinc-500 bg-transparent hover:border-rose-400 hover:text-rose-400"
               }">
                 ${isChecked ? `
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 6 9 17l-5-5"/>
+                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
-                ` : ""}
+                ` : `
+                  <svg class="w-3 h-3 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                `}
               </div>
 
               <div class="flex-1 min-w-0">
@@ -2936,7 +3114,7 @@ ${escapeHtml(data.mainLoveLetter)}
         }).join("");
 
         if (badge) {
-          badge.textContent = `${completedCount} / ${list.length} Done`;
+          badge.textContent = `${completedCount} of ${list.length} completed`;
         }
 
         // Bind click listeners for checklist items
@@ -3112,6 +3290,17 @@ ${escapeHtml(data.mainLoveLetter)}
           });
         }
 
+        const notifBanner = document.getElementById("ios-notification-banner");
+        if (notifBanner) {
+          notifBanner.addEventListener("click", () => {
+            playUiSound("tap");
+            if (activeChatTab !== "first-texts" && tabFirstTexts) {
+              tabFirstTexts.click();
+            }
+            renderChatBubbles(true);
+          });
+        }
+
         document.querySelectorAll(".unsent-draft-card").forEach((card) => {
           card.addEventListener("click", () => {
             playUiSound("tap");
@@ -3244,32 +3433,35 @@ ${escapeHtml(data.mainLoveLetter)}
         canvas.height = height * dpr;
         ctx.scale(dpr, dpr);
 
-        // Metallic Rose-Gold / Platinum Foil Gradient
+        // Radiant Champagne Gold Foil Gradient
         const grad = ctx.createLinearGradient(0, 0, width, height);
-        grad.addColorStop(0, "#d8b4a6");
-        grad.addColorStop(0.35, "#e5cfc3");
-        grad.addColorStop(0.7, "#c9a191");
-        grad.addColorStop(1, "#b58776");
+        grad.addColorStop(0, "#d4af37");
+        grad.addColorStop(0.25, "#fcedd8");
+        grad.addColorStop(0.5, "#d4af37");
+        grad.addColorStop(0.75, "#f4dfb8");
+        grad.addColorStop(1, "#b38927");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
-        // Sparkle patterns
-        ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
-        for (let i = 0; i < 40; i++) {
-          const rx = (i * 37) % width;
-          const ry = (i * 23) % height;
-          ctx.fillRect(rx, ry, 2.5, 2.5);
+        // Fine luxury sparkle stars
+        ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+        for (let i = 0; i < 45; i++) {
+          const rx = (i * 47) % width;
+          const ry = (i * 29) % height;
+          ctx.beginPath();
+          ctx.arc(rx, ry, (i % 3 === 0 ? 2 : 1.2), 0, Math.PI * 2);
+          ctx.fill();
         }
 
         // Foil Text
-        ctx.fillStyle = "#26262b";
-        ctx.font = '600 13px "JetBrains Mono", monospace';
+        ctx.fillStyle = "#1e160a";
+        ctx.font = '700 12px "JetBrains Mono", monospace';
         ctx.textAlign = "center";
-        ctx.fillText("✦ SCRATCH WITH FINGER TO REVEAL ✦", width / 2, height / 2 - 8);
+        ctx.fillText("✦ SCRATCH OFF TO UNLOCK ✦", width / 2, height / 2 - 8);
 
-        ctx.fillStyle = "#52525b";
-        ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText("Special Romantic Voucher", width / 2, height / 2 + 16);
+        ctx.fillStyle = "#5c4314";
+        ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText("Official Couple's VIP Date Voucher", width / 2, height / 2 + 15);
 
         let isScratching = false;
         let scratchedCount = 0;
