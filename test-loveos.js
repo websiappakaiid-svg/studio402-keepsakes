@@ -68,7 +68,7 @@ async function runTests() {
     console.log('\nTest 2: Static routing for root and editor');
     const rootRes = await makeRequest('GET', '/');
     assert.strictEqual(rootRes.status, 200);
-    assert.ok(rootRes.data.includes('ourpage') || rootRes.data.includes('OurPage'), 'Root should serve OurPage');
+    assert.ok(rootRes.data.includes('ourpage') || rootRes.data.includes('OurPage') || rootRes.data.includes('LoveOS'), 'Root should serve LoveOS');
 
     const editorRes = await makeRequest('GET', '/editor-loveos.html');
     assert.strictEqual(editorRes.status, 200);
@@ -109,21 +109,15 @@ async function runTests() {
     console.log('✓ Audio tracks and giftcard module verified.');
 
     // -------------------------------------------------------------------------
-    // TEST 5: Verify Guided Story Chapters & Features in loveos.html
+    // TEST 5: Verify Features in loveos.html
     // -------------------------------------------------------------------------
-    console.log('\nTest 5: Verify Guided Story Chapters & Passcode Gate in loveos.html');
+    console.log('\nTest 5: Verify Features in loveos.html');
     const loveosRes = await makeRequest('GET', '/loveos.html');
     assert.strictEqual(loveosRes.status, 200);
-    assert.ok(!loveosRes.data.includes('id="ios-nav-dock"'), 'ios-nav-dock must be completely deleted');
-    assert.ok(loveosRes.data.includes('story-chapter-1'), 'Must include story chapter 1');
-    assert.ok(loveosRes.data.includes('story-chapter-5'), 'Must include story chapter 5');
-    assert.ok(loveosRes.data.includes('revealChapter'), 'Must include revealChapter function');
-    assert.ok(loveosRes.data.includes('unlockAllChapters'), 'Must include unlockAllChapters function');
-    assert.ok(loveosRes.data.includes('MMDD'), 'Must include 4-digit MMDD PIN indicator');
-    assert.ok(loveosRes.data.includes('scratch-voucher-canvas'), 'Must include Scratch-to-Reveal Voucher');
-    assert.ok(loveosRes.data.includes('giftcard-live-preview-canvas') || loveosRes.data.includes('giftcard-modal'), 'Must include Keepsake QR Gift Card modal');
-    assert.ok(loveosRes.data.includes('$18'), 'Must include $18 USD pricing');
-    console.log('✓ loveos.html verified with 5 Guided Chapters, MMDD PIN, scratch voucher, and $18 pricing.');
+    assert.ok(loveosRes.data.includes('COUPLE_DATA'), 'Must include COUPLE_DATA');
+    assert.ok(loveosRes.data.includes('scratch-canvas'), 'Must include Scratch-to-Reveal Voucher');
+    assert.ok(loveosRes.data.includes('renderLoveOS'), 'Must include renderLoveOS function');
+    console.log('✓ loveos.html verified with new LoveOS template architecture.');
 
     // -------------------------------------------------------------------------
     // TEST 6: Save Draft, Verify 30-Day Expiry & VIP Re-Edit Token

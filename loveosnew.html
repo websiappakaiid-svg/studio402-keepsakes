@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>LoveOS — Digital Keepsake</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter (UI), Instrument Serif (Editorial), Caveat (Handwritten Scrapbook), JetBrains Mono (Tickets & 35mm Film) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['Instrument Serif', 'Georgia', 'serif'],
+            hand: ['Caveat', 'cursive'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            roseGold: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              DEFAULT: '#e6a89a',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --rose-gold: #f4a298;
+      --warm-amber: #fbbf24;
+      --ios-blue: #007aff;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #08060a;
+      color: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Preview Mode Compatibility Rules (.in-preview-mode) */
+    body.in-preview-mode #cinematic-intro,
+    html.in-preview-mode #cinematic-intro {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    body.in-preview-mode #main-experience,
+    html.in-preview-mode #main-experience {
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+      filter: none !important;
+    }
+
+    /* Subtle Film Grain Overlay */
+    .film-grain-overlay {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.045'/%3E%3C/svg%3E");
+    }
+
+    /* Floating Ambient Bokeh & Sparkles */
+    @keyframes floatSlow {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(12px, -18px) scale(1.06); }
+      66% { transform: translate(-10px, 12px) scale(0.95); }
+    }
+    @keyframes twinklePulse {
+      0%, 100% { opacity: 0.25; transform: scale(0.85) rotate(0deg); }
+      50% { opacity: 0.85; transform: scale(1.15) rotate(12deg); }
+    }
+    .animate-float-slow {
+      animation: floatSlow 14s ease-in-out infinite;
+    }
+    .animate-twinkle {
+      animation: twinklePulse 4.5s ease-in-out infinite;
+    }
+
+    /* Dynamic Island Waveform Animation (.island-wave-bar) */
+    @keyframes soundWaveBounce {
+      0%, 100% { height: 4px; opacity: 0.6; }
+      50% { height: 15px; opacity: 1; }
+    }
+    .island-wave-bar {
+      width: 3px;
+      height: 4px;
+      border-radius: 9999px;
+      background: linear-gradient(to top, #fb7185, #fdba74);
+      transition: height 0.2s ease;
+    }
+    .island-wave-bar.is-playing {
+      animation: soundWaveBounce 0.75s ease-in-out infinite;
+    }
+    .island-wave-bar.is-playing:nth-child(1) { animation-delay: 0.0s; animation-duration: 0.65s; }
+    .island-wave-bar.is-playing:nth-child(2) { animation-delay: 0.18s; animation-duration: 0.85s; }
+    .island-wave-bar.is-playing:nth-child(3) { animation-delay: 0.32s; animation-duration: 0.55s; }
+    .island-wave-bar.is-playing:nth-child(4) { animation-delay: 0.12s; animation-duration: 0.78s; }
+
+    /* Apple Wallet Boarding Pass / VIP Ticket Cutouts */
+    .boarding-pass-card {
+      position: relative;
+      background: linear-gradient(165deg, rgba(34, 24, 34, 0.95) 0%, rgba(19, 14, 22, 0.98) 100%);
+      border: 1px solid rgba(251, 113, 133, 0.25);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .ticket-notch-left,
+    .ticket-notch-right {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background-color: #08060a;
+      border-radius: 9999px;
+      z-index: 20;
+    }
+    .ticket-notch-left {
+      left: -14px;
+      border-right: 1px solid rgba(251, 113, 133, 0.3);
+    }
+    .ticket-notch-right {
+      right: -14px;
+      border-left: 1px solid rgba(251, 113, 133, 0.3);
+    }
+
+    /* Spinning Vinyl Disc */
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    #vinyl-disc-el {
+      animation: spinVinyl 9s linear infinite;
+      animation-play-state: paused;
+      background:
+        repeating-radial-gradient(
+          circle at center,
+          #141216 0px,
+          #141216 2px,
+          #221f26 3px,
+          #100e12 4px
+        );
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        inset 0 0 25px rgba(255, 255, 255, 0.08);
+    }
+    #vinyl-disc-el.playing {
+      animation-play-state: running;
+    }
+    /* Vinyl sheen reflection */
+    .vinyl-sheen {
+      background: conic-gradient(
+        from 40deg,
+        transparent 0deg,
+        rgba(255, 255, 255, 0.09) 25deg,
+        transparent 55deg,
+        transparent 180deg,
+        rgba(251, 113, 133, 0.08) 205deg,
+        transparent 235deg
+      );
+    }
+
+    /* Tonearm pivot transition */
+    #vinyl-tonearm {
+      transform-origin: 78% 18%;
+      transform: rotate(0deg);
+      transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #vinyl-tonearm.playing {
+      transform: rotate(24deg);
+    }
+
+    /* iMessage Bubble Tails */
+    .imessage-received {
+      position: relative;
+      background: #26262a;
+      color: #f4f4f6;
+      border-radius: 18px 18px 18px 5px;
+    }
+    .imessage-sent {
+      position: relative;
+      background: linear-gradient(180deg, #2b8eff 0%, #007aff 100%);
+      color: #ffffff;
+      border-radius: 18px 18px 5px 18px;
+      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.25);
+    }
+
+    /* iOS Notification Spring Drop */
+    #ios-notification-banner {
+      transition: transform 0.65s cubic-bezier(0.22, 1.35, 0.36, 1), opacity 0.4s ease;
+    }
+
+    /* Unsent Draft Smooth Accordion */
+    .unsent-draft-body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, margin-top 0.3s ease;
+    }
+    .unsent-draft-card.is-open .unsent-draft-body {
+      max-height: 360px;
+      opacity: 1;
+      margin-top: 0.75rem;
+    }
+    .unsent-draft-card.is-open .draft-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* 3D Polaroid Card Flip */
+    .perspective-1000 {
+      perspective: 1200px;
+    }
+    .polaroid-3d-inner {
+      position: relative;
+      width: 100%;
+      transition: transform 0.75s cubic-bezier(0.34, 1.45, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+    .polaroid-3d-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .polaroid-face {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .polaroid-back {
+      transform: rotateY(180deg);
+      background-color: #f7f3eb;
+      background-image: radial-gradient(#d6cfc2 0.6px, transparent 0.6px);
+      background-size: 14px 14px;
+    }
+
+    /* 90s 35mm Film Date Burn Stamp */
+    .film-date-burn {
+      font-family: 'JetBrains Mono', monospace;
+      color: #ff7b1c;
+      text-shadow: 0 0 8px rgba(255, 115, 0, 0.85), 0 0 16px rgba(255, 68, 0, 0.55);
+      letter-spacing: 0.12em;
+    }
+
+    /* Tactile Airmail Envelope Styling */
+    .airmail-stripe-bar {
+      background: repeating-linear-gradient(
+        -45deg,
+        #c83e4d,
+        #c83e4d 10px,
+        transparent 10px,
+        transparent 18px,
+        #2b4c7e 18px,
+        #2b4c7e 28px,
+        transparent 28px,
+        transparent 36px
+      );
+    }
+    .envelope-card {
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+      box-shadow: 0 18px 35px -10px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    .envelope-card:hover {
+      transform: translateY(-5px) rotate(-0.5deg);
+      box-shadow: 0 24px 45px -10px rgba(0, 0, 0, 0.75);
+    }
+    .wax-seal-3d {
+      background: radial-gradient(circle at 32% 30%, #ef4444 0%, #b91c1c 48%, #7f1d1d 88%, #450a0a 100%);
+      box-shadow:
+        0 6px 14px rgba(69, 10, 10, 0.55),
+        inset 0 2px 3px rgba(254, 202, 202, 0.45),
+        inset 0 -3px 6px rgba(40, 5, 5, 0.8);
+    }
+
+    /* 2:14 AM Apple Notes Lined Paper */
+    .notes-paper-lines {
+      background-color: #161418;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 31px,
+        rgba(255, 214, 10, 0.08) 32px
+      );
+    }
+
+    /* Floating Heart Particle Animation */
+    @keyframes floatUpHeart {
+      0% { transform: translateY(0) scale(0.7) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-220px) scale(1.35) rotate(18deg); opacity: 0; }
+    }
+    .floating-heart-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: floatUpHeart 2.1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08060a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(251, 113, 133, 0.25);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="relative selection:bg-rose-500/30 selection:text-rose-200">
+
+  <!-- ===================================================================== -->
+  <!-- AMBIENT ATMOSPHERE: FILM GRAIN, BOKEH ORBS & FLOATING MICRO-SPARKLES   -->
+  <!-- ===================================================================== -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- Film grain noise overlay -->
+    <div class="absolute inset-0 film-grain-overlay z-10"></div>
+
+    <!-- Soft ambient glowing bokeh orbs -->
+    <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-rose-500/12 blur-[110px] animate-float-slow"></div>
+    <div class="absolute top-1/3 -right-28 w-80 h-80 rounded-full bg-amber-500/10 blur-[100px] animate-float-slow" style="animation-delay: -5s;"></div>
+    <div class="absolute bottom-12 left-1/4 w-96 h-96 rounded-full bg-fuchsia-500/10 blur-[120px] animate-float-slow" style="animation-delay: -9s;"></div>
+
+    <!-- Floating micro-sparkle SVG stars -->
+    <svg class="absolute top-[14%] left-[12%] w-4 h-4 text-rose-300/40 animate-twinkle" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+    </svg>
+    <svg class="absolute top-[38%] right-[10%] w-3.5 h-3.5 text-amber-200/40 animate-twinkle" style="animation-delay: 1.5s;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+    </svg>
+    <svg class="absolute top-[68%] left-[8%] w-3 h-3 text-rose-200/35 animate-twinkle" style="animation-delay: 2.7s;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+    </svg>
+    <svg class="absolute top-[84%] right-[16%] w-4 h-4 text-amber-300/30 animate-twinkle" style="animation-delay: 0.9s;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+    </svg>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CINEMATIC LOCKSCREEN INTRO (#cinematic-intro)                         -->
+  <!-- ===================================================================== -->
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 py-10 bg-[#08060a]/95 backdrop-blur-2xl transition-all duration-700 select-none">
+    <!-- Subtle lockscreen wallpaper glow -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/25 via-amber-400/15 to-transparent blur-3xl"></div>
+    </div>
+
+    <!-- Top Lockscreen Status Bar -->
+    <div class="relative z-10 w-full max-w-md flex items-center justify-between text-xs font-medium text-zinc-400 px-2">
+      <span id="lockscreen-carrier" class="tracking-wide flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+        LoveOS 18.4
+      </span>
+      <div class="flex items-center gap-2">
+        <!-- Signal & Battery SVGs -->
+        <svg class="w-3.5 h-3.5 text-zinc-300" fill="currentColor" viewBox="0 0 16 16">
+          <rect x="1" y="10" width="2.2" height="5" rx="0.8"/>
+          <rect x="4.5" y="7.5" width="2.2" height="7.5" rx="0.8"/>
+          <rect x="8" y="4.5" width="2.2" height="10.5" rx="0.8"/>
+          <rect x="11.5" y="1.5" width="2.2" height="13.5" rx="0.8"/>
+        </svg>
+        <div class="flex items-center gap-0.5 border border-zinc-500 rounded-[4px] p-0.5">
+          <div class="w-4 h-2 bg-rose-400 rounded-[2px]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Lockscreen Clock & Notification Preview -->
+    <div class="relative z-10 flex flex-col items-center text-center my-auto max-w-sm w-full">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-rose-200/90 mb-3">
+        <svg class="w-3 h-3 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 0110 0v2h1zm-6-5a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z"/>
+        </svg>
+        <span>private keepsake • eyes only</span>
+      </div>
+
+      <div id="lockscreen-date-el" class="text-sm font-medium text-zinc-300 tracking-wide">
+        Sunday, October 14
+      </div>
+      <div id="lockscreen-time-el" class="text-7xl font-bold tracking-tight text-white/95 my-1 font-sans">
+        02:14
+      </div>
+
+      <p id="lockscreen-couple-pill" class="text-xs text-zinc-400 mt-1">
+        prepared exclusively for <span id="intro-receiver-name" class="text-rose-300 font-medium">Mia</span>
+      </p>
+
+      <!-- Lockscreen Notification Stack Preview -->
+      <div id="intro-unlock-card" class="mt-8 w-full p-4 rounded-3xl bg-white/[0.07] hover:bg-white/[0.11] border border-white/15 backdrop-blur-xl shadow-2xl text-left cursor-pointer transition-all active:scale-[0.98]">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <div class="w-5 h-5 rounded-md bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center text-[11px] text-white shadow">
+              ♥
+            </div>
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-300">LOVEOS CAPSULE</span>
+          </div>
+          <span class="text-[11px] text-zinc-400">now</span>
+        </div>
+        <p id="intro-notification-title" class="text-sm font-semibold text-white">
+          Noah left a private time capsule for you
+        </p>
+        <p class="text-xs text-zinc-300/80 mt-0.5">
+          1 song on repeat, unsent late-night drafts, 4 sealed envelopes &amp; a scratch-off favor.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom Biometric / Tap-to-Unlock Trigger -->
+    <div class="relative z-10 flex flex-col items-center gap-3 w-full max-w-xs">
+      <button
+        id="unlock-experience-btn"
+        type="button"
+        class="group relative flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-b from-rose-500/20 to-rose-500/5 border border-rose-300/30 shadow-[0_0_40px_rgba(244,63,94,0.25)] transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none"
+        aria-label="Unlock Keepsake"
+      >
+        <span class="absolute inset-0 rounded-full border border-rose-400/40 animate-ping opacity-30"></span>
+        <!-- Fingerprint + Heart SVG -->
+        <svg class="w-9 h-9 text-rose-300 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+        </svg>
+      </button>
+      <span class="text-xs font-medium tracking-wide text-zinc-300">
+        tap to unlock our world
+      </span>
+      <div class="w-32 h-1 rounded-full bg-white/25 mt-2"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- FLOATING DYNAMIC ISLAND (#dynamic-island)                             -->
+  <!-- ===================================================================== -->
+  <header class="fixed top-3 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
+    <div
+      id="dynamic-island"
+      class="pointer-events-auto flex items-center justify-between gap-3 px-4 py-2 rounded-full bg-black/85 hover:bg-black/95 border border-white/15 backdrop-blur-2xl shadow-[0_12px_32px_rgba(0,0,0,0.75)] transition-all duration-500 cursor-pointer max-w-[92vw] sm:max-w-md"
+      title="Tap to toggle our song"
+    >
+      <!-- Dynamic Island Content Injected by updateDynamicIslandContent() -->
+    </div>
+  </header>
+
+  <!-- Hidden HTML5 Audio Element for Song Playback -->
+  <audio id="bg-music-audio" preload="auto" loop crossorigin="anonymous"></audio>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN COHESIVE VERTICAL EXPERIENCE (#main-experience)                  -->
+  <!-- ===================================================================== -->
+  <main id="main-experience" class="relative z-10 max-w-xl mx-auto px-4 sm:px-6 pt-20 pb-28 space-y-16 transition-all duration-700">
+
+    <!-- =================================================================== -->
+    <!-- SECTION 1: HERO LOCKSCREEN, WEATHER PILL, COUNTER & BOARDING PASS   -->
+    <!-- =================================================================== -->
+    <section id="section-hero" class="space-y-6 pt-2">
+      <!-- Cute iOS Weather / Location Status Lockscreen Pill -->
+      <div class="flex justify-center">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-inner text-xs text-zinc-200">
+          <span id="hero-weather-pill-text" class="tracking-tight">
+            📍 Right by your side • 100% chance of missing you
+          </span>
+        </div>
+      </div>
+
+      <!-- Couple Headline & Candid Subhead -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-rose-300/80 font-mono">
+          <span id="hero-partner1-tag">NOAH</span>
+          <span class="text-rose-400">♥</span>
+          <span id="hero-partner2-tag">MIA</span>
+        </div>
+        <h1 id="hero-main-title" class="font-serif italic text-4xl sm:text-5xl text-white tracking-tight leading-[1.1]">
+          every second since my favorite hello.
+        </h1>
+        <p id="hero-subtitle-el" class="text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+          i built this little corner of the internet so you have somewhere to go whenever you forget how much you mean to me.
+        </p>
+      </div>
+
+      <!-- Tactile iOS Glass Live Relationship Counter Widget -->
+      <div class="relative rounded-3xl p-5 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-3">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 -ml-3.5"></span>
+            clocked in together
+          </span>
+          <span id="hero-since-date-label">SINCE OCT 14, 2023</span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2.5 text-center">
+          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+            <div id="counter-days" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">000</div>
+            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">days</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+            <div id="counter-hours" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">00</div>
+            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">hours</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+            <div id="counter-minutes" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">00</div>
+            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">mins</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-rose-500/15 border border-rose-400/25">
+            <div id="counter-seconds" class="font-mono text-2xl sm:text-3xl font-bold text-rose-300 tracking-tight">00</div>
+            <div class="text-[10px] uppercase tracking-widest text-rose-300/80 mt-0.5">secs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone Selector Pills -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs font-medium text-zinc-400">core memory boarding passes</span>
+          <span class="text-[11px] font-mono text-rose-300/80">tap a pass to inspect</span>
+        </div>
+        <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <!-- Milestone pills injected by JS -->
+        </div>
+      </div>
+
+      <!-- Apple Wallet Boarding Pass / VIP Event Ticket (#milestone-detail-card) -->
+      <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300">
+        <!-- Injected by renderMilestoneDetailCard() with semicircular notches, dashed tear-line, barcode SVG & tilted VERIFIED MEMORY ♡ stamp -->
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 2: ON REPEAT — VINYL RECORD & METALLIC TONEARM DECK         -->
+    <!-- =================================================================== -->
+    <section id="section-music" class="space-y-4">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">02 • heavy rotation</span>
+          <h2 class="font-serif italic text-3xl text-white">the song that sounds like us</h2>
+        </div>
+        <!-- Cassette Tape Sticker Accent -->
+        <div class="rotate-[3deg] px-2.5 py-1 rounded bg-[#f5ebd6] text-zinc-900 border border-amber-900/30 shadow-md font-mono text-[10px] font-bold tracking-tight flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+          <span>SIDE A • 90m TAPE</span>
+        </div>
+      </div>
+
+      <!-- Tactile Turntable Plinth Card -->
+      <div class="relative rounded-3xl p-6 bg-gradient-to-br from-[#1d1720] via-[#130f16] to-[#0d0a10] border border-white/15 shadow-2xl overflow-hidden">
+        <!-- Decorative Corner Screws -->
+        <div class="absolute top-3.5 left-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
+        <div class="absolute top-3.5 right-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
+        <div class="absolute bottom-3.5 left-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
+        <div class="absolute bottom-3.5 right-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <!-- Vinyl Platter + Spinning Couple Photo Center Label + Metallic Tonearm -->
+          <div class="relative w-56 h-56 flex items-center justify-center shrink-0">
+            <!-- Platter outer rim -->
+            <div class="absolute inset-2 rounded-full border border-white/10 bg-black/50 shadow-inner"></div>
+
+            <!-- Spinning Vinyl Record (#vinyl-disc-el) -->
+            <div
+              id="vinyl-disc-el"
+              class="relative w-48 h-48 rounded-full flex items-center justify-center cursor-pointer select-none border border-zinc-700/60"
+              title="Tap vinyl to play/pause"
+            >
+              <!-- Specular vinyl sheen -->
+              <div class="absolute inset-0 rounded-full vinyl-sheen pointer-events-none"></div>
+              <!-- Subtle groove rings -->
+              <div class="absolute inset-4 rounded-full border border-white/[0.05] pointer-events-none"></div>
+              <div class="absolute inset-8 rounded-full border border-white/[0.04] pointer-events-none"></div>
+              <div class="absolute inset-12 rounded-full border border-white/[0.06] pointer-events-none"></div>
+
+              <!-- Couple's First Photo inside the Center Record Label -->
+              <div class="relative w-20 h-20 rounded-full overflow-hidden border-2 border-rose-200/60 shadow-inner bg-zinc-900 flex items-center justify-center">
+                <img
+                  id="vinyl-center-label-img"
+                  src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80"
+                  alt="Vinyl Center Label"
+                  class="w-full h-full object-cover"
+                  onerror="this.src='https://placehold.co/200x200/2a1b24/fda4af?text=Us'"
+                />
+                <!-- Circular label rim text effect -->
+                <div class="absolute inset-0 rounded-full ring-4 ring-rose-500/30 pointer-events-none"></div>
+                <!-- Center spindle hole -->
+                <div class="w-3.5 h-3.5 rounded-full bg-[#0d0a10] border border-zinc-400/70 z-10 shadow-md"></div>
+              </div>
+            </div>
+
+            <!-- Realistic Metallic SVG Tonearm (#vinyl-tonearm) -->
+            <svg
+              id="vinyl-tonearm"
+              class="absolute -top-1 -right-2 w-28 h-40 pointer-events-none z-20 drop-shadow-[0_8px_12px_rgba(0,0,0,0.85)]"
+              viewBox="0 0 120 170"
+              fill="none"
+            >
+              <defs>
+                <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f4f4f5" />
+                  <stop offset="50%" stop-color="#a1a1aa" />
+                  <stop offset="100%" stop-color="#52525b" />
+                </linearGradient>
+                <linearGradient id="roseMetal" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fda4af" />
+                  <stop offset="100%" stop-color="#be123c" />
+                </linearGradient>
+              </defs>
+              <!-- Tonearm Base Pivot -->
+              <circle cx="92" cy="30" r="18" fill="#18181b" stroke="url(#metalGrad)" stroke-width="2.5" />
+              <circle cx="92" cy="30" r="9" fill="url(#metalGrad)" />
+              <!-- Counterweight -->
+              <rect x="86" y="6" width="12" height="10" rx="3" fill="url(#metalGrad)" />
+              <!-- Tonearm Curved Tube -->
+              <path d="M92 30 L82 95 C80 112 68 124 54 136" stroke="url(#metalGrad)" stroke-width="4.5" stroke-linecap="round" />
+              <!-- Headshell / Cartridge -->
+              <g transform="translate(42, 130) rotate(32)">
+                <rect x="0" y="0" width="12" height="20" rx="2.5" fill="url(#roseMetal)" stroke="#fff" stroke-width="0.7" />
+                <line x1="6" y1="20" x2="6" y2="24" stroke="#fde047" stroke-width="2" stroke-linecap="round" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Track Details, Animated Equalizer & Controls -->
+          <div class="flex-1 w-full space-y-4 text-center sm:text-left">
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/25 text-[11px] text-rose-300">
+                <!-- Animated Equalizer Bars -->
+                <div class="flex items-end gap-0.5 h-3">
+                  <span class="island-wave-bar"></span>
+                  <span class="island-wave-bar"></span>
+                  <span class="island-wave-bar"></span>
+                  <span class="island-wave-bar"></span>
+                </div>
+                <span id="vinyl-status-badge">ready to spin</span>
+              </div>
+
+              <h3 id="music-song-title" class="text-xl font-bold text-white tracking-tight pt-1">
+                Sunsetz (Late Night Drive Edit)
+              </h3>
+              <p id="music-song-artist" class="text-sm text-zinc-400 font-medium">
+                Cigarettes After Sex • Our Car Stereo
+              </p>
+            </div>
+
+            <!-- Candid Dedication Quote -->
+            <p id="music-dedication-note" class="text-xs italic text-zinc-300/90 bg-white/[0.04] border-l-2 border-rose-400/70 pl-3 py-2 rounded-r-xl leading-relaxed">
+              "i still can't hear the first 5 seconds of this without immediately thinking of you with the passenger window rolled down."
+            </p>
+
+            <!-- Play / Pause Button + Scrubber -->
+            <div class="flex items-center gap-3 pt-1">
+              <button
+                id="music-toggle-btn"
+                type="button"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 text-zinc-950 font-semibold text-xs shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition-all"
+              >
+                <svg id="music-play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <svg id="music-pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+                <span id="music-btn-label">Spin Our Record</span>
+              </button>
+
+              <div class="flex-1 space-y-1">
+                <div class="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                  <div id="music-progress-bar" class="h-full w-1/3 bg-gradient-to-r from-rose-400 to-amber-300 rounded-full transition-all duration-300"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                  <span id="music-time-current">0:42</span>
+                  <span>∞ ON REPEAT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 3: HOW IT STARTED — iOS 18 iMESSAGE & UNSENT DRAFTS         -->
+    <!-- =================================================================== -->
+    <section id="section-messages" class="space-y-5 relative">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">03 • receipts &amp; late nights</span>
+          <h2 class="font-serif italic text-3xl text-white">how we started talking</h2>
+        </div>
+      </div>
+
+      <!-- Drop-Down iOS Notification Banner (#ios-notification-banner) -->
+      <div
+        id="ios-notification-banner"
+        class="relative z-20 p-3.5 rounded-3xl bg-zinc-900/95 border border-white/15 backdrop-blur-2xl shadow-[0_18px_40px_rgba(0,0,0,0.75)] flex items-center gap-3.5 cursor-pointer transition-all hover:border-blue-400/40 active:scale-[0.99] -translate-y-2 opacity-95"
+        title="Tap to replay our messages with iMessage sound"
+      >
+        <div class="relative w-10 h-10 rounded-2xl bg-gradient-to-b from-[#34d399] to-[#10b981] flex items-center justify-center shrink-0 shadow-md">
+          <!-- iMessage Bubble SVG -->
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3C6.48 3 2 6.58 2 11c0 2.03.94 3.88 2.47 5.28-.18.96-.68 2.13-1.41 2.95-.2.22-.06.58.23.55 1.54-.17 3.09-.78 4.12-1.38.82.22 1.69.35 2.59.35 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <span id="notif-sender-name" class="text-xs font-semibold text-white">Mia ♥</span>
+            <span class="text-[10px] text-zinc-400">iMessage • tap to replay</span>
+          </div>
+          <p id="notif-preview-text" class="text-xs text-zinc-300 truncate mt-0.5">
+            "be honest... were you nervous the first time we hung out?"
+          </p>
+        </div>
+      </div>
+
+      <!-- Authentic iOS 18 Messages Viewport Card -->
+      <div class="rounded-[32px] bg-[#0b0b0e] border border-white/15 shadow-2xl overflow-hidden">
+        <!-- Blurred iOS 18 Contact Header -->
+        <div class="px-4 py-3 bg-zinc-900/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
+          <!-- Left back button + unread pill -->
+          <div class="flex items-center gap-1 text-[#007aff] text-sm font-medium cursor-pointer" id="imessage-header-replay">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span class="px-1.5 py-0.5 text-[11px] rounded-full bg-[#007aff] text-white font-semibold">2</span>
+          </div>
+
+          <!-- Center Avatar + Contact Name > -->
+          <div class="flex flex-col items-center">
+            <div class="relative w-9 h-9 rounded-full overflow-hidden bg-gradient-to-tr from-rose-400 to-amber-300 p-[1.5px]">
+              <img
+                id="imessage-contact-avatar"
+                src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=300&q=80"
+                alt="Contact Avatar"
+                class="w-full h-full rounded-full object-cover"
+                onerror="this.src='https://placehold.co/100x100/2a1b24/fda4af?text=M'"
+              />
+            </div>
+            <div class="flex items-center gap-0.5 mt-1">
+              <span id="imessage-contact-name" class="text-xs font-semibold text-white">Mia</span>
+              <svg class="w-3 h-3 text-zinc-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Right FaceTime Video & Audio Icons -->
+          <div class="flex items-center gap-3 text-[#007aff]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- iMessage Timestamp Header -->
+        <div class="text-center pt-4 pb-1">
+          <span id="imessage-timestamp-label" class="text-[11px] font-medium text-zinc-500">
+            iMessage • Late Night, 11:48 PM
+          </span>
+        </div>
+
+        <!-- Chat Bubbles Feed (#chat-bubbles-container) -->
+        <div id="chat-bubbles-container" class="p-4 space-y-2.5 min-h-[260px] flex flex-col justify-end">
+          <!-- Chat bubbles injected by renderChatBubbles() -->
+        </div>
+
+        <!-- Delivered Receipt -->
+        <div class="px-5 pb-2 text-right">
+          <span class="text-[10px] font-medium text-zinc-500">Delivered • Read 11:51 PM</span>
+        </div>
+
+        <!-- Realistic Decorative iMessage Input Bar at Bottom -->
+        <div class="px-3.5 py-3 bg-zinc-900/70 border-t border-white/10 flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div
+            id="replay-chat-input-bar"
+            class="flex-1 flex items-center justify-between pl-3.5 pr-1.5 py-1.5 rounded-full bg-zinc-950/90 border border-white/15 cursor-pointer hover:border-[#007aff]/60 transition-colors"
+          >
+            <span class="text-xs text-zinc-400 truncate">iMessage... (tap to replay chat)</span>
+            <button
+              id="replay-chat-btn"
+              type="button"
+              class="w-7 h-7 rounded-full bg-[#007aff] hover:bg-blue-500 text-white flex items-center justify-center shadow-[0_0_14px_rgba(0,122,255,0.65)] transition-transform active:scale-90"
+              aria-label="Replay Chat Messages"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unsent Drafts Stack (.unsent-draft-card) -->
+      <div class="pt-3 space-y-2.5">
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            unsent drafts i typed &amp; backspaced
+          </span>
+          <span class="text-[11px] font-mono text-zinc-500">tap to read</span>
+        </div>
+        <div id="unsent-drafts-container" class="space-y-2.5">
+          <!-- Unsent drafts injected by renderUnsentDrafts() -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 4: CAMERA ROLL — 3D POLAROID SCRAPBOOK WITH WASHI TAPE      -->
+    <!-- =================================================================== -->
+    <section id="section-polaroids" class="space-y-5">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">04 • 35mm camera roll</span>
+          <h2 class="font-serif italic text-3xl text-white">frames i'm keeping forever</h2>
+        </div>
+        <span id="polaroid-counter-badge" class="font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300">
+          1 / 4
+        </span>
+      </div>
+
+      <!-- Scrapbook Stage with Washi Tape, Sparkle Doodles & 3D Flip Polaroid -->
+      <div class="relative pt-5 pb-2 px-2 sm:px-6">
+        <!-- Decorative Hand-Drawn Sparkle Doodle SVGs -->
+        <svg class="absolute top-1 left-2 w-7 h-7 text-amber-300/60 pointer-events-none z-20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M16 3v26M3 16h26M7 7l18 18M25 7L7 25" />
+        </svg>
+        <svg class="absolute bottom-8 right-1 w-8 h-8 text-rose-300/60 pointer-events-none z-20" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M20 4c1.5 9 4 12.5 14 16-10 3.5-12.5 7-14 16-1.5-9-4-12.5-14-16 10-3.5 12.5-7 14-16z" />
+        </svg>
+
+        <!-- Realistic Translucent Washi Tape SVG Strip Across Top-Center -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 z-30 pointer-events-none rotate-[-2deg] drop-shadow-md">
+          <svg width="148" height="36" viewBox="0 0 148 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 3L144 1L141 7L146 13L142 19L145 25L141 33L3 35L7 28L2 22L6 15L2 9L4 3Z" fill="#FCE7F3" fill-opacity="0.78" stroke="#F9A8D4" stroke-opacity="0.5" />
+            <!-- Subtle Washi Crosshatch Pattern -->
+            <path d="M20 3L12 34M40 3L32 34M60 2L52 34M80 2L72 34M100 2L92 34M120 2L112 34" stroke="#F472B6" stroke-opacity="0.22" stroke-width="1.2" />
+            <text x="74" y="21" text-anchor="middle" fill="#9D174D" fill-opacity="0.65" font-family="Caveat, cursive" font-size="14" font-weight="700">keep forever ♡</text>
+          </svg>
+        </div>
+
+        <!-- 3D Flip Polaroid Frame -->
+        <div class="perspective-1000 max-w-sm mx-auto">
+          <div id="polaroid-3d-card" class="polaroid-3d-inner cursor-pointer select-none">
+
+            <!-- FRONT OF POLAROID -->
+            <div class="polaroid-face rounded-xl bg-[#faf7f2] p-3.5 pb-6 shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300">
+              <div class="relative aspect-[4/4] w-full rounded-lg overflow-hidden bg-zinc-900 shadow-inner">
+                <img
+                  id="polaroid-active-img"
+                  src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80"
+                  alt="Couple Memory"
+                  class="w-full h-full object-cover transition-transform duration-500"
+                  onerror="this.src='https://placehold.co/600x600/2a1b24/fda4af?text=Our+Photo'"
+                />
+                <!-- Subtle 35mm Warm Vignette -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15 pointer-events-none"></div>
+
+                <!-- Tactile "Flip Over ↻" Pill Badge -->
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1 shadow">
+                  <span>Flip Over ↻</span>
+                </div>
+
+                <!-- Authentic 90s 35mm Film Date Burn Stamp ('24 10 14) -->
+                <div id="polaroid-film-date" class="absolute bottom-2.5 right-3.5 text-sm font-bold film-date-burn select-none">
+                  '24 10 14
+                </div>
+              </div>
+
+              <!-- Handwritten Caption Below Photo -->
+              <div class="pt-4 px-2 flex items-center justify-between">
+                <p id="polaroid-front-caption" class="font-hand text-2xl text-zinc-800 leading-tight">
+                  golden hour in your passenger seat
+                </p>
+                <span class="text-xs font-mono text-stone-400">#01</span>
+              </div>
+            </div>
+
+            <!-- BACK OF POLAROID (Handwritten Secret Note) -->
+            <div class="polaroid-face polaroid-back absolute inset-0 rounded-xl p-6 flex flex-col justify-between shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300 text-zinc-800">
+              <div class="flex items-center justify-between border-b border-stone-300 pb-3">
+                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">KODAK PORTRA 400 • BACK OF PRINT</span>
+                <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-mono text-[10px] font-semibold">Flip Back ↻</span>
+              </div>
+
+              <div class="my-auto py-4 space-y-3">
+                <p class="text-xs font-mono uppercase tracking-wider text-stone-400">written on the back:</p>
+                <p id="polaroid-back-note" class="font-hand text-2xl sm:text-3xl text-zinc-800 leading-snug">
+                  "you were laughing so hard at your own joke here that you spilled iced coffee on your sleeve. i remember thinking: yep, i'm completely done for."
+                </p>
+              </div>
+
+              <div class="flex items-center justify-between border-t border-stone-300 pt-3 text-xs font-mono text-stone-500">
+                <span id="polaroid-back-location">📍 Pacific Coast Hwy</span>
+                <span>♥ kept safe</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Polaroid Navigation & Thumbnail Strip -->
+      <div class="flex items-center justify-between gap-3 max-w-sm mx-auto pt-1">
+        <button
+          id="polaroid-prev-btn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-200 transition active:scale-95"
+        >
+          ← Prev
+        </button>
+        <div id="polaroid-thumbs-row" class="flex items-center gap-2 overflow-x-auto py-1">
+          <!-- Thumbnails injected by JS -->
+        </div>
+        <button
+          id="polaroid-next-btn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-200 transition active:scale-95"
+        >
+          Next →
+        </button>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 5: "OPEN WHEN..." — REAL TACTILE CREAM AIRMAIL ENVELOPES    -->
+    <!-- =================================================================== -->
+    <section id="section-envelopes" class="space-y-5">
+      <div class="px-1">
+        <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">05 • par avion keepsake mail</span>
+        <h2 class="font-serif italic text-3xl text-white">open when you need me</h2>
+        <p class="text-xs text-zinc-400 mt-0.5">
+          tap any wax seal to break it open and read the letter inside.
+        </p>
+      </div>
+
+      <!-- 2x2 Grid of Tactile Warm Cream / Vintage Kraft Paper Envelopes (.envelope-card) -->
+      <div id="envelopes-grid-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Tactile cream airmail envelopes injected by renderEnvelopes() -->
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 6: SCRATCH-OFF DATE NIGHT FAVOR (PERFORATED CINEMA TICKET)  -->
+    <!-- =================================================================== -->
+    <section id="section-scratch" class="space-y-4">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">06 • redeemable anytime</span>
+          <h2 class="font-serif italic text-3xl text-white">scratch-off date night favor</h2>
+        </div>
+        <button
+          id="reset-scratch-btn"
+          type="button"
+          class="text-[11px] font-mono text-zinc-400 hover:text-rose-300 underline"
+        >
+          reset foil
+        </button>
+      </div>
+
+      <!-- Perforated Cinema Ticket Voucher Container -->
+      <div class="relative rounded-3xl bg-gradient-to-b from-[#231922] to-[#140e16] border border-amber-300/30 p-5 shadow-2xl overflow-hidden">
+        <!-- Left & Right Perforated Cinema Ticket Notches -->
+        <div class="ticket-notch-left top-1/2 -translate-y-1/2 !border-amber-300/30"></div>
+        <div class="ticket-notch-right top-1/2 -translate-y-1/2 !border-amber-300/30"></div>
+
+        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-amber-200/80 mb-3 px-2">
+          <span>★ ADMIT TWO • VIP COUPON</span>
+          <span id="scratch-serial-code">NO. 1014-LOVE</span>
+        </div>
+
+        <!-- Hidden Prize Underneath + Interactive Holographic Gold-Rose Foil Canvas -->
+        <div class="relative h-44 w-full rounded-2xl overflow-hidden border border-amber-300/25 bg-[#1a121b] flex flex-col items-center justify-center text-center p-5 select-none">
+          <span class="px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-300/30 text-[10px] font-mono uppercase tracking-wider text-amber-300 mb-2">
+            GOOD FOR ONE UNCONDITIONAL FAVOR
+          </span>
+          <h3 id="scratch-prize-title" class="font-serif italic text-2xl sm:text-3xl text-white">
+            Midnight Takeout + Back Scratch &amp; Zero Questions Asked
+          </h3>
+          <p id="scratch-prize-desc" class="text-xs text-zinc-300 mt-1.5 max-w-xs">
+            screenshot this &amp; send it to me whenever you want to cash it in. valid 24/7/365.
+          </p>
+
+          <!-- Holographic Gold-Rose Foil Scratch Canvas -->
+          <canvas
+            id="scratch-canvas"
+            class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-none z-10 transition-opacity duration-500"
+          ></canvas>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-zinc-400 mt-3 px-2">
+          <span id="scratch-status-text">✦ rub the gold-rose foil with your finger to reveal</span>
+          <button
+            id="quick-reveal-scratch-btn"
+            type="button"
+            class="text-amber-300 hover:underline font-medium"
+          >
+            reveal instant →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 7: 2:14 AM NOTES APP (WITH METALLIC PAPERCLIP) & BUCKET LIST -->
+    <!-- =================================================================== -->
+    <section id="section-notes" class="space-y-8">
+      <!-- 2:14 AM Apple Notes Card with Realistic Metallic Silver Paperclip -->
+      <div class="relative pt-3">
+        <!-- Realistic Metallic Silver Paperclip SVG Clipped to Top-Right Edge -->
+        <div class="absolute -top-2 right-7 z-30 pointer-events-none drop-shadow-[0_6px_8px_rgba(0,0,0,0.7)] rotate-[6deg]">
+          <svg width="36" height="72" viewBox="0 0 36 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="silverClipGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#e4e4e7" />
+                <stop offset="45%" stop-color="#ffffff" />
+                <stop offset="100%" stop-color="#71717a" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M10 22V54C10 61.732 15.82 68 23 68C30.18 68 33 61.732 33 54V16C33 8.82 27.627 3 21 3C14.373 3 9 8.82 9 16V48C9 52.418 12.582 56 17 56C21.418 56 25 52.418 25 48V20"
+              stroke="url(#silverClipGrad)"
+              stroke-width="3.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div class="rounded-3xl notes-paper-lines border border-amber-400/25 shadow-2xl overflow-hidden">
+          <!-- Apple Notes Top Navigation Bar -->
+          <div class="px-5 py-3.5 bg-zinc-900/90 border-b border-white/10 flex items-center justify-between text-amber-400 text-xs font-medium">
+            <span class="flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              iCloud Notes
+            </span>
+            <span class="text-[11px] font-mono text-zinc-400">Edited 2:14 AM</span>
+            <span class="font-semibold">Done</span>
+          </div>
+
+          <div class="p-6 space-y-5">
+            <!-- Headline with Hand-Drawn Marker Underline SVG -->
+            <div>
+              <div class="inline-block relative">
+                <h2 id="notes-title-el" class="font-serif italic text-3xl text-white relative z-10">
+                  things i don't say out loud enough
+                </h2>
+                <!-- Hand-drawn marker underline SVG -->
+                <svg class="w-full h-3 -mt-1 text-amber-400/70" viewBox="0 0 280 12" fill="none" preserveAspectRatio="none">
+                  <path d="M3 9C72 3 195 2 277 8" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+                  <path d="M18 11C98 6 188 6 264 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Candid Late-Night Bullet Confessions -->
+            <ul id="late-night-notes-list" class="space-y-3 text-sm text-zinc-200 leading-relaxed">
+              <!-- Injected by renderNotesAndBucketList() -->
+            </ul>
+
+            <!-- Final Candid Paragraph -->
+            <div class="pt-3 border-t border-white/10">
+              <p id="final-letter-body" class="font-hand text-2xl text-amber-100/95 leading-snug">
+                "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time."
+              </p>
+              <p id="final-letter-signoff" class="text-xs font-mono text-amber-300/80 mt-2">
+                — yours, always, Noah ♥
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shared Bucket List ("our someday list") -->
+      <div class="rounded-3xl p-6 bg-white/[0.04] border border-white/10 backdrop-blur-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">interactive checklist</span>
+            <h3 class="font-serif italic text-2xl text-white">our someday bucket list</h3>
+          </div>
+          <span id="bucket-progress-badge" class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-400/30 text-xs font-mono text-rose-200">
+            2 / 5 done
+          </span>
+        </div>
+
+        <div id="bucket-list-container" class="space-y-2">
+          <!-- Interactive checkable bucket list items injected by JS -->
+        </div>
+      </div>
+
+      <!-- Tactile Send Heart Pulse Footer Button -->
+      <div class="pt-4 text-center space-y-3">
+        <button
+          id="send-heart-pulse-btn"
+          type="button"
+          class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-400 text-zinc-950 font-semibold text-xs tracking-wide shadow-[0_10px_30px_rgba(244,63,94,0.35)] hover:scale-105 active:scale-95 transition-all"
+        >
+          <span>♥</span>
+          <span>tap to send a little love pulse</span>
+        </button>
+        <p class="text-[11px] text-zinc-500 font-mono">
+          crafted with LoveOS • saved to your personal keepsake vault
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- WAX-SEALED LETTER MODAL (#envelope-modal)                             -->
+  <!-- ===================================================================== -->
+  <div
+    id="envelope-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity"
+  >
+    <div class="relative w-full max-w-md rounded-3xl bg-gradient-to-b from-[#faf6f0] to-[#efe8dc] text-zinc-900 p-6 sm:p-8 shadow-2xl border-2 border-[#d8ccb8] overflow-hidden">
+      <!-- Top Airmail Stripe Bar -->
+      <div class="absolute top-0 inset-x-0 h-2.5 airmail-stripe-bar"></div>
+
+      <div class="flex items-center justify-between mt-2 pb-4 border-b border-stone-300">
+        <div>
+          <span id="modal-envelope-tag" class="font-mono text-[10px] uppercase tracking-widest text-rose-700 font-bold">
+            PAR AVION • SEAL BROKEN
+          </span>
+          <h3 id="modal-envelope-title" class="font-serif italic text-3xl text-zinc-900 mt-0.5">
+            Open when you miss me
+          </h3>
+        </div>
+        <button
+          id="close-envelope-modal-btn"
+          type="button"
+          class="w-9 h-9 rounded-full bg-stone-200 hover:bg-stone-300 text-zinc-700 flex items-center justify-center font-bold text-sm transition"
+          aria-label="Close letter"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="py-5 space-y-4">
+        <p id="modal-envelope-body" class="text-sm sm:text-base text-zinc-800 leading-relaxed whitespace-pre-line">
+          Hey love...
+        </p>
+        <p id="modal-envelope-ps" class="font-hand text-2xl text-rose-800 pt-2">
+          p.s. call me right now, i'm never too busy for your voice.
+        </p>
+      </div>
+
+      <div class="pt-3 border-t border-stone-300 flex items-center justify-between text-[11px] font-mono text-stone-500">
+        <span>HAND-SEALED WITH LOVE</span>
+        <button
+          id="modal-done-btn"
+          type="button"
+          class="px-4 py-1.5 rounded-full bg-zinc-900 text-amber-100 font-sans font-medium text-xs hover:bg-zinc-800 transition"
+        >
+          Fold &amp; Keep Safe ♡
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- CORE JAVASCRIPT: DATA SCHEMA, HYBRID AUDIO ENGINE & LIVE EDITOR HOOKS -->
+  <!-- ===================================================================== -->
+  <script>
+    // =========================================================================
+    // 1. DEFAULT COUPLE_DATA SCHEMA & SERVER PROJECT HYDRATION
+    // =========================================================================
+    window.COUPLE_DATA = window.COUPLE_DATA || {
+      partner1Name: "Noah",
+      partner2Name: "Mia",
+      anniversaryDate: "2023-10-14T20:30:00",
+      weatherStatus: "📍 Right by your side • 100% chance of missing you",
+      heroTitle: "every second since my favorite hello.",
+      heroSubtitle: "i built this little corner of the internet so you have somewhere to go whenever you forget how much you mean to me.",
+      songTitle: "Sunsetz (Late Night Drive Edit)",
+      songArtist: "Cigarettes After Sex • Our Car Stereo",
+      audioUrl: "",
+      songDedication: "i still can't hear the first 5 seconds of this without immediately thinking of you with the passenger window rolled down.",
+      milestones: [
+        {
+          id: "m1",
+          label: "First Coffee",
+          date: "OCT 14, 2023",
+          time: "08:30 PM",
+          location: "Corner Booth • Rainy Tuesday",
+          flightCode: "LV-001",
+          seat: "BOOTH 4A",
+          title: "The 45-Minute Coffee That Turned Into 4 Hours",
+          description: "We were supposed to just grab a quick drink before the rain started. Instead we closed the whole place down and talked until the barista had to politely kick us out."
+        },
+        {
+          id: "m2",
+          label: "First Roadtrip",
+          date: "DEC 22, 2023",
+          time: "06:15 AM",
+          location: "Highway 1 • Coastline",
+          flightCode: "LV-019",
+          seat: "PASSENGER",
+          title: "Wrong Turns & Gas Station Snacks",
+          description: "Missed our exit twice because you were DJing from the passenger seat. Best detour of my entire life."
+        },
+        {
+          id: "m3",
+          label: "First 'I Love You'",
+          date: "FEB 09, 2024",
+          time: "01:12 AM",
+          location: "Your Kitchen Floor",
+          flightCode: "LV-143",
+          seat: "HOME",
+          title: "2 AM Takeout & Saying It Out Loud",
+          description: "You were mid-sentence talking about something random, and I just couldn't hold it in another second."
+        }
+      ],
+      chatMessages: [
+        { sender: "them", text: "be honest... were you nervous the first time we hung out?", time: "11:48 PM" },
+        { sender: "me", text: "i literally changed my shirt 3 times before i left my house 😭", time: "11:49 PM" },
+        { sender: "them", text: "stoppp no you didn't", time: "11:49 PM" },
+        { sender: "me", text: "100% serious. and i still get butterflies every time your name pops up on my phone", time: "11:50 PM" },
+        { sender: "them", text: "okay wait that's actually the sweetest thing ever ♥", time: "11:51 PM" }
+      ],
+      unsentDrafts: [
+        {
+          preview: "sometimes when you fall asleep on my shoulder...",
+          fullText: "sometimes when you fall asleep on my shoulder in the car, i drive 10 mph slower just so i get a few extra minutes before i have to wake you up."
+        },
+        {
+          preview: "i didn't tell you this the other night, but...",
+          fullText: "i didn't tell you this the other night, but watching you laugh with your friends across the room made me realize how ridiculously lucky i am that i get to go home with you."
+        },
+        {
+          preview: "whenever life gets loud and overwhelming...",
+          fullText: "whenever life gets loud and overwhelming, five minutes of hugging you in the kitchen fixes my entire week."
+        }
+      ],
+      polaroidPhotos: [
+        {
+          imageUrl: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+          caption: "golden hour in your passenger seat",
+          dateStamp: "'23 10 14",
+          location: "Pacific Coast Hwy",
+          secretNote: "you were laughing so hard at your own joke here that you spilled iced coffee on your sleeve. i remember thinking: yep, i'm completely done for."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
+          caption: "sunday morning pancake disaster",
+          dateStamp: "'24 01 21",
+          location: "Our Kitchen",
+          secretNote: "half the batter ended up on the counter, the smoke alarm went off once, and it's still my favorite breakfast i've ever had."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
+          caption: "caught in the rain without an umbrella",
+          dateStamp: "'24 05 03",
+          location: "Downtown Crosswalk",
+          secretNote: "we hid under that tiny bakery awning for twenty minutes sharing one warm cinnamon roll."
+        },
+        {
+          imageUrl: "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=800&q=80",
+          caption: "late night grocery run at 11pm",
+          dateStamp: "'24 08 19",
+          location: "Aisle 4 • Frozen Snacks",
+          secretNote: "even doing the most boring mundane errands with you feels like a date."
+        }
+      ],
+      openWhenLetters: [
+        {
+          id: "env1",
+          label: "Open when you miss me",
+          postmark: "LONELY NIGHTS • EXPRESS",
+          stampCode: "LOVE 01",
+          body: "Take a deep breath and look at the clock. Whatever time it is right now, there's a 99.9% chance I'm thinking about you too.\n\nPut on the sweatshirt of mine you stole, play our song from Section 2, and text me a single heart emoji. I'll drop whatever I'm doing as fast as I can.",
+          ps: "p.s. distance has nothing on us."
+        },
+        {
+          id: "env2",
+          label: "Open when you've had a rough day",
+          postmark: "COMFORT DEPT • PRIORITY",
+          stampCode: "CARE 02",
+          body: "First of all: you don't have to have everything figured out tonight. You work so hard and carry so much for everyone around you.\n\nTonight, your only job is to let me take care of you. No dishes, no stress. Tell me what takeout you want and I'm already on my way.",
+          ps: "p.s. i'm always in your corner, no matter what."
+        },
+        {
+          id: "env3",
+          label: "Open when you're overthinking",
+          postmark: "2AM REASSURANCE • AIRMAIL",
+          stampCode: "SAFE 03",
+          body: "Hey, quiet that loud brain for a second and read this carefully:\n\nYou are never 'too much.' I'm not going anywhere. You don't have to earn my love on your hard days—you already have all of it.",
+          ps: "p.s. you are my favorite person on this planet."
+        },
+        {
+          id: "env4",
+          label: "Open when we're being stubborn",
+          postmark: "PEACE TREATY • FIRST CLASS",
+          stampCode: "US 04",
+          body: "Remember our rule: it's never you vs. me. It's always us vs. the problem.\n\nEven when I'm annoyed for five minutes, I still want to hold your hand. Come give me a 20-second hug and let's reset.",
+          ps: "p.s. i love you way more than winning any argument."
+        }
+      ],
+      scratchOffFavor: {
+        serial: "NO. 1014-LOVE",
+        title: "Midnight Takeout + Back Scratch & Zero Questions Asked",
+        description: "screenshot this & send it to me whenever you want to cash it in. valid 24/7/365."
+      },
+      lateNightNotes: [
+        "the way your whole face lights up before you even finish telling a story.",
+        "how safe and quiet my brain feels the exact second you hug me.",
+        "that little sleepy voice you get when you're trying to stay awake during a movie.",
+        "how you remember the smallest details about things i mentioned once three months ago."
+      ],
+      bucketList: [
+        { text: "take a spontaneous weekend roadtrip with no hotel booked", done: true },
+        { text: "cook a 3-course pasta dinner at home at midnight", done: true },
+        { text: "watch the sunrise from the beach wrapped in one big blanket", done: false },
+        { text: "fill a physical disposable camera together on vacation", done: false },
+        { text: "grow old & still hold hands in the grocery store", done: false }
+      ],
+      finalLetter: "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time.",
+      finalSignoff: "— yours, always, Noah ♥"
+    };
+
+    // Hydrate from window.__SERVER_PROJECT__ if injected by backend
+    if (typeof window.__SERVER_PROJECT__ !== "undefined" && window.__SERVER_PROJECT__) {
+      const srv = window.__SERVER_PROJECT__.data || window.__SERVER_PROJECT__.coupleData || window.__SERVER_PROJECT__;
+      if (srv && typeof srv === "object") {
+        window.COUPLE_DATA = Object.assign({}, window.COUPLE_DATA, srv);
+      }
+    }
+
+    // =========================================================================
+    // 2. UNIVERSAL CROSS-PLATFORM AUDIO & iMESSAGE SOUND ENGINE
+    //    (100% Working on both iOS Safari [even Silent Switch ON] & Android)
+    // =========================================================================
+    let uiAudioCtx = null;
+    let audioUnlocked = false;
+    let chatReceiveWavUrl = null;
+    let chatSendWavUrl = null;
+    let tapWavUrl = null;
+    let unlockWavUrl = null;
+    const html5AudioPool = {};
+
+    /**
+     * Synthesizes a 16-bit PCM .wav Blob URL in memory using ArrayBuffer
+     * so HTML5 <audio> elements can play through the iOS Media Channel
+     * (audible even when the physical iPhone silent switch is turned on).
+     */
+    function generatePcmWavBlobUrl(durationSec, sampleFn) {
+      const sampleRate = 44100;
+      const numSamples = Math.floor(sampleRate * durationSec);
+      const buffer = new ArrayBuffer(44 + numSamples * 2);
+      const view = new DataView(buffer);
+
+      function writeStr(offset, str) {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(offset + i, str.charCodeAt(i));
+        }
+      }
+
+      // RIFF WAVE Header
+      writeStr(0, "RIFF");
+      view.setUint32(4, 36 + numSamples * 2, true);
+      writeStr(8, "WAVE");
+      writeStr(12, "fmt ");
+      view.setUint32(16, 16, true); // PCM chunk size
+      view.setUint16(20, 1, true);  // PCM format = 1
+      view.setUint16(22, 1, true);  // Mono = 1 channel
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true); // 16-bit
+      writeStr(36, "data");
+      view.setUint32(40, numSamples * 2, true);
+
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        let s = sampleFn(t, durationSec);
+        s = Math.max(-1, Math.min(1, s));
+        view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+
+      const blob = new Blob([buffer], { type: "audio/wav" });
+      return URL.createObjectURL(blob);
+    }
+
+    function initSynthesizedWavUrls() {
+      if (chatReceiveWavUrl) return;
+
+      // 1. chatReceiveWavUrl: Authentic Apple iMessage two-tone bell chime (880Hz -> 1318.5Hz)
+      chatReceiveWavUrl = generatePcmWavBlobUrl(0.62, (t) => {
+        if (t < 0.13) {
+          const env = Math.exp(-t * 16) * Math.min(1, t * 250);
+          return (
+            Math.sin(2 * Math.PI * 880 * t) * 0.55 +
+            Math.sin(2 * Math.PI * 1760 * t) * 0.2
+          ) * env;
+        } else {
+          const t2 = t - 0.13;
+          const env = Math.exp(-t2 * 7.5) * Math.min(1, t2 * 250);
+          return (
+            Math.sin(2 * Math.PI * 1318.5 * t2) * 0.6 +
+            Math.sin(2 * Math.PI * 2637 * t2) * 0.22
+          ) * env;
+        }
+      });
+
+      // 2. chatSendWavUrl: Authentic iMessage upward Swoosh-Pop (480Hz -> 980Hz)
+      chatSendWavUrl = generatePcmWavBlobUrl(0.22, (t, dur) => {
+        const progress = t / dur;
+        const freq = 480 + (980 - 480) * Math.pow(progress, 1.4);
+        const env = Math.sin(Math.PI * progress) * Math.exp(-t * 6);
+        return Math.sin(2 * Math.PI * freq * t) * 0.5 * env;
+      });
+
+      // 3. tapWavUrl: Subtle tactile iOS keyboard pop
+      tapWavUrl = generatePcmWavBlobUrl(0.06, (t) => {
+        const freq = 520 * Math.exp(-t * 35);
+        const env = Math.exp(-t * 55);
+        return Math.sin(2 * Math.PI * freq * t) * 0.45 * env;
+      });
+
+      // 4. unlockWavUrl: Warm lockscreen unlock chime
+      unlockWavUrl = generatePcmWavBlobUrl(0.55, (t) => {
+        const env = Math.exp(-t * 5.5) * Math.min(1, t * 120);
+        const c1 = Math.sin(2 * Math.PI * 587.33 * t) * 0.3;
+        const c2 = Math.sin(2 * Math.PI * 880 * t) * 0.3;
+        const c3 = t > 0.08 ? Math.sin(2 * Math.PI * 1174.66 * (t - 0.08)) * 0.35 : 0;
+        return (c1 + c2 + c3) * env;
+      });
+
+      html5AudioPool["chat-receive"] = new Audio(chatReceiveWavUrl);
+      html5AudioPool["chat-send"] = new Audio(chatSendWavUrl);
+      html5AudioPool["tap"] = new Audio(tapWavUrl);
+      html5AudioPool["unlock"] = new Audio(unlockWavUrl);
+
+      Object.values(html5AudioPool).forEach((aud) => {
+        aud.volume = 0.7;
+        aud.preload = "auto";
+      });
+    }
+
+    function unlockAudioEngine() {
+      initSynthesizedWavUrls();
+      if (!uiAudioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          uiAudioCtx = new AudioContextClass();
+        }
+      }
+      if (uiAudioCtx && uiAudioCtx.state === "suspended") {
+        uiAudioCtx.resume().catch(() => {});
+      }
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        // Pre-warm pooled HTML5 <audio> elements silently on first touch
+        Object.values(html5AudioPool).forEach((aud) => {
+          const prevVol = aud.volume;
+          aud.volume = 0.001;
+          const p = aud.play();
+          if (p && typeof p.then === "function") {
+            p.then(() => {
+              aud.pause();
+              aud.currentTime = 0;
+              aud.volume = prevVol;
+            }).catch(() => {
+              aud.volume = prevVol;
+            });
+          }
+        });
+      }
+    }
+
+    /**
+     * Hybrid Dual-Channel Sound Player:
+     * Plays BOTH pooled HTML5 <audio> (.wav Blob URL for iOS Silent Mode bypass)
+     * AND WebAudio API synthesizer + navigator.vibrate.
+     */
+    function playUiSound(type = "tap") {
+      try {
+        initSynthesizedWavUrls();
+
+        // 1. Haptic vibration on supported Android/mobile browsers
+        if (navigator.vibrate) {
+          if (type === "chat-receive" || type === "unlock") navigator.vibrate([12, 30, 18]);
+          else navigator.vibrate(8);
+        }
+
+        // 2. HTML5 <audio> channel (works on iPhone even with physical Silent Mode switch ON)
+        const mappedType = (type === "chat-receive" || type === "chat-send" || type === "unlock") ? type : "tap";
+        const baseAudio = html5AudioPool[mappedType];
+        if (baseAudio) {
+          const clone = baseAudio.cloneNode();
+          clone.volume = 0.7;
+          clone.play().catch(() => {
+            baseAudio.currentTime = 0;
+            baseAudio.volume = 0.7;
+            baseAudio.play().catch(() => {});
+          });
+        }
+
+        // 3. WebAudio API Synthesizer Channel
+        if (!uiAudioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) uiAudioCtx = new AudioContextClass();
+        }
+        if (uiAudioCtx) {
+          if (uiAudioCtx.state === "suspended") uiAudioCtx.resume().catch(() => {});
+          const now = uiAudioCtx.currentTime;
+          const osc = uiAudioCtx.createOscillator();
+          const gain = uiAudioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(uiAudioCtx.destination);
+
+          if (type === "chat-receive") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.setValueAtTime(1318.5, now + 0.13);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc.start(now);
+            osc.stop(now + 0.56);
+          } else if (type === "chat-send") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(480, now);
+            osc.frequency.exponentialRampToValueAtTime(980, now + 0.19);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.21);
+            osc.start(now);
+            osc.stop(now + 0.22);
+          } else if (type === "unlock") {
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(587.33, now);
+            osc.frequency.setValueAtTime(880, now + 0.1);
+            osc.frequency.setValueAtTime(1174.66, now + 0.2);
+            gain.gain.setValueAtTime(0.16, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.52);
+          } else {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.05);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+            osc.start(now);
+            osc.stop(now + 0.06);
+          }
+        }
+      } catch (err) {
+        // Ignore audio errors on restricted environments
+      }
+    }
+
+    // Pre-warm audio on first user gesture anywhere
+    ["touchstart", "pointerdown", "click"].forEach((evtName) => {
+      document.addEventListener(evtName, unlockAudioEngine, { once: true, passive: true });
+    });
+
+    // =========================================================================
+    // 3. BUILT-IN ROMANTIC LO-FI SYNTHESIZED WAV STREAM FALLBACK FOR TURNTABLE
+    // =========================================================================
+    let fallbackSongWavUrl = null;
+    function getOrCreateRomanticFallbackSongUrl() {
+      if (fallbackSongWavUrl) return fallbackSongWavUrl;
+      // Generate an 8-second warm dreamy electric-piano loop (Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+      const chords = [
+        [349.23, 440.0, 523.25, 659.25], // Fmaj7
+        [329.63, 392.0, 493.88, 587.33], // Em7
+        [293.66, 349.23, 440.0, 523.25], // Dm7
+        [261.63, 329.63, 392.0, 493.88]  // Cmaj7
+      ];
+      fallbackSongWavUrl = generatePcmWavBlobUrl(8.0, (t) => {
+        const chordIdx = Math.floor(t / 2.0) % 4;
+        const localT = t % 2.0;
+        const env = Math.exp(-localT * 1.35) * Math.min(1, localT * 35);
+        const notes = chords[chordIdx];
+        let sig = 0;
+        for (let i = 0; i < notes.length; i++) {
+          const vibrato = Math.sin(2 * Math.PI * 4.5 * t) * 0.8;
+          sig += Math.sin(2 * Math.PI * (notes[i] + vibrato) * t) * 0.16;
+        }
+        // Subtle warm vinyl crackle
+        const crackle = (Math.random() > 0.996) ? (Math.random() - 0.5) * 0.08 : 0;
+        return sig * env + crackle;
+      });
+      return fallbackSongWavUrl;
+    }
+
+    // =========================================================================
+    // 4. STATE & DYNAMIC ISLAND / COMPONENT RENDERERS
+    // =========================================================================
+    let activeMilestoneIndex = 0;
+    let activePolaroidIndex = 0;
+    let isMusicPlaying = false;
+    let isExperienceUnlocked = false;
+    let hasAutoPlayedMessages = false;
+    let chatReplayTimeouts = [];
+
+    function updateDynamicIslandContent() {
+      const island = document.getElementById("dynamic-island");
+      if (!island) return;
+      const d = window.COUPLE_DATA || {};
+      const p1 = d.partner1Name || d.boyfriendName || "Noah";
+      const p2 = d.partner2Name || d.girlfriendName || "Mia";
+      const songTitle = d.songTitle || "Our Song";
+      const coverImg = (d.polaroidPhotos && d.polaroidPhotos[0] && (d.polaroidPhotos[0].imageUrl || d.polaroidPhotos[0].url)) ||
+        "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=200&q=80";
+
+      const waveStateClass = isMusicPlaying ? "is-playing" : "";
+
+      island.innerHTML = `
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="relative w-7 h-7 rounded-full overflow-hidden border border-rose-300/50 shrink-0 ${isMusicPlaying ? 'animate-spin' : ''}" style="animation-duration: 6s;">
+            <img src="${coverImg}" alt="Mini Disc" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/2a1b24/fda4af?text=Us'" />
+          </div>
+          <div class="truncate text-left">
+            <div class="text-[11px] font-semibold text-white truncate leading-tight">
+              ${isMusicPlaying ? songTitle : `${p1} &amp; ${p2} • Locked In`}
+            </div>
+            <div class="text-[10px] text-rose-300/85 truncate leading-tight">
+              ${isMusicPlaying ? "Now Playing • Tap to pause" : "Tap island to spin our song"}
+            </div>
+          </div>
+        </div>
+        <div class="flex items-end gap-[3px] h-4 px-1.5 shrink-0" aria-label="Sound Waveform">
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
+        </div>
+      `;
+
+      // Also sync the section 2 equalizer bars
+      document.querySelectorAll("#section-music .island-wave-bar").forEach((bar) => {
+        if (isMusicPlaying) bar.classList.add("is-playing");
+        else bar.classList.remove("is-playing");
+      });
+    }
+
+    function toggleMusicPlayback() {
+      const audioEl = document.getElementById("bg-music-audio");
+      const vinylDisc = document.getElementById("vinyl-disc-el");
+      const tonearm = document.getElementById("vinyl-tonearm");
+      const playIcon = document.getElementById("music-play-icon");
+      const pauseIcon = document.getElementById("music-pause-icon");
+      const btnLabel = document.getElementById("music-btn-label");
+      const statusBadge = document.getElementById("vinyl-status-badge");
+
+      const customUrl = (window.COUPLE_DATA && (window.COUPLE_DATA.audioUrl || window.COUPLE_DATA.songUrl)) || "";
+      const targetSrc = customUrl.trim() ? customUrl.trim() : getOrCreateRomanticFallbackSongUrl();
+
+      if (!audioEl.src || audioEl.src !== targetSrc) {
+        audioEl.src = targetSrc;
+      }
+
+      if (!isMusicPlaying) {
+        audioEl.play().then(() => {
+          isMusicPlaying = true;
+          vinylDisc?.classList.add("playing");
+          tonearm?.classList.add("playing");
+          playIcon?.classList.add("hidden");
+          pauseIcon?.classList.remove("hidden");
+          if (btnLabel) btnLabel.textContent = "Pause Vinyl";
+          if (statusBadge) statusBadge.textContent = "spinning @ 33⅓ RPM";
+          updateDynamicIslandContent();
+        }).catch(() => {
+          // Fallback to synthesized stream if external URL failed
+          audioEl.src = getOrCreateRomanticFallbackSongUrl();
+          audioEl.play().catch(() => {});
+          isMusicPlaying = true;
+          vinylDisc?.classList.add("playing");
+          tonearm?.classList.add("playing");
+          playIcon?.classList.add("hidden");
+          pauseIcon?.classList.remove("hidden");
+          if (btnLabel) btnLabel.textContent = "Pause Vinyl";
+          if (statusBadge) statusBadge.textContent = "spinning @ 33⅓ RPM";
+          updateDynamicIslandContent();
+        });
+      } else {
+        audioEl.pause();
+        isMusicPlaying = false;
+        vinylDisc?.classList.remove("playing");
+        tonearm?.classList.remove("playing");
+        playIcon?.classList.remove("hidden");
+        pauseIcon?.classList.add("hidden");
+        if (btnLabel) btnLabel.textContent = "Spin Our Record";
+        if (statusBadge) statusBadge.textContent = "ready to spin";
+        updateDynamicIslandContent();
+      }
+    }
+
+    // =========================================================================
+    // 5. SECTION 1: LIVE COUNTER & APPLE WALLET BOARDING PASS RENDERER
+    // =========================================================================
+    function updateLiveRelationshipCounter() {
+      const d = window.COUPLE_DATA || {};
+      const rawDate = d.anniversaryDate || d.startDate || "2023-10-14T20:30:00";
+      const startMs = new Date(rawDate).getTime();
+      const validStart = isNaN(startMs) ? new Date("2023-10-14T20:30:00").getTime() : startMs;
+      const diff = Math.max(0, Date.now() - validStart);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      const dEl = document.getElementById("counter-days");
+      const hEl = document.getElementById("counter-hours");
+      const mEl = document.getElementById("counter-minutes");
+      const sEl = document.getElementById("counter-seconds");
+
+      if (dEl) dEl.textContent = String(days).padStart(3, "0");
+      if (hEl) hEl.textContent = String(hours).padStart(2, "0");
+      if (mEl) mEl.textContent = String(mins).padStart(2, "0");
+      if (sEl) sEl.textContent = String(secs).padStart(2, "0");
+    }
+
+    function renderMilestonesSection() {
+      const d = window.COUPLE_DATA || {};
+      const milestones = Array.isArray(d.milestones) && d.milestones.length ? d.milestones : [];
+      const pillsContainer = document.getElementById("milestone-pills-container");
+      const detailCard = document.getElementById("milestone-detail-card");
+      if (!pillsContainer || !detailCard || !milestones.length) return;
+
+      if (activeMilestoneIndex >= milestones.length) activeMilestoneIndex = 0;
+
+      pillsContainer.innerHTML = milestones.map((m, idx) => {
+        const isActive = idx === activeMilestoneIndex;
+        return `
+          <button
+            type="button"
+            data-milestone-idx="${idx}"
+            class="milestone-pill-btn shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+              isActive
+                ? "bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 font-semibold shadow-lg shadow-rose-500/20"
+                : "bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10"
+            }"
+          >
+            <span>✈</span>
+            <span>${m.label || m.title || `Memory #${idx + 1}`}</span>
+          </button>
+        `;
+      }).join("");
+
+      pillsContainer.querySelectorAll(".milestone-pill-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeMilestoneIndex = parseInt(btn.getAttribute("data-milestone-idx"), 10) || 0;
+          playUiSound("tap");
+          renderMilestonesSection();
+        });
+      });
+
+      const activeM = milestones[activeMilestoneIndex];
+      const p1 = (d.partner1Name || "NOAH").toUpperCase();
+      const p2 = (d.partner2Name || "MIA").toUpperCase();
+
+      detailCard.innerHTML = `
+        <!-- Semicircular Ticket Notch Cutouts on Left and Right Edges -->
+        <div class="ticket-notch-left" style="top: 66%;"></div>
+        <div class="ticket-notch-right" style="top: 66%;"></div>
+
+        <!-- Top Boarding Pass Header -->
+        <div class="px-6 pt-5 pb-4 bg-gradient-to-r from-rose-500/15 via-transparent to-amber-500/10 border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-rose-400/20 border border-rose-300/30 font-mono text-[10px] font-bold text-rose-200">
+              APPLE WALLET • VIP PASS
+            </span>
+            <span class="font-mono text-xs text-zinc-400">${activeM.flightCode || `LV-00${activeMilestoneIndex + 1}`}</span>
+          </div>
+          <span class="font-mono text-xs text-amber-300 font-semibold">${activeM.date || "CORE MEMORY"}</span>
+        </div>
+
+        <!-- Main Boarding Pass Body -->
+        <div class="p-6 space-y-4 relative">
+          <!-- Tilted Rose-Gold Ink Stamp (VERIFIED MEMORY ♡) -->
+          <div class="
+            absolute top-3 right-4 rotate-[-11deg] pointer-events-none select-none
+            border-2 border-rose-300/60 rounded-lg px-2.5 py-1
+            text-[10px] font-mono font-bold tracking-widest text-rose-300/80
+            shadow-[0_0_15px_rgba(251,113,133,0.18)] bg-rose-950/30 backdrop-blur-sm
+          ">
+            VERIFIED MEMORY ♡
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-left font-mono">
+            <div>
+              <div class="text-[10px] text-zinc-500 uppercase">PASSENGERS</div>
+              <div class="text-xs font-bold text-white mt-0.5">${p1} + ${p2}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-zinc-500 uppercase">TIME</div>
+              <div class="text-xs font-bold text-rose-200 mt-0.5">${activeM.time || "LATE NIGHT"}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-zinc-500 uppercase">SEAT / GATE</div>
+              <div class="text-xs font-bold text-amber-200 mt-0.5">${activeM.seat || "VIP 01"}</div>
+            </div>
+          </div>
+
+          <div class="pt-1">
+            <div class="text-[11px] font-mono text-rose-300/85">📍 ${activeM.location || "Right by your side"}</div>
+            <h3 class="font-serif italic text-2xl sm:text-3xl text-white mt-0.5">${activeM.title || activeM.label}</h3>
+            <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
+              ${activeM.description || ""}
+            </p>
+          </div>
+        </div>
+
+        <!-- Dashed Tear-Line & Decorative Mini Barcode SVG Stub -->
+        <div class="border-t-2 border-dashed border-rose-300/25 px-6 py-4 bg-black/35 flex items-center justify-between gap-4">
+          <div class="text-left">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-400">NON-TRANSFERABLE KEEPSAKE</div>
+            <div class="font-mono text-[11px] text-rose-200/90 mt-0.5">ADMIT TWO • FOREVER VALID</div>
+          </div>
+          <!-- Decorative Mini Barcode SVG -->
+          <svg class="h-8 w-32 text-zinc-200/85 shrink-0" viewBox="0 0 130 32" fill="currentColor" aria-hidden="true">
+            <rect x="2" y="2" width="3" height="28" />
+            <rect x="8" y="2" width="1.5" height="28" />
+            <rect x="13" y="2" width="4" height="28" />
+            <rect x="20" y="2" width="1.5" height="28" />
+            <rect x="24" y="2" width="2.5" height="28" />
+            <rect x="30" y="2" width="5" height="28" />
+            <rect x="38" y="2" width="1.5" height="28" />
+            <rect x="42" y="2" width="3" height="28" />
+            <rect x="48" y="2" width="2" height="28" />
+            <rect x="53" y="2" width="4.5" height="28" />
+            <rect x="61" y="2" width="1.5" height="28" />
+            <rect x="65" y="2" width="3" height="28" />
+            <rect x="71" y="2" width="2" height="28" />
+            <rect x="76" y="2" width="5" height="28" />
+            <rect x="84" y="2" width="1.5" height="28" />
+            <rect x="89" y="2" width="3.5" height="28" />
+            <rect x="95" y="2" width="2" height="28" />
+            <rect x="100" y="2" width="4" height="28" />
+            <rect x="107" y="2" width="1.5" height="28" />
+            <rect x="112" y="2" width="3" height="28" />
+            <rect x="118" y="2" width="5" height="28" />
+            <rect x="126" y="2" width="2" height="28" />
+          </svg>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 6. SECTION 3: iMESSAGE CHAT REPLAY & UNSENT DRAFTS (NO-FLASH ACCORDION)
+    // =========================================================================
+    function renderChatBubbles(animated = false) {
+      const container = document.getElementById("chat-bubbles-container");
+      if (!container) return;
+
+      chatReplayTimeouts.forEach((t) => clearTimeout(t));
+      chatReplayTimeouts = [];
+
+      const d = window.COUPLE_DATA || {};
+      const msgs = Array.isArray(d.chatMessages) && d.chatMessages.length ? d.chatMessages : [];
+
+      if (!animated) {
+        container.innerHTML = msgs.map((m) => createChatBubbleHtml(m)).join("");
+        return;
+      }
+
+      container.innerHTML = "";
+      msgs.forEach((msg, index) => {
+        const delay = index * 950;
+        const timer = setTimeout(() => {
+          // Show brief typing indicator before message appears
+          const typingEl = document.createElement("div");
+          const isMe = msg.sender === "me" || msg.from === "me";
+          typingEl.className = `flex ${isMe ? "justify-end" : "justify-start"}`;
+          typingEl.innerHTML = `
+            <div class="px-3.5 py-2.5 rounded-2xl bg-zinc-800 text-zinc-400 text-xs flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0.15s"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0.3s"></span>
+            </div>
+          `;
+          container.appendChild(typingEl);
+
+          const popTimer = setTimeout(() => {
+            typingEl.remove();
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = createChatBubbleHtml(msg);
+            const node = wrapper.firstElementChild;
+            if (node) container.appendChild(node);
+            playUiSound(isMe ? "chat-send" : "chat-receive");
+          }, 360);
+          chatReplayTimeouts.push(popTimer);
+        }, delay);
+        chatReplayTimeouts.push(timer);
+      });
+    }
+
+    function createChatBubbleHtml(msg) {
+      const isMe = msg.sender === "me" || msg.from === "me";
+      return `
+        <div class="flex flex-col ${isMe ? "items-end" : "items-start"} transition-all duration-300">
+          <div class="max-w-[82%] px-4 py-2.5 text-xs sm:text-sm leading-snug ${
+            isMe ? "imessage-sent" : "imessage-received"
+          }">
+            ${msg.text || ""}
+          </div>
+          ${msg.time ? `<span class="text-[9px] text-zinc-500 mt-1 px-1">${msg.time}</span>` : ""}
+        </div>
+      `;
+    }
+
+    /**
+     * Renders Unsent Draft cards and attaches direct DOM toggle listeners
+     * so clicking a draft smoothly expands/collapses it WITHOUT calling window.renderLoveOS()
+     */
+    function renderUnsentDrafts() {
+      const container = document.getElementById("unsent-drafts-container");
+      if (!container) return;
+      const d = window.COUPLE_DATA || {};
+      const drafts = Array.isArray(d.unsentDrafts) ? d.unsentDrafts : [];
+
+      container.innerHTML = drafts.map((draft, idx) => {
+        const preview = draft.preview || (draft.fullText ? draft.fullText.slice(0, 46) + "..." : `Unsent Draft #${idx + 1}`);
+        const fullText = draft.fullText || draft.text || preview;
+        return `
+          <div class="unsent-draft-card rounded-2xl p-4 bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 cursor-pointer transition-colors select-none">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="px-2 py-0.5 rounded bg-amber-400/15 border border-amber-300/30 font-mono text-[10px] text-amber-300 shrink-0">
+                  DRAFT #0${idx + 1}
+                </span>
+                <span class="text-xs font-medium text-zinc-200 truncate">${preview}</span>
+              </div>
+              <svg class="draft-chevron w-4 h-4 text-zinc-400 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <div class="unsent-draft-body">
+              <p class="text-xs sm:text-sm text-rose-100/90 leading-relaxed pt-2 border-t border-white/10 font-serif italic text-base">
+                "${fullText}"
+              </p>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Direct DOM class toggle on the clicked element (fixes whole-screen flash bug)
+      container.querySelectorAll(".unsent-draft-card").forEach((cardEl) => {
+        cardEl.addEventListener("click", () => {
+          playUiSound("tap");
+          cardEl.classList.toggle("is-open");
+        });
+      });
+    }
+
+    // =========================================================================
+    // 7. SECTION 4: 3D POLAROID SCRAPBOOK RENDERER
+    // =========================================================================
+    function renderPolaroidSection() {
+      const d = window.COUPLE_DATA || {};
+      const photos = Array.isArray(d.polaroidPhotos) && d.polaroidPhotos.length ? d.polaroidPhotos : [];
+      if (!photos.length) return;
+
+      if (activePolaroidIndex >= photos.length) activePolaroidIndex = 0;
+      const current = photos[activePolaroidIndex];
+
+      const cardInner = document.getElementById("polaroid-3d-card");
+      cardInner?.classList.remove("is-flipped");
+
+      const imgEl = document.getElementById("polaroid-active-img");
+      const dateEl = document.getElementById("polaroid-film-date");
+      const capEl = document.getElementById("polaroid-front-caption");
+      const noteEl = document.getElementById("polaroid-back-note");
+      const locEl = document.getElementById("polaroid-back-location");
+      const badgeEl = document.getElementById("polaroid-counter-badge");
+      const vinylCenterImg = document.getElementById("vinyl-center-label-img");
+
+      const photoUrl = current.imageUrl || current.url || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80";
+      if (imgEl) imgEl.src = photoUrl;
+      if (dateEl) dateEl.textContent = current.dateStamp || "'24 10 14";
+      if (capEl) capEl.textContent = current.caption || "our favorite memory";
+      if (noteEl) noteEl.textContent = `"${current.secretNote || current.backNote || current.caption || "kept safe in my camera roll forever."}"`;
+      if (locEl) locEl.textContent = `📍 ${current.location || "With You"}`;
+      if (badgeEl) badgeEl.textContent = `${activePolaroidIndex + 1} / ${photos.length}`;
+
+      // Keep Vinyl center label synced with couple's first photo (polaroidPhotos[0].imageUrl)
+      const firstPhotoUrl = photos[0].imageUrl || photos[0].url || photoUrl;
+      if (vinylCenterImg) vinylCenterImg.src = firstPhotoUrl;
+
+      // Render thumbnail strip
+      const thumbsRow = document.getElementById("polaroid-thumbs-row");
+      if (thumbsRow) {
+        thumbsRow.innerHTML = photos.map((p, idx) => {
+          const isAct = idx === activePolaroidIndex;
+          const u = p.imageUrl || p.url || "";
+          return `
+            <button
+              type="button"
+              data-polaroid-idx="${idx}"
+              class="polaroid-thumb-btn w-11 h-11 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
+                isAct ? "border-rose-400 scale-105 shadow-md" : "border-white/15 opacity-55 hover:opacity-90"
+              }"
+            >
+              <img src="${u}" alt="Thumb ${idx + 1}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/2a1b24/fda4af?text=${idx + 1}'" />
+            </button>
+          `;
+        }).join("");
+
+        thumbsRow.querySelectorAll(".polaroid-thumb-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            activePolaroidIndex = parseInt(btn.getAttribute("data-polaroid-idx"), 10) || 0;
+            playUiSound("tap");
+            renderPolaroidSection();
+          });
+        });
+      }
+    }
+
+    // =========================================================================
+    // 8. SECTION 5: TACTILE CREAM / KRAFT AIRMAIL ENVELOPES RENDERER
+    // =========================================================================
+    function renderEnvelopes() {
+      const container = document.getElementById("envelopes-grid-container");
+      if (!container) return;
+      const d = window.COUPLE_DATA || {};
+      const letters = Array.isArray(d.openWhenLetters) && d.openWhenLetters.length ? d.openWhenLetters : [];
+
+      container.innerHTML = letters.map((item, idx) => {
+        return `
+          <div
+            data-envelope-idx="${idx}"
+            class="envelope-card rounded-2xl bg-gradient-to-b from-[#faf6f0] to-[#efe8dc] text-zinc-900 p-5 cursor-pointer select-none overflow-hidden border border-[#dcd0be]"
+          >
+            <!-- Top Airmail Diagonal Border Accent -->
+            <div class="absolute top-0 inset-x-0 h-2 airmail-stripe-bar"></div>
+            <!-- Bottom Airmail Diagonal Border Accent -->
+            <div class="absolute bottom-0 inset-x-0 h-1.5 airmail-stripe-bar opacity-80"></div>
+
+            <!-- 3D Triangular Envelope Flap SVG Overlay -->
+            <svg class="absolute top-2 inset-x-0 w-full h-24 pointer-events-none" viewBox="0 0 300 95" preserveAspectRatio="none">
+              <polygon points="0,0 150,82 300,0" fill="#f3ece0" stroke="#d5c7b2" stroke-width="1.5" />
+              <polygon points="0,0 150,86 300,0" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="4" />
+            </svg>
+
+            <!-- Top Row: Circular Postmark Ink Stamp & Custom Love Postage Stamp SVG -->
+            <div class="relative z-10 flex items-start justify-between pt-1">
+              <!-- Circular Postmark Ink Stamp -->
+              <div class="flex items-center gap-1.5 opacity-75 rotate-[-4deg]">
+                <div class="w-11 h-11 rounded-full border border-dashed border-stone-700 flex flex-col items-center justify-center text-[7px] font-mono font-bold text-stone-800 leading-none text-center p-1">
+                  <span>LOVE OS</span>
+                  <span class="text-[6px] text-rose-800 my-0.5">★ FIRST CLASS ★</span>
+                  <span>2026</span>
+                </div>
+                <svg class="w-10 h-5 text-stone-600/70" viewBox="0 0 48 20" fill="none" stroke="currentColor" stroke-width="1.2">
+                  <path d="M0 4c6-3 12 3 18 0s12 3 18 0 12 3 12 0M0 10c6-3 12 3 18 0s12 3 18 0 12 3 12 0M0 16c6-3 12 3 18 0s12 3 18 0 12 3 12 0" />
+                </svg>
+              </div>
+
+              <!-- Custom Perforated Love Postage Stamp SVG -->
+              <div class="bg-[#fffdf9] p-1.5 border-2 border-dotted border-stone-400 shadow-sm rotate-[3deg]">
+                <div class="w-10 h-12 bg-rose-100 border border-rose-300 flex flex-col items-center justify-between p-1">
+                  <span class="font-mono text-[6px] font-bold text-rose-900">${item.stampCode || `LOVE 0${idx + 1}`}</span>
+                  <svg class="w-4 h-4 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  <span class="font-mono text-[6px] text-stone-600">FOREVER</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Center Glossy Red 3D Wax Seal -->
+            <div class="relative z-20 flex flex-col items-center justify-center my-3">
+              <div class="w-14 h-14 rounded-full wax-seal-3d flex items-center justify-center border border-red-300/30 transition-transform duration-300 group-hover:scale-110">
+                <div class="w-10 h-10 rounded-full border border-dashed border-rose-200/50 flex items-center justify-center text-rose-100 text-base shadow-inner">
+                  ♥
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Handwritten Label on Envelope -->
+            <div class="relative z-10 text-center pt-1 pb-1">
+              <div class="font-mono text-[9px] uppercase tracking-widest text-stone-500">
+                ${item.postmark || "PAR AVION • PRIVATE"}
+              </div>
+              <h3 class="font-hand text-2xl font-bold text-zinc-900 leading-tight mt-0.5">
+                ${item.label || item.title || "Open when you need me"}
+              </h3>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".envelope-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const idx = parseInt(card.getAttribute("data-envelope-idx"), 10) || 0;
+          openEnvelopeModal(idx);
+        });
+      });
+    }
+
+    function openEnvelopeModal(idx) {
+      const d = window.COUPLE_DATA || {};
+      const letters = Array.isArray(d.openWhenLetters) ? d.openWhenLetters : [];
+      const letter = letters[idx];
+      if (!letter) return;
+
+      playUiSound("unlock");
+
+      const modal = document.getElementById("envelope-modal");
+      const tagEl = document.getElementById("modal-envelope-tag");
+      const titleEl = document.getElementById("modal-envelope-title");
+      const bodyEl = document.getElementById("modal-envelope-body");
+      const psEl = document.getElementById("modal-envelope-ps");
+
+      if (tagEl) tagEl.textContent = `${letter.postmark || "PAR AVION"} • WAX SEAL BROKEN`;
+      if (titleEl) titleEl.textContent = letter.label || letter.title || "Open when...";
+      if (bodyEl) bodyEl.textContent = letter.body || letter.content || "";
+      if (psEl) psEl.textContent = letter.ps || "p.s. i love you endlessly.";
+
+      if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+    }
+
+    // =========================================================================
+    // 9. SECTION 6: HOLOGRAPHIC GOLD-ROSE FOIL SCRATCH-OFF CANVAS
+    // =========================================================================
+    let isScratchDrawing = false;
+    let scratchRevealed = false;
+
+    function initScratchCardCanvas() {
+      const canvas = document.getElementById("scratch-canvas");
+      if (!canvas) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = Math.max(300, Math.floor(rect.width));
+      canvas.height = Math.max(160, Math.floor(rect.height));
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      scratchRevealed = false;
+      canvas.style.opacity = "1";
+      canvas.style.pointerEvents = "auto";
+
+      // Holographic gold-rose metallic gradient
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, "#f6d365");
+      grad.addColorStop(0.35, "#fda085");
+      grad.addColorStop(0.7, "#fbc2eb");
+      grad.addColorStop(1, "#f6d365");
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Subtle foil shimmer stripes
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+      ctx.lineWidth = 2;
+      for (let x = -canvas.height; x < canvas.width; x += 18) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + canvas.height, canvas.height);
+        ctx.stroke();
+      }
+
+      // Foil label text
+      ctx.fillStyle = "#271722";
+      ctx.font = "bold 13px 'JetBrains Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.fillText("✦ SCRATCH GOLD FOIL HERE ✦", canvas.width / 2, canvas.height / 2 - 4);
+      ctx.font = "12px 'Inter', sans-serif";
+      ctx.fillText("rub gently with your finger to reveal your date night favor", canvas.width / 2, canvas.height / 2 + 18);
+    }
+
+    function scratchAtPoint(clientX, clientY) {
+      const canvas = document.getElementById("scratch-canvas");
+      if (!canvas || scratchRevealed) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(x, y, 24, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Check percentage scratched
+      if (Math.random() < 0.25) {
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let transparentPixels = 0;
+        const totalChecked = imgData.length / 16;
+        for (let i = 3; i < imgData.length; i += 16) {
+          if (imgData[i] < 128) transparentPixels++;
+        }
+        if (transparentPixels / totalChecked > 0.42) {
+          revealScratchCardCompletely();
+        }
+      }
+    }
+
+    function revealScratchCardCompletely() {
+      if (scratchRevealed) return;
+      scratchRevealed = true;
+      const canvas = document.getElementById("scratch-canvas");
+      const statusText = document.getElementById("scratch-status-text");
+      if (canvas) {
+        canvas.style.opacity = "0";
+        canvas.style.pointerEvents = "none";
+      }
+      if (statusText) {
+        statusText.textContent = "🎉 Favor unlocked! Screenshot this ticket anytime.";
+      }
+      playUiSound("unlock");
+      spawnFloatingHeartBurst(8);
+    }
+
+    // =========================================================================
+    // 10. SECTION 7: 2:14 AM NOTES & INTERACTIVE BUCKET LIST RENDERER
+    // =========================================================================
+    function renderNotesAndBucketList() {
+      const d = window.COUPLE_DATA || {};
+
+      // Late Night Notes
+      const notesListEl = document.getElementById("late-night-notes-list");
+      const notesArr = Array.isArray(d.lateNightNotes) && d.lateNightNotes.length ? d.lateNightNotes : [];
+      if (notesListEl) {
+        notesListEl.innerHTML = notesArr.map((line) => `
+          <li class="flex items-start gap-3">
+            <span class="text-amber-400 font-mono text-xs mt-1">•</span>
+            <span>${line}</span>
+          </li>
+        `).join("");
+      }
+
+      const finalLetterEl = document.getElementById("final-letter-body");
+      const finalSignEl = document.getElementById("final-letter-signoff");
+      if (finalLetterEl) finalLetterEl.textContent = `"${d.finalLetter || "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time."}"`;
+      if (finalSignEl) finalSignEl.textContent = d.finalSignoff || `— yours, always, ${d.partner1Name || "Noah"} ♥`;
+
+      // Shared Bucket List
+      const bucketContainer = document.getElementById("bucket-list-container");
+      const progressBadge = document.getElementById("bucket-progress-badge");
+      const bucketItems = Array.isArray(d.bucketList) ? d.bucketList : [];
+
+      if (bucketContainer) {
+        const doneCount = bucketItems.filter((b) => b.done).length;
+        if (progressBadge) progressBadge.textContent = `${doneCount} / ${bucketItems.length} done`;
+
+        bucketContainer.innerHTML = bucketItems.map((item, idx) => `
+          <div
+            data-bucket-idx="${idx}"
+            class="bucket-item-row flex items-center gap-3 p-3 rounded-2xl bg-black/30 hover:bg-black/50 border border-white/[0.07] cursor-pointer transition select-none"
+          >
+            <div class="w-5 h-5 rounded-full flex items-center justify-center border transition ${
+              item.done
+                ? "bg-rose-500 border-rose-400 text-zinc-950 font-bold"
+                : "border-zinc-500 text-transparent"
+            }">
+              ✓
+            </div>
+            <span class="text-xs sm:text-sm ${item.done ? "line-through text-zinc-500" : "text-zinc-200"}">
+              ${item.text || ""}
+            </span>
+          </div>
+        `).join("");
+
+        bucketContainer.querySelectorAll(".bucket-item-row").forEach((row) => {
+          row.addEventListener("click", () => {
+            const idx = parseInt(row.getAttribute("data-bucket-idx"), 10) || 0;
+            if (window.COUPLE_DATA.bucketList && window.COUPLE_DATA.bucketList[idx]) {
+              window.COUPLE_DATA.bucketList[idx].done = !window.COUPLE_DATA.bucketList[idx].done;
+              playUiSound("tap");
+              renderNotesAndBucketList();
+            }
+          });
+        });
+      }
+    }
+
+    // =========================================================================
+    // 11. FLOATING HEARTS CELEBRATION HELPER
+    // =========================================================================
+    function spawnFloatingHeartBurst(count = 10) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const el = document.createElement("div");
+          el.className = "floating-heart-particle text-xl sm:text-2xl";
+          el.textContent = ["♥", "✦", "💖", "💌"][i % 4];
+          el.style.left = `${20 + Math.random() * 60}vw`;
+          el.style.bottom = "30px";
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2200);
+        }, i * 85);
+      }
+    }
+
+    // =========================================================================
+    // 12. GLOBAL window.renderLoveOS(customData) FOR BACKEND & LIVE EDITOR
+    // =========================================================================
+    window.renderLoveOS = function (customData) {
+      if (customData && typeof customData === "object") {
+        window.COUPLE_DATA = Object.assign({}, window.COUPLE_DATA, customData);
+      }
+      const d = window.COUPLE_DATA || {};
+      const p1 = d.partner1Name || d.boyfriendName || "Noah";
+      const p2 = d.partner2Name || d.girlfriendName || "Mia";
+
+      // Lockscreen intro labels
+      const introReceiver = document.getElementById("intro-receiver-name");
+      const introNotifTitle = document.getElementById("intro-notification-title");
+      if (introReceiver) introReceiver.textContent = p2;
+      if (introNotifTitle) introNotifTitle.textContent = `${p1} left a private time capsule for you`;
+
+      // Section 1 Hero labels
+      const weatherPill = document.getElementById("hero-weather-pill-text");
+      const p1Tag = document.getElementById("hero-partner1-tag");
+      const p2Tag = document.getElementById("hero-partner2-tag");
+      const heroTitle = document.getElementById("hero-main-title");
+      const heroSub = document.getElementById("hero-subtitle-el");
+
+      if (weatherPill) weatherPill.textContent = d.weatherStatus || d.locationStatus || "📍 Right by your side • 100% chance of missing you";
+      if (p1Tag) p1Tag.textContent = p1.toUpperCase();
+      if (p2Tag) p2Tag.textContent = p2.toUpperCase();
+      if (heroTitle) heroTitle.textContent = d.heroTitle || "every second since my favorite hello.";
+      if (heroSub) heroSub.textContent = d.heroSubtitle || "i built this little corner of the internet so you have somewhere to go whenever you forget how much you mean to me.";
+
+      // Section 2 Music labels
+      const sTitle = document.getElementById("music-song-title");
+      const sArtist = document.getElementById("music-song-artist");
+      const sDedication = document.getElementById("music-dedication-note");
+      if (sTitle) sTitle.textContent = d.songTitle || "Sunsetz (Late Night Drive Edit)";
+      if (sArtist) sArtist.textContent = d.songArtist || "Cigarettes After Sex • Our Car Stereo";
+      if (sDedication) sDedication.textContent = `"${d.songDedication || "i still can't hear the first 5 seconds of this without immediately thinking of you."}"`;
+
+      // Section 3 iMessage Header labels
+      const notifSender = document.getElementById("notif-sender-name");
+      const notifPrev = document.getElementById("notif-preview-text");
+      const contactName = document.getElementById("imessage-contact-name");
+      const contactAvatar = document.getElementById("imessage-contact-avatar");
+      if (notifSender) notifSender.textContent = `${p2} ♥`;
+      if (contactName) contactName.textContent = p2;
+      if (d.chatMessages && d.chatMessages[0] && notifPrev) {
+        notifPrev.textContent = `"${d.chatMessages[0].text}"`;
+      }
+      if (d.polaroidPhotos && d.polaroidPhotos[0] && contactAvatar) {
+        contactAvatar.src = d.polaroidPhotos[0].imageUrl || d.polaroidPhotos[0].url || contactAvatar.src;
+      }
+
+      // Section 6 Scratch-off labels
+      const scratchFavor = d.scratchOffFavor || {};
+      const sSerial = document.getElementById("scratch-serial-code");
+      const sPrizeTitle = document.getElementById("scratch-prize-title");
+      const sPrizeDesc = document.getElementById("scratch-prize-desc");
+      if (sSerial) sSerial.textContent = scratchFavor.serial || "NO. 1014-LOVE";
+      if (sPrizeTitle) sPrizeTitle.textContent = scratchFavor.title || d.scratchPrize || "Midnight Takeout + Back Scratch & Zero Questions Asked";
+      if (sPrizeDesc) sPrizeDesc.textContent = scratchFavor.description || "screenshot this & send it to me whenever you want to cash it in. valid 24/7/365.";
+
+      // Render sub-components
+      updateLiveRelationshipCounter();
+      renderMilestonesSection();
+      renderChatBubbles(false);
+      renderUnsentDrafts();
+      renderPolaroidSection();
+      renderEnvelopes();
+      renderNotesAndBucketList();
+      updateDynamicIslandContent();
+    };
+
+    // =========================================================================
+    // 13. LIVE EDITOR postMessage LISTENER & INTERSECTION OBSERVER
+    // =========================================================================
+    window.addEventListener("message", (event) => {
+      const msg = event.data;
+      if (!msg || typeof msg !== "object") return;
+
+      if (msg.type === "PREVIEW_MODE" || msg.previewMode === true) {
+        document.body.classList.add("in-preview-mode");
+        isExperienceUnlocked = true;
+      }
+
+      const payload = msg.payload || msg.coupleData || msg.data || (msg.partner1Name ? msg : null);
+      if (
+        msg.type === "UPDATE_COUPLE_DATA" ||
+        msg.type === "UPDATE_DATA" ||
+        msg.type === "LOVEOS_UPDATE" ||
+        payload
+      ) {
+        window.renderLoveOS(payload || msg);
+      }
+
+      if (msg.type === "SCROLL_TO_SECTION" && msg.sectionId) {
+        const target = document.getElementById(msg.sectionId);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+
+    function triggerChatNotificationReplay() {
+      const banner = document.getElementById("ios-notification-banner");
+      if (banner) {
+        banner.style.transform = "translateY(-14px) scale(0.96)";
+        setTimeout(() => {
+          banner.style.transform = "translateY(0px) scale(1)";
+        }, 60);
+      }
+      playUiSound("chat-receive");
+      renderChatBubbles(true);
+    }
+
+    // Setup DOM Listeners on Startup
+    window.addEventListener("DOMContentLoaded", () => {
+      initSynthesizedWavUrls();
+      window.renderLoveOS(window.COUPLE_DATA);
+      initScratchCardCanvas();
+
+      // Update live counter every second
+      setInterval(updateLiveRelationshipCounter, 1000);
+
+      // Lockscreen Unlock Trigger
+      const introEl = document.getElementById("cinematic-intro");
+      const unlockBtn = document.getElementById("unlock-experience-btn");
+      const introCard = document.getElementById("intro-unlock-card");
+
+      function handleUnlockExperience() {
+        if (isExperienceUnlocked) return;
+        isExperienceUnlocked = true;
+        unlockAudioEngine();
+        playUiSound("unlock");
+        if (introEl) {
+          introEl.style.opacity = "0";
+          introEl.style.pointerEvents = "none";
+          setTimeout(() => {
+            introEl.classList.add("hidden");
+          }, 650);
+        }
+      }
+
+      unlockBtn?.addEventListener("click", handleUnlockExperience);
+      introCard?.addEventListener("click", handleUnlockExperience);
+
+      // Dynamic Island & Turntable Click
+      document.getElementById("dynamic-island")?.addEventListener("click", () => {
+        playUiSound("tap");
+        toggleMusicPlayback();
+      });
+      document.getElementById("music-toggle-btn")?.addEventListener("click", () => {
+        playUiSound("tap");
+        toggleMusicPlayback();
+      });
+      document.getElementById("vinyl-disc-el")?.addEventListener("click", () => {
+        playUiSound("tap");
+        toggleMusicPlayback();
+      });
+
+      // iMessage Notification Banner & Replay Input Bar Click
+      document.getElementById("ios-notification-banner")?.addEventListener("click", triggerChatNotificationReplay);
+      document.getElementById("replay-chat-btn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        triggerChatNotificationReplay();
+      });
+      document.getElementById("replay-chat-input-bar")?.addEventListener("click", triggerChatNotificationReplay);
+      document.getElementById("imessage-header-replay")?.addEventListener("click", triggerChatNotificationReplay);
+
+      // Auto-Play First Chat Notification on Scroll via IntersectionObserver
+      const messagesSection = document.getElementById("section-messages");
+      if (messagesSection && "IntersectionObserver" in window) {
+        const chatObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const unlockedOrPreview = isExperienceUnlocked || document.body.classList.contains("in-preview-mode");
+              if (entry.isIntersecting && unlockedOrPreview && !hasAutoPlayedMessages) {
+                hasAutoPlayedMessages = true;
+                triggerChatNotificationReplay();
+              }
+            });
+          },
+          { threshold: 0.25 }
+        );
+        chatObserver.observe(messagesSection);
+      }
+
+      // 3D Polaroid Card Flip & Prev/Next Buttons
+      const polaroid3dCard = document.getElementById("polaroid-3d-card");
+      polaroid3dCard?.addEventListener("click", () => {
+        playUiSound("tap");
+        polaroid3dCard.classList.toggle("is-flipped");
+      });
+
+      document.getElementById("polaroid-prev-btn")?.addEventListener("click", () => {
+        const photos = window.COUPLE_DATA.polaroidPhotos || [];
+        if (!photos.length) return;
+        activePolaroidIndex = (activePolaroidIndex - 1 + photos.length) % photos.length;
+        playUiSound("tap");
+        renderPolaroidSection();
+      });
+
+      document.getElementById("polaroid-next-btn")?.addEventListener("click", () => {
+        const photos = window.COUPLE_DATA.polaroidPhotos || [];
+        if (!photos.length) return;
+        activePolaroidIndex = (activePolaroidIndex + 1) % photos.length;
+        playUiSound("tap");
+        renderPolaroidSection();
+      });
+
+      // Envelope Modal Close
+      const closeModal = () => {
+        playUiSound("tap");
+        const modal = document.getElementById("envelope-modal");
+        modal?.classList.add("hidden");
+        modal?.classList.remove("flex");
+      };
+      document.getElementById("close-envelope-modal-btn")?.addEventListener("click", closeModal);
+      document.getElementById("modal-done-btn")?.addEventListener("click", closeModal);
+      document.getElementById("envelope-modal")?.addEventListener("click", (e) => {
+        if (e.target.id === "envelope-modal") closeModal();
+      });
+
+      // Scratch Card Mouse & Touch Listeners
+      const scratchCanvas = document.getElementById("scratch-canvas");
+      if (scratchCanvas) {
+        scratchCanvas.addEventListener("mousedown", (e) => {
+          isScratchDrawing = true;
+          scratchAtPoint(e.clientX, e.clientY);
+        });
+        window.addEventListener("mousemove", (e) => {
+          if (isScratchDrawing) scratchAtPoint(e.clientX, e.clientY);
+        });
+        window.addEventListener("mouseup", () => {
+          isScratchDrawing = false;
+        });
+        scratchCanvas.addEventListener("touchstart", (e) => {
+          isScratchDrawing = true;
+          if (e.touches[0]) scratchAtPoint(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        scratchCanvas.addEventListener("touchmove", (e) => {
+          if (isScratchDrawing && e.touches[0]) {
+            scratchAtPoint(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+        scratchCanvas.addEventListener("touchend", () => {
+          isScratchDrawing = false;
+        });
+      }
+
+      document.getElementById("reset-scratch-btn")?.addEventListener("click", () => {
+        playUiSound("tap");
+        initScratchCardCanvas();
+      });
+      document.getElementById("quick-reveal-scratch-btn")?.addEventListener("click", () => {
+        revealScratchCardCompletely();
+      });
+
+      // Send Heart Pulse Footer Button
+      document.getElementById("send-heart-pulse-btn")?.addEventListener("click", () => {
+        playUiSound("unlock");
+        spawnFloatingHeartBurst(12);
+      });
+    });
+  </script>
+
+  <!-- Preserve Backend Giftcard Script Hook -->
+  <script src="/loveos-giftcard.js"></script>
+</body>
+</html>
