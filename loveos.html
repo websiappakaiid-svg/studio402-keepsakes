@@ -322,9 +322,52 @@
       background: rgba(251, 113, 133, 0.25);
       border-radius: 9999px;
     }
+  
+    /* Polos Hitam & Ukuran Wajar Dynamic Island */
+    #dynamic-island {
+      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-radius 0.3s ease,
+                  padding 0.3s ease,
+                  background-color 0.2s ease;
+    }
+    #dynamic-island.is-expanded {
+      width: 92vw !important;
+      max-width: 380px !important;
+      height: auto !important;
+      padding: 1rem !important;
+      border-radius: 1.75rem !important;
+      background-color: rgba(9, 8, 13, 0.96) !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Lockscreen Full Opaque Isolation (No Bleed-Through) */
+    #cinematic-intro {
+      background-color: #08060a !important;
+    }
+    body.is-locked {
+      overflow: hidden !important;
+      height: 100vh !important;
+    }
+
+    /* Shutter Flash Animation */
+    @keyframes shutterFlashAnim {
+      0% { opacity: 0.95; }
+      100% { opacity: 0; }
+    }
+    .flash-active {
+      animation: shutterFlashAnim 0.35s ease-out forwards;
+    }
+
+    /* 9:16 Photobox Card Aspect */
+    .aspect-9-16 {
+      aspect-ratio: 9 / 16;
+    }
+
   </style>
 </head>
-<body class="relative selection:bg-rose-500/30 selection:text-rose-200">
+<body class="relative is-locked selection:bg-rose-500/30 selection:text-rose-200">
 
   <!-- ===================================================================== -->
   <!-- AMBIENT ATMOSPHERE: FILM GRAIN, BOKEH ORBS & FLOATING MICRO-SPARKLES   -->
@@ -356,7 +399,7 @@
   <!-- ===================================================================== -->
   <!-- CINEMATIC LOCKSCREEN INTRO (#cinematic-intro)                         -->
   <!-- ===================================================================== -->
-  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 py-10 bg-[#08060a]/95 backdrop-blur-2xl transition-all duration-700 select-none">
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 py-10 bg-[#08060a] transition-all duration-700 select-none">
     <!-- Subtle lockscreen wallpaper glow -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/25 via-amber-400/15 to-transparent blur-3xl"></div>
@@ -444,15 +487,41 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- FLOATING DYNAMIC ISLAND (#dynamic-island)                             -->
+  <!-- FLOATING iOS STATUS BAR & COMPACT POLOS HITAM DYNAMIC ISLAND         -->
   <!-- ===================================================================== -->
-  <header class="fixed top-3 inset-x-0 z-[60] flex justify-center px-4 pointer-events-none">
-    <div
-      id="dynamic-island"
-      class="pointer-events-auto flex items-center justify-between gap-3 px-4 py-2 rounded-full bg-black/85 hover:bg-black/95 border border-white/15 backdrop-blur-2xl shadow-[0_12px_32px_rgba(0,0,0,0.75)] transition-all duration-500 cursor-pointer max-w-[92vw] sm:max-w-md"
-      title="Tap to toggle our song"
-    >
-      <!-- Dynamic Island Content Injected by updateDynamicIslandContent() -->
+  <header class="fixed top-2 inset-x-0 z-[60] pointer-events-none select-none px-4 sm:px-6">
+    <div class="max-w-xl mx-auto flex items-center justify-between relative h-9">
+      <!-- iOS Status Bar Left: Realtime Clock -->
+      <div id="sticky-status-left" class="w-20 text-xs font-semibold tracking-tight text-white/90 pl-1 transition-opacity duration-300 flex items-center gap-1">
+        <span id="ios-clock-time">09:41</span>
+      </div>
+
+      <!-- Center: Compact Polos Hitam Dynamic Island (#dynamic-island) -->
+      <div
+        id="dynamic-island"
+        class="pointer-events-auto relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.85)] cursor-pointer w-32 sm:w-36 h-8 sm:h-8.5 overflow-hidden select-none transition-all duration-300"
+        title="Tap Dynamic Island to expand"
+      >
+        <!-- Collapsed & Expanded content injected dynamically by updateDynamicIslandContent() -->
+      </div>
+
+      <!-- iOS Status Bar Right: Signal, 5G, Battery -->
+      <div id="sticky-status-right" class="w-20 text-xs font-medium text-white/90 pr-1 transition-opacity duration-300 flex items-center justify-end gap-1.5">
+        <!-- 4 Cellular Signal Bars -->
+        <svg class="w-3.5 h-3.5 text-white/90" fill="currentColor" viewBox="0 0 16 16">
+          <rect x="1" y="10" width="2.2" height="5" rx="0.8"/>
+          <rect x="4.5" y="7.5" width="2.2" height="7.5" rx="0.8"/>
+          <rect x="8" y="4.5" width="2.2" height="10.5" rx="0.8"/>
+          <rect x="11.5" y="1.5" width="2.2" height="13.5" rx="0.8"/>
+        </svg>
+        <!-- 5G Badge -->
+        <span class="text-[10px] font-bold tracking-tighter">5G</span>
+        <!-- Battery Icon with Green Level -->
+        <div class="flex items-center border border-white/80 rounded-[3.5px] p-[1px] w-[20px] h-[10px] relative">
+          <div class="w-full h-full bg-emerald-400 rounded-[2px]"></div>
+          <div class="absolute -right-[3px] top-[2px] w-[2px] h-[4px] bg-white/80 rounded-r-[1px]"></div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -462,7 +531,7 @@
   <!-- ===================================================================== -->
   <!-- MAIN COHESIVE VERTICAL EXPERIENCE (#main-experience)                  -->
   <!-- ===================================================================== -->
-  <main id="main-experience" class="relative z-10 max-w-xl mx-auto px-4 sm:px-6 pt-20 pb-28 space-y-16 transition-all duration-700">
+  <main id="main-experience" class="relative z-10 max-w-xl mx-auto px-4 sm:px-6 pt-20 pb-28 space-y-16 transition-all duration-700 hidden">
 
     <!-- =================================================================== -->
     <!-- SECTION 1: HERO LOCKSCREEN, WEATHER PILL, COUNTER & BOARDING PASS   -->
@@ -537,6 +606,17 @@
       <!-- Apple Wallet Boarding Pass / VIP Event Ticket (#milestone-detail-card) -->
       <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300">
         <!-- Injected by renderMilestoneDetailCard() with semicircular notches, dashed tear-line, barcode SVG & tilted VERIFIED MEMORY ♡ stamp -->
+      </div>
+          <!-- Section 1 Next Flow Indicator -->
+      <div id="flow-nav-sec1" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-music')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Lagu Kita</span>
+          <span class="animate-bounce">↓</span>
+        </button>
       </div>
     </section>
 
@@ -688,6 +768,17 @@
           </div>
         </div>
       </div>
+          <!-- Section 2 Next Flow Indicator -->
+      <div id="flow-nav-sec2" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-messages')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Percakapan iMessage</span>
+          <span class="animate-bounce">↓</span>
+        </button>
+      </div>
     </section>
 
     <!-- =================================================================== -->
@@ -822,6 +913,17 @@
           <!-- Unsent drafts injected by renderUnsentDrafts() -->
         </div>
       </div>
+          <!-- Section 3 Next Flow Indicator -->
+      <div id="flow-nav-sec3" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-polaroids')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Album Foto Polaroid</span>
+          <span class="animate-bounce">↓</span>
+        </button>
+      </div>
     </section>
 
     <!-- =================================================================== -->
@@ -939,6 +1041,17 @@
           Next →
         </button>
       </div>
+          <!-- Section 4 Next Flow Indicator -->
+      <div id="flow-nav-sec4" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-envelopes')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Amplop Surat Rahasia</span>
+          <span class="animate-bounce">↓</span>
+        </button>
+      </div>
     </section>
 
     <!-- =================================================================== -->
@@ -956,6 +1069,17 @@
       <!-- 2x2 Grid of Tactile Warm Cream / Vintage Kraft Paper Envelopes (.envelope-card) -->
       <div id="envelopes-grid-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- Tactile cream airmail envelopes injected by renderEnvelopes() -->
+      </div>
+          <!-- Section 5 Next Flow Indicator -->
+      <div id="flow-nav-sec5" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-scratch')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Kupon Gosok Bioskop</span>
+          <span class="animate-bounce">↓</span>
+        </button>
       </div>
     </section>
 
@@ -1017,6 +1141,17 @@
             reveal instant →
           </button>
         </div>
+      </div>
+          <!-- Section 6 Next Flow Indicator -->
+      <div id="flow-nav-sec6" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-notes')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-rose-300 transition shadow"
+        >
+          <span>Lanjut ke Catatan 2:14 AM</span>
+          <span class="animate-bounce">↓</span>
+        </button>
       </div>
     </section>
 
@@ -1122,7 +1257,227 @@
           crafted with LoveOS • saved to your personal keepsake vault
         </p>
       </div>
+
+      <!-- Section 7 Next Flow Indicator -->
+      <div id="flow-nav-sec7" class="flex justify-center pt-2">
+        <button
+          type="button"
+          onclick="document.getElementById('section-photobox')?.scrollIntoView({ behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500/20 to-amber-400/20 hover:from-rose-500/30 hover:to-amber-400/30 active:scale-95 border border-rose-400/30 text-xs font-semibold text-rose-200 transition shadow-lg"
+        >
+          <span>📸 Lanjut ke Photobox Studio & 9:16 InstaStory</span>
+          <span class="animate-bounce">↓</span>
+        </button>
+      </div>
     </section>
+
+  <!-- =================================================================== -->
+    <!-- SECTION 8: iOS PHOTOBOX STUDIO & 9:16 INSTASTORY KEEPSAKE GENERATOR -->
+    <!-- =================================================================== -->
+    <section id="section-photobox" class="space-y-6 pt-4">
+      <div class="px-1 text-center sm:text-left">
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/30 text-[11px] font-mono text-rose-300">
+          <span>08 • STUDIO PHOTOBOX &amp; INSTASTORY</span>
+        </div>
+        <h2 class="font-serif italic text-3xl sm:text-4xl text-white mt-1.5">
+          photobox studio &amp; 9:16 keepsake
+        </h2>
+        <p class="text-xs text-zinc-400 mt-1 max-w-lg">
+          Abadikan momen berdua ala photobox Korea. Pilih 3 strip atau 1 foto hero, jepret kamera live dengan countdown 3-2-1 &amp; shutter flash, lalu ekspor kartu 9:16 HD untuk InstaStory!
+        </p>
+      </div>
+
+      <!-- Segmented Mode Control (3 Foto Strip vs Single 1 Foto) -->
+      <div class="flex items-center justify-center p-1 rounded-2xl bg-black/60 border border-white/10 max-w-sm mx-auto">
+        <button
+          id="photobox-mode-strip"
+          type="button"
+          class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md"
+        >
+          <span>🎞</span>
+          <span>3 Foto Strip (9:16)</span>
+        </button>
+        <button
+          id="photobox-mode-single"
+          type="button"
+          class="flex-1 py-2 px-3 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center justify-center gap-1.5"
+        >
+          <span>📸</span>
+          <span>Single 1 Foto (9:16)</span>
+        </button>
+      </div>
+
+      <!-- Photobox Interactive Studio Card -->
+      <div class="rounded-3xl p-5 sm:p-6 bg-gradient-to-b from-[#18121a] to-[#0c090e] border border-rose-300/25 shadow-2xl space-y-6">
+        
+        <!-- Slot Uploaders Container -->
+        <div id="photobox-slots-container" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <!-- Slots injected dynamically by JS -->
+        </div>
+
+        <!-- Hidden File Input for Gallery Pick -->
+        <input id="photobox-file-input" type="file" accept="image/*" class="hidden" />
+
+        <!-- Live 9:16 Card Preview Stage -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+              9:16 INSTASTORY LIVE PREVIEW
+            </span>
+            <span class="text-[11px] font-mono text-rose-300/80">HD 1080×1920 CANVAS</span>
+          </div>
+
+          <!-- Preview Frame Wrapper (aspect ratio 9:16) -->
+          <div id="photobox-preview-frame" class="relative max-w-xs mx-auto rounded-3xl overflow-hidden border-2 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.95)] bg-[#09080d] aspect-9-16 p-4 flex flex-col justify-between select-none">
+            <!-- Background subtle ambient glow -->
+            <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-rose-500/10 via-transparent to-amber-500/10"></div>
+            
+            <!-- Top Card Header -->
+            <div class="relative z-10 flex items-center justify-between border-b border-white/10 pb-2">
+              <div>
+                <span class="text-[9px] font-mono tracking-widest text-rose-300 uppercase font-bold">LOVEOS PHOTO ARCHIVE</span>
+                <div id="preview-card-couple" class="font-serif italic text-lg text-white leading-tight">Noah &amp; Mia</div>
+              </div>
+              <div id="preview-card-date" class="text-[9px] font-mono text-zinc-400 text-right leading-tight">
+                OCT 14, 2024<br/><span class="text-rose-300/80">CORE MEMORY</span>
+              </div>
+            </div>
+
+            <!-- Photos Container inside 9:16 preview card -->
+            <div id="preview-card-photos" class="relative z-10 flex-1 my-2 flex flex-col justify-center gap-2 overflow-hidden">
+              <!-- Rendered via JS based on Mode: 3 strips or single -->
+            </div>
+
+            <!-- Card Bottom Sticker & Link Footer -->
+            <div class="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-[9px] font-mono text-zinc-300">KEEP FOREVER ♡</span>
+              </div>
+              <!-- Website Link Sticker Badge -->
+              <div class="px-2.5 py-1 rounded-full bg-white/15 border border-white/25 text-[9px] font-mono font-bold text-white flex items-center gap-1 shadow">
+                <span>🔗</span>
+                <span id="preview-card-link-text">loveos.kept.us</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Primary Action Buttons -->
+        <div class="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
+          <!-- 1. Download PNG -->
+          <button
+            id="photobox-download-btn"
+            type="button"
+            class="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-400 hover:brightness-110 active:scale-95 text-zinc-950 font-bold text-xs shadow-lg shadow-rose-500/25 transition-all flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>⬇ Simpan 9:16 PNG (HD 1080×1920)</span>
+          </button>
+
+          <!-- 2. Share InstaStory -->
+          <button
+            id="photobox-share-btn"
+            type="button"
+            class="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 border border-white/15 text-white font-semibold text-xs shadow-md transition-all flex items-center justify-center gap-2"
+          >
+            <span class="text-base">📲</span>
+            <span>Bagikan ke InstaStory</span>
+          </button>
+
+          <!-- 3. Copy Link -->
+          <button
+            id="photobox-copylink-btn"
+            type="button"
+            class="w-full sm:w-auto py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 font-medium text-xs transition-all flex items-center justify-center gap-1.5"
+            title="Salin link website"
+          >
+            <span>🔗</span>
+            <span>Salin Link</span>
+          </button>
+        </div>
+      </div>
+          <!-- Section 8 Flow Indicator Back to Top -->
+      <div id="flow-nav-sec8" class="flex justify-center pt-6">
+        <button
+          type="button"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); playUiSound('tap');"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition shadow"
+        >
+          <span>Kembali ke Awal Cerita</span>
+          <span>↑</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- LIVE CAMERA VIEWFINDER MODAL WITH 3-2-1 COUNTDOWN & SHUTTER FLASH -->
+    <div
+      id="photobox-camera-modal"
+      class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl"
+    >
+      <div class="relative w-full max-w-sm rounded-3xl bg-[#110e16] border border-white/20 p-4 shadow-2xl flex flex-col items-center overflow-hidden">
+        
+        <!-- Shutter Flash White Overlay -->
+        <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-30"></div>
+
+        <!-- 3-2-1 Countdown Overlay -->
+        <div id="camera-countdown-overlay" class="absolute inset-0 z-20 hidden items-center justify-center bg-black/50 backdrop-blur-sm pointer-events-none">
+          <span id="camera-countdown-num" class="text-8xl font-sans font-bold text-white">3</span>
+        </div>
+
+        <!-- Camera Header -->
+        <div class="w-full flex items-center justify-between pb-3 text-xs text-zinc-300">
+          <span class="font-mono flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            LIVE CAMERA • <span id="camera-slot-indicator">FOTO 1</span>
+          </span>
+          <button id="camera-modal-close-btn" type="button" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-xs">
+            ✕
+          </button>
+        </div>
+
+        <!-- Video Stream Viewfinder (Square / 4:5 aspect) -->
+        <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black border border-white/10 shadow-inner flex items-center justify-center">
+          <video id="camera-stream-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+          <!-- Grid Overlay Guidelines -->
+          <div class="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3 opacity-20 border border-white/30">
+            <div class="border-r border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-b border-white"></div>
+            <div class="border-r border-white"></div>
+            <div class="border-r border-white"></div>
+            <div></div>
+          </div>
+        </div>
+
+        <!-- Camera Bottom Trigger Bar -->
+        <div class="w-full flex items-center justify-around pt-4 pb-2">
+          <!-- Flip Camera (Front / Back) -->
+          <button id="camera-flip-btn" type="button" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center text-lg active:scale-90 transition" title="Ganti Kamera">
+            🔄
+          </button>
+
+          <!-- Big iOS Shutter Button (Ring within Ring) -->
+          <button
+            id="camera-snap-trigger-btn"
+            type="button"
+            class="relative w-16 h-16 p-1 rounded-full border-4 border-white flex items-center justify-center transition-all hover:scale-105 active:scale-90"
+            title="Jepret Foto (Countdown 3-2-1)"
+          >
+            <div class="w-12 h-12 rounded-full bg-rose-500 active:bg-rose-400 transition-colors"></div>
+          </button>
+
+          <!-- Cancel Button -->
+          <button id="camera-cancel-btn" type="button" class="text-xs text-zinc-400 hover:text-white px-2 py-1">
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
 
   </main>
 
@@ -1614,6 +1969,8 @@
     let hasAutoPlayedMessages = false;
     let chatReplayTimeouts = [];
 
+    let isDynamicIslandExpanded = false;
+
     function updateDynamicIslandContent() {
       const island = document.getElementById("dynamic-island");
       if (!island) return;
@@ -1621,38 +1978,100 @@
       const p1 = d.partner1Name || d.boyfriendName || "Noah";
       const p2 = d.partner2Name || d.girlfriendName || "Mia";
       const songTitle = d.songTitle || "Our Song";
+      const songArtist = d.songArtist || "Cigarettes After Sex";
       const coverImg = (d.polaroidPhotos && d.polaroidPhotos[0] && (d.polaroidPhotos[0].imageUrl || d.polaroidPhotos[0].url)) ||
         "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=200&q=80";
 
-      const waveStateClass = isMusicPlaying ? "is-playing" : "";
+      const statusLeft = document.getElementById("sticky-status-left");
+      const statusRight = document.getElementById("sticky-status-right");
 
-      island.innerHTML = `
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div class="relative w-7 h-7 rounded-full overflow-hidden border border-rose-300/50 shrink-0 ${isMusicPlaying ? 'animate-spin' : ''}" style="animation-duration: 6s;">
-            <img src="${coverImg}" alt="Mini Disc" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/2a1b24/fda4af?text=Us'" />
-          </div>
-          <div class="truncate text-left">
-            <div class="text-[11px] font-semibold text-white truncate leading-tight">
-              ${isMusicPlaying ? songTitle : `${p1} &amp; ${p2} • Locked In`}
-            </div>
-            <div class="text-[10px] text-rose-300/85 truncate leading-tight">
-              ${isMusicPlaying ? "Now Playing • Tap to pause" : "Tap island to spin our song"}
-            </div>
-          </div>
-        </div>
-        <div class="flex items-end gap-[3px] h-4 px-1.5 shrink-0" aria-label="Sound Waveform">
-          <span class="island-wave-bar ${waveStateClass}"></span>
-          <span class="island-wave-bar ${waveStateClass}"></span>
-          <span class="island-wave-bar ${waveStateClass}"></span>
-          <span class="island-wave-bar ${waveStateClass}"></span>
-        </div>
-      `;
+      if (!isDynamicIslandExpanded) {
+        // Show status bar left/right when island is collapsed
+        if (statusLeft) { statusLeft.style.opacity = "1"; statusLeft.style.pointerEvents = "auto"; }
+        if (statusRight) { statusRight.style.opacity = "1"; statusRight.style.pointerEvents = "auto"; }
 
-      // Also sync the section 2 equalizer bars
-      document.querySelectorAll("#section-music .island-wave-bar").forEach((bar) => {
-        if (isMusicPlaying) bar.classList.add("is-playing");
-        else bar.classList.remove("is-playing");
-      });
+        // COMPACT POLOS HITAM (Ukuran wajar, elegan khas iPhone)
+        island.classList.remove("is-expanded");
+        island.className = "pointer-events-auto relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.85)] cursor-pointer w-32 sm:w-36 h-8 sm:h-8.5 overflow-hidden select-none transition-all duration-300";
+        island.innerHTML = `
+          <!-- Camera cutout dot -->
+          <div class="w-2.5 h-2.5 rounded-full bg-[#14141a] border border-white/20 shrink-0 flex items-center justify-center">
+            <div class="w-1 h-1 rounded-full bg-blue-950"></div>
+          </div>
+          <!-- Audio / State indicator in black pill -->
+          ${
+            isMusicPlaying
+              ? `<div class="flex items-end gap-[2px] h-3 px-1" title="Now Playing">
+                  <span class="w-1 h-2 bg-rose-400 rounded-full animate-pulse"></span>
+                  <span class="w-1 h-3.5 bg-amber-300 rounded-full animate-pulse" style="animation-delay:0.18s"></span>
+                  <span class="w-1 h-2 bg-rose-400 rounded-full animate-pulse" style="animation-delay:0.35s"></span>
+                </div>`
+              : `<div class="flex items-center gap-1.5 pr-0.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500/80 animate-pulse"></span>
+                </div>`
+          }
+        `;
+      } else {
+        // Fade out status bar left/right to give full space to expanded island
+        if (statusLeft) { statusLeft.style.opacity = "0"; statusLeft.style.pointerEvents = "none"; }
+        if (statusRight) { statusRight.style.opacity = "0"; statusRight.style.pointerEvents = "none"; }
+
+        // EXPANDED INTERACTIVE ISLAND (Muncul saat diklik)
+        island.classList.add("is-expanded");
+        island.className = "pointer-events-auto relative flex flex-col gap-3 p-4 rounded-3xl bg-black/95 border border-white/25 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] cursor-default w-[92vw] sm:w-[380px] h-auto select-none transition-all duration-300 is-expanded";
+        island.innerHTML = `
+          <div class="w-full flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="relative w-11 h-11 rounded-full overflow-hidden border border-rose-300/40 shrink-0 shadow ${isMusicPlaying ? 'animate-spin' : ''}" style="animation-duration: 7s;">
+                <img src="${coverImg}" alt="Album Art" class="w-full h-full object-cover" />
+              </div>
+              <div class="min-w-0 text-left">
+                <div class="text-xs font-bold text-white truncate">${songTitle}</div>
+                <div class="text-[11px] text-zinc-400 truncate">${songArtist}</div>
+                <div class="text-[10px] text-rose-300/80 font-mono mt-0.5">${isMusicPlaying ? "33⅓ RPM • ON REPEAT" : "PAUSED"}</div>
+              </div>
+            </div>
+            <!-- Minimize Button -->
+            <button id="island-close-btn" type="button" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs shrink-0" title="Kecilkan Dynamic Island">
+              ✕
+            </button>
+          </div>
+
+          <!-- Progress / Equalizer Row -->
+          <div class="w-full flex items-center justify-between gap-3 pt-1 border-t border-white/10">
+            <div class="flex items-center gap-2">
+              <button id="island-play-toggle-btn" type="button" class="w-8 h-8 rounded-full bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center font-bold text-xs shadow hover:scale-105 active:scale-95 transition">
+                ${isMusicPlaying ? '❚❚' : '▶'}
+              </button>
+              <span class="text-[11px] font-mono text-zinc-300">${isMusicPlaying ? 'Playing' : 'Paused'}</span>
+            </div>
+            <!-- Jump to Section 2 Vinyl Button -->
+            <button id="island-jump-music-btn" type="button" class="text-[11px] font-medium text-rose-300 hover:text-white flex items-center gap-1 transition">
+              <span>Ke Piringan Hitam</span>
+              <span>↓</span>
+            </button>
+          </div>
+        `;
+
+        // Attach listeners inside expanded island
+        document.getElementById("island-close-btn")?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isDynamicIslandExpanded = false;
+          playUiSound("tap");
+          updateDynamicIslandContent();
+        });
+        document.getElementById("island-play-toggle-btn")?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          playUiSound("tap");
+          toggleMusicPlayback();
+        });
+        document.getElementById("island-jump-music-btn")?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isDynamicIslandExpanded = false;
+          updateDynamicIslandContent();
+          document.getElementById("section-music")?.scrollIntoView({ behavior: "smooth" });
+        });
+      }
     }
 
     function toggleMusicPlayback() {
@@ -2315,6 +2734,568 @@
     }
 
     // =========================================================================
+    // 14. SECTION 08: iOS PHOTOBOX STUDIO & 9:16 INSTASTORY GENERATOR
+    // =========================================================================
+    let photoboxMode = "strip"; // 'strip' (3 foto) or 'single' (1 foto)
+    let photoboxSlots = [null, null, null];
+    let activeCameraSlot = 0;
+    let cameraMediaStream = null;
+    let cameraFacingMode = "user"; // 'user' or 'environment'
+
+    function initPhotoboxStudio() {
+      // Load saved photos from localStorage if available
+      try {
+        const saved = localStorage.getItem("loveos_photobox_slots");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= 3) {
+            photoboxSlots = parsed;
+          }
+        }
+      } catch (_) {}
+
+      // Fallback slots from COUPLE_DATA.polaroidPhotos if empty
+      const d = window.COUPLE_DATA || {};
+      const defPhotos = Array.isArray(d.polaroidPhotos) ? d.polaroidPhotos : [];
+      if (!photoboxSlots[0] && defPhotos[0]) photoboxSlots[0] = defPhotos[0].imageUrl || defPhotos[0].url;
+      if (!photoboxSlots[1] && defPhotos[1]) photoboxSlots[1] = defPhotos[1].imageUrl || defPhotos[1].url;
+      if (!photoboxSlots[2] && defPhotos[2]) photoboxSlots[2] = defPhotos[2].imageUrl || defPhotos[2].url;
+
+      renderPhotoboxSlots();
+      render916PreviewCard();
+
+      // Mode switchers
+      const stripBtn = document.getElementById("photobox-mode-strip");
+      const singleBtn = document.getElementById("photobox-mode-single");
+
+      stripBtn?.addEventListener("click", () => {
+        photoboxMode = "strip";
+        playUiSound("tap");
+        stripBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md";
+        if (singleBtn) singleBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+        renderPhotoboxSlots();
+        render916PreviewCard();
+      });
+
+      singleBtn?.addEventListener("click", () => {
+        photoboxMode = "single";
+        playUiSound("tap");
+        singleBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md";
+        if (stripBtn) stripBtn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+        renderPhotoboxSlots();
+        render916PreviewCard();
+      });
+
+      // Gallery File Input Listener
+      const fileInput = document.getElementById("photobox-file-input");
+      fileInput?.addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (loadEvt) => {
+          savePhotoboxSlot(activeCameraSlot, loadEvt.target.result);
+          fileInput.value = "";
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Camera Modal Controls
+      document.getElementById("camera-modal-close-btn")?.addEventListener("click", closeLiveCamera);
+      document.getElementById("camera-cancel-btn")?.addEventListener("click", closeLiveCamera);
+      document.getElementById("camera-flip-btn")?.addEventListener("click", () => {
+        cameraFacingMode = cameraFacingMode === "user" ? "environment" : "user";
+        playUiSound("tap");
+        startCameraStream();
+      });
+      document.getElementById("camera-snap-trigger-btn")?.addEventListener("click", snapPhotoWithCountdown);
+
+      // Download, Share & Copy Link Actions
+      document.getElementById("photobox-download-btn")?.addEventListener("click", download916KeepsakePng);
+      document.getElementById("photobox-share-btn")?.addEventListener("click", shareToInstaStory);
+      document.getElementById("photobox-copylink-btn")?.addEventListener("click", copyKeepsakeWebLink);
+    }
+
+    function savePhotoboxSlot(slotIdx, dataUrl) {
+      photoboxSlots[slotIdx] = dataUrl;
+      try {
+        localStorage.setItem("loveos_photobox_slots", JSON.stringify(photoboxSlots));
+      } catch (_) {}
+      playUiSound("tap");
+      renderPhotoboxSlots();
+      render916PreviewCard();
+    }
+
+    function clearPhotoboxSlot(slotIdx) {
+      photoboxSlots[slotIdx] = null;
+      try {
+        localStorage.setItem("loveos_photobox_slots", JSON.stringify(photoboxSlots));
+      } catch (_) {}
+      playUiSound("tap");
+      renderPhotoboxSlots();
+      render916PreviewCard();
+    }
+
+    function renderPhotoboxSlots() {
+      const container = document.getElementById("photobox-slots-container");
+      if (!container) return;
+
+      const numSlots = photoboxMode === "single" ? 1 : 3;
+      container.className = numSlots === 1 ? "grid grid-cols-1 max-w-xs mx-auto gap-3" : "grid grid-cols-1 sm:grid-cols-3 gap-3.5";
+
+      let html = "";
+      for (let i = 0; i < numSlots; i++) {
+        const photo = photoboxSlots[i];
+        html += `
+          <div class="rounded-2xl p-3.5 bg-black/40 border border-white/10 flex flex-col justify-between gap-3 shadow">
+            <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+              <span class="font-bold text-rose-300">FOTO #0${i + 1}</span>
+              ${photo ? '<span class="text-emerald-400 font-semibold">✓ Terpasang</span>' : '<span class="text-zinc-500">Kosong</span>'}
+            </div>
+
+            <!-- Thumbnail Frame -->
+            <div class="relative aspect-[4/5] rounded-xl overflow-hidden bg-zinc-900 border border-white/10 flex items-center justify-center">
+              ${
+                photo
+                  ? `<img src="${photo}" class="w-full h-full object-cover" alt="Slot ${i + 1}" />`
+                  : `<div class="flex flex-col items-center text-zinc-600 gap-1 text-xs">
+                      <span class="text-2xl">📸</span>
+                      <span>Belum ada foto</span>
+                    </div>`
+              }
+            </div>
+
+            <!-- Actions Row -->
+            <div class="flex items-center gap-1.5 pt-1">
+              <button
+                type="button"
+                onclick="triggerLiveCameraForSlot(${i})"
+                class="flex-1 py-1.5 px-2 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-200 text-[11px] font-medium transition flex items-center justify-center gap-1"
+                title="Jepret Kamera Live"
+              >
+                <span>📸</span> Kamera
+              </button>
+              <button
+                type="button"
+                onclick="triggerGalleryForSlot(${i})"
+                class="flex-1 py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-medium transition flex items-center justify-center gap-1"
+                title="Pilih dari Galeri"
+              >
+                <span>🖼</span> Galeri
+              </button>
+              ${
+                photo
+                  ? `<button
+                      type="button"
+                      onclick="clearPhotoboxSlot(${i})"
+                      class="py-1.5 px-2 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-300 text-[11px] font-medium transition"
+                      title="Ulang / Hapus Foto"
+                    >
+                      🗑
+                    </button>`
+                  : ''
+              }
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    window.triggerLiveCameraForSlot = function (slotIdx) {
+      activeCameraSlot = slotIdx;
+      openLiveCamera();
+    };
+
+    window.triggerGalleryForSlot = function (slotIdx) {
+      activeCameraSlot = slotIdx;
+      document.getElementById("photobox-file-input")?.click();
+    };
+
+    window.clearPhotoboxSlot = function (slotIdx) {
+      clearPhotoboxSlot(slotIdx);
+    };
+
+    function render916PreviewCard() {
+      const cardCouple = document.getElementById("preview-card-couple");
+      const cardDate = document.getElementById("preview-card-date");
+      const photosBox = document.getElementById("preview-card-photos");
+      const linkText = document.getElementById("preview-card-link-text");
+
+      const d = window.COUPLE_DATA || {};
+      const p1 = d.partner1Name || "Noah";
+      const p2 = d.partner2Name || "Mia";
+      if (cardCouple) cardCouple.textContent = `${p1} & ${p2}`;
+
+      if (cardDate) {
+        const rawDate = d.anniversaryDate || "2023-10-14";
+        const dateStr = rawDate.slice(0, 10);
+        cardDate.innerHTML = `${dateStr}<br/><span class="text-rose-300 font-bold">CORE MEMORY</span>`;
+      }
+
+      if (linkText) {
+        linkText.textContent = window.location.hostname || "loveos.kept.us";
+      }
+
+      if (!photosBox) return;
+
+      if (photoboxMode === "single") {
+        const p = photoboxSlots[0] || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80";
+        photosBox.innerHTML = `
+          <div class="relative w-full h-full rounded-2xl overflow-hidden bg-zinc-900 border border-white/20 shadow-inner flex items-center justify-center">
+            <img src="${p}" class="w-full h-full object-cover" alt="Single Hero Photo" />
+            <div class="absolute bottom-2.5 right-3 px-2 py-0.5 rounded bg-black/60 text-[8px] font-mono font-bold text-amber-300 backdrop-blur-sm">
+              '24 10 14 • US
+            </div>
+          </div>
+        `;
+      } else {
+        // 3 Foto Strip Layout
+        const p1 = photoboxSlots[0] || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=400&q=80";
+        const p2 = photoboxSlots[1] || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=400&q=80";
+        const p3 = photoboxSlots[2] || "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=400&q=80";
+
+        photosBox.innerHTML = `
+          <div class="flex-1 rounded-xl overflow-hidden bg-zinc-900 border border-white/15 relative">
+            <img src="${p1}" class="w-full h-full object-cover" alt="Strip 1" />
+            <span class="absolute bottom-1 right-2 text-[7px] font-mono text-white/90 drop-shadow">01</span>
+          </div>
+          <div class="flex-1 rounded-xl overflow-hidden bg-zinc-900 border border-white/15 relative">
+            <img src="${p2}" class="w-full h-full object-cover" alt="Strip 2" />
+            <span class="absolute bottom-1 right-2 text-[7px] font-mono text-white/90 drop-shadow">02</span>
+          </div>
+          <div class="flex-1 rounded-xl overflow-hidden bg-zinc-900 border border-white/15 relative">
+            <img src="${p3}" class="w-full h-full object-cover" alt="Strip 3" />
+            <span class="absolute bottom-1 right-2 text-[7px] font-mono text-white/90 drop-shadow">03</span>
+          </div>
+        `;
+      }
+    }
+
+    // Live Camera Stream Handling
+    function openLiveCamera() {
+      const modal = document.getElementById("photobox-camera-modal");
+      const indicator = document.getElementById("camera-slot-indicator");
+      if (indicator) indicator.textContent = `FOTO ${activeCameraSlot + 1}`;
+      if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+      startCameraStream();
+    }
+
+    function closeLiveCamera() {
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach((track) => track.stop());
+        cameraMediaStream = null;
+      }
+      const modal = document.getElementById("photobox-camera-modal");
+      if (modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+    }
+
+    async function startCameraStream() {
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach((track) => track.stop());
+      }
+      const video = document.getElementById("camera-stream-video");
+      if (!video) return;
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: cameraFacingMode, width: { ideal: 1080 }, height: { ideal: 1350 } },
+          audio: false
+        });
+        cameraMediaStream = stream;
+        video.srcObject = stream;
+        video.play().catch(() => {});
+      } catch (err) {
+        alert("Tidak dapat mengakses kamera: " + (err.message || "Izin ditolak"));
+        closeLiveCamera();
+      }
+    }
+
+    function snapPhotoWithCountdown() {
+      const countdownOverlay = document.getElementById("camera-countdown-overlay");
+      const countdownNum = document.getElementById("camera-countdown-num");
+      const flashEl = document.getElementById("camera-shutter-flash");
+      const video = document.getElementById("camera-stream-video");
+
+      if (!video || !cameraMediaStream) return;
+
+      let count = 3;
+      if (countdownOverlay) {
+        countdownOverlay.classList.remove("hidden");
+        countdownOverlay.classList.add("flex");
+      }
+      if (countdownNum) countdownNum.textContent = count;
+      playUiSound("tap");
+
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          if (countdownNum) countdownNum.textContent = count;
+          playUiSound("tap");
+        } else {
+          clearInterval(interval);
+          if (countdownOverlay) {
+            countdownOverlay.classList.add("hidden");
+            countdownOverlay.classList.remove("flex");
+          }
+
+          // Shutter Flash White pulse
+          if (flashEl) {
+            flashEl.classList.add("flash-active");
+            setTimeout(() => flashEl.classList.remove("flash-active"), 350);
+          }
+          playUiSound("unlock"); // Shutter sound
+
+          // Capture frame onto canvas
+          const snapCanvas = document.createElement("canvas");
+          snapCanvas.width = video.videoWidth || 720;
+          snapCanvas.height = video.videoHeight || 960;
+          const sCtx = snapCanvas.getContext("2d");
+          if (cameraFacingMode === "user") {
+            // Mirror image for front selfie camera
+            sCtx.translate(snapCanvas.width, 0);
+            sCtx.scale(-1, 1);
+          }
+          sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+          const dataUrl = snapCanvas.toDataURL("image/jpeg", 0.92);
+
+          savePhotoboxSlot(activeCameraSlot, dataUrl);
+          closeLiveCamera();
+        }
+      }, 900);
+    }
+
+    // High-Res 1080 x 1920 9:16 Canvas Generator
+    function generate1080x1920Canvas() {
+      return new Promise((resolve) => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1920;
+        const ctx = canvas.getContext("2d");
+
+        // 1. Dark obsidian background with soft rose-gold ambient vignette
+        ctx.fillStyle = "#09080d";
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        const radial = ctx.createRadialGradient(540, 600, 100, 540, 960, 900);
+        radial.addColorStop(0, "rgba(244, 63, 94, 0.12)");
+        radial.addColorStop(0.5, "rgba(251, 191, 36, 0.05)");
+        radial.addColorStop(1, "rgba(0, 0, 0, 0.85)");
+        ctx.fillStyle = radial;
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        // 2. Outer border & rounded frame outline
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(40, 40, 1000, 1840);
+
+        // 3. Top Header Typography
+        const d = window.COUPLE_DATA || {};
+        const p1 = (d.partner1Name || "NOAH").toUpperCase();
+        const p2 = (d.partner2Name || "MIA").toUpperCase();
+
+        ctx.fillStyle = "#fda4af";
+        ctx.font = "bold 24px 'JetBrains Mono', monospace";
+        ctx.fillText("★ LOVEOS PHOTO ARCHIVE • 9:16 KEEPSAKE ★", 80, 120);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "italic 64px 'Instrument Serif', Georgia, serif";
+        ctx.fillText(`${p1} ♥ ${p2}`, 80, 195);
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+        ctx.font = "24px 'JetBrains Mono', monospace";
+        const anniv = d.anniversaryDate ? d.anniversaryDate.slice(0, 10) : "2023-10-14";
+        ctx.textAlign = "right";
+        ctx.fillText(`SINCE ${anniv}`, 1000, 195);
+        ctx.textAlign = "left";
+
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(80, 225);
+        ctx.lineTo(1000, 225);
+        ctx.stroke();
+
+        // 4. Photos rendering
+        function loadImg(src) {
+          return new Promise((res) => {
+            if (!src) return res(null);
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => res(img);
+            img.onerror = () => res(null);
+            img.src = src;
+          });
+        }
+
+        const fallback = "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80";
+
+        if (photoboxMode === "single") {
+          loadImg(photoboxSlots[0] || fallback).then((img) => {
+            if (img) {
+              const x = 90, y = 270, w = 900, h = 1350;
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(x - 12, y - 12, w + 24, h + 24);
+              ctx.drawImage(img, x, y, w, h);
+            }
+            finishCanvasFooter();
+          });
+        } else {
+          // 3-photo strip
+          Promise.all([
+            loadImg(photoboxSlots[0] || fallback),
+            loadImg(photoboxSlots[1] || fallback),
+            loadImg(photoboxSlots[2] || fallback)
+          ]).then(([img1, img2, img3]) => {
+            const imgs = [img1, img2, img3];
+            const startY = 270;
+            const stripH = 430;
+            const gap = 30;
+
+            imgs.forEach((im, idx) => {
+              const curY = startY + idx * (stripH + gap);
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(78, curY - 10, 924, stripH + 20);
+              if (im) {
+                ctx.drawImage(im, 90, curY, 900, stripH);
+              }
+              // Film date burn in corner
+              ctx.fillStyle = "#f59e0b";
+              ctx.font = "bold 22px 'JetBrains Mono', monospace";
+              ctx.fillText(`'24 10 14 #0${idx + 1}`, 110, curY + stripH - 20);
+            });
+            finishCanvasFooter();
+          });
+        }
+
+        function finishCanvasFooter() {
+          // Bottom footer & website link sticker
+          const footY = 1750;
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+          ctx.beginPath();
+          ctx.moveTo(80, footY);
+          ctx.lineTo(1000, footY);
+          ctx.stroke();
+
+          ctx.fillStyle = "#34d399";
+          ctx.beginPath();
+          ctx.arc(95, footY + 45, 8, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 26px 'Inter', sans-serif";
+          ctx.fillText("KEEP THIS MOMENT SAFE FOREVER ♡", 120, footY + 54);
+
+          // Sticker pill for website link
+          const linkStr = `🔗 ${window.location.hostname || "loveos.kept.us"}`;
+          ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+          ctx.lineWidth = 2;
+          ctx.fillRect(660, footY + 20, 340, 52);
+          ctx.strokeRect(660, footY + 20, 340, 52);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 24px 'JetBrains Mono', monospace";
+          ctx.textAlign = "center";
+          ctx.fillText(linkStr, 830, footY + 55);
+
+          resolve(canvas);
+        }
+      });
+    }
+
+    async function download916KeepsakePng() {
+      playUiSound("tap");
+      const btn = document.getElementById("photobox-download-btn");
+      const originalText = btn ? btn.innerHTML : "";
+      if (btn) btn.innerHTML = "<span>⏳ Merender 1080×1920 HD...</span>";
+
+      try {
+        const canvas = await generate1080x1920Canvas();
+        const dataUrl = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.download = `loveos-photobox-${Date.now()}.png`;
+        a.href = dataUrl;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        playUiSound("unlock");
+        showToast("✓ Kartu 9:16 HD Berhasil Disimpan!");
+      } catch (err) {
+        alert("Gagal merender gambar: " + err.message);
+      } finally {
+        if (btn) btn.innerHTML = originalText;
+      }
+    }
+
+    async function shareToInstaStory() {
+      playUiSound("tap");
+      try {
+        const canvas = await generate1080x1920Canvas();
+        canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          const file = new File([blob], "loveos-instastory.png", { type: "image/png" });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: "LoveOS 9:16 InstaStory Keepsake",
+                text: "Keepsake kami berdua di LoveOS ♡"
+              });
+              return;
+            } catch (_) {}
+          }
+
+          // Fallback: download image and guide user
+          const a = document.createElement("a");
+          a.download = "loveos-instastory.png";
+          a.href = URL.createObjectURL(blob);
+          a.click();
+          showToast("📲 Gambar 9:16 terunduh! Buka Instagram & bagikan ke Story!");
+        }, "image/png");
+      } catch (err) {
+        showToast("Pilih tombol Simpan PNG untuk membagikan!");
+      }
+    }
+
+    function copyKeepsakeWebLink() {
+      playUiSound("tap");
+      const url = window.location.href;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast("🔗 Link keepsake berhasil disalin!");
+        }).catch(() => {
+          prompt("Salin link ini:", url);
+        });
+      } else {
+        prompt("Salin link ini:", url);
+      }
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById("loveos-global-toast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "loveos-global-toast";
+        toast.className = "fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] px-5 py-2.5 rounded-full bg-zinc-900/95 border border-white/20 text-white text-xs font-semibold shadow-2xl backdrop-blur-xl flex items-center gap-2 transition-all duration-300";
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.opacity = "1";
+      toast.style.transform = "translate(-50%, 0)";
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translate(-50%, 15px)";
+      }, 2800);
+    }
+
+    // =========================================================================
     // 12. GLOBAL window.renderLoveOS(customData) FOR BACKEND & LIVE EDITOR
     // =========================================================================
     window.renderLoveOS = function (customData) {
@@ -2431,6 +3412,7 @@
       initSynthesizedWavUrls();
       window.renderLoveOS(window.COUPLE_DATA);
       initScratchCardCanvas();
+      initPhotoboxStudio();
 
       // Auto-resize scratch canvas on window resize
       window.addEventListener("resize", () => {
@@ -2477,22 +3459,79 @@
         isExperienceUnlocked = true;
         unlockAudioEngine();
         playUiSound("unlock");
+        if (navigator.vibrate) {
+          try { navigator.vibrate([25, 35, 45]); } catch (_) {}
+        }
+
+        // Show main cohesive experience and unfreeze body scrolling
+        const mainExp = document.getElementById("main-experience");
+        if (mainExp) mainExp.classList.remove("hidden");
+        document.body.classList.remove("is-locked");
+        document.body.style.overflow = "";
+
         if (introEl) {
+          introEl.style.transition = "transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease";
+          introEl.style.transform = "translateY(-100%)";
           introEl.style.opacity = "0";
           introEl.style.pointerEvents = "none";
           setTimeout(() => {
+            introEl.style.display = "none";
             introEl.classList.add("hidden");
+            // Smoothly glide into Section 1 Hero
+            const heroEl = document.getElementById("section-hero");
+            if (heroEl) heroEl.scrollIntoView({ behavior: "smooth" });
           }, 650);
         }
       }
+
+      // Swipe up to unlock on mobile touch devices
+      let touchStartY = 0;
+      introEl?.addEventListener("touchstart", (e) => {
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      introEl?.addEventListener("touchend", (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        if (touchStartY - touchEndY > 50) {
+          handleUnlockExperience();
+        }
+      }, { passive: true });
+
+      // Keep real-time clock synced
+      function updateDeviceClocks() {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, "0");
+        const mins = String(now.getMinutes()).padStart(2, "0");
+        const clockStr = `${hrs}:${mins}`;
+        const topClock = document.getElementById("ios-clock-time");
+        if (topClock) topClock.textContent = clockStr;
+        const lockClock = document.getElementById("lockscreen-time-el");
+        if (lockClock && !window.COUPLE_DATA?.lockscreenTime) {
+          lockClock.textContent = clockStr;
+        }
+      }
+      updateDeviceClocks();
+      setInterval(updateDeviceClocks, 1000);
 
       unlockBtn?.addEventListener("click", handleUnlockExperience);
       introCard?.addEventListener("click", handleUnlockExperience);
 
       // Dynamic Island & Turntable Click
-      document.getElementById("dynamic-island")?.addEventListener("click", () => {
-        playUiSound("tap");
-        toggleMusicPlayback();
+      // Dynamic Island Click: Expand when compact
+      const islandEl = document.getElementById("dynamic-island");
+      islandEl?.addEventListener("click", (e) => {
+        if (!isDynamicIslandExpanded) {
+          isDynamicIslandExpanded = true;
+          playUiSound("tap");
+          updateDynamicIslandContent();
+        }
+      });
+
+      // Click outside collapses expanded island
+      document.addEventListener("click", (e) => {
+        if (isDynamicIslandExpanded && !islandEl?.contains(e.target)) {
+          isDynamicIslandExpanded = false;
+          updateDynamicIslandContent();
+        }
       });
       document.getElementById("music-toggle-btn")?.addEventListener("click", () => {
         playUiSound("tap");
