@@ -322,42 +322,6 @@
       background: rgba(251, 113, 133, 0.25);
       border-radius: 9999px;
     }
-  
-    /* Persistent iOS Status Bar Blur */
-    #ios-persistent-top-bar {
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    /* 8-Bar Dynamic Island & Music Spectrum Equalizer */
-    .eq-bar-8 {
-      width: 2.5px;
-      height: 4px;
-      border-radius: 9999px;
-      background: linear-gradient(to top, #fb7185, #fbbf24);
-      transition: height 0.2s ease;
-    }
-    .eq-bar-8.is-playing {
-      animation: soundWaveBounce 0.75s ease-in-out infinite;
-    }
-    .eq-bar-8.is-playing:nth-child(1) { animation-delay: 0.0s; animation-duration: 0.65s; }
-    .eq-bar-8.is-playing:nth-child(2) { animation-delay: 0.22s; animation-duration: 0.85s; }
-    .eq-bar-8.is-playing:nth-child(3) { animation-delay: 0.12s; animation-duration: 0.55s; }
-    .eq-bar-8.is-playing:nth-child(4) { animation-delay: 0.35s; animation-duration: 0.78s; }
-    .eq-bar-8.is-playing:nth-child(5) { animation-delay: 0.18s; animation-duration: 0.62s; }
-    .eq-bar-8.is-playing:nth-child(6) { animation-delay: 0.42s; animation-duration: 0.9s; }
-    .eq-bar-8.is-playing:nth-child(7) { animation-delay: 0.08s; animation-duration: 0.58s; }
-    .eq-bar-8.is-playing:nth-child(8) { animation-delay: 0.28s; animation-duration: 0.72s; }
-
-    /* Guided 'Lanjut' Section Action Pill */
-    .lanjut-pill-btn {
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .lanjut-pill-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(251, 113, 133, 0.3);
-    }
-
   </style>
 </head>
 <body class="relative selection:bg-rose-500/30 selection:text-rose-200">
@@ -390,70 +354,40 @@
   </div>
 
   <!-- ===================================================================== -->
-  
-  <!-- ===================================================================== -->
-  <!-- PERSISTENT iOS 18 STATUS BAR & DYNAMIC ISLAND (#ios-persistent-top-bar) -->
-  <!-- ===================================================================== -->
-  <header id="ios-persistent-top-bar" class="fixed top-0 inset-x-0 z-[60] pt-2 pb-1.5 px-4 sm:px-6 pointer-events-none select-none transition-all duration-300">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <!-- Left: Authentic Live Time Clock (Real-time updates) -->
-      <div class="pointer-events-auto flex items-center gap-1 text-xs sm:text-sm font-semibold tracking-tight text-white/95 font-sans pl-1">
-        <span id="ios-live-time">09:41</span>
-      </div>
-
-      <!-- Center: Interactive Dynamic Island Pill -->
-      <div class="pointer-events-auto flex justify-center">
-        <div
-          id="dynamic-island"
-          class="flex items-center justify-between gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/90 hover:bg-black/98 border border-white/20 backdrop-blur-2xl shadow-[0_12px_32px_rgba(0,0,0,0.85)] transition-all duration-500 cursor-pointer max-w-[92vw] sm:max-w-md"
-          title="Tap to toggle our song"
-        >
-          <!-- Dynamic Island Content Injected by updateDynamicIslandContent() -->
-        </div>
-      </div>
-
-      <!-- Right: Authentic 5G+ Signal, Wi-Fi & Heart Battery Indicator -->
-      <div class="pointer-events-auto flex items-center gap-2 text-zinc-300 pr-1">
-        <div class="flex items-center gap-1">
-          <span class="text-[10px] font-mono font-bold text-rose-300 tracking-tighter">5G♥</span>
-          <!-- Signal 4 Bars -->
-          <svg class="w-3.5 h-3 text-white/90" fill="currentColor" viewBox="0 0 16 12">
-            <rect x="1" y="8" width="2.2" height="4" rx="0.6"/>
-            <rect x="4.5" y="5.5" width="2.2" height="6.5" rx="0.6"/>
-            <rect x="8" y="3" width="2.2" height="9" rx="0.6"/>
-            <rect x="11.5" y="0.5" width="2.2" height="11.5" rx="0.6"/>
-          </svg>
-        </div>
-
-        <!-- Battery with Live Heart indicator -->
-        <div class="flex items-center gap-1">
-          <div class="relative flex items-center border border-zinc-400/80 rounded-[4.5px] p-[1.5px] w-6 h-3">
-            <div class="h-full bg-gradient-to-r from-rose-500 to-rose-400 rounded-[2px] w-full"></div>
-            <div class="absolute -right-[3px] top-1/2 -translate-y-1/2 w-[2px] h-[4px] bg-zinc-400/80 rounded-r-sm"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- ===================================================================== -->
   <!-- CINEMATIC LOCKSCREEN INTRO (#cinematic-intro)                         -->
   <!-- ===================================================================== -->
-  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 pt-16 pb-10 bg-[#08060a]/95 backdrop-blur-2xl transition-all duration-700 select-none">
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 py-10 bg-[#08060a]/95 backdrop-blur-2xl transition-all duration-700 select-none">
     <!-- Subtle lockscreen wallpaper glow -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/25 via-amber-400/15 to-transparent blur-3xl"></div>
     </div>
 
+    <!-- Top Lockscreen Status Bar -->
+    <div class="relative z-10 w-full max-w-md flex items-center justify-between text-xs font-medium text-zinc-400 px-2">
+      <span id="lockscreen-carrier" class="tracking-wide flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+        LoveOS 18.4
+      </span>
+      <div class="flex items-center gap-2">
+        <!-- Signal & Battery SVGs -->
+        <svg class="w-3.5 h-3.5 text-zinc-300" fill="currentColor" viewBox="0 0 16 16">
+          <rect x="1" y="10" width="2.2" height="5" rx="0.8"/>
+          <rect x="4.5" y="7.5" width="2.2" height="7.5" rx="0.8"/>
+          <rect x="8" y="4.5" width="2.2" height="10.5" rx="0.8"/>
+          <rect x="11.5" y="1.5" width="2.2" height="13.5" rx="0.8"/>
+        </svg>
+        <div class="flex items-center gap-0.5 border border-zinc-500 rounded-[4px] p-0.5">
+          <div class="w-4 h-2 bg-rose-400 rounded-[2px]"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Center Lockscreen Clock & Notification Preview -->
     <div class="relative z-10 flex flex-col items-center text-center my-auto max-w-sm w-full">
-      <!-- Mini Red Heart Padlock Badge (Focus Style) -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.07] border border-white/15 text-[11px] text-rose-200/90 mb-3 backdrop-blur-md shadow-lg">
-        <svg class="w-4 h-4 shrink-0" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M166 230V152C166 102.3 206.3 62 256 62C305.7 62 346 102.3 346 152V230H290V152C290 133.2 274.8 118 256 118C237.2 118 222 133.2 222 152V230H166Z" fill="#df484d" stroke="#1a1921" stroke-width="28" stroke-linejoin="round" />
-  <rect x="134" y="226" width="244" height="220" rx="58" fill="#df484d" stroke="#1a1921" stroke-width="28" stroke-linejoin="round" />
-  <path d="M256 312 C250.5 299.5 237.5 292 224 292 C207.5 292 194 305.5 194 322 C194 336 202.5 348 214 356 C218 359 220 363.5 218 368 L211 396 H301 L294 368 C292 363.5 294 359 298 356 C309.5 348 318 336 318 322 C318 305.5 304.5 292 288 292 C274.5 292 261.5 299.5 256 312Z" fill="#ffffff" stroke="#1a1921" stroke-width="22" stroke-linejoin="round" />
-</svg>
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] text-rose-200/90 mb-3">
+        <svg class="w-3 h-3 text-rose-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 0110 0v2h1zm-6-5a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z"/>
+        </svg>
         <span>private keepsake • eyes only</span>
       </div>
 
@@ -473,11 +407,11 @@
         <div class="flex items-center justify-between mb-1.5">
           <div class="flex items-center gap-2">
             <div class="w-5 h-5 rounded-md bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center text-[11px] text-white shadow">
-              <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              ♥
             </div>
-            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-300 font-mono">LOVEOS CAPSULE</span>
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-300">LOVEOS CAPSULE</span>
           </div>
-          <span class="text-[11px] text-zinc-400 font-mono">now</span>
+          <span class="text-[11px] text-zinc-400">now</span>
         </div>
         <p id="intro-notification-title" class="text-sm font-semibold text-white">
           Noah left a private time capsule for you
@@ -488,36 +422,39 @@
       </div>
     </div>
 
-    <!-- Bottom Biometric / Tap-to-Unlock Trigger with Bespoke Red Heart Padlock -->
+    <!-- Bottom Biometric / Tap-to-Unlock Trigger -->
     <div class="relative z-10 flex flex-col items-center gap-3 w-full max-w-xs">
       <button
         id="unlock-experience-btn"
         type="button"
-        class="group relative flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-rose-500/25 via-rose-500/10 to-transparent border border-rose-400/40 shadow-[0_0_50px_rgba(223,72,77,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none"
+        class="group relative flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-b from-rose-500/20 to-rose-500/5 border border-rose-300/30 shadow-[0_0_40px_rgba(244,63,94,0.25)] transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none"
         aria-label="Unlock Keepsake"
       >
-        <span class="absolute inset-0 rounded-full border border-rose-400/50 animate-ping opacity-25 pointer-events-none"></span>
-        <!-- Bespoke Red Heart Padlock SVG (User uploaded image vector) -->
-        <svg class="w-14 h-14 drop-shadow-[0_8px_20px_rgba(223,72,77,0.4)] transition-transform duration-300 group-hover:scale-110 group-active:scale-95" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path class="shackle-path transition-transform duration-500 origin-bottom" d="M166 230V152C166 102.3 206.3 62 256 62C305.7 62 346 102.3 346 152V230H290V152C290 133.2 274.8 118 256 118C237.2 118 222 133.2 222 152V230H166Z" fill="#df484d" stroke="#1a1921" stroke-width="24" stroke-linejoin="round" />
-  <rect x="134" y="226" width="244" height="220" rx="58" fill="#df484d" stroke="#1a1921" stroke-width="24" stroke-linejoin="round" />
-  <path d="M256 312 C250.5 299.5 237.5 292 224 292 C207.5 292 194 305.5 194 322 C194 336 202.5 348 214 356 C218 359 220 363.5 218 368 L211 396 H301 L294 368 C292 363.5 294 359 298 356 C309.5 348 318 336 318 322 C318 305.5 304.5 292 288 292 C274.5 292 261.5 299.5 256 312Z" fill="#ffffff" stroke="#1a1921" stroke-width="19" stroke-linejoin="round" />
-</svg>
-      </button>
-      <div class="flex flex-col items-center gap-1">
-        <span class="text-xs font-medium tracking-wide text-zinc-200">
-          tap to unlock our world
-        </span>
-        <svg class="w-4 h-4 text-rose-300 animate-bounce mt-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        <span class="absolute inset-0 rounded-full border border-rose-400/40 animate-ping opacity-30"></span>
+        <!-- Fingerprint + Heart SVG -->
+        <svg class="w-9 h-9 text-rose-300 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
         </svg>
-      </div>
-      <div class="w-32 h-1 rounded-full bg-white/25 mt-1"></div>
+      </button>
+      <span class="text-xs font-medium tracking-wide text-zinc-300">
+        tap to unlock our world
+      </span>
+      <div class="w-32 h-1 rounded-full bg-white/25 mt-2"></div>
     </div>
   </div>
 
-
-
+  <!-- ===================================================================== -->
+  <!-- FLOATING DYNAMIC ISLAND (#dynamic-island)                             -->
+  <!-- ===================================================================== -->
+  <header class="fixed top-3 inset-x-0 z-[60] flex justify-center px-4 pointer-events-none">
+    <div
+      id="dynamic-island"
+      class="pointer-events-auto flex items-center justify-between gap-3 px-4 py-2 rounded-full bg-black/85 hover:bg-black/95 border border-white/15 backdrop-blur-2xl shadow-[0_12px_32px_rgba(0,0,0,0.75)] transition-all duration-500 cursor-pointer max-w-[92vw] sm:max-w-md"
+      title="Tap to toggle our song"
+    >
+      <!-- Dynamic Island Content Injected by updateDynamicIslandContent() -->
+    </div>
+  </header>
 
   <!-- Hidden HTML5 Audio Element for Song Playback -->
   <audio id="bg-music-audio" preload="auto" loop crossorigin="anonymous"></audio>
@@ -535,17 +472,7 @@
       <div class="flex justify-center">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-inner text-xs text-zinc-200">
           <span id="hero-weather-pill-text" class="tracking-tight">
-            <span class="inline-flex items-center gap-1.5">
-  <svg class="w-4 h-4 text-amber-300 inline-block" viewBox="0 0 64 64" fill="none">
-    <path d="M40 14C34.5 14 30 18.5 30 24C30 29.5 34.5 34 40 34C42.2 34 44.2 33.2 45.8 32C41.8 31.8 38.5 28.5 38.5 24.4C38.5 21.2 40.5 18.4 43.3 17.3C42.2 14.9 41.2 14 40 14Z" fill="#fbbf24"/>
-    <path d="M22 44H44C49.5 44 54 39.5 54 34C54 29 50.3 24.9 45.5 24.2C43.7 18.3 38.2 14 31.8 14C23.8 14 17.4 20.4 17.4 28.4C17.4 28.9 17.4 29.4 17.5 29.9C13.8 31 11 34.4 11 38.5C11 41.5 13.5 44 16.5 44H22Z" fill="#f1f5f9" fill-opacity="0.92" stroke="#ffffff" stroke-width="1"/>
-  </svg>
-  <svg class="w-3.5 h-3.5 text-rose-400 inline-block" viewBox="0 0 64 64" fill="none">
-    <path d="M32 8C20.954 8 12 16.954 12 28C12 41.5 32 54 32 54C32 54 52 41.5 52 28C52 16.954 43.046 8 32 8Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5"/>
-    <circle cx="32" cy="27" r="7.5" fill="#fff1f2"/>
-    <path d="M32 31C32 31 27.5 28.2 27.5 25.5C27.5 24.1 28.6 23 30 23C30.9 23 31.6 23.5 32 24.2C32.4 23.5 33.1 23 34 23C35.4 23 36.5 24.1 36.5 25.5C36.5 28.2 32 31 32 31Z" fill="#e11d48"/>
-  </svg>
-</span> Right by your side • 100% chance of missing you
+            📍 Right by your side • 100% chance of missing you
           </span>
         </div>
       </div>
@@ -554,18 +481,7 @@
       <div class="text-center space-y-2">
         <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-rose-300/80 font-mono">
           <span id="hero-partner1-tag">NOAH</span>
-          <svg class="w-3.5 h-3.5 text-rose-400 inline-block align-middle" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <radialGradient id="puffyHeartGrad" cx="30%" cy="25%" r="75%">
-      <stop offset="0%" stop-color="#fff1f2"/>
-      <stop offset="22%" stop-color="#fda4af"/>
-      <stop offset="58%" stop-color="#e11d48"/>
-      <stop offset="100%" stop-color="#4c0519"/>
-    </radialGradient>
-  </defs>
-  <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="url(#puffyHeartGrad)" stroke="#fecdd3" stroke-width="1.2"/>
-  <ellipse cx="22" cy="18.5" rx="5" ry="2.6" transform="rotate(-28 22 18.5)" fill="#ffffff" fill-opacity="0.65"/>
-</svg>
+          <span class="text-rose-400">♥</span>
           <span id="hero-partner2-tag">MIA</span>
         </div>
         <h1 id="hero-main-title" class="font-serif italic text-4xl sm:text-5xl text-white tracking-tight leading-[1.1]">
@@ -622,16 +538,7 @@
       <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300">
         <!-- Injected by renderMilestoneDetailCard() with semicircular notches, dashed tear-line, barcode SVG & tilted VERIFIED MEMORY ♡ stamp -->
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 2 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-music" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-rose-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Lanjut ke Lagu Kita</span>
-          <svg class="w-3.5 h-3.5 text-rose-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 2: ON REPEAT — VINYL RECORD & METALLIC TONEARM DECK         -->
@@ -774,25 +681,14 @@
                 </div>
                 <div class="flex justify-between text-[10px] font-mono text-zinc-500">
                   <span id="music-time-current">0:42</span>
-                  <span><svg class="w-3.5 h-3.5 inline-block text-rose-300 align-middle" viewBox="0 0 64 64" fill="none">
-  <path d="M32 32C27.5 24.5 22 22 17.5 22C12 22 8 26.2 8 32C8 37.8 12 42 17.5 42C22 42 27.5 39.5 32 32ZM32 32C36.5 39.5 42 42 46.5 42C52 42 56 37.8 56 32C56 26.2 52 22 46.5 22C42 22 36.5 24.5 32 32Z" stroke="#fda4af" stroke-width="5" stroke-linecap="round"/>
-</svg> ON REPEAT</span>
+                  <span>∞ ON REPEAT</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 3 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-messages" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-rose-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Lanjut ke Pesan &amp; Obrolan Kita</span>
-          <svg class="w-3.5 h-3.5 text-rose-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 3: HOW IT STARTED — iOS 18 iMESSAGE & UNSENT DRAFTS         -->
@@ -926,16 +822,7 @@
           <!-- Unsent drafts injected by renderUnsentDrafts() -->
         </div>
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 4 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-polaroids" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-rose-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Buka Polaroid Kenangan Kita</span>
-          <svg class="w-3.5 h-3.5 text-rose-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 4: CAMERA ROLL — 3D POLAROID SCRAPBOOK WITH WASHI TAPE      -->
@@ -989,14 +876,9 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15 pointer-events-none"></div>
 
                 <!-- Tactile "Flip Over ↻" Pill Badge -->
-                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1.5 shadow">
-  <svg class="w-3.5 h-3.5 text-rose-300" viewBox="0 0 64 64" fill="none">
-    <rect x="8" y="14" width="48" height="36" rx="18" fill="#18181b" stroke="#fda4af" stroke-width="2"/>
-    <path d="M22 32C22 26.5 26.5 22 32 22C35.8 22 39.1 24.1 40.8 27.2" stroke="#fda4af" stroke-width="3" stroke-linecap="round"/>
-    <path d="M42 32C42 37.5 37.5 42 32 42C28.2 42 24.9 39.9 23.2 36.8" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-  </svg>
-  <span>Flip Over</span>
-</div>
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1 shadow">
+                  <span>Flip Over ↻</span>
+                </div>
 
                 <!-- Authentic 90s 35mm Film Date Burn Stamp ('24 10 14) -->
                 <div id="polaroid-film-date" class="absolute bottom-2.5 right-3.5 text-sm font-bold film-date-burn select-none">
@@ -1057,16 +939,7 @@
           Next →
         </button>
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 5 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-envelopes" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-rose-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Buka 4 Amplop Surat Rahasia</span>
-          <svg class="w-3.5 h-3.5 text-rose-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 5: "OPEN WHEN..." — REAL TACTILE CREAM AIRMAIL ENVELOPES    -->
@@ -1084,16 +957,7 @@
       <div id="envelopes-grid-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- Tactile cream airmail envelopes injected by renderEnvelopes() -->
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 6 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-scratch" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-amber-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Gosok Tiket Keberuntungan Kita</span>
-          <svg class="w-3.5 h-3.5 text-amber-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 6: SCRATCH-OFF DATE NIGHT FAVOR (PERFORATED CINEMA TICKET)  -->
@@ -1154,16 +1018,7 @@
           </button>
         </div>
       </div>
-
-      <!-- Guided Flow: Lanjut ke Section 7 -->
-      <div class="flex justify-center pt-2">
-        <a href="#section-notes" class="lanjut-pill-btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.07] hover:bg-white/[0.14] border border-white/15 text-xs font-medium text-rose-200 hover:text-white backdrop-blur-md shadow-lg transition-all active:scale-95 group">
-          <span>Baca Catatan Rahasia 02:14 AM</span>
-          <svg class="w-3.5 h-3.5 text-rose-300 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-        </a>
-      </div>
     </section>
-
 
     <!-- =================================================================== -->
     <!-- SECTION 7: 2:14 AM NOTES APP (WITH METALLIC PAPERCLIP) & BUCKET LIST -->
@@ -1292,16 +1147,13 @@
           </h3>
         </div>
         <button
-  id="close-envelope-modal-btn"
-  type="button"
-  class="w-8 h-8 rounded-full bg-stone-200/90 hover:bg-stone-300 text-zinc-700 flex items-center justify-center transition shadow-sm"
-  aria-label="Close letter"
->
-  <svg class="w-4 h-4 text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-</button>
+          id="close-envelope-modal-btn"
+          type="button"
+          class="w-9 h-9 rounded-full bg-stone-200 hover:bg-stone-300 text-zinc-700 flex items-center justify-center font-bold text-sm transition"
+          aria-label="Close letter"
+        >
+          ✕
+        </button>
       </div>
 
       <div class="py-5 space-y-4">
@@ -1772,7 +1624,7 @@
       const coverImg = (d.polaroidPhotos && d.polaroidPhotos[0] && (d.polaroidPhotos[0].imageUrl || d.polaroidPhotos[0].url)) ||
         "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=200&q=80";
 
-      const eqStateClass = isMusicPlaying ? "is-playing" : "";
+      const waveStateClass = isMusicPlaying ? "is-playing" : "";
 
       island.innerHTML = `
         <div class="flex items-center gap-2.5 min-w-0">
@@ -1780,29 +1632,24 @@
             <img src="${coverImg}" alt="Mini Disc" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/2a1b24/fda4af?text=Us'" />
           </div>
           <div class="truncate text-left">
-            <div class="text-[11px] font-semibold text-white truncate leading-tight flex items-center gap-1">
-              ${isMusicPlaying ? songTitle : `${p1} &amp; ${p2} <span class="text-rose-400 font-mono text-[10px]">18.4</span>`}
+            <div class="text-[11px] font-semibold text-white truncate leading-tight">
+              ${isMusicPlaying ? songTitle : `${p1} &amp; ${p2} • Locked In`}
             </div>
             <div class="text-[10px] text-rose-300/85 truncate leading-tight">
-              ${isMusicPlaying ? "Now Playing • Tap to pause" : "Tap to spin our song"}
+              ${isMusicPlaying ? "Now Playing • Tap to pause" : "Tap island to spin our song"}
             </div>
           </div>
         </div>
-        <!-- 8-Bar Hi-Res Equalizer Spectrum (Asset #018) -->
-        <div class="flex items-end gap-[2px] h-4 px-1 shrink-0" aria-label="8-Bar Sound Spectrum">
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
-          <span class="eq-bar-8 ${eqStateClass}"></span>
+        <div class="flex items-end gap-[3px] h-4 px-1.5 shrink-0" aria-label="Sound Waveform">
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
+          <span class="island-wave-bar ${waveStateClass}"></span>
         </div>
       `;
 
-      // Also sync Section 2 equalizer bars
-      document.querySelectorAll("#section-music .eq-bar-8, #section-music .island-wave-bar").forEach((bar) => {
+      // Also sync the section 2 equalizer bars
+      document.querySelectorAll("#section-music .island-wave-bar").forEach((bar) => {
         if (isMusicPlaying) bar.classList.add("is-playing");
         else bar.classList.remove("is-playing");
       });
@@ -1907,9 +1754,7 @@
                 : "bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10"
             }"
           >
-            <svg class="w-3.5 h-3.5 inline-block text-rose-300" viewBox="0 0 64 64" fill="none">
-  <path d="M46 18L33 31L19 26L16 29L27 36.5L22.5 45L19.5 44L17.5 46L22.5 48L24.5 50L26.5 48L25.5 45L34 40.5L41.5 51.5L44.5 48.5L39.5 34.5L46 18Z" fill="currentColor"/>
-</svg>
+            <span>✈</span>
             <span>${m.label || m.title || `Memory #${idx + 1}`}</span>
           </button>
         `;
@@ -1932,15 +1777,9 @@
         <div class="ticket-notch-left" style="top: 66%;"></div>
         <div class="ticket-notch-right" style="top: 66%;"></div>
 
-        <!-- Top Boarding Pass Header with Apple Wallet Passes Icon (Asset #033) -->
+        <!-- Top Boarding Pass Header -->
         <div class="px-6 pt-5 pb-4 bg-gradient-to-r from-rose-500/15 via-transparent to-amber-500/10 border-b border-white/10 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <svg class="w-5 h-5 shrink-0" viewBox="0 0 64 64" fill="none">
-              <rect x="10" y="10" width="44" height="44" rx="11" fill="#18181b" stroke="#52525b" stroke-width="1.5"/>
-              <rect x="15" y="15" width="34" height="12" rx="3" fill="#38bdf8"/>
-              <rect x="15" y="21" width="34" height="12" rx="3" fill="#fbbf24"/>
-              <rect x="15" y="27" width="34" height="21" rx="4" fill="#f43f5e"/>
-            </svg>
+          <div class="flex items-center gap-2">
             <span class="px-2 py-0.5 rounded bg-rose-400/20 border border-rose-300/30 font-mono text-[10px] font-bold text-rose-200">
               APPLE WALLET • VIP PASS
             </span>
@@ -1951,22 +1790,14 @@
 
         <!-- Main Boarding Pass Body -->
         <div class="p-6 space-y-4 relative">
-          <!-- Iridescent Hologram Security Seal (Asset #035) -->
-          <div class="absolute top-3 right-4 rotate-[-8deg] pointer-events-none select-none">
-            <svg class="w-14 h-14" viewBox="0 0 64 64" fill="none">
-              <defs>
-                <linearGradient id="holoFoilGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#f9a8d4"/>
-                  <stop offset="33%" stop-color="#fde047"/>
-                  <stop offset="66%" stop-color="#7dd3fc"/>
-                  <stop offset="100%" stop-color="#c4b5fd"/>
-                </linearGradient>
-              </defs>
-              <circle cx="32" cy="32" r="23" fill="url(#holoFoilGrad)" stroke="#ffffff" stroke-width="1.5"/>
-              <circle cx="32" cy="32" r="17" stroke="#18181b" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="3 2"/>
-              <text x="32" y="30" text-anchor="middle" fill="#18181b" font-family="JetBrains Mono" font-size="7.5" font-weight="800">GENUINE</text>
-              <text x="32" y="39" text-anchor="middle" fill="#18181b" font-family="JetBrains Mono" font-size="8.5" font-weight="800">1 OF 1 ♥</text>
-            </svg>
+          <!-- Tilted Rose-Gold Ink Stamp (VERIFIED MEMORY ♡) -->
+          <div class="
+            absolute top-3 right-4 rotate-[-11deg] pointer-events-none select-none
+            border-2 border-rose-300/60 rounded-lg px-2.5 py-1
+            text-[10px] font-mono font-bold tracking-widest text-rose-300/80
+            shadow-[0_0_15px_rgba(251,113,133,0.18)] bg-rose-950/30 backdrop-blur-sm
+          ">
+            VERIFIED MEMORY ♡
           </div>
 
           <div class="grid grid-cols-3 gap-2 text-left font-mono">
@@ -1985,14 +1816,7 @@
           </div>
 
           <div class="pt-1">
-            <div class="text-[11px] font-mono text-rose-300/85 flex items-center gap-1">
-              <svg class="w-3.5 h-3.5 text-rose-400 inline" viewBox="0 0 64 64" fill="none">
-                <path d="M32 8C20.954 8 12 16.954 12 28C12 41.5 32 54 32 54C32 54 52 41.5 52 28C52 16.954 43.046 8 32 8Z" fill="#f43f5e" stroke="#fda4af" stroke-width="1.5"/>
-                <circle cx="32" cy="27" r="7.5" fill="#fff1f2"/>
-                <path d="M32 31C32 31 27.5 28.2 27.5 25.5C27.5 24.1 28.6 23 30 23C30.9 23 31.6 23.5 32 24.2C32.4 23.5 33.1 23 34 23C35.4 23 36.5 24.1 36.5 25.5C36.5 28.2 32 31 32 31Z" fill="#e11d48"/>
-              </svg>
-              <span>${activeM.location || "Right by your side"}</span>
-            </div>
+            <div class="text-[11px] font-mono text-rose-300/85">📍 ${activeM.location || "Right by your side"}</div>
             <h3 class="font-serif italic text-2xl sm:text-3xl text-white mt-0.5">${activeM.title || activeM.label}</h3>
             <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
               ${activeM.description || ""}
@@ -2000,36 +1824,36 @@
           </div>
         </div>
 
-        <!-- Tailor Scissors & Perforation Tear Line (Asset #036) -->
-        <div class="px-6 py-1 bg-black/40 flex items-center gap-2">
-          <svg class="w-4 h-4 text-rose-300/80 shrink-0" viewBox="0 0 40 40" fill="none">
-            <circle cx="12" cy="14" r="4.5" stroke="#fda4af" stroke-width="1.8"/>
-            <circle cx="12" cy="26" r="4.5" stroke="#fda4af" stroke-width="1.8"/>
-            <path d="M16 16.5L30 25M16 23.5L30 15" stroke="#fda4af" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <div class="flex-1 border-t-2 border-dashed border-rose-300/35"></div>
-          <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">TEAR HERE</span>
-        </div>
-
-        <!-- Apple Wallet QR Code 'Scan to Hug' Stub (Asset #032) -->
-        <div class="px-6 py-4 bg-black/35 flex items-center justify-between gap-4">
+        <!-- Dashed Tear-Line & Decorative Mini Barcode SVG Stub -->
+        <div class="border-t-2 border-dashed border-rose-300/25 px-6 py-4 bg-black/35 flex items-center justify-between gap-4">
           <div class="text-left">
             <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-400">NON-TRANSFERABLE KEEPSAKE</div>
-            <div class="font-mono text-[11px] text-rose-200/90 mt-0.5">SCAN TO HUG • FOREVER VALID</div>
+            <div class="font-mono text-[11px] text-rose-200/90 mt-0.5">ADMIT TWO • FOREVER VALID</div>
           </div>
-          <!-- Apple Wallet QR Code with Heart Center (Asset #032) -->
-          <svg class="w-12 h-12 shrink-0 bg-white p-1 rounded-lg shadow-md" viewBox="0 0 64 64" fill="none">
-            <rect x="8" y="8" width="48" height="48" rx="8" fill="#ffffff"/>
-            <rect x="13" y="13" width="13" height="13" rx="2" stroke="#18181b" stroke-width="2.8"/>
-            <rect x="17" y="17" width="5" height="5" fill="#18181b"/>
-            <rect x="38" y="13" width="13" height="13" rx="2" stroke="#18181b" stroke-width="2.8"/>
-            <rect x="42" y="17" width="5" height="5" fill="#18181b"/>
-            <rect x="13" y="38" width="13" height="13" rx="2" stroke="#18181b" stroke-width="2.8"/>
-            <rect x="17" y="42" width="5" height="5" fill="#18181b"/>
-            <rect x="30" y="14" width="4" height="4" fill="#18181b"/>
-            <rect x="30" y="22" width="4" height="4" fill="#18181b"/>
-            <rect x="14" y="30" width="8" height="4" fill="#18181b"/>
-            <path d="M43 49C43 49 36 44.2 36 39.8C36 37.6 37.8 36 40 36C41.3 36 42.4 36.7 43 37.7C43.6 36.7 44.7 36 46 36C48.2 36 50 37.6 50 39.8C50 44.2 43 49 43 49Z" fill="#e11d48"/>
+          <!-- Decorative Mini Barcode SVG -->
+          <svg class="h-8 w-32 text-zinc-200/85 shrink-0" viewBox="0 0 130 32" fill="currentColor" aria-hidden="true">
+            <rect x="2" y="2" width="3" height="28" />
+            <rect x="8" y="2" width="1.5" height="28" />
+            <rect x="13" y="2" width="4" height="28" />
+            <rect x="20" y="2" width="1.5" height="28" />
+            <rect x="24" y="2" width="2.5" height="28" />
+            <rect x="30" y="2" width="5" height="28" />
+            <rect x="38" y="2" width="1.5" height="28" />
+            <rect x="42" y="2" width="3" height="28" />
+            <rect x="48" y="2" width="2" height="28" />
+            <rect x="53" y="2" width="4.5" height="28" />
+            <rect x="61" y="2" width="1.5" height="28" />
+            <rect x="65" y="2" width="3" height="28" />
+            <rect x="71" y="2" width="2" height="28" />
+            <rect x="76" y="2" width="5" height="28" />
+            <rect x="84" y="2" width="1.5" height="28" />
+            <rect x="89" y="2" width="3.5" height="28" />
+            <rect x="95" y="2" width="2" height="28" />
+            <rect x="100" y="2" width="4" height="28" />
+            <rect x="107" y="2" width="1.5" height="28" />
+            <rect x="112" y="2" width="3" height="28" />
+            <rect x="118" y="2" width="5" height="28" />
+            <rect x="126" y="2" width="2" height="28" />
           </svg>
         </div>
       `;
@@ -2257,21 +2081,13 @@
               </div>
             </div>
 
-            <!-- Center Royal Crimson 3D Wax Seal with Gold Rim (Asset #091) -->
+            <!-- Center Glossy Red 3D Wax Seal -->
             <div class="relative z-20 flex flex-col items-center justify-center my-3">
-              <svg class="w-14 h-14 drop-shadow-[0_8px_16px_rgba(159,18,57,0.45)] transition-transform duration-300 group-hover:scale-110" viewBox="0 0 64 64" fill="none">
-                <defs>
-                  <radialGradient id="waxGrad3d" cx="35%" cy="30%" r="70%">
-                    <stop offset="0%" stop-color="#fda4af"/>
-                    <stop offset="35%" stop-color="#be123c"/>
-                    <stop offset="85%" stop-color="#4c0519"/>
-                    <stop offset="100%" stop-color="#2a020d"/>
-                  </radialGradient>
-                </defs>
-                <path d="M32 5C45 5 57 14 58 27C59 38 52 50 41 57C30 63 15 59 8 49C1 39 4 23 14 13C19 8 26 5 32 5Z" fill="url(#waxGrad3d)" stroke="#fbbf24" stroke-opacity="0.45" stroke-width="1.4"/>
-                <circle cx="32" cy="32" r="16" fill="#881337" stroke="#fbbf24" stroke-opacity="0.6" stroke-width="1" stroke-dasharray="2 2"/>
-                <path d="M32 40C32 40 23 33.2 23 27.5C23 24.5 25.2 22 28.2 22C29.9 22 31.4 23 32 24.2C32.6 23 34.1 22 35.8 22C38.8 22 41 24.5 41 27.5C41 33.2 32 40 32 40Z" fill="#fff1f2"/>
-              </svg>
+              <div class="w-14 h-14 rounded-full wax-seal-3d flex items-center justify-center border border-red-300/30 transition-transform duration-300 group-hover:scale-110">
+                <div class="w-10 h-10 rounded-full border border-dashed border-rose-200/50 flex items-center justify-center text-rose-100 text-base shadow-inner">
+                  ♥
+                </div>
+              </div>
             </div>
 
             <!-- Bottom Handwritten Label on Envelope -->
@@ -2374,15 +2190,18 @@
       const canvas = document.getElementById("scratch-canvas");
       if (!canvas || scratchRevealed) return;
       const rect = canvas.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
+      if (!rect.width || !rect.height) return;
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
 
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       ctx.globalCompositeOperation = "destination-out";
       ctx.beginPath();
-      ctx.arc(x, y, 24, 0, Math.PI * 2);
+      ctx.arc(x, y, 26, 0, Math.PI * 2);
       ctx.fill();
 
       // Check percentage scratched
@@ -2452,12 +2271,12 @@
             data-bucket-idx="${idx}"
             class="bucket-item-row flex items-center gap-3 p-3 rounded-2xl bg-black/30 hover:bg-black/50 border border-white/[0.07] cursor-pointer transition select-none"
           >
-            <div class="w-6 h-6 rounded-full flex items-center justify-center border transition ${
+            <div class="w-5 h-5 rounded-full flex items-center justify-center border transition ${
               item.done
-                ? "bg-gradient-to-tr from-rose-600 to-rose-400 border-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.6)] text-white"
-                : "border-zinc-600 bg-black/40 text-transparent"
+                ? "bg-rose-500 border-rose-400 text-zinc-950 font-bold"
+                : "border-zinc-500 text-transparent"
             }">
-              ${item.done ? '<svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>' : ''}
+              ✓
             </div>
             <span class="text-xs sm:text-sm ${item.done ? "line-through text-zinc-500" : "text-zinc-200"}">
               ${item.text || ""}
@@ -2486,13 +2305,7 @@
         setTimeout(() => {
           const el = document.createElement("div");
           el.className = "floating-heart-particle text-xl sm:text-2xl";
-          const particleSvgs = [
-            '<svg class="w-5 h-5 text-rose-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-            '<svg class="w-5 h-5 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>',
-            '<svg class="w-5 h-5 text-pink-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
-            '<svg class="w-5 h-5 text-rose-300" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>'
-          ];
-          el.innerHTML = particleSvgs[i % particleSvgs.length];
+          el.textContent = ["♥", "✦", "💖", "💌"][i % 4];
           el.style.left = `${20 + Math.random() * 60}vw`;
           el.style.bottom = "30px";
           document.body.appendChild(el);
@@ -2613,33 +2426,43 @@
       renderChatBubbles(true);
     }
 
-    // Setup DOM Listeners on Startup
-    window.addEventListener("DOMContentLoaded", () => {
+    // Setup DOM Listeners on Startup (Safe for immediate or deferred execution)
+    function initializeLoveOSApp() {
       initSynthesizedWavUrls();
       window.renderLoveOS(window.COUPLE_DATA);
-      function updateIosClock() {
-      const clockEl = document.getElementById("ios-live-time");
-      const lockClockEl = document.getElementById("lockscreen-time-el");
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const timeStr = `${hours}:${minutes}`;
-      if (clockEl) clockEl.textContent = timeStr;
-      if (lockClockEl && !lockClockEl.dataset.custom) lockClockEl.textContent = timeStr;
-    }
-    setInterval(updateIosClock, 1000);
-    updateIosClock();
-
-    function updateLockscreenDate() {
-      const dateEl = document.getElementById("lockscreen-date-el");
-      if (!dateEl) return;
-      const now = new Date();
-      const options = { weekday: 'long', month: 'long', day: 'numeric' };
-      dateEl.textContent = now.toLocaleDateString('en-US', options);
-    }
-    updateLockscreenDate();
-
       initScratchCardCanvas();
+
+      // Auto-resize scratch canvas on window resize
+      window.addEventListener("resize", () => {
+        if (!scratchRevealed) initScratchCardCanvas();
+      });
+
+      // Sync Music Progress Bar & Time Current
+      const bgAudio = document.getElementById("bg-music-audio");
+      bgAudio?.addEventListener("timeupdate", () => {
+        if (!bgAudio.duration || isNaN(bgAudio.duration)) return;
+        const progress = (bgAudio.currentTime / bgAudio.duration) * 100;
+        const progressBar = document.getElementById("music-progress-bar");
+        const timeCurrent = document.getElementById("music-time-current");
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (timeCurrent) {
+          const mins = Math.floor(bgAudio.currentTime / 60);
+          const secs = Math.floor(bgAudio.currentTime % 60);
+          timeCurrent.textContent = `${mins}:${String(secs).padStart(2, "0")}`;
+        }
+      });
+      bgAudio?.addEventListener("ended", () => {
+        if (!bgAudio.loop) {
+          isMusicPlaying = false;
+          updateDynamicIslandContent();
+          document.getElementById("vinyl-disc-el")?.classList.remove("playing");
+          document.getElementById("vinyl-tonearm")?.classList.remove("playing");
+          document.getElementById("music-play-icon")?.classList.remove("hidden");
+          document.getElementById("music-pause-icon")?.classList.add("hidden");
+          const btnLabel = document.getElementById("music-btn-label");
+          if (btnLabel) btnLabel.textContent = "Spin Our Record";
+        }
+      });
 
       // Update live counter every second
       setInterval(updateLiveRelationshipCounter, 1000);
@@ -2654,39 +2477,14 @@
         isExperienceUnlocked = true;
         unlockAudioEngine();
         playUiSound("unlock");
-        if (navigator.vibrate) {
-          try { navigator.vibrate([25, 35, 45]); } catch (_) {}
-        }
         if (introEl) {
-          introEl.style.transition = "all 0.65s cubic-bezier(0.22, 1, 0.36, 1)";
           introEl.style.opacity = "0";
-          introEl.style.transform = "translateY(-30px) scale(0.98)";
           introEl.style.pointerEvents = "none";
           setTimeout(() => {
             introEl.classList.add("hidden");
-            // Smoothly glide into Section 1
-            const heroEl = document.getElementById("section-hero");
-            if (heroEl) heroEl.scrollIntoView({ behavior: "smooth" });
-          }, 450);
+          }, 650);
         }
       }
-
-      // Allow swipe up or wheel scroll on lockscreen to naturally unlock
-      let touchStartY = 0;
-      introEl?.addEventListener("touchstart", (e) => {
-        touchStartY = e.touches[0].clientY;
-      }, { passive: true });
-      introEl?.addEventListener("touchend", (e) => {
-        const touchEndY = e.changedTouches[0].clientY;
-        if (touchStartY - touchEndY > 60) {
-          handleUnlockExperience();
-        }
-      }, { passive: true });
-      introEl?.addEventListener("wheel", (e) => {
-        if (e.deltaY > 30) {
-          handleUnlockExperience();
-        }
-      }, { passive: true });
 
       unlockBtn?.addEventListener("click", handleUnlockExperience);
       introCard?.addEventListener("click", handleUnlockExperience);
@@ -2787,9 +2585,10 @@
         }, { passive: true });
         scratchCanvas.addEventListener("touchmove", (e) => {
           if (isScratchDrawing && e.touches[0]) {
+            if (e.cancelable) e.preventDefault();
             scratchAtPoint(e.touches[0].clientX, e.touches[0].clientY);
           }
-        }, { passive: true });
+        }, { passive: false });
         scratchCanvas.addEventListener("touchend", () => {
           isScratchDrawing = false;
         });
@@ -2808,7 +2607,13 @@
         playUiSound("unlock");
         spawnFloatingHeartBurst(12);
       });
-    });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeLoveOSApp);
+    } else {
+      initializeLoveOSApp();
+    }
   </script>
 
   <!-- Preserve Backend Giftcard Script Hook -->
