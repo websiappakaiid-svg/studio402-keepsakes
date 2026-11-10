@@ -53,7 +53,7 @@
     }
 
     body {
-      background-color: #08060a;
+      background-color: #050507;
       color: #f8fafc;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
@@ -323,54 +323,52 @@
       border-radius: 9999px;
     }
   
-    /* Polos Hitam & Ukuran Wajar Dynamic Island */
+    /* ===================================================================== */
+    /* FIXED DYNAMIC ISLAND (EXPANDS STRICTLY DOWNWARD — NEVER CLIPPED)      */
+    /* ===================================================================== */
     #dynamic-island {
-      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                  height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      transform-origin: top center;
+      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                   border-radius 0.3s ease,
                   padding 0.3s ease,
-                  background-color 0.2s ease;
+                  background-color 0.25s ease,
+                  box-shadow 0.3s ease;
     }
     #dynamic-island.is-expanded {
-      width: 92vw !important;
-      max-width: 380px !important;
+      position: absolute !important;
+      top: 0px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: min(92vw, 372px) !important;
       height: auto !important;
-      padding: 1rem !important;
+      padding: 1rem 1.15rem !important;
       border-radius: 1.75rem !important;
-      background-color: rgba(9, 8, 13, 0.96) !important;
-      border-color: rgba(255, 255, 255, 0.25) !important;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+      background-color: rgba(12, 12, 15, 0.98) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+      z-index: 80 !important;
     }
 
-    /* Lockscreen Full Opaque Isolation (No Bleed-Through) */
+    /* ===================================================================== */
+    /* LOCKSCREEN FULL ISOLATION & ANTI-ZOOM (ONLY SENSOR IS CLICKABLE)      */
+    /* ===================================================================== */
     #cinematic-intro {
-      background-color: #08060a !important;
+      background-color: #050507 !important;
+      touch-action: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
     }
     body.is-locked {
       overflow: hidden !important;
       height: 100vh !important;
+      touch-action: none !important;
     }
-
-    /* Shutter Flash Animation */
-    @keyframes shutterFlashAnim {
-      0% { opacity: 0.95; }
-      100% { opacity: 0; }
-    }
-    .flash-active {
-      animation: shutterFlashAnim 0.35s ease-out forwards;
-    }
-
-    /* 9:16 Photobox Card Aspect */
-    .aspect-9-16 {
-      aspect-ratio: 9 / 16;
-    }
-
 
     /* Progressive Chapter-by-Chapter Reveal System */
     .chapter-hidden {
       display: none;
       opacity: 0;
-      transform: translateY(28px);
+      transform: translateY(24px);
     }
     body.in-preview-mode .chapter-hidden,
     html.in-preview-mode .chapter-hidden {
@@ -379,18 +377,12 @@
       transform: none !important;
     }
     @keyframes chapterUnroll {
-      0% {
-        opacity: 0;
-        transform: translateY(32px) scale(0.985);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      0% { opacity: 0; transform: translateY(28px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     .chapter-reveal-active {
       display: block !important;
-      animation: chapterUnroll 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: chapterUnroll 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     /* Biometric Unlock Progress Ring & Radial Particle Burst */
@@ -403,33 +395,16 @@
       stroke-dashoffset: 0;
     }
     @keyframes biometricPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 35px rgba(244, 63, 94, 0.3); }
-      50% { transform: scale(1.06); box-shadow: 0 0 65px rgba(251, 113, 133, 0.65); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 35px rgba(250, 45, 72, 0.35); }
+      50% { transform: scale(1.05); box-shadow: 0 0 65px rgba(250, 45, 72, 0.7); }
     }
     #unlock-experience-btn.is-scanning {
       animation: biometricPulse 0.8s ease-in-out infinite;
     }
-    @keyframes nudgeSensor {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      50% { transform: translateX(6px); }
-      75% { transform: translateX(-4px); }
-    }
-    .sensor-nudge {
-      animation: nudgeSensor 0.4s ease-in-out;
-    }
     @keyframes radialLoveBurst {
-      0% {
-        transform: translate(-50%, -50%) scale(0.25) rotate(0deg);
-        opacity: 1;
-      }
-      75% {
-        opacity: 1;
-      }
-      100% {
-        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.25) rotate(var(--rot));
-        opacity: 0;
-      }
+      0% { transform: translate(-50%, -50%) scale(0.25) rotate(0deg); opacity: 1; }
+      75% { opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.25) rotate(var(--rot)); opacity: 0; }
     }
     .radial-burst-particle {
       position: fixed;
@@ -438,19 +413,91 @@
       animation: radialLoveBurst 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Photobooth Strip Slot-Print Animation */
-    @keyframes photoboothPrintOut {
+    /* ===================================================================== */
+    /* SNAPBOOTH-STYLE VIEWFINDER, RING LIGHT & PHYSICAL DISPENSER SLOT      */
+    /* ===================================================================== */
+    .vf-ring-light {
+      box-shadow: inset 0 0 0 10px rgba(255, 248, 232, 0.92),
+                  inset 0 0 65px 22px rgba(255, 236, 190, 0.55) !important;
+    }
+    @keyframes shutterFlashAnim {
+      0% { opacity: 0.98; }
+      100% { opacity: 0; }
+    }
+    .flash-active {
+      animation: shutterFlashAnim 0.38s ease-out forwards;
+    }
+    @keyframes lensFlareSweep {
+      0% { opacity: 0; transform: translateX(-100%) rotate(25deg); }
+      40% { opacity: 0.85; }
+      100% { opacity: 0; transform: translateX(120%) rotate(25deg); }
+    }
+    .flare-active {
+      animation: lensFlareSweep 0.55s ease-out forwards;
+    }
+    .dispenser-housing {
+      position: relative;
+      padding: 22px 20px 24px;
+      background: linear-gradient(180deg, #16141d 0%, #09080c 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 28px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.92), inset 0 2px 12px rgba(255, 255, 255, 0.08);
+    }
+    .dispenser-slot-bar {
+      height: 14px;
+      background: linear-gradient(90deg, #09080c 0%, #e5c158 50%, #09080c 100%);
+      border-radius: 999px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.95), 0 0 18px rgba(229, 193, 88, 0.35);
+      position: relative;
+      z-index: 20;
+    }
+    @keyframes stripDispenseSlide {
       0% {
         opacity: 0;
-        transform: translateY(-44px) scale(0.96);
+        transform: translateY(-120px) scale(0.95);
       }
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
     }
-    .strip-print-anim {
-      animation: photoboothPrintOut 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    .strip-dispense-anim {
+      animation: stripDispenseSlide 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .holo-glint-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 22%, rgba(255, 255, 255, 0.28) 46%, rgba(250, 45, 72, 0.22) 52%, rgba(229, 193, 88, 0.25) 58%, transparent 78%);
+      mix-blend-mode: screen;
+      opacity: 0.65;
+    }
+
+    /* Tactile Ivory Boarding Pass Override (Authentic Physical Paper) */
+    .boarding-pass-card {
+      position: relative;
+      background: linear-gradient(180deg, #faf6ee 0%, #f2ece1 100%) !important;
+      color: #141416 !important;
+      border: 1px solid #dcd3c2 !important;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 #ffffff !important;
+    }
+    .ticket-notch-left,
+    .ticket-notch-right {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background-color: #050507 !important;
+      border-radius: 9999px;
+      z-index: 20;
+    }
+    .ticket-notch-left {
+      left: -14px;
+      border-right: 1px solid #dcd3c2 !important;
+    }
+    .ticket-notch-right {
+      right: -14px;
+      border-left: 1px solid #dcd3c2 !important;
     }
 
   </style>
@@ -485,158 +532,138 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- CINEMATIC LOCKSCREEN INTRO (#cinematic-intro) — SINGLE UNIFIED HEADER -->
+  <!-- CINEMATIC LOCKSCREEN INTRO (#cinematic-intro) — ANTI-ZOOM & SOLID     -->
   <!-- ===================================================================== -->
-  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 pt-16 pb-10 bg-[#08060a] transition-all duration-700 select-none">
-    <!-- Subtle lockscreen ambient wallpaper glow -->
+  <div id="cinematic-intro" class="fixed inset-0 z-50 flex flex-col justify-between items-center px-6 pt-16 pb-10 bg-[#050507] transition-all duration-700 select-none pointer-events-auto">
+    <!-- Subtle OLED ambient glow (pointer-events-none) -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/25 via-amber-400/15 to-transparent blur-3xl"></div>
-      <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-rose-500/15 blur-3xl"></div>
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-gradient-to-tr from-rose-500/20 via-amber-400/10 to-transparent blur-3xl"></div>
     </div>
 
-    <!-- Top Spacer (Aligns cleanly beneath the single fixed Dynamic Island header) -->
-    <div class="relative z-10 flex items-center justify-center pt-1">
-      <!-- Bespoke iOS Focus Pill (#025 from Vault) -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1e1b4b]/80 border border-indigo-400/35 shadow-inner text-[11px] font-medium text-indigo-100">
-        <svg class="w-3.5 h-3.5 text-indigo-300" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+    <!-- Top Focus Pill (Strictly Non-Interactive so clicking never zooms) -->
+    <div class="relative z-10 flex items-center justify-center pt-1 pointer-events-none">
+      <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[11px] font-medium text-zinc-300">
+        <svg class="w-3 h-3 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-9a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2h1V6a5 5 0 0110 0v2h1zm-6-5a3 3 0 00-3 3v2h6V6a3 3 0 00-3-3z"/>
         </svg>
-        <span>Focus • Yours Only</span>
+        <span>Private Capsule • Eyes Only</span>
       </div>
     </div>
 
-    <!-- Center Lockscreen Clock & Notification Preview -->
-    <div class="relative z-10 flex flex-col items-center text-center my-auto max-w-sm w-full">
-      <div id="lockscreen-date-el" class="text-sm font-medium text-zinc-300 tracking-wide">
+    <!-- Center Lockscreen Clock & Notification Preview (Strictly pointer-events-none) -->
+    <div class="relative z-10 flex flex-col items-center text-center my-auto max-w-sm w-full pointer-events-none">
+      <div id="lockscreen-date-el" class="text-sm font-medium text-zinc-400 tracking-wide">
         Sunday, October 14
       </div>
-      <div id="lockscreen-time-el" class="text-7xl sm:text-8xl font-bold tracking-tight text-white/95 my-1 font-sans">
+      <div id="lockscreen-time-el" class="text-7xl sm:text-8xl font-bold tracking-tight text-white my-1 font-sans">
         02:14
       </div>
 
       <p id="lockscreen-couple-pill" class="text-xs text-zinc-400 mt-1 flex items-center justify-center gap-1.5">
-        <span>prepared exclusively for</span>
-        <span id="intro-receiver-name" class="text-rose-300 font-semibold">Mia</span>
+        <span>for</span>
+        <span id="intro-receiver-name" class="text-white font-semibold">Mia</span>
         <svg class="w-3.5 h-3.5 inline-block" viewBox="0 0 64 64" fill="none">
-          <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#f43f5e"/>
+          <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#fa2d48"/>
         </svg>
       </p>
 
-      <!-- Lockscreen Notification Stack Preview (Nudges user to use biometric sensor below) -->
-      <div id="intro-unlock-card" class="mt-8 w-full p-4 rounded-3xl bg-white/[0.07] hover:bg-white/[0.10] border border-white/15 backdrop-blur-xl shadow-2xl text-left cursor-pointer transition-all active:scale-[0.99]">
-        <div class="flex items-center justify-between mb-1.5">
+      <!-- Static iOS Lockscreen Notification Preview (No click/zoom jitter) -->
+      <div id="intro-unlock-card" class="mt-7 w-full p-4 rounded-3xl bg-white/[0.07] border border-white/15 backdrop-blur-xl shadow-2xl text-left pointer-events-none">
+        <div class="flex items-center justify-between mb-1">
           <div class="flex items-center gap-2">
-            <div class="w-5 h-5 rounded-md bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center shadow">
+            <div class="w-5 h-5 rounded-md bg-[#fa2d48] flex items-center justify-center shadow">
               <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </div>
-            <span class="text-[11px] font-semibold uppercase tracking-wider text-zinc-300">LOVEOS CAPSULE • LOCKED</span>
+            <span class="text-[10px] font-semibold uppercase tracking-wider text-zinc-300">LOVEOS TIME CAPSULE</span>
           </div>
-          <span class="text-[11px] text-zinc-400">now</span>
+          <span class="text-[10px] text-zinc-400">now</span>
         </div>
         <p id="intro-notification-title" class="text-sm font-semibold text-white">
-          Noah left a private time capsule for you
+          Noah left a private keepsake for you
         </p>
-        <p class="text-xs text-zinc-300/80 mt-0.5">
-          8 interactive chapters: our song on vinyl, late-night receipts, sealed letters &amp; a live self-photo booth.
+        <p class="text-xs text-zinc-400 mt-0.5">
+          Tap the Heart ID sensor below to unseal.
         </p>
       </div>
     </div>
 
-    <!-- Bottom Biometric Heart-ID Sensor (ONLY This Button Unlocks After 2.4s Scan) -->
-    <div class="relative z-10 flex flex-col items-center gap-2.5 w-full max-w-xs">
+    <!-- Bottom Biometric Heart-ID Sensor (THE ONLY CLICKABLE ELEMENT ON LOCKSCREEN) -->
+    <div class="relative z-20 flex flex-col items-center gap-2 w-full max-w-xs pointer-events-none">
       <button
         id="unlock-experience-btn"
         type="button"
-        class="group relative flex items-center justify-center w-22 h-22 p-3 rounded-full bg-gradient-to-b from-rose-500/20 to-rose-500/5 border border-rose-300/30 shadow-[0_0_40px_rgba(244,63,94,0.28)] transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none"
-        style="width: 88px; height: 88px;"
+        class="pointer-events-auto touch-manipulation group relative flex items-center justify-center p-3 rounded-full bg-white/[0.06] hover:bg-white/[0.10] border border-white/20 shadow-[0_0_40px_rgba(250,45,72,0.28)] transition-colors duration-300 focus:outline-none cursor-pointer"
+        style="width: 86px; height: 86px;"
         aria-label="Unlock Keepsake with Heart ID"
       >
-        <span class="absolute inset-0 rounded-full border border-rose-400/35 animate-ping opacity-25"></span>
+        <span class="absolute inset-0 rounded-full border border-rose-400/35 animate-ping opacity-25 pointer-events-none"></span>
 
         <!-- Animated Biometric Progress Ring SVG -->
         <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 92 92" fill="none">
-          <circle cx="46" cy="46" r="42" stroke="rgba(255,255,255,0.08)" stroke-width="3" />
+          <circle cx="46" cy="46" r="42" stroke="rgba(255,255,255,0.1)" stroke-width="3" />
           <circle
             id="unlock-progress-circle"
             cx="46"
             cy="46"
             r="42"
-            stroke="url(#unlockRingGrad)"
+            stroke="#fa2d48"
             stroke-width="3.5"
             stroke-linecap="round"
           />
-          <defs>
-            <linearGradient id="unlockRingGrad" x1="0" y1="0" x2="92" y2="92" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#fda4af" />
-              <stop offset="50%" stop-color="#f43f5e" />
-              <stop offset="100%" stop-color="#fbbf24" />
-            </linearGradient>
-          </defs>
         </svg>
 
         <!-- Phase 1 Icon: Biometric Fingerprint Sensor -->
-        <svg id="unlock-icon-fingerprint" class="w-9 h-9 text-rose-300 transition-all duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <svg id="unlock-icon-fingerprint" class="w-9 h-9 text-rose-400 transition-opacity duration-300 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
         </svg>
 
-        <!-- Phase 2 Icon: Bespoke 3D Anodized Rose-Gold Puffy Heart (#002) -->
-        <svg id="unlock-icon-heart" class="w-11 h-11 hidden scale-90 transition-all duration-300" viewBox="0 0 64 64" fill="none">
-          <defs>
-            <radialGradient id="unlockHeartGrad" cx="30%" cy="25%" r="75%">
-              <stop offset="0%" stop-color="#fff1f2"/>
-              <stop offset="22%" stop-color="#fda4af"/>
-              <stop offset="58%" stop-color="#e11d48"/>
-              <stop offset="100%" stop-color="#4c0519"/>
-            </radialGradient>
-          </defs>
-          <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="url(#unlockHeartGrad)" stroke="#fecdd3" stroke-width="1.5"/>
+        <!-- Phase 2 Icon: Bespoke 3D Rose-Gold Puffy Heart (#002) -->
+        <svg id="unlock-icon-heart" class="w-10 h-10 hidden pointer-events-none" viewBox="0 0 64 64" fill="none">
+          <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#fa2d48" stroke="#fecdd3" stroke-width="2"/>
           <ellipse cx="22" cy="18.5" rx="5" ry="2.6" transform="rotate(-28 22 18.5)" fill="#ffffff" fill-opacity="0.65"/>
         </svg>
       </button>
 
-      <span id="unlock-hint-label" class="text-xs font-semibold tracking-wide text-zinc-200 transition-colors">
-        tap sensor to scan heart id
+      <span id="unlock-hint-label" class="text-xs font-medium tracking-wide text-zinc-300">
+        Tap Heart ID to Unlock
       </span>
       <span id="unlock-sub-status" class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-        biometric lock • eyes only
+        Hold Still • 2.4s Scan
       </span>
       <div class="w-32 h-1 rounded-full bg-white/20 mt-1"></div>
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- FLOATING iOS STATUS BAR & COMPACT POLOS HITAM DYNAMIC ISLAND         -->
+  <!-- SINGLE UNIFIED iOS STATUS BAR & ANTI-CLIP DYNAMIC ISLAND              -->
   <!-- ===================================================================== -->
-  <header class="fixed top-2 inset-x-0 z-[60] pointer-events-none select-none px-4 sm:px-6">
-    <div class="max-w-xl mx-auto flex items-center justify-between relative h-9">
+  <header class="fixed top-2.5 inset-x-0 z-[60] pointer-events-none select-none px-4 sm:px-6">
+    <div class="max-w-xl mx-auto flex items-start justify-between relative min-h-[36px]">
       <!-- iOS Status Bar Left: Realtime Clock -->
-      <div id="sticky-status-left" class="w-20 text-xs font-semibold tracking-tight text-white/90 pl-1 transition-opacity duration-300 flex items-center gap-1">
+      <div id="sticky-status-left" class="w-20 pt-1.5 text-xs font-semibold tracking-tight text-white/90 pl-1 transition-opacity duration-200 flex items-center gap-1">
         <span id="ios-clock-time">09:41</span>
       </div>
 
-      <!-- Center: Compact Polos Hitam Dynamic Island (#dynamic-island) -->
+      <!-- Center: Compact Polos Hitam Dynamic Island (Expands Strictly Downward) -->
       <div
         id="dynamic-island"
-        class="pointer-events-auto relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.85)] cursor-pointer w-32 sm:w-36 h-8 sm:h-8.5 overflow-hidden select-none transition-all duration-300"
-        title="Tap Dynamic Island to expand"
+        class="pointer-events-auto touch-manipulation relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.9)] cursor-pointer w-32 sm:w-36 h-8 overflow-hidden select-none"
+        title="Tap Dynamic Island"
       >
-        <!-- Collapsed & Expanded content injected dynamically by updateDynamicIslandContent() -->
+        <!-- Content Injected by updateDynamicIslandContent() -->
       </div>
 
       <!-- iOS Status Bar Right: Signal, 5G, Battery -->
-      <div id="sticky-status-right" class="w-20 text-xs font-medium text-white/90 pr-1 transition-opacity duration-300 flex items-center justify-end gap-1.5">
-        <!-- 4 Cellular Signal Bars -->
+      <div id="sticky-status-right" class="w-20 pt-1.5 text-xs font-medium text-white/90 pr-1 transition-opacity duration-200 flex items-center justify-end gap-1.5">
         <svg class="w-3.5 h-3.5 text-white/90" fill="currentColor" viewBox="0 0 16 16">
           <rect x="1" y="10" width="2.2" height="5" rx="0.8"/>
           <rect x="4.5" y="7.5" width="2.2" height="7.5" rx="0.8"/>
           <rect x="8" y="4.5" width="2.2" height="10.5" rx="0.8"/>
           <rect x="11.5" y="1.5" width="2.2" height="13.5" rx="0.8"/>
         </svg>
-        <!-- 5G Badge -->
         <span class="text-[10px] font-bold tracking-tighter">5G</span>
-        <!-- Battery Icon with Green Level -->
         <div class="flex items-center border border-white/80 rounded-[3.5px] p-[1px] w-[20px] h-[10px] relative">
           <div class="w-full h-full bg-emerald-400 rounded-[2px]"></div>
           <div class="absolute -right-[3px] top-[2px] w-[2px] h-[4px] bg-white/80 rounded-r-[1px]"></div>
@@ -688,7 +715,7 @@
       </div>
 
       <!-- Tactile iOS Glass Live Relationship Counter Widget -->
-      <div class="relative rounded-3xl p-5 bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
+      <div class="relative rounded-3xl p-5 bg-[#101014] border border-white/15 shadow-2xl overflow-hidden">
         <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-3">
           <span class="flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
@@ -721,8 +748,8 @@
       <!-- Milestone Selector Pills -->
       <div class="space-y-3">
         <div class="flex items-center justify-between px-1">
-          <span class="text-xs font-medium text-zinc-400">core memory boarding passes</span>
-          <span class="text-[11px] font-mono text-rose-300/80">tap a pass to inspect</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Memory Passes</span>
+          <span class="text-[11px] font-mono text-zinc-500">Tap to switch</span>
         </div>
         <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           <!-- Milestone pills injected by JS -->
@@ -734,29 +761,19 @@
         <!-- Injected by renderMilestoneDetailCard() with semicircular notches, dashed tear-line, barcode SVG & tilted VERIFIED MEMORY ♡ stamp -->
       </div>
           <!-- Section 1 Next Flow Indicator -->
-      <div id="flow-nav-sec1" class="pt-6">
+      <div id="flow-nav-sec1" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-music', 'flow-nav-sec1', '02', 'Unseal Chapter 02: Heavy Rotation')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-music', 'flow-nav-sec1', '02', 'Next • Spin Our Record')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 02 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 02: Heavy Rotation
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Spin our vinyl record & late-night car stereo note
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Spin Our Record</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -885,7 +902,7 @@
               <button
                 id="music-toggle-btn"
                 type="button"
-                class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 text-zinc-950 font-semibold text-xs shadow-lg shadow-rose-500/20 hover:brightness-110 active:scale-95 transition-all"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] text-white font-semibold text-xs shadow-lg shadow-rose-600/30 active:scale-95 transition-all"
               >
                 <svg id="music-play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
@@ -910,29 +927,19 @@
         </div>
       </div>
           <!-- Section 2 Next Flow Indicator -->
-      <div id="flow-nav-sec2" class="pt-6">
+      <div id="flow-nav-sec2" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-messages', 'flow-nav-sec2', '03', 'Unseal Chapter 03: Late Night Receipts')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-messages', 'flow-nav-sec2', '03', 'Next • First Texts & Drafts')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 03 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 03: Late Night Receipts
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Replay how we started talking & read my unsent drafts
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • First Texts & Drafts</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -1070,29 +1077,19 @@
         </div>
       </div>
           <!-- Section 3 Next Flow Indicator -->
-      <div id="flow-nav-sec3" class="pt-6">
+      <div id="flow-nav-sec3" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-polaroids', 'flow-nav-sec3', '04', 'Unseal Chapter 04: 35mm Camera Roll')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-polaroids', 'flow-nav-sec3', '04', 'Next • 35mm Camera Roll')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 04 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 04: 35mm Camera Roll
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Flip our Polaroid prints to read what I wrote on the back
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • 35mm Camera Roll</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -1216,29 +1213,19 @@
         </button>
       </div>
           <!-- Section 4 Next Flow Indicator -->
-      <div id="flow-nav-sec4" class="pt-6">
+      <div id="flow-nav-sec4" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-envelopes', 'flow-nav-sec4', '05', 'Unseal Chapter 05: Par Avion Keepsake Mail')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-envelopes', 'flow-nav-sec4', '05', 'Next • Sealed Letters')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 05 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 05: Par Avion Keepsake Mail
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Break the crimson wax seals on 4 private letters
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Sealed Letters</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -1260,29 +1247,19 @@
         <!-- Tactile cream airmail envelopes injected by renderEnvelopes() -->
       </div>
           <!-- Section 5 Next Flow Indicator -->
-      <div id="flow-nav-sec5" class="pt-6">
+      <div id="flow-nav-sec5" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-scratch', 'flow-nav-sec5', '06', 'Unseal Chapter 06: Date Night Favor')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-scratch', 'flow-nav-sec5', '06', 'Next • Date Night Voucher')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 06 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 06: Date Night Favor
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Scratch the holographic gold-rose foil voucher
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Date Night Voucher</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -1347,29 +1324,19 @@
         </div>
       </div>
           <!-- Section 6 Next Flow Indicator -->
-      <div id="flow-nav-sec6" class="pt-6">
+      <div id="flow-nav-sec6" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-notes', 'flow-nav-sec6', '07', 'Unseal Chapter 07: 2:14 AM Confessions')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-notes', 'flow-nav-sec6', '07', 'Next • 2:14 AM Note')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>UP NEXT • CHAPTER 07 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Unseal Chapter 07: 2:14 AM Confessions
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Read my pinned iCloud note & check off our someday list
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • 2:14 AM Note</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
@@ -1467,7 +1434,7 @@
         <button
           id="send-heart-pulse-btn"
           type="button"
-          class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-400 text-zinc-950 font-semibold text-xs tracking-wide shadow-[0_10px_30px_rgba(244,63,94,0.35)] hover:scale-105 active:scale-95 transition-all"
+          class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#fa2d48] hover:bg-[#ff3b56] text-white font-semibold text-xs tracking-wide shadow-[0_10px_30px_rgba(250,45,72,0.4)] hover:scale-105 active:scale-95 transition-all"
         >
           <svg class="w-4 h-4" viewBox="0 0 64 64" fill="none">
             <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#18181b"/>
@@ -1480,336 +1447,244 @@
       </div>
 
       <!-- Section 7 Next Flow Indicator -->
-      <div id="flow-nav-sec7" class="pt-6">
+      <div id="flow-nav-sec7" class="pt-4 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Enter Finale: Live Self-Photo Booth')"
-          class="w-full group relative overflow-hidden rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-rose-500/12 via-white/[0.05] to-amber-400/12 hover:from-rose-500/20 hover:to-amber-400/20 border border-rose-300/25 shadow-xl transition-all duration-300 active:scale-[0.99] text-left flex items-center justify-between gap-4"
+          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • Live Photo Booth')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
         >
-          <div class="space-y-1 min-w-0">
-            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-rose-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-              <span>FINALE CHAPTER • 08 OF 08</span>
-            </div>
-            <div class="font-serif italic text-xl sm:text-2xl text-white group-hover:text-rose-200 transition-colors truncate">
-              Enter Finale: Live Self-Photo Booth
-            </div>
-            <p class="text-xs text-zinc-400 truncate">
-              Snap a real 3-pose strip together with auto-decorated stickers
-            </p>
-          </div>
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center shrink-0 shadow-lg group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Finale • Live Photo Booth</span>
+          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
-          </div>
+          </span>
         </button>
       </div>
     </section>
 
   <!-- =================================================================== -->
-    <!-- SECTION 8: AUTOMATED 3-SNAP LIVE SELF-PHOTO BOOTH & 9:16 STORY TOY -->
+    <!-- SECTION 8: SNAPBOOTH-STYLE AUTO 3-SNAP LIVE BOOTH & DISPENSER SLOT -->
     <!-- =================================================================== -->
-    <section id="section-photobox" class="space-y-6 pt-4 chapter-hidden">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 px-1">
+    <section id="section-photobox" class="space-y-5 pt-4 chapter-hidden">
+      <div class="flex items-center justify-between px-1">
         <div>
-          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/30 text-[11px] font-mono text-rose-300">
-            <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-            </svg>
-            <span>08 • FINALE INTERACTIVE BOOTH</span>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-400">08 • Finale Booth</span>
+          <h2 class="font-serif italic text-3xl text-white">self-photo dispenser</h2>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button
+            id="booth-ringlight-toggle"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl bg-amber-400/15 border border-amber-300/30 text-[11px] font-mono text-amber-200 flex items-center gap-1 transition"
+            title="Toggle Studio Ring Light"
+          >
+            <span>💡 Ring Light</span>
+          </button>
+          <button
+            id="camera-flip-btn"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-[11px] font-mono text-zinc-300 flex items-center gap-1 transition"
+            title="Flip Front/Back Camera"
+          >
+            <span>Flip Lens</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 1: CLEAN LIVE CAMERA BOOTH CARD (1 CLICK -> AUTO 3 SNAPS) -->
+      <div class="rounded-3xl p-4 sm:p-5 bg-[#101015] border border-white/15 shadow-2xl space-y-4">
+        <!-- Viewfinder Stage with Studio Ring-Light Glow -->
+        <div
+          id="booth-vf-box"
+          class="relative max-w-sm mx-auto aspect-[4/5] rounded-2xl overflow-hidden bg-[#050507] border border-white/15 vf-ring-light flex items-center justify-center transition-shadow duration-300"
+        >
+          <!-- Live Badge Top-Left -->
+          <div id="booth-live-badge" class="absolute top-3.5 left-3.5 z-30 hidden items-center gap-1.5 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold text-white tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-ping"></span>
+            <span id="booth-status-pill">LIVE • 3-SNAP AUTO</span>
           </div>
-          <h2 class="font-serif italic text-3xl sm:text-4xl text-white mt-1.5">
-            late-night self-photo booth
-          </h2>
-          <p class="text-xs text-zinc-400 mt-1 max-w-lg leading-relaxed">
-            Before you close this capsule, step into our private photo booth. Hit the shutter once—it automatically snaps 3 live poses in a row and prints a custom-decorated 9:16 strip with tactile stickers.
+
+          <!-- White Shutter Flash & Diagonal Lens Flare -->
+          <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-40"></div>
+          <div id="booth-lens-flare" class="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-0 z-40"></div>
+
+          <!-- Mirrored Live Video Stream -->
+          <video
+            id="camera-stream-video"
+            autoplay
+            playsinline
+            muted
+            class="w-full h-full object-cover hidden"
+            style="transform: scaleX(-1);"
+          ></video>
+
+          <!-- Standby Screen (1 Tap Activates Camera & Immediately Starts 3-Snap Burst!) -->
+          <div id="booth-mirror-standby" class="relative z-10 p-6 text-center flex flex-col items-center justify-center space-y-3">
+            <div class="w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center shadow-inner">
+              <svg class="w-8 h-8 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                <circle cx="12" cy="13" r="3.2"/>
+              </svg>
+            </div>
+            <h3 class="font-serif italic text-2xl text-white">ready for 3 quick poses?</h3>
+            <p class="text-xs text-zinc-400 max-w-[230px] leading-relaxed">
+              Tap below once—the booth will automatically count down &amp; snap 3 photos in a row, then dispense your finished strip.
+            </p>
+          </div>
+
+          <!-- Countdown & Pose Prompt Overlay -->
+          <div id="camera-countdown-overlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-between p-5 bg-black/25 pointer-events-none">
+            <div id="camera-pose-prompt" class="px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-mono font-bold text-amber-300 shadow-lg">
+              POSE 1 / 3 • SMILE!
+            </div>
+            <span id="camera-countdown-num" class="text-8xl font-sans font-extrabold text-white drop-shadow-[0_6px_25px_rgba(0,0,0,0.95)] my-auto">
+              3
+            </span>
+            <div class="w-12 h-1"></div>
+          </div>
+
+          <!-- 3 Shot Progress Dots at Bottom of Viewfinder -->
+          <div class="absolute bottom-3.5 inset-x-0 z-30 flex items-center justify-center gap-2 pointer-events-none">
+            <span id="booth-dot-0" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
+            <span id="booth-dot-1" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
+            <span id="booth-dot-2" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
+          </div>
+        </div>
+
+        <!-- Primary 1-Click Auto 3-Snap Action Row -->
+        <div class="flex flex-col sm:flex-row items-center gap-2.5 max-w-sm mx-auto">
+          <button
+            id="camera-snap-trigger-btn"
+            type="button"
+            class="w-full flex-1 py-3.5 px-5 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] active:scale-[0.98] text-white font-bold text-xs shadow-[0_10px_28px_rgba(250,45,72,0.4)] transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/>
+            </svg>
+            <span id="booth-main-btn-label">Start 3-Snap Photo Booth</span>
+          </button>
+
+          <button
+            id="booth-upload-fallback-btn"
+            type="button"
+            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
+          >
+            From Gallery
+          </button>
+          <input id="photobox-file-input" type="file" accept="image/*" multiple class="hidden" />
+        </div>
+
+        <!-- Hidden compatibility hooks -->
+        <div id="photobox-slots-container" class="hidden"></div>
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- STEP 2: PHYSICAL DISPENSER SLOT OUTPUT (1 UNIFIED MERGED IMAGE!)   -->
+      <!-- ================================================================= -->
+      <div id="photobox-developed-stage" class="hidden space-y-5 pt-2">
+        <div class="dispenser-housing text-center">
+          <!-- Glowing Metallic Dispenser Slot Bar -->
+          <div class="dispenser-slot-bar max-w-xs mx-auto"></div>
+
+          <p class="text-[11px] font-mono uppercase tracking-widest text-amber-300/90 mb-3">
+            ✦ Freshly Printed Strip • Tap Strip to Zoom ✦
           </p>
-        </div>
 
-        <!-- Segmented Mode Selector: 3-Snap Strip vs Single Portrait -->
-        <div class="flex items-center p-1 rounded-2xl bg-black/70 border border-white/10 shrink-0 self-start sm:self-auto">
-          <button
-            id="photobox-mode-strip"
-            type="button"
-            class="py-2 px-3.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md"
-          >
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="4" y1="8.5" x2="20" y2="8.5"/><line x1="4" y1="15" x2="20" y2="15"/>
-            </svg>
-            <span>3-Snap Strip</span>
-          </button>
-          <button
-            id="photobox-mode-single"
-            type="button"
-            class="py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center gap-1.5"
-          >
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="11" r="3"/>
-            </svg>
-            <span>Single Portrait</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Aesthetic Frame & Auto-Sticker Theme Picker -->
-      <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/10">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-zinc-400 pl-1">
-          Auto-Sticker Pack:
-        </span>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            data-booth-theme="midnight"
-            class="booth-theme-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/20 border border-rose-400/50 text-rose-200 transition flex items-center gap-1.5"
-          >
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
-            <span>Obsidian 35mm</span>
-          </button>
-          <button
-            type="button"
-            data-booth-theme="seoul"
-            class="booth-theme-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 border border-white/10 text-zinc-300 hover:text-white transition flex items-center gap-1.5"
-          >
-            <span class="w-2.5 h-2.5 rounded-full bg-[#faf6f0] border border-stone-400"></span>
-            <span>Seoul Cream Tape</span>
-          </button>
-          <button
-            type="button"
-            data-booth-theme="y2k"
-            class="booth-theme-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 border border-white/10 text-zinc-300 hover:text-white transition flex items-center gap-1.5"
-          >
-            <span class="w-2.5 h-2.5 rounded-full bg-fuchsia-400"></span>
-            <span>Y2K Tapback</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- MAIN PHOTOBOOTH CABINET & LIVE MIRROR VIEWFINDER -->
-      <div class="rounded-3xl p-5 sm:p-6 bg-gradient-to-b from-[#18121c] via-[#100c14] to-[#0a080d] border border-rose-300/25 shadow-2xl space-y-6">
-
-        <!-- IN-PAGE BOOTH MIRROR CAMERA STAGE (#booth-mirror-stage) -->
-        <div id="booth-mirror-stage" class="space-y-4">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-mono text-[11px] uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
-              <span id="booth-led-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span id="booth-status-pill">SELF-PHOTO BOOTH MIRROR • READY</span>
-            </span>
-            <button
-              id="camera-flip-btn"
-              type="button"
-              class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-mono text-zinc-300 flex items-center gap-1 transition"
-              title="Switch Front/Back Lens"
-            >
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 7h-3l-2-2H9L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              <span>Flip Lens</span>
-            </button>
-          </div>
-
-          <!-- Illuminated Studio Mirror Frame -->
-          <div class="relative max-w-sm mx-auto aspect-[4/5] rounded-3xl overflow-hidden bg-[#070609] border-2 border-white/20 shadow-[0_0_50px_rgba(244,63,94,0.15),inset_0_0_30px_rgba(255,255,255,0.08)] flex items-center justify-center">
-            <!-- Studio Ring-Light Glow Frame -->
-            <div class="absolute inset-2 rounded-2xl border border-white/15 pointer-events-none z-20"></div>
-
-            <!-- White Shutter Flash Overlay -->
-            <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-40"></div>
-
-            <!-- Live Video Stream Element (Mirrored for Selfie) -->
-            <video
-              id="camera-stream-video"
-              autoplay
-              playsinline
-              muted
-              class="w-full h-full object-cover hidden"
-              style="transform: scaleX(-1);"
-            ></video>
-
-            <!-- Standby Mirror Placeholder (Shown before camera is turned on) -->
-            <div id="booth-mirror-standby" class="relative z-10 p-6 text-center flex flex-col items-center justify-center space-y-4">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-rose-500/25 to-amber-400/20 border border-rose-300/35 flex items-center justify-center shadow-lg">
-                <svg class="w-8 h-8 text-rose-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                  <circle cx="12" cy="13" r="3"/>
-                </svg>
-              </div>
-              <div class="space-y-1 max-w-xs">
-                <h3 class="font-serif italic text-2xl text-white">step in front of the mirror</h3>
-                <p class="text-xs text-zinc-400 leading-relaxed">
-                  Turn on the live booth camera to snap 3 back-to-back poses with automatic countdown &amp; cute sticker overlays.
-                </p>
-              </div>
-              <div class="flex flex-col w-full gap-2 pt-1">
-                <button
-                  id="booth-start-camera-btn"
-                  type="button"
-                  class="w-full py-3 px-5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 font-bold text-xs shadow-lg shadow-rose-500/25 hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/>
-                  </svg>
-                  <span>Turn On Live Booth Camera</span>
-                </button>
-                <button
-                  id="booth-upload-fallback-btn"
-                  type="button"
-                  class="w-full py-2 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 text-[11px] font-medium transition"
-                >
-                  or pick photos from camera roll
-                </button>
-              </div>
-            </div>
-
-            <!-- Live Pose Prompt & 3-2-1 Countdown Overlay -->
-            <div id="camera-countdown-overlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-between p-5 bg-black/35 backdrop-blur-[2px] pointer-events-none">
-              <div id="camera-pose-prompt" class="px-3.5 py-1.5 rounded-full bg-black/80 border border-rose-300/40 text-xs font-mono font-bold text-rose-200 shadow-lg">
-                POSE 01 OF 03 • GIVE YOUR BEST SMILE!
-              </div>
-              <span id="camera-countdown-num" class="text-8xl font-sans font-extrabold text-white drop-shadow-[0_6px_25px_rgba(0,0,0,0.9)] my-auto">
-                3
-              </span>
-              <div class="text-[11px] font-mono text-white/80 bg-black/60 px-3 py-1 rounded-full">
-                Hold still • Auto-burst in progress
-              </div>
-            </div>
-
-            <!-- Live Shutter Trigger Bar Inside Mirror Bottom -->
-            <div id="booth-live-controls" class="absolute bottom-4 inset-x-4 z-30 hidden items-center justify-between bg-black/75 backdrop-blur-xl border border-white/15 rounded-2xl px-4 py-2.5">
-              <div class="text-left">
-                <div id="booth-live-mode-label" class="text-[10px] font-mono uppercase text-rose-300 font-bold">AUTO 3-POSE BURST</div>
-                <div class="text-[11px] text-zinc-300">Tap shutter once for 3 snaps</div>
-              </div>
-              <button
-                id="camera-snap-trigger-btn"
-                type="button"
-                class="relative w-14 h-14 p-1 rounded-full border-4 border-white flex items-center justify-center transition-all hover:scale-105 active:scale-90 shadow-[0_0_25px_rgba(244,63,94,0.6)] shrink-0"
-                title="Start Automated Photobooth Burst"
-              >
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-600 to-rose-400"></div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Mini Pose Progress Strip (Slots 1, 2, 3) -->
-          <div id="photobox-slots-container" class="grid grid-cols-3 gap-2.5 max-w-sm mx-auto">
-            <!-- Rendered dynamically by renderPhotoboxSlots() -->
-          </div>
-        </div>
-
-        <!-- Hidden File Input for Optional Camera Roll Pick -->
-        <input id="photobox-file-input" type="file" accept="image/*" multiple class="hidden" />
-
-        <!-- =============================================================== -->
-        <!-- DEVELOPED 9:16 KEEPSAKE STRIP WITH AUTO-GENERATED STICKER ASSETS -->
-        <!-- =============================================================== -->
-        <div id="photobox-developed-stage" class="space-y-4 pt-3 border-t border-white/10">
-          <div class="flex items-center justify-between px-1">
-            <span class="text-xs font-mono uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
-              <span id="developed-strip-status">AUTO-DECORATED 9:16 KEEPSAKE STRIP</span>
-            </span>
-            <button
-              id="booth-retake-all-btn"
-              type="button"
-              class="text-[11px] font-mono text-rose-300 hover:underline flex items-center gap-1"
-            >
-              <span>Retake Booth Session ↻</span>
-            </button>
-          </div>
-
-          <!-- 9:16 Story Card Live DOM Preview with Auto-Stickers (#photobox-preview-frame) -->
+          <!-- ONE SINGLE UNIFIED COMPOSITE IMAGE (<img>) EMERGING FROM SLOT -->
           <div
-            id="photobox-preview-frame"
-            class="relative max-w-xs mx-auto rounded-3xl overflow-hidden border-2 border-white/20 shadow-[0_24px_60px_rgba(0,0,0,0.95)] bg-[#09080d] aspect-9-16 p-4 flex flex-col justify-between select-none transition-colors duration-300"
+            id="booth-strip-img-wrapper"
+            class="relative inline-block max-w-[290px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
+            title="Tap to view fullscreen"
           >
-            <!-- Ambient background glow -->
-            <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-rose-500/12 via-transparent to-amber-500/12"></div>
-
-            <!-- Top Strip Header -->
-            <div class="relative z-10 flex items-center justify-between border-b border-white/15 pb-2">
-              <div>
-                <span id="preview-card-header-tag" class="text-[8.5px] font-mono tracking-widest text-rose-300 uppercase font-bold block">
-                  LOVEOS SELF-PHOTO STUDIO
-                </span>
-                <div id="preview-card-couple" class="font-serif italic text-lg text-white leading-tight">
-                  Noah &amp; Mia
-                </div>
-              </div>
-              <div id="preview-card-date" class="text-[8.5px] font-mono text-zinc-400 text-right leading-tight">
-                LIVE BOOTH<br/><span class="text-rose-300 font-bold">1 OF 1 EDITION</span>
-              </div>
-            </div>
-
-            <!-- Photos + Auto-Sticker Overlays Container (#preview-card-photos) -->
-            <div id="preview-card-photos" class="relative z-10 flex-1 my-2.5 flex flex-col justify-center gap-2.5 overflow-visible">
-              <!-- Populated by render916PreviewCard() with real photos + custom SVG stickers, washi tape & film burns -->
-            </div>
-
-            <!-- Bottom Strip Footer & Website Link Sticker -->
-            <div class="relative z-10 pt-2 border-t border-white/15 flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <svg class="w-3.5 h-3.5 text-rose-400 shrink-0" viewBox="0 0 64 64" fill="none">
-                  <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#f43f5e"/>
-                </svg>
-                <span id="preview-card-footer-note" class="text-[8.5px] font-mono text-zinc-300 truncate">
-                  KEPT SAFE FOREVER
-                </span>
-              </div>
-              <div class="px-2.5 py-0.5 rounded-full bg-white/15 border border-white/25 text-[8.5px] font-mono font-bold text-white flex items-center gap-1 shadow shrink-0">
-                <span id="preview-card-link-text">loveos.kept.us</span>
-              </div>
-            </div>
+            <img
+              id="booth-final-strip-img"
+              src=""
+              alt="Printed Photobooth Strip"
+              class="w-full h-auto block select-none"
+            />
+            <div class="holo-glint-overlay group-hover:opacity-90 transition-opacity"></div>
           </div>
 
-          <!-- 3 Primary Export & Share Buttons (100% Native US English + Clean SVGs) -->
-          <div class="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
-            <button
-              id="photobox-download-btn"
-              type="button"
-              class="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-400 hover:brightness-110 active:scale-95 text-zinc-950 font-bold text-xs shadow-lg shadow-rose-500/25 transition-all flex items-center justify-center gap-2"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-              </svg>
-              <span>Save 9:16 HD Story (1080×1920)</span>
-            </button>
+          <!-- 3 Individual Raw Shots Mini Strip (Just like SNAPBOOTH .gal) -->
+          <div id="booth-raw-gal" class="flex items-center justify-center gap-2.5 mt-4">
+            <!-- Populated with the 3 raw snapshots -->
+          </div>
 
-            <button
-              id="photobox-share-btn"
-              type="button"
-              class="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 border border-white/15 text-white font-semibold text-xs shadow-md transition-all flex items-center justify-center gap-2"
-            >
-              <svg class="w-4 h-4 text-rose-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>
-              </svg>
-              <span>Share to IG Story</span>
+          <!-- Instant Frame Color Switcher (Re-renders the unified <img> on tap) -->
+          <div class="flex items-center justify-center gap-2 mt-4 pt-3 border-t border-white/10">
+            <span class="text-[10px] font-mono uppercase text-zinc-400 mr-1">Frame:</span>
+            <button type="button" data-booth-theme="seoul" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-semibold bg-[#faf6ee] text-zinc-900 border border-white shadow">
+              Cream Paper
             </button>
-
-            <button
-              id="photobox-copylink-btn"
-              type="button"
-              class="w-full sm:w-auto py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 font-medium text-xs transition-all flex items-center justify-center gap-1.5"
-              title="Copy Keepsake Link"
-            >
-              <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-              </svg>
-              <span>Copy Link</span>
+            <button type="button" data-booth-theme="midnight" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-medium bg-zinc-900 text-zinc-300 border border-white/20">
+              Obsidian 35mm
+            </button>
+            <button type="button" data-booth-theme="y2k" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-medium bg-fuchsia-950/80 text-pink-200 border border-pink-400/30">
+              Rose Studio
             </button>
           </div>
         </div>
+
+        <!-- Action Buttons: Download HD PNG, Share IG Story, Retake, Copy Link -->
+        <div class="flex flex-col sm:flex-row items-center gap-2.5">
+          <button
+            id="photobox-download-btn"
+            type="button"
+            class="w-full sm:flex-1 py-3.5 px-4 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] active:scale-95 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span>Download Ultra HD Strip (PNG)</span>
+          </button>
+
+          <button
+            id="photobox-share-btn"
+            type="button"
+            class="w-full sm:flex-1 py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 border border-white/15 text-white font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Share to IG Story</span>
+          </button>
+
+          <button
+            id="booth-retake-all-btn"
+            type="button"
+            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
+          >
+            Retake ↻
+          </button>
+
+          <button
+            id="photobox-copylink-btn"
+            type="button"
+            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
+          >
+            Copy Link
+          </button>
+        </div>
       </div>
 
-      <!-- Back to Top Story Footer -->
-      <div id="flow-nav-sec8" class="flex justify-center pt-6">
+      <!-- Fullscreen Lightbox Modal when user clicks the Printed Strip Image -->
+      <div
+        id="booth-lightbox-modal"
+        class="fixed inset-0 z-[90] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl cursor-zoom-out"
+      >
+        <div class="relative max-w-sm w-full max-h-[90vh] flex flex-col items-center">
+          <img id="booth-lightbox-img" src="" alt="Fullscreen Strip" class="max-h-[82vh] w-auto rounded-2xl shadow-2xl border border-white/20" />
+          <span class="mt-3 text-xs font-mono text-zinc-400">Tap anywhere to close • Long-press image to save on phone</span>
+        </div>
+      </div>
+
+      <!-- Back to Top Footer -->
+      <div id="flow-nav-sec8" class="flex justify-center pt-4">
         <button
           type="button"
           onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); playUiSound('tap');"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition shadow"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition"
         >
-          <span>Back to Top of Keepsake</span>
-          <span>↑</span>
+          <span>Back to Top ↑</span>
         </button>
       </div>
     </section>
@@ -2310,9 +2185,7 @@
       const island = document.getElementById("dynamic-island");
       if (!island) return;
       const d = window.COUPLE_DATA || {};
-      const p1 = d.partner1Name || d.boyfriendName || "Noah";
-      const p2 = d.partner2Name || d.girlfriendName || "Mia";
-      const songTitle = d.songTitle || "Our Song";
+      const songTitle = d.songTitle || "Sunsetz (Late Night Drive Edit)";
       const songArtist = d.songArtist || "Cigarettes After Sex";
       const coverImg = (d.polaroidPhotos && d.polaroidPhotos[0] && (d.polaroidPhotos[0].imageUrl || d.polaroidPhotos[0].url)) ||
         "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=200&q=80";
@@ -2321,74 +2194,63 @@
       const statusRight = document.getElementById("sticky-status-right");
 
       if (!isDynamicIslandExpanded) {
-        // Show status bar left/right when island is collapsed
-        if (statusLeft) { statusLeft.style.opacity = "1"; statusLeft.style.pointerEvents = "auto"; }
-        if (statusRight) { statusRight.style.opacity = "1"; statusRight.style.pointerEvents = "auto"; }
+        if (statusLeft) { statusLeft.style.opacity = "1"; }
+        if (statusRight) { statusRight.style.opacity = "1"; }
 
-        // COMPACT POLOS HITAM (Ukuran wajar, elegan khas iPhone)
         island.classList.remove("is-expanded");
-        island.className = "pointer-events-auto relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.85)] cursor-pointer w-32 sm:w-36 h-8 sm:h-8.5 overflow-hidden select-none transition-all duration-300";
+        island.className = "pointer-events-auto touch-manipulation relative flex items-center justify-between px-3.5 py-1.5 rounded-full bg-black hover:bg-zinc-950 border border-white/15 shadow-[0_10px_25px_rgba(0,0,0,0.9)] cursor-pointer w-32 sm:w-36 h-8 overflow-hidden select-none";
         island.innerHTML = `
-          <!-- Camera cutout dot -->
           <div class="w-2.5 h-2.5 rounded-full bg-[#14141a] border border-white/20 shrink-0 flex items-center justify-center">
-            <div class="w-1 h-1 rounded-full bg-blue-950"></div>
+            <div class="w-1 h-1 rounded-full bg-indigo-900"></div>
           </div>
-          <!-- Audio / State indicator in black pill -->
           ${
             isMusicPlaying
               ? `<div class="flex items-end gap-[2px] h-3 px-1" title="Now Playing">
-                  <span class="w-1 h-2 bg-rose-400 rounded-full animate-pulse"></span>
-                  <span class="w-1 h-3.5 bg-amber-300 rounded-full animate-pulse" style="animation-delay:0.18s"></span>
-                  <span class="w-1 h-2 bg-rose-400 rounded-full animate-pulse" style="animation-delay:0.35s"></span>
+                  <span class="w-1 h-2 bg-[#fa2d48] rounded-full animate-pulse"></span>
+                  <span class="w-1 h-3.5 bg-amber-300 rounded-full animate-pulse" style="animation-delay:0.15s"></span>
+                  <span class="w-1 h-2.5 bg-[#fa2d48] rounded-full animate-pulse" style="animation-delay:0.3s"></span>
                 </div>`
               : `<div class="flex items-center gap-1.5 pr-0.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500/80 animate-pulse"></span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#fa2d48] animate-pulse"></span>
                 </div>`
           }
         `;
       } else {
-        // Fade out status bar left/right to give full space to expanded island
-        if (statusLeft) { statusLeft.style.opacity = "0"; statusLeft.style.pointerEvents = "none"; }
-        if (statusRight) { statusRight.style.opacity = "0"; statusRight.style.pointerEvents = "none"; }
+        if (statusLeft) { statusLeft.style.opacity = "0"; }
+        if (statusRight) { statusRight.style.opacity = "0"; }
 
-        // EXPANDED INTERACTIVE ISLAND (Muncul saat diklik)
+        // Expands strictly downward from top:0 inside header — NEVER clipped!
         island.classList.add("is-expanded");
-        island.className = "pointer-events-auto relative flex flex-col gap-3 p-4 rounded-3xl bg-black/95 border border-white/25 backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.95)] cursor-default w-[92vw] sm:w-[380px] h-auto select-none transition-all duration-300 is-expanded";
         island.innerHTML = `
-          <div class="w-full flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="relative w-11 h-11 rounded-full overflow-hidden border border-rose-300/40 shrink-0 shadow ${isMusicPlaying ? 'animate-spin' : ''}" style="animation-duration: 7s;">
-                <img src="${coverImg}" alt="Album Art" class="w-full h-full object-cover" />
+          <div class="w-full flex flex-col gap-3">
+            <div class="w-full flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="relative w-11 h-11 rounded-full overflow-hidden border border-white/20 shrink-0 shadow ${isMusicPlaying ? 'animate-spin' : ''}" style="animation-duration: 7s;">
+                  <img src="${coverImg}" alt="Album Art" class="w-full h-full object-cover" />
+                </div>
+                <div class="min-w-0 text-left">
+                  <div class="text-xs font-bold text-white truncate">${songTitle}</div>
+                  <div class="text-[11px] text-zinc-400 truncate">${songArtist}</div>
+                  <div class="text-[10px] text-rose-400 font-mono mt-0.5">${isMusicPlaying ? "SPINNING • 33⅓ RPM" : "READY TO SPIN"}</div>
+                </div>
               </div>
-              <div class="min-w-0 text-left">
-                <div class="text-xs font-bold text-white truncate">${songTitle}</div>
-                <div class="text-[11px] text-zinc-400 truncate">${songArtist}</div>
-                <div class="text-[10px] text-rose-300/80 font-mono mt-0.5">${isMusicPlaying ? "33⅓ RPM • ON REPEAT" : "PAUSED"}</div>
-              </div>
-            </div>
-            <!-- Minimize Button -->
-            <button id="island-close-btn" type="button" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs shrink-0" title="Minimize Island">
-              ✕
-            </button>
-          </div>
-
-          <!-- Progress / Equalizer Row -->
-          <div class="w-full flex items-center justify-between gap-3 pt-1 border-t border-white/10">
-            <div class="flex items-center gap-2">
-              <button id="island-play-toggle-btn" type="button" class="w-8 h-8 rounded-full bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 flex items-center justify-center font-bold text-xs shadow hover:scale-105 active:scale-95 transition">
-                ${isMusicPlaying ? '❚❚' : '▶'}
+              <button id="island-close-btn" type="button" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs shrink-0 cursor-pointer" title="Minimize">
+                ✕
               </button>
-              <span class="text-[11px] font-mono text-zinc-300">${isMusicPlaying ? 'Playing' : 'Paused'}</span>
             </div>
-            <!-- Jump to Section 2 Vinyl Button -->
-            <button id="island-jump-music-btn" type="button" class="text-[11px] font-medium text-rose-300 hover:text-white flex items-center gap-1 transition">
-              <span>Jump to Turntable</span>
-              <span>↓</span>
-            </button>
+
+            <div class="w-full flex items-center justify-between gap-3 pt-2 border-t border-white/10">
+              <button id="island-play-toggle-btn" type="button" class="px-3.5 py-1.5 rounded-full bg-[#fa2d48] hover:bg-[#ff3b56] text-white flex items-center gap-1.5 font-semibold text-xs shadow transition cursor-pointer">
+                <span>${isMusicPlaying ? '❚❚ Pause' : '▶ Play Song'}</span>
+              </button>
+              <button id="island-jump-music-btn" type="button" class="text-[11px] font-medium text-zinc-300 hover:text-white flex items-center gap-1 transition cursor-pointer">
+                <span>Go to Turntable</span>
+                <span>↓</span>
+              </button>
+            </div>
           </div>
         `;
 
-        // Attach listeners inside expanded island
         document.getElementById("island-close-btn")?.addEventListener("click", (e) => {
           e.stopPropagation();
           isDynamicIslandExpanded = false;
@@ -2404,7 +2266,11 @@
           e.stopPropagation();
           isDynamicIslandExpanded = false;
           updateDynamicIslandContent();
-          document.getElementById("section-music")?.scrollIntoView({ behavior: "smooth" });
+          const musicSec = document.getElementById("section-music");
+          if (musicSec) {
+            musicSec.classList.remove("chapter-hidden");
+            musicSec.scrollIntoView({ behavior: "smooth" });
+          }
         });
       }
     }
@@ -2504,7 +2370,7 @@
             data-milestone-idx="${idx}"
             class="milestone-pill-btn shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
               isActive
-                ? "bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 font-semibold shadow-lg shadow-rose-500/20"
+                ? "bg-[#fa2d48] text-white font-semibold shadow-lg shadow-rose-600/25"
                 : "bg-white/[0.06] hover:bg-white/10 text-zinc-300 border border-white/10"
             }"
           >
@@ -2527,87 +2393,69 @@
       const p2 = (d.partner2Name || "MIA").toUpperCase();
 
       detailCard.innerHTML = `
-        <!-- Semicircular Ticket Notch Cutouts on Left and Right Edges -->
-        <div class="ticket-notch-left" style="top: 66%;"></div>
-        <div class="ticket-notch-right" style="top: 66%;"></div>
+        <div class="ticket-notch-left" style="top: 68%;"></div>
+        <div class="ticket-notch-right" style="top: 68%;"></div>
 
-        <!-- Top Boarding Pass Header -->
-        <div class="px-6 pt-5 pb-4 bg-gradient-to-r from-rose-500/15 via-transparent to-amber-500/10 border-b border-white/10 flex items-center justify-between">
+        <!-- Top Airlines Crimson Header Bar -->
+        <div class="px-6 py-3.5 bg-[#e11d48] text-white flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded bg-rose-400/20 border border-rose-300/30 font-mono text-[10px] font-bold text-rose-200">
-              APPLE WALLET • VIP PASS
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>
+            <span class="font-mono text-[11px] font-bold tracking-wider uppercase">
+              LOVEOS AIRWAYS • PASS ${activeM.flightCode || `LV-0${activeMilestoneIndex + 1}`}
             </span>
-            <span class="font-mono text-xs text-zinc-400">${activeM.flightCode || `LV-00${activeMilestoneIndex + 1}`}</span>
           </div>
-          <span class="font-mono text-xs text-amber-300 font-semibold">${activeM.date || "CORE MEMORY"}</span>
+          <span class="font-mono text-xs font-bold bg-black/20 px-2.5 py-0.5 rounded-full">${activeM.date || "FIRST CLASS"}</span>
         </div>
 
-        <!-- Main Boarding Pass Body -->
-        <div class="p-6 space-y-4 relative">
-          <!-- Tilted Rose-Gold Ink Stamp (VERIFIED MEMORY ♡) -->
-          <div class="
-            absolute top-3 right-4 rotate-[-11deg] pointer-events-none select-none
-            border-2 border-rose-300/60 rounded-lg px-2.5 py-1
-            text-[10px] font-mono font-bold tracking-widest text-rose-300/80
-            shadow-[0_0_15px_rgba(251,113,133,0.18)] bg-rose-950/30 backdrop-blur-sm
-          ">
-            VERIFIED MEMORY ♡
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 text-left font-mono">
+        <!-- Tactile Warm Ivory Paper Body -->
+        <div class="p-6 space-y-4 relative text-zinc-900">
+          <div class="grid grid-cols-3 gap-2 text-left font-mono border-b border-stone-300 pb-3">
             <div>
-              <div class="text-[10px] text-zinc-500 uppercase">PASSENGERS</div>
-              <div class="text-xs font-bold text-white mt-0.5">${p1} + ${p2}</div>
+              <div class="text-[10px] text-stone-500 uppercase">PASSENGERS</div>
+              <div class="text-xs font-extrabold text-zinc-900 mt-0.5">${p1} + ${p2}</div>
             </div>
             <div>
-              <div class="text-[10px] text-zinc-500 uppercase">TIME</div>
-              <div class="text-xs font-bold text-rose-200 mt-0.5">${activeM.time || "LATE NIGHT"}</div>
+              <div class="text-[10px] text-stone-500 uppercase">TIME</div>
+              <div class="text-xs font-extrabold text-rose-700 mt-0.5">${activeM.time || "LATE NIGHT"}</div>
             </div>
             <div>
-              <div class="text-[10px] text-zinc-500 uppercase">SEAT / GATE</div>
-              <div class="text-xs font-bold text-amber-200 mt-0.5">${activeM.seat || "VIP 01"}</div>
+              <div class="text-[10px] text-stone-500 uppercase">GATE / SEAT</div>
+              <div class="text-xs font-extrabold text-zinc-900 mt-0.5">${activeM.seat || "01A • VIP"}</div>
             </div>
           </div>
 
           <div class="pt-1">
-            <div class="text-[11px] font-mono text-rose-300/85 flex items-center gap-1"><svg class="w-3.5 h-3.5 text-rose-400 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg><span>${activeM.location || "Right by your side"}</span></div>
-            <h3 class="font-serif italic text-2xl sm:text-3xl text-white mt-0.5">${activeM.title || activeM.label}</h3>
-            <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-2">
+            <div class="text-[11px] font-mono font-semibold text-rose-700 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+              <span>${activeM.location || "Right by your side"}</span>
+            </div>
+            <h3 class="font-serif italic text-2xl sm:text-3xl text-zinc-900 mt-0.5">${activeM.title || activeM.label}</h3>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed mt-1.5">
               ${activeM.description || ""}
             </p>
           </div>
         </div>
 
-        <!-- Dashed Tear-Line & Decorative Mini Barcode SVG Stub -->
-        <div class="border-t-2 border-dashed border-rose-300/25 px-6 py-4 bg-black/35 flex items-center justify-between gap-4">
+        <!-- Perforated Tear-Line Stub with QR Code (#032) -->
+        <div class="border-t-2 border-dashed border-stone-300 px-6 py-3.5 bg-[#efe9dd] flex items-center justify-between gap-4 text-zinc-900">
           <div class="text-left">
-            <div class="font-mono text-[10px] uppercase tracking-widest text-zinc-400">NON-TRANSFERABLE KEEPSAKE</div>
-            <div class="font-mono text-[11px] text-rose-200/90 mt-0.5">ADMIT TWO • FOREVER VALID</div>
+            <div class="font-mono text-[10px] font-bold uppercase tracking-widest text-rose-700">VERIFIED CORE MEMORY ♥</div>
+            <div class="font-mono text-[10px] text-stone-600 mt-0.5">ADMIT TWO • NEVER EXPIRES</div>
           </div>
-          <!-- Decorative Mini Barcode SVG -->
-          <svg class="h-8 w-32 text-zinc-200/85 shrink-0" viewBox="0 0 130 32" fill="currentColor" aria-hidden="true">
-            <rect x="2" y="2" width="3" height="28" />
-            <rect x="8" y="2" width="1.5" height="28" />
-            <rect x="13" y="2" width="4" height="28" />
-            <rect x="20" y="2" width="1.5" height="28" />
-            <rect x="24" y="2" width="2.5" height="28" />
-            <rect x="30" y="2" width="5" height="28" />
-            <rect x="38" y="2" width="1.5" height="28" />
-            <rect x="42" y="2" width="3" height="28" />
-            <rect x="48" y="2" width="2" height="28" />
-            <rect x="53" y="2" width="4.5" height="28" />
-            <rect x="61" y="2" width="1.5" height="28" />
-            <rect x="65" y="2" width="3" height="28" />
-            <rect x="71" y="2" width="2" height="28" />
-            <rect x="76" y="2" width="5" height="28" />
-            <rect x="84" y="2" width="1.5" height="28" />
-            <rect x="89" y="2" width="3.5" height="28" />
-            <rect x="95" y="2" width="2" height="28" />
-            <rect x="100" y="2" width="4" height="28" />
-            <rect x="107" y="2" width="1.5" height="28" />
-            <rect x="112" y="2" width="3" height="28" />
-            <rect x="118" y="2" width="5" height="28" />
-            <rect x="126" y="2" width="2" height="28" />
+          <!-- Mini QR Code Stub SVG -->
+          <svg class="w-11 h-11 shrink-0 rounded-lg border border-stone-300 bg-white p-1" viewBox="0 0 64 64" fill="none">
+            <rect x="8" y="8" width="16" height="16" rx="2" stroke="#18181b" stroke-width="4"/>
+            <rect x="13" y="13" width="6" height="6" fill="#18181b"/>
+            <rect x="40" y="8" width="16" height="16" rx="2" stroke="#18181b" stroke-width="4"/>
+            <rect x="45" y="13" width="6" height="6" fill="#18181b"/>
+            <rect x="8" y="40" width="16" height="16" rx="2" stroke="#18181b" stroke-width="4"/>
+            <rect x="13" y="45" width="6" height="6" fill="#18181b"/>
+            <rect x="30" y="10" width="5" height="5" fill="#18181b"/>
+            <rect x="30" y="20" width="5" height="5" fill="#18181b"/>
+            <rect x="10" y="30" width="10" height="5" fill="#18181b"/>
+            <path d="M44 52C44 52 35 46 35 40.5C35 37.8 37.2 35.8 39.8 35.8C41.4 35.8 42.8 36.7 44 38C45.2 36.7 46.6 35.8 48.2 35.8C50.8 35.8 53 37.8 53 40.5C53 46 44 52 44 52Z" fill="#e11d48"/>
           </svg>
         </div>
       `;
@@ -3141,81 +2989,45 @@
     };
 
     // =========================================================================
-    // 14. SECTION 08: AUTOMATED 3-SNAP LIVE SELF-PHOTO BOOTH & STICKER ENGINE
+    // 14. SECTION 08: SNAPBOOTH-STYLE 1-TAP AUTO 3-SNAP & DISPENSER ENGINE
     // =========================================================================
-    let photoboxMode = "strip"; // 'strip' (3-pose burst) or 'single' (1-pose hero)
-    let photoboxTheme = "midnight"; // 'midnight' | 'seoul' | 'y2k'
+    let photoboxMode = "strip";
+    let photoboxTheme = "seoul"; // Default: Cream Paper Strip (high-contrast & tactile)
     let photoboxSlots = [null, null, null];
     let cameraMediaStream = null;
     let cameraFacingMode = "user";
     let isBoothBurstRunning = false;
+    let isRingLightOn = true;
 
     const BOOTH_POSE_PROMPTS = [
-      "POSE 01 OF 03 • GIVE YOUR BEST SMILE!",
-      "POSE 02 OF 03 • MAKE A CUTE OR SILLY FACE!",
-      "POSE 03 OF 03 • BLOW A KISS OR PEACE SIGN!"
+      "POSE 1 / 3 • GIVE YOUR BEST SMILE!",
+      "POSE 2 / 3 • PEACE SIGN OR SILLY FACE!",
+      "POSE 3 / 3 • BLOW A KISS!"
     ];
 
     function initPhotoboxStudio() {
-      // Load only genuine user booth snaps from localStorage (NO stock photos pre-filled)
+      // Check if user already snapped photos in this session
       try {
         const saved = localStorage.getItem("loveos_live_booth_snaps");
         if (saved) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length === 3) {
+          if (Array.isArray(parsed) && parsed.length === 3 && parsed[0]) {
             photoboxSlots = parsed;
+            renderUnifiedDispenserStrip(false);
           }
         }
       } catch (_) {}
 
-      renderPhotoboxSlots();
-      render916PreviewCard();
-
-      // Mode Switchers (3-Snap Strip vs Single Portrait)
-      const stripBtn = document.getElementById("photobox-mode-strip");
-      const singleBtn = document.getElementById("photobox-mode-single");
-
-      stripBtn?.addEventListener("click", () => {
-        photoboxMode = "strip";
+      // Ring Light Toggle
+      const ringBtn = document.getElementById("booth-ringlight-toggle");
+      const vfBox = document.getElementById("booth-vf-box");
+      ringBtn?.addEventListener("click", () => {
+        isRingLightOn = !isRingLightOn;
         playUiSound("tap");
-        stripBtn.className = "py-2 px-3.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md";
-        if (singleBtn) singleBtn.className = "py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center gap-1.5";
-        const modeLbl = document.getElementById("booth-live-mode-label");
-        if (modeLbl) modeLbl.textContent = "AUTO 3-POSE BURST";
-        renderPhotoboxSlots();
-        render916PreviewCard();
-      });
-
-      singleBtn?.addEventListener("click", () => {
-        photoboxMode = "single";
-        playUiSound("tap");
-        singleBtn.className = "py-2 px-3.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-amber-400 text-zinc-950 shadow-md";
-        if (stripBtn) stripBtn.className = "py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition-all flex items-center gap-1.5";
-        const modeLbl = document.getElementById("booth-live-mode-label");
-        if (modeLbl) modeLbl.textContent = "SINGLE PORTRAIT SNAP";
-        renderPhotoboxSlots();
-        render916PreviewCard();
-      });
-
-      // Theme Switchers (Obsidian 35mm, Seoul Cream Tape, Y2K Tapback)
-      document.querySelectorAll(".booth-theme-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          photoboxTheme = btn.getAttribute("data-booth-theme") || "midnight";
-          playUiSound("tap");
-          document.querySelectorAll(".booth-theme-btn").forEach((b) => {
-            const active = b.getAttribute("data-booth-theme") === photoboxTheme;
-            b.className = active
-              ? "booth-theme-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-500/20 border border-rose-400/50 text-rose-200 transition flex items-center gap-1.5"
-              : "booth-theme-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 border border-white/10 text-zinc-300 hover:text-white transition flex items-center gap-1.5";
-          });
-          render916PreviewCard();
-        });
-      });
-
-      // Start Live Booth Camera in Mirror
-      document.getElementById("booth-start-camera-btn")?.addEventListener("click", () => {
-        playUiSound("tap");
-        startCameraStream();
+        if (vfBox) vfBox.classList.toggle("vf-ring-light", isRingLightOn);
+        ringBtn.className = isRingLightOn
+          ? "px-2.5 py-1.5 rounded-xl bg-amber-400/15 border border-amber-300/30 text-[11px] font-mono text-amber-200 flex items-center gap-1 transition"
+          : "px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-[11px] font-mono text-zinc-400 flex items-center gap-1 transition";
       });
 
       // Flip Front/Back Lens
@@ -3227,48 +3039,76 @@
         if (cameraMediaStream) startCameraStream();
       });
 
-      // Trigger Automated 3-Pose Burst (or 1-Pose in Single mode)
+      // 1-CLICK MAIN BUTTON: Turns on camera AND immediately starts 3-Pose Auto Burst!
       document.getElementById("camera-snap-trigger-btn")?.addEventListener("click", () => {
         if (!isBoothBurstRunning) {
           runAutomatedPhotoboothBurst();
         }
       });
 
-      // Retake Booth Session
+      // Retake 3 Snaps Button
       document.getElementById("booth-retake-all-btn")?.addEventListener("click", () => {
         playUiSound("tap");
-        photoboxSlots = [null, null, null];
-        try { localStorage.removeItem("loveos_live_booth_snaps"); } catch (_) {}
-        renderPhotoboxSlots();
-        render916PreviewCard();
-        startCameraStream();
-        document.getElementById("booth-mirror-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.getElementById("booth-vf-box")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          if (!isBoothBurstRunning) runAutomatedPhotoboothBurst();
+        }, 350);
       });
 
-      // Camera Roll Fallback Upload
+      // Instant Frame Color Switcher below Dispenser
+      document.querySelectorAll(".booth-theme-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          photoboxTheme = btn.getAttribute("data-booth-theme") || "seoul";
+          playUiSound("tap");
+          renderUnifiedDispenserStrip(false);
+        });
+      });
+
+      // Fullscreen Lightbox Zoom on Strip Image Click
+      const stripWrapper = document.getElementById("booth-strip-img-wrapper");
+      const lightboxModal = document.getElementById("booth-lightbox-modal");
+      const lightboxImg = document.getElementById("booth-lightbox-img");
+      stripWrapper?.addEventListener("click", () => {
+        const mainImg = document.getElementById("booth-final-strip-img");
+        if (!mainImg || !mainImg.src) return;
+        playUiSound("tap");
+        if (lightboxImg) lightboxImg.src = mainImg.src;
+        if (lightboxModal) {
+          lightboxModal.classList.remove("hidden");
+          lightboxModal.classList.add("flex");
+        }
+      });
+      lightboxModal?.addEventListener("click", () => {
+        lightboxModal.classList.add("hidden");
+        lightboxModal.classList.remove("flex");
+      });
+
+      // Gallery Upload Fallback (Auto-fills 3 slots & dispenses unified strip!)
       const fileInput = document.getElementById("photobox-file-input");
       document.getElementById("booth-upload-fallback-btn")?.addEventListener("click", () => {
         playUiSound("tap");
         fileInput?.click();
       });
-
       fileInput?.addEventListener("change", (e) => {
         const files = Array.from(e.target.files || []);
         if (!files.length) return;
-        const max = photoboxMode === "single" ? 1 : 3;
         let loaded = 0;
-        files.slice(0, max).forEach((file, idx) => {
+        const targetCount = Math.min(files.length, 3);
+        const tempSlots = [null, null, null];
+
+        files.slice(0, 3).forEach((file, idx) => {
           const reader = new FileReader();
           reader.onload = (ev) => {
-            photoboxSlots[idx] = ev.target.result;
+            tempSlots[idx] = ev.target.result;
             loaded++;
-            if (loaded === Math.min(files.length, max)) {
-              // If user picked only 1 file in strip mode, fill remaining empty slots or keep them
+            if (loaded === targetCount) {
+              photoboxSlots[0] = tempSlots[0];
+              photoboxSlots[1] = tempSlots[1] || tempSlots[0];
+              photoboxSlots[2] = tempSlots[2] || tempSlots[0];
               try { localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots)); } catch (_) {}
               playUiSound("unlock");
               spawnFloatingHeartBurst(8);
-              renderPhotoboxSlots();
-              render916PreviewCard(true);
+              renderUnifiedDispenserStrip(true);
               fileInput.value = "";
             }
           };
@@ -3276,7 +3116,7 @@
         });
       });
 
-      // Export & Share Actions
+      // Download, Share & Copy Link
       document.getElementById("photobox-download-btn")?.addEventListener("click", download916KeepsakePng);
       document.getElementById("photobox-share-btn")?.addEventListener("click", shareToInstaStory);
       document.getElementById("photobox-copylink-btn")?.addEventListener("click", copyKeepsakeWebLink);
@@ -3288,9 +3128,8 @@
       }
       const video = document.getElementById("camera-stream-video");
       const standby = document.getElementById("booth-mirror-standby");
-      const liveControls = document.getElementById("booth-live-controls");
-      const statusPill = document.getElementById("booth-status-pill");
-      if (!video) return;
+      const liveBadge = document.getElementById("booth-live-badge");
+      if (!video) return false;
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -3301,15 +3140,16 @@
         video.srcObject = stream;
         video.classList.remove("hidden");
         if (standby) standby.classList.add("hidden");
-        if (liveControls) {
-          liveControls.classList.remove("hidden");
-          liveControls.classList.add("flex");
+        if (liveBadge) {
+          liveBadge.classList.remove("hidden");
+          liveBadge.classList.add(" inline-flex");
         }
-        if (statusPill) statusPill.textContent = "LIVE MIRROR ACTIVE • READY FOR BURST";
         await video.play();
+        return true;
       } catch (err) {
-        showToast("Camera permission needed — or select photos from your camera roll!");
-        document.getElementById("booth-upload-fallback-btn")?.click();
+        showToast("Camera access unavailable — pick photos from your gallery instead!");
+        document.getElementById("photobox-file-input")?.click();
+        return false;
       }
     }
 
@@ -3320,17 +3160,24 @@
       }
       const video = document.getElementById("camera-stream-video");
       const standby = document.getElementById("booth-mirror-standby");
-      const liveControls = document.getElementById("booth-live-controls");
+      const liveBadge = document.getElementById("booth-live-badge");
       if (video) video.classList.add("hidden");
       if (standby) standby.classList.remove("hidden");
-      if (liveControls) {
-        liveControls.classList.add("hidden");
-        liveControls.classList.remove("flex");
-      }
+      if (liveBadge) liveBadge.classList.add("hidden");
     }
 
     function sleepMs(ms) {
       return new Promise((r) => setTimeout(r, ms));
+    }
+
+    function updateBoothDots(completedCount) {
+      for (let i = 0; i < 3; i++) {
+        const dot = document.getElementById(`booth-dot-${i}`);
+        if (!dot) continue;
+        dot.className = i < completedCount
+          ? "w-3 h-3 rounded-full bg-[#fa2d48] border border-white scale-110 shadow-[0_0_10px_#fa2d48] transition-all"
+          : "w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all";
+      }
     }
 
     async function runAutomatedPhotoboothBurst() {
@@ -3339,47 +3186,52 @@
       const countdownNum = document.getElementById("camera-countdown-num");
       const posePrompt = document.getElementById("camera-pose-prompt");
       const flashEl = document.getElementById("camera-shutter-flash");
-      const liveControls = document.getElementById("booth-live-controls");
-      const statusPill = document.getElementById("booth-status-pill");
-
-      if (!video || !cameraMediaStream) {
-        await startCameraStream();
-        if (!cameraMediaStream) return;
-      }
+      const flareEl = document.getElementById("booth-lens-flare");
+      const mainBtn = document.getElementById("camera-snap-trigger-btn");
+      const mainBtnLabel = document.getElementById("booth-main-btn-label");
 
       isBoothBurstRunning = true;
-      const totalPoses = photoboxMode === "single" ? 1 : 3;
-      photoboxSlots = [null, null, null];
-      renderPhotoboxSlots();
+      if (mainBtn) mainBtn.classList.add("opacity-50", "pointer-events-none");
+      if (mainBtnLabel) mainBtnLabel.textContent = "Opening Booth Camera...";
 
-      if (liveControls) liveControls.classList.add("opacity-40", "pointer-events-none");
+      if (!cameraMediaStream) {
+        const ok = await startCameraStream();
+        if (!ok) {
+          isBoothBurstRunning = false;
+          if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
+          if (mainBtnLabel) mainBtnLabel.textContent = "Start 3-Snap Photo Booth";
+          return;
+        }
+        await sleepMs(500);
+      }
+
+      photoboxSlots = [null, null, null];
+      updateBoothDots(0);
+
       if (countdownOverlay) {
         countdownOverlay.classList.remove("hidden");
         countdownOverlay.classList.add("flex");
       }
 
-      for (let poseIdx = 0; poseIdx < totalPoses; poseIdx++) {
-        if (posePrompt) {
-          posePrompt.textContent = totalPoses === 1
-            ? "SINGLE PORTRAIT • GIVE YOUR BEST SMILE!"
-            : BOOTH_POSE_PROMPTS[poseIdx];
-        }
-        if (statusPill) {
-          statusPill.textContent = `SNAPPING POSE 0${poseIdx + 1} OF 0${totalPoses}...`;
-        }
+      for (let poseIdx = 0; poseIdx < 3; poseIdx++) {
+        if (posePrompt) posePrompt.textContent = BOOTH_POSE_PROMPTS[poseIdx];
+        if (mainBtnLabel) mainBtnLabel.textContent = `Snapping Pose ${poseIdx + 1} of 3...`;
 
-        // 3 - 2 - 1 Countdown
         for (let c = 3; c >= 1; c--) {
           if (countdownNum) countdownNum.textContent = String(c);
           playUiSound("tap");
-          await sleepMs(850);
+          await sleepMs(820);
         }
 
-        // SHUTTER FLASH + CAPTURE FRAME
-        if (countdownNum) countdownNum.textContent = "✦";
+        // SHUTTER FLASH + LENS FLARE + CAPTURE
+        if (countdownNum) countdownNum.textContent = "📸";
         if (flashEl) {
           flashEl.classList.add("flash-active");
-          setTimeout(() => flashEl.classList.remove("flash-active"), 360);
+          setTimeout(() => flashEl.classList.remove("flash-active"), 380);
+        }
+        if (flareEl) {
+          flareEl.classList.add("flare-active");
+          setTimeout(() => flareEl.classList.remove("flare-active"), 550);
         }
         playUiSound("unlock");
 
@@ -3393,15 +3245,14 @@
         }
         sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
         photoboxSlots[poseIdx] = snapCanvas.toDataURL("image/jpeg", 0.92);
-        renderPhotoboxSlots();
+        updateBoothDots(poseIdx + 1);
 
-        if (poseIdx < totalPoses - 1) {
-          if (posePrompt) posePrompt.textContent = `NICE! GET READY FOR POSE #0${poseIdx + 2}...`;
-          await sleepMs(1050);
+        if (poseIdx < 2) {
+          if (posePrompt) posePrompt.textContent = `GREAT! GET READY FOR POSE #${poseIdx + 2}...`;
+          await sleepMs(950);
         }
       }
 
-      // Save & Develop Strip with Auto-Stickers!
       try {
         localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots));
       } catch (_) {}
@@ -3410,50 +3261,13 @@
         countdownOverlay.classList.add("hidden");
         countdownOverlay.classList.remove("flex");
       }
-      if (liveControls) liveControls.classList.remove("opacity-40", "pointer-events-none");
-      if (statusPill) statusPill.textContent = "STRIP DEVELOPED • AUTO-STICKERS APPLIED";
-
       stopBoothCameraStream();
       isBoothBurstRunning = false;
+      if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
+      if (mainBtnLabel) mainBtnLabel.textContent = "Snap Another 3-Pose Strip";
 
-      spawnFloatingHeartBurst(12);
-      render916PreviewCard(true);
-      showToast("✦ Strip developed with custom stickers! Scroll down to save or share.");
-
-      setTimeout(() => {
-        document.getElementById("photobox-developed-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 250);
-    }
-
-    function renderPhotoboxSlots() {
-      const container = document.getElementById("photobox-slots-container");
-      if (!container) return;
-
-      const numSlots = photoboxMode === "single" ? 1 : 3;
-      container.className = numSlots === 1
-        ? "grid grid-cols-1 max-w-[140px] mx-auto gap-2.5"
-        : "grid grid-cols-3 gap-2.5 max-w-sm mx-auto";
-
-      let htmlStr = "";
-      for (let i = 0; i < numSlots; i++) {
-        const photo = photoboxSlots[i];
-        htmlStr += `
-          <div class="rounded-2xl p-2 bg-black/50 border ${photo ? 'border-rose-400/50' : 'border-white/10'} flex flex-col gap-1.5 shadow">
-            <div class="flex items-center justify-between text-[9px] font-mono px-0.5">
-              <span class="font-bold text-rose-300">POSE 0${i + 1}</span>
-              <span class="${photo ? 'text-emerald-400' : 'text-zinc-500'}">${photo ? 'CAPTURED' : 'WAITING'}</span>
-            </div>
-            <div class="relative aspect-[4/5] rounded-xl overflow-hidden bg-zinc-900/90 border border-white/10 flex items-center justify-center">
-              ${
-                photo
-                  ? `<img src="${photo}" class="w-full h-full object-cover" alt="Pose ${i + 1}" />`
-                  : `<span class="text-[10px] font-mono text-zinc-600">0${i + 1}</span>`
-              }
-            </div>
-          </div>
-        `;
-      }
-      container.innerHTML = htmlStr;
+      spawnFloatingHeartBurst(10);
+      await renderUnifiedDispenserStrip(true);
     }
 
     function getFormattedBoothDateStamp() {
@@ -3464,148 +3278,48 @@
       return `'${yy} ${mm} ${dd}`;
     }
 
-    function render916PreviewCard(animatePrint = false) {
-      const frameEl = document.getElementById("photobox-preview-frame");
-      const cardCouple = document.getElementById("preview-card-couple");
-      const cardDate = document.getElementById("preview-card-date");
-      const headerTag = document.getElementById("preview-card-header-tag");
-      const footerNote = document.getElementById("preview-card-footer-note");
-      const photosBox = document.getElementById("preview-card-photos");
-      const linkText = document.getElementById("preview-card-link-text");
+    // Compiles the 3 photos + frame + stickers into ONE unified PNG and dispenses it into #booth-final-strip-img!
+    async function renderUnifiedDispenserStrip(animateDispense = false) {
+      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) return;
 
-      const d = window.COUPLE_DATA || {};
-      const p1 = d.partner1Name || "Noah";
-      const p2 = d.partner2Name || "Mia";
-      const dateBurn = getFormattedBoothDateStamp();
+      const stage = document.getElementById("photobox-developed-stage");
+      const finalImg = document.getElementById("booth-final-strip-img");
+      const wrapper = document.getElementById("booth-strip-img-wrapper");
+      const rawGal = document.getElementById("booth-raw-gal");
 
-      if (cardCouple) cardCouple.textContent = `${p1} & ${p2}`;
-      if (linkText) linkText.textContent = window.location.hostname || "loveos.kept.us";
+      const canvas = await generate1080x1920Canvas();
+      const unifiedDataUrl = canvas.toDataURL("image/png");
 
-      // Apply Theme Styling to 9:16 Preview Frame
-      if (frameEl) {
-        if (photoboxTheme === "seoul") {
-          frameEl.style.backgroundColor = "#f7f2e9";
-          frameEl.style.borderColor = "#d6cbb9";
-          if (cardCouple) cardCouple.className = "font-serif italic text-lg text-zinc-900 leading-tight";
-          if (headerTag) headerTag.className = "text-[8.5px] font-mono tracking-widest text-rose-700 uppercase font-bold block";
-          if (footerNote) footerNote.className = "text-[8.5px] font-mono text-stone-700 truncate font-semibold";
-        } else if (photoboxTheme === "y2k") {
-          frameEl.style.backgroundColor = "#160d24";
-          frameEl.style.borderColor = "rgba(244, 114, 182, 0.4)";
-          if (cardCouple) cardCouple.className = "font-serif italic text-lg text-white leading-tight";
-          if (headerTag) headerTag.className = "text-[8.5px] font-mono tracking-widest text-fuchsia-300 uppercase font-bold block";
-          if (footerNote) footerNote.className = "text-[8.5px] font-mono text-fuchsia-200 truncate";
-        } else {
-          frameEl.style.backgroundColor = "#09080d";
-          frameEl.style.borderColor = "rgba(255, 255, 255, 0.22)";
-          if (cardCouple) cardCouple.className = "font-serif italic text-lg text-white leading-tight";
-          if (headerTag) headerTag.className = "text-[8.5px] font-mono tracking-widest text-rose-300 uppercase font-bold block";
-          if (footerNote) footerNote.className = "text-[8.5px] font-mono text-zinc-300 truncate";
-        }
+      if (stage) stage.classList.remove("hidden");
+      if (finalImg) finalImg.src = unifiedDataUrl;
 
-        if (animatePrint) {
-          frameEl.classList.remove("strip-print-anim");
-          void frameEl.offsetWidth;
-          frameEl.classList.add("strip-print-anim");
-        }
+      if (wrapper && animateDispense) {
+        wrapper.classList.remove("strip-dispense-anim");
+        void wrapper.offsetWidth;
+        wrapper.classList.add("strip-dispense-anim");
       }
 
-      if (cardDate) {
-        cardDate.innerHTML = `${dateBurn}<br/><span class="${photoboxTheme === 'seoul' ? 'text-rose-700' : 'text-rose-300'} font-bold">LIVE BOOTH ♥</span>`;
+      // Render the 3 individual raw shots underneath (like SNAPBOOTH .gal)
+      if (rawGal) {
+        rawGal.innerHTML = [0, 1, 2].map((i) => {
+          const src = photoboxSlots[i] || photoboxSlots[0];
+          return `
+            <div class="relative w-16 aspect-[4/5] rounded-lg overflow-hidden border border-white/25 shadow cursor-pointer hover:scale-105 transition" onclick="document.getElementById('booth-lightbox-img').src='${src}'; document.getElementById('booth-lightbox-modal').classList.remove('hidden'); document.getElementById('booth-lightbox-modal').classList.add('flex');">
+              <img src="${src}" class="w-full h-full object-cover" alt="Raw Shot ${i + 1}" />
+              <span class="absolute bottom-0.5 right-1 text-[8px] font-mono font-bold text-amber-300 drop-shadow">#0${i + 1}</span>
+            </div>
+          `;
+        }).join("");
       }
 
-      if (!photosBox) return;
-      const hasAnyLivePhoto = Boolean(photoboxSlots[0] || photoboxSlots[1] || photoboxSlots[2]);
-
-      // Bespoke SVG Stickers automatically overlaid on the strip
-      const washiTapeSticker = `
-        <svg class="absolute -top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 z-20 pointer-events-none rotate-[-2deg] drop-shadow" viewBox="0 0 148 36" fill="none">
-          <path d="M4 3L144 1L141 7L146 13L142 19L145 25L141 33L3 35L7 28L2 22L6 15L2 9L4 3Z" fill="#FCE7F3" fill-opacity="0.88" stroke="#F9A8D4" stroke-width="1.2"/>
-          <text x="74" y="22" text-anchor="middle" fill="#9D174D" font-family="Caveat, cursive" font-size="15" font-weight="700">us right now ♡</text>
-        </svg>`;
-
-      const puffyHeartSticker = `
-        <svg class="absolute -bottom-2 -left-2 w-7 h-7 z-20 pointer-events-none rotate-[-12deg] drop-shadow-md" viewBox="0 0 64 64" fill="none">
-          <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#f43f5e" stroke="#fecdd3" stroke-width="2"/>
-          <ellipse cx="22" cy="18.5" rx="5" ry="2.6" transform="rotate(-28 22 18.5)" fill="#ffffff" fill-opacity="0.65"/>
-        </svg>`;
-
-      const tapbackBubbleSticker = `
-        <svg class="absolute -top-2 -right-2 w-8 h-8 z-20 pointer-events-none rotate-[8deg] drop-shadow-md" viewBox="0 0 64 64" fill="none">
-          <circle cx="32" cy="28" r="18" fill="#18181b" stroke="#fb7185" stroke-width="2"/>
-          <path d="M32 37C32 37 23 31 23 25C23 22 25.4 19.8 28.2 19.8C30 19.8 31.4 20.8 32 22C32.6 20.8 34 19.8 35.8 19.8C38.6 19.8 41 22 41 25C41 31 32 37 32 37Z" fill="#f43f5e"/>
-        </svg>`;
-
-      const hologramSealSticker = `
-        <svg class="absolute bottom-1.5 left-2 w-7 h-7 z-20 pointer-events-none drop-shadow" viewBox="0 0 64 64" fill="none">
-          <circle cx="32" cy="32" r="23" fill="#fde047" fill-opacity="0.9" stroke="#ffffff" stroke-width="2"/>
-          <text x="32" y="35" text-anchor="middle" fill="#18181b" font-family="JetBrains Mono" font-size="10" font-weight="800">1 OF 1</text>
-        </svg>`;
-
-      if (!hasAnyLivePhoto) {
-        // Waiting for couple to snap live photos in the mirror above
-        photosBox.innerHTML = `
-          <div class="relative w-full h-full rounded-2xl border border-dashed ${photoboxTheme === 'seoul' ? 'border-stone-400 bg-stone-200/50 text-stone-700' : 'border-white/20 bg-white/[0.03] text-zinc-400'} flex flex-col items-center justify-center p-5 text-center gap-2">
-            ${washiTapeSticker}
-            <svg class="w-8 h-8 text-rose-400/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-              <rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="12" cy="12" r="3.2"/>
-            </svg>
-            <div class="font-serif italic text-base ${photoboxTheme === 'seoul' ? 'text-zinc-900' : 'text-white'}">
-              your live strip prints here
-            </div>
-            <p class="text-[10px] leading-relaxed max-w-[180px]">
-              Use the booth mirror above to snap 3 live poses—custom stickers, date stamps &amp; tape will be added automatically!
-            </p>
-          </div>
-        `;
-        return;
-      }
-
-      if (photoboxMode === "single") {
-        const p = photoboxSlots[0] || photoboxSlots[1] || photoboxSlots[2];
-        photosBox.innerHTML = `
-          <div class="relative w-full h-full rounded-2xl bg-white p-1.5 shadow-lg flex items-center justify-center">
-            ${washiTapeSticker}
-            ${tapbackBubbleSticker}
-            ${puffyHeartSticker}
-            <div class="relative w-full h-full rounded-xl overflow-hidden bg-zinc-900">
-              <img src="${p}" class="w-full h-full object-cover" alt="Live Booth Portrait" />
-              <div class="absolute bottom-2 right-2.5 px-2 py-0.5 rounded bg-black/65 text-[8px] font-mono font-bold text-amber-300">
-                ${dateBurn} • LIVE
-              </div>
-            </div>
-          </div>
-        `;
-      } else {
-        // 3-Snap Film Strip with Auto-Stickers on Each Frame
-        const slots = [
-          photoboxSlots[0] || photoboxSlots[1] || photoboxSlots[2],
-          photoboxSlots[1] || photoboxSlots[0] || photoboxSlots[2],
-          photoboxSlots[2] || photoboxSlots[0] || photoboxSlots[1]
-        ];
-        const captions = ["pose #01 • candid", "pose #02 • chaotic", "pose #03 • forever"];
-
-        photosBox.innerHTML = slots.map((src, idx) => `
-          <div class="relative flex-1 rounded-xl bg-white p-1 shadow-md flex flex-col overflow-visible">
-            ${idx === 0 ? washiTapeSticker : ""}
-            ${idx === 1 ? tapbackBubbleSticker : ""}
-            ${idx === 2 ? puffyHeartSticker : ""}
-            ${idx === 2 ? hologramSealSticker : ""}
-            <div class="relative flex-1 rounded-lg overflow-hidden bg-zinc-900">
-              <img src="${src}" class="w-full h-full object-cover" alt="Booth Pose ${idx + 1}" />
-              <span class="absolute bottom-1 right-2 text-[7.5px] font-mono font-bold text-amber-300 drop-shadow">
-                ${dateBurn} • 0${idx + 1}
-              </span>
-              <span class="absolute top-1 left-2 text-[8px] font-hand text-white/95 drop-shadow">
-                ${captions[idx]}
-              </span>
-            </div>
-          </div>
-        `).join("");
+      if (animateDispense && stage) {
+        setTimeout(() => {
+          stage.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 180);
       }
     }
 
-    // High-Res 1080 x 1920 9:16 Canvas Generator with Auto-Decorated Vector Stickers
+    // High-Res 1080 x 1920 Unified Photobooth Strip Generator (Center-Cropped Aspect Fill + Custom Vector Stickers)
     function generate1080x1920Canvas() {
       return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
@@ -3616,96 +3330,48 @@
         const isSeoul = photoboxTheme === "seoul";
         const isY2k = photoboxTheme === "y2k";
 
-        // 1. Theme Background
-        ctx.fillStyle = isSeoul ? "#f7f2e9" : isY2k ? "#160d24" : "#09080d";
+        // 1. Tactile Paper / Film Strip Background
+        ctx.fillStyle = isSeoul ? "#f8f4ec" : isY2k ? "#190d26" : "#0b0b0f";
         ctx.fillRect(0, 0, 1080, 1920);
 
-        const radial = ctx.createRadialGradient(540, 600, 100, 540, 960, 950);
-        radial.addColorStop(0, isSeoul ? "rgba(244, 63, 94, 0.08)" : "rgba(244, 63, 94, 0.16)");
-        radial.addColorStop(0.5, "rgba(251, 191, 36, 0.06)");
-        radial.addColorStop(1, isSeoul ? "rgba(214, 203, 185, 0.4)" : "rgba(0, 0, 0, 0.85)");
-        ctx.fillStyle = radial;
-        ctx.fillRect(0, 0, 1080, 1920);
+        // Outer Frame Border
+        ctx.strokeStyle = isSeoul ? "#d8cfc0" : isY2k ? "rgba(244, 114, 182, 0.45)" : "rgba(255, 255, 255, 0.22)";
+        ctx.lineWidth = 6;
+        ctx.strokeRect(36, 36, 1008, 1848);
 
-        // 2. Outer Frame Border
-        ctx.strokeStyle = isSeoul ? "#d6cbb9" : "rgba(255, 255, 255, 0.22)";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(42, 42, 996, 1836);
-
-        // 3. Top Header Typography
+        // 2. Top Strip Header
         const d = window.COUPLE_DATA || {};
         const p1 = (d.partner1Name || "NOAH").toUpperCase();
         const p2 = (d.partner2Name || "MIA").toUpperCase();
         const dateBurn = getFormattedBoothDateStamp();
 
-        ctx.fillStyle = isSeoul ? "#be123c" : "#fda4af";
+        ctx.fillStyle = isSeoul ? "#e11d48" : "#fa2d48";
         ctx.font = "bold 24px 'JetBrains Mono', monospace";
-        ctx.fillText("✦ LOVEOS SELF-PHOTO BOOTH • 9:16 KEEPSAKE ✦", 80, 118);
+        ctx.fillText("● LOVEOS SELF-PHOTO DISPENSER • 3-POSE STRIP", 84, 114);
 
-        ctx.fillStyle = isSeoul ? "#18181b" : "#ffffff";
-        ctx.font = "italic 64px 'Instrument Serif', Georgia, serif";
-        ctx.fillText(`${p1} & ${p2}`, 80, 192);
+        ctx.fillStyle = isSeoul ? "#141416" : "#ffffff";
+        ctx.font = "italic 68px 'Instrument Serif', Georgia, serif";
+        ctx.fillText(`${p1} & ${p2}`, 84, 190);
 
         ctx.fillStyle = isSeoul ? "#57534e" : "rgba(255, 255, 255, 0.7)";
         ctx.font = "bold 24px 'JetBrains Mono', monospace";
         ctx.textAlign = "right";
-        ctx.fillText(`LIVE BOOTH • ${dateBurn}`, 1000, 192);
+        ctx.fillText(`${dateBurn} • 1 OF 1`, 996, 190);
         ctx.textAlign = "left";
 
-        ctx.strokeStyle = isSeoul ? "#d6cbb9" : "rgba(255, 255, 255, 0.15)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(80, 224);
-        ctx.lineTo(1000, 224);
-        ctx.stroke();
-
-        // Helper: Draw Auto-Stickers onto Canvas (Washi Tape, 3D Heart, Gold Starburst, Stamp)
-        function drawCanvasStickers(topY) {
-          // Top Center Translucent Pink Washi Tape Strip
-          ctx.save();
-          ctx.translate(540, topY - 8);
-          ctx.rotate(-0.035);
-          ctx.fillStyle = "rgba(252, 231, 243, 0.9)";
-          ctx.strokeStyle = "rgba(244, 114, 182, 0.55)";
-          ctx.lineWidth = 2;
-          ctx.fillRect(-130, -22, 260, 44);
-          ctx.strokeRect(-130, -22, 260, 44);
-          ctx.fillStyle = "#9d174d";
-          ctx.font = "bold 24px 'Caveat', cursive";
-          ctx.textAlign = "center";
-          ctx.fillText("us right now ♡", 0, 8);
-          ctx.restore();
-
-          // Gold 4-Point Starburst Sticker (Top Right)
-          ctx.save();
-          ctx.translate(975, topY + 25);
-          ctx.fillStyle = "#fbbf24";
-          ctx.beginPath();
-          ctx.moveTo(0, -28);
-          ctx.quadraticCurveTo(6, -6, 28, 0);
-          ctx.quadraticCurveTo(6, 6, 0, 28);
-          ctx.quadraticCurveTo(-6, 6, -28, 0);
-          ctx.quadraticCurveTo(-6, -6, 0, -28);
-          ctx.fill();
-          ctx.restore();
-
-          // Genuine 1 of 1 Stamp (Bottom Left)
-          ctx.save();
-          ctx.translate(135, 1665);
-          ctx.rotate(-0.12);
-          ctx.fillStyle = "#fde047";
-          ctx.beginPath();
-          ctx.arc(0, 0, 46, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = "#18181b";
-          ctx.lineWidth = 3;
-          ctx.stroke();
-          ctx.fillStyle = "#18181b";
-          ctx.font = "bold 16px 'JetBrains Mono', monospace";
-          ctx.textAlign = "center";
-          ctx.fillText("GENUINE", 0, -4);
-          ctx.fillText("1 OF 1 ♥", 0, 16);
-          ctx.restore();
+        // Helper for Cover-Fit Image Drawing (Prevents Squishing!)
+        function drawImageCover(ctx, img, x, y, w, h) {
+          const imgRatio = img.width / img.height;
+          const boxRatio = w / h;
+          let sx = 0, sy = 0, sw = img.width, sh = img.height;
+          if (imgRatio > boxRatio) {
+            sw = img.height * boxRatio;
+            sx = (img.width - sw) / 2;
+          } else {
+            sh = img.width / boxRatio;
+            sy = (img.height - sh) / 2;
+          }
+          ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
         }
 
         function loadImg(src) {
@@ -3723,99 +3389,138 @@
         const s1 = photoboxSlots[1] || s0;
         const s2 = photoboxSlots[2] || s0;
 
-        if (photoboxMode === "single") {
-          loadImg(s0).then((img) => {
-            const x = 90, y = 270, w = 900, h = 1350;
+        Promise.all([loadImg(s0), loadImg(s1), loadImg(s2)]).then((imgs) => {
+          const startY = 250;
+          const stripW = 912;
+          const stripH = 445;
+          const gap = 36;
+          const captions = ["POSE 01 • CANDID", "POSE 02 • CHAOTIC", "POSE 03 • FOREVER"];
+
+          imgs.forEach((im, idx) => {
+            const curY = startY + idx * (stripH + gap);
+
+            // White Polaroid Sub-Frame
             ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x - 14, y - 14, w + 28, h + 28);
-            if (img) {
-              ctx.drawImage(img, x, y, w, h);
+            ctx.fillRect(72, curY - 12, stripW + 24, stripH + 24);
+            ctx.strokeStyle = "rgba(0,0,0,0.08)";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(72, curY - 12, stripW + 24, stripH + 24);
+
+            if (im) {
+              drawImageCover(ctx, im, 84, curY, stripW, stripH);
             }
-            ctx.fillStyle = "#fbbf24";
-            ctx.font = "bold 26px 'JetBrains Mono', monospace";
-            ctx.fillText(`${dateBurn} • LIVE BOOTH`, 125, y + h - 30);
-            drawCanvasStickers(y);
-            finishCanvasFooter();
-          });
-        } else {
-          Promise.all([loadImg(s0), loadImg(s1), loadImg(s2)]).then((imgs) => {
-            const startY = 270;
-            const stripH = 430;
-            const gap = 32;
-            const labels = ["pose #01 • candid", "pose #02 • chaotic", "pose #03 • forever"];
 
-            imgs.forEach((im, idx) => {
-              const curY = startY + idx * (stripH + gap);
-              ctx.fillStyle = "#ffffff";
-              ctx.fillRect(78, curY - 10, 924, stripH + 20);
-              if (im) {
-                ctx.drawImage(im, 90, curY, 900, stripH);
-              }
-              ctx.fillStyle = "#fbbf24";
-              ctx.font = "bold 22px 'JetBrains Mono', monospace";
-              ctx.fillText(`${dateBurn} #0${idx + 1} • ${labels[idx]}`, 112, curY + stripH - 20);
-            });
-            drawCanvasStickers(startY);
-            finishCanvasFooter();
-          });
-        }
+            // Subtle dark bottom gradient for legible film date stamp
+            const legGrad = ctx.createLinearGradient(84, curY + stripH - 90, 84, curY + stripH);
+            legGrad.addColorStop(0, "transparent");
+            legGrad.addColorStop(1, "rgba(0,0,0,0.65)");
+            ctx.fillStyle = legGrad;
+            ctx.fillRect(84, curY + stripH - 90, stripW, 90);
 
-        function finishCanvasFooter() {
-          const footY = 1750;
-          ctx.strokeStyle = isSeoul ? "#d6cbb9" : "rgba(255, 255, 255, 0.15)";
+            // 90s 35mm Orange Film Date Burn
+            ctx.fillStyle = "#ff8a2b";
+            ctx.font = "bold 22px 'JetBrains Mono', monospace";
+            ctx.fillText(`${dateBurn}  •  ${captions[idx]}`, 110, curY + stripH - 22);
+          });
+
+          // 3. Draw Tactile Stickers Directly Onto the Merged Strip
+          // Top Washi Tape Strip ("us right now ♡")
+          ctx.save();
+          ctx.translate(540, startY - 12);
+          ctx.rotate(-0.03);
+          ctx.fillStyle = "rgba(252, 231, 243, 0.92)";
+          ctx.strokeStyle = "rgba(244, 114, 182, 0.6)";
+          ctx.lineWidth = 2;
+          ctx.fillRect(-140, -24, 280, 48);
+          ctx.strokeRect(-140, -24, 280, 48);
+          ctx.fillStyle = "#9d174d";
+          ctx.font = "bold 28px 'Caveat', cursive";
+          ctx.textAlign = "center";
+          ctx.fillText("us right now ♡", 0, 9);
+          ctx.restore();
+
+          // 3D Rose-Gold Heart Sticker on Frame #2 Corner
+          ctx.save();
+          ctx.translate(965, startY + stripH + gap + 20);
+          ctx.rotate(0.18);
+          ctx.fillStyle = "#fa2d48";
           ctx.beginPath();
-          ctx.moveTo(80, footY);
-          ctx.lineTo(1000, footY);
+          ctx.arc(-14, -10, 18, 0, Math.PI * 2);
+          ctx.arc(14, -10, 18, 0, Math.PI * 2);
+          ctx.moveTo(-31, -4);
+          ctx.lineTo(0, 30);
+          ctx.lineTo(31, -4);
+          ctx.fill();
+          ctx.restore();
+
+          // Genuine 1 of 1 Gold Seal on Frame #3 Bottom-Right
+          ctx.save();
+          ctx.translate(935, startY + 2 * (stripH + gap) + stripH - 45);
+          ctx.rotate(-0.14);
+          ctx.fillStyle = "#fde047";
+          ctx.beginPath();
+          ctx.arc(0, 0, 46, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "#18181b";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.fillStyle = "#18181b";
+          ctx.font = "bold 15px 'JetBrains Mono', monospace";
+          ctx.textAlign = "center";
+          ctx.fillText("GENUINE", 0, -4);
+          ctx.fillText("1 OF 1 ♥", 0, 16);
+          ctx.restore();
+
+          // 4. Bottom Strip Footer & Website Link Sticker
+          const footY = 1755;
+          ctx.strokeStyle = isSeoul ? "#d8cfc0" : "rgba(255, 255, 255, 0.16)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(84, footY);
+          ctx.lineTo(996, footY);
           ctx.stroke();
 
-          ctx.fillStyle = "#f43f5e";
-          ctx.beginPath();
-          ctx.arc(98, footY + 46, 10, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = isSeoul ? "#18181b" : "#ffffff";
-          ctx.font = "bold 26px 'Inter', sans-serif";
+          ctx.fillStyle = isSeoul ? "#141416" : "#ffffff";
+          ctx.font = "bold 25px 'Inter', sans-serif";
           ctx.textAlign = "left";
-          ctx.fillText("KEPT SAFE IN OUR LOVEOS CAPSULE ♡", 122, footY + 55);
+          ctx.fillText("PRINTED IN OUR LOVEOS CAPSULE ♥", 84, footY + 56);
 
           const linkStr = window.location.hostname || "loveos.kept.us";
-          ctx.fillStyle = isSeoul ? "#18181b" : "rgba(255, 255, 255, 0.15)";
-          ctx.fillRect(660, footY + 20, 340, 52);
-
+          ctx.fillStyle = "#fa2d48";
+          ctx.fillRect(660, footY + 20, 336, 54);
           ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 23px 'JetBrains Mono', monospace";
+          ctx.font = "bold 22px 'JetBrains Mono', monospace";
           ctx.textAlign = "center";
-          ctx.fillText(linkStr, 830, footY + 54);
+          ctx.fillText(linkStr, 828, footY + 55);
 
           resolve(canvas);
-        }
+        });
       });
     }
 
     async function download916KeepsakePng() {
       if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Snap a live photo in the booth mirror above first!");
-        document.getElementById("booth-mirror-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        showToast("Tap 'Start 3-Snap Photo Booth' first!");
         return;
       }
       playUiSound("tap");
       const btn = document.getElementById("photobox-download-btn");
       const originalText = btn ? btn.innerHTML : "";
-      if (btn) btn.innerHTML = "<span>Rendering 1080×1920 HD Strip...</span>";
+      if (btn) btn.innerHTML = "<span>Exporting Ultra HD Strip...</span>";
 
       try {
         const canvas = await generate1080x1920Canvas();
         const dataUrl = canvas.toDataURL("image/png");
         const a = document.createElement("a");
-        a.download = `loveos-booth-${Date.now()}.png`;
+        a.download = `loveos-photobooth-${Date.now()}.png`;
         a.href = dataUrl;
         document.body.appendChild(a);
         a.click();
         a.remove();
         playUiSound("unlock");
-        showToast("✦ 9:16 HD Keepsake Strip saved to your device!");
+        showToast("✦ Ultra HD Photobooth Strip saved!");
       } catch (err) {
-        showToast("Could not export image: " + err.message);
+        showToast("Could not export strip: " + err.message);
       } finally {
         if (btn) btn.innerHTML = originalText;
       }
@@ -3823,8 +3528,7 @@
 
     async function shareToInstaStory() {
       if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Snap a live photo in the booth mirror above first!");
-        document.getElementById("booth-mirror-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        showToast("Tap 'Start 3-Snap Photo Booth' first!");
         return;
       }
       playUiSound("tap");
@@ -3838,7 +3542,7 @@
             try {
               await navigator.share({
                 files: [file],
-                title: "Our LoveOS 9:16 Photo Strip",
+                title: "Our LoveOS Photo Strip",
                 text: "Snapped inside our private LoveOS time capsule ♡"
               });
               return;
@@ -3849,10 +3553,10 @@
           a.download = "loveos-story-strip.png";
           a.href = URL.createObjectURL(blob);
           a.click();
-          showToast("✦ 9:16 Story Strip downloaded! Open Instagram to post to your Story.");
+          showToast("✦ Strip downloaded! Open Instagram to share to your Story.");
         }, "image/png");
       } catch (err) {
-        showToast("Tap 'Save 9:16 HD Story' to download your strip!");
+        showToast("Tap 'Download Ultra HD Strip' to save your photo!");
       }
     }
 
@@ -3861,7 +3565,7 @@
       const url = window.location.href;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => {
-          showToast("✦ Keepsake link copied to clipboard!");
+          showToast("✦ Keepsake link copied!");
         }).catch(() => {
           prompt("Copy your keepsake link:", url);
         });
@@ -4160,19 +3864,8 @@
 
       // ONLY #unlock-experience-btn triggers unlock; clicking notification card nudges sensor
       unlockBtn?.addEventListener("click", handleUnlockExperience);
-      introCard?.addEventListener("click", () => {
-        if (isExperienceUnlocked || isBiometricScanRunning) return;
-        playUiSound("tap");
-        unlockBtn?.classList.remove("sensor-nudge");
-        void unlockBtn?.offsetWidth;
-        unlockBtn?.classList.add("sensor-nudge");
-        const hintLabel = document.getElementById("unlock-hint-label");
-        if (hintLabel) {
-          hintLabel.textContent = "Tap the biometric sensor right here to unlock ↓";
-          hintLabel.className = "text-xs font-semibold tracking-wide text-rose-300 transition-colors";
-        }
-      });
-
+      // Prevent any double-click or pinch zoom on lockscreen outside the sensor button
+      introEl?.addEventListener("dblclick", (e) => e.preventDefault());
       // Dynamic Island & Turntable Click
       // Dynamic Island Click: Expand when compact
       const islandEl = document.getElementById("dynamic-island");
