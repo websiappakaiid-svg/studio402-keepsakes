@@ -1231,7 +1231,7 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 7: CLEAN 2:14 AM NOTE & SOMEDAY CHECKLIST (NO PAPERCLIP)    -->
+    <!-- SECTION 7: CLEAN 2:14 AM NOTE, CHECKLIST & THUMBPRINT HEARTBEAT SYNC -->
     <!-- =================================================================== -->
     <section id="section-notes" class="space-y-6 chapter-hidden">
       <div class="rounded-3xl bg-[#141210] border border-white/12 shadow-2xl overflow-hidden">
@@ -1245,9 +1245,7 @@
             things i don't say out loud enough
           </h2>
 
-          <ul id="late-night-notes-list" class="space-y-2.5 text-sm text-stone-200 leading-relaxed">
-            <!-- Injected by renderNotesAndBucketList() -->
-          </ul>
+          <ul id="late-night-notes-list" class="space-y-2.5 text-sm text-stone-200 leading-relaxed"></ul>
 
           <div class="pt-3 border-t border-white/10">
             <p id="final-letter-body" class="font-hand text-2xl text-stone-100 leading-snug">
@@ -1271,14 +1269,27 @@
         <div id="bucket-list-container" class="space-y-2"></div>
       </div>
 
-      <div class="text-center">
+      <!-- NEW US FEATURE: INTERACTIVE THUMBPRINT HEARTBEAT SYNC SENSOR -->
+      <div class="rounded-3xl p-5 bg-[#141210] border border-white/12 text-center space-y-3 shadow-2xl">
+        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-stone-400 px-1">
+          <span>BIOMETRIC PULSE LINK</span>
+          <span id="heartbeat-bpm-readout" class="text-[#ff4d63] font-bold">READY TO SYNC</span>
+        </div>
+
+        <!-- Live Animated ECG Heartbeat Waveform SVG -->
+        <div class="h-12 w-full rounded-2xl bg-black/60 border border-white/[0.06] flex items-center justify-center px-4 overflow-hidden">
+          <svg id="heartbeat-ecg-svg" class="w-full h-8 text-stone-600 transition-colors duration-300" viewBox="0 0 320 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M0 20 H70 L82 10 L92 32 L104 4 L116 36 L126 16 L136 20 H200 L212 10 L222 32 L234 4 L246 36 L256 16 L266 20 H320" />
+          </svg>
+        </div>
+
         <button
           id="send-heart-pulse-btn"
           type="button"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.06] hover:bg-white/10 border border-white/15 text-white font-medium text-xs transition cursor-pointer"
+          class="w-full py-3.5 px-5 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-[0.98] border border-white/15 text-white font-semibold text-xs transition flex items-center justify-center gap-2.5 cursor-pointer select-none"
         >
-          <span class="text-[#d92338]">♥</span>
-          <span>Send a Little Love Pulse</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#d92338] animate-ping"></span>
+          <span id="heartbeat-btn-label">Tap &amp; Hold to Sync Our Heartbeats ♥</span>
         </button>
       </div>
 
@@ -1289,19 +1300,19 @@
           onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • 1:1 Photo Booth')"
           class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white shadow-xl transition-all cursor-pointer"
         >
-          <span class="text-xs font-bold tracking-wide">Finale • Open 1:1 Photo Booth ↓</span>
+          <span class="text-xs font-bold tracking-wide">Finale • Open Couple 1:1 Photo Booth ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 8: ULTRA-SIMPLE 1:1 SQUARE BOOTH & FULL SCRAPBOOK OUTPUT    -->
+    <!-- SECTION 8: COUPLE (HIS & HERS / TOGETHER) 1:1 BOOTH & 3 TEMPLATES   -->
     <!-- =================================================================== -->
     <section id="section-photobox" class="space-y-5 pt-2 chapter-hidden">
       <div class="flex items-center justify-between px-1">
         <div>
-          <h2 class="font-serif italic text-3xl text-white">1:1 photo booth</h2>
-          <p class="text-xs text-stone-400">1 tap snaps 3 square poses &amp; prints your decorated scrapbook keepsake</p>
+          <h2 class="font-serif italic text-3xl text-white">couple 1:1 photo booth</h2>
+          <p class="text-xs text-stone-400">snap together on 1 phone, or snap His &amp; Hers separately to merge!</p>
         </div>
         <button
           id="camera-flip-btn"
@@ -1313,24 +1324,64 @@
         </button>
       </div>
 
-      <!-- STEP 1: SUPER SIMPLE 1:1 SQUARE CAMERA CARD -->
+      <!-- STEP 1: COUPLE MODE SELECTOR + CLEAN 1:1 SQUARE CAMERA -->
       <div class="rounded-3xl p-4 sm:p-5 bg-[#141210] border border-white/12 shadow-2xl space-y-4">
+        <!-- Mode Toggle: Together (1 Frame) vs His & Hers Split (Laki & Cewek) -->
+        <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-black/60 border border-white/10 max-w-[330px] mx-auto">
+          <button
+            type="button"
+            id="booth-mode-couple-btn"
+            class="py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow"
+          >
+            👦👧 His &amp; Hers Split
+          </button>
+          <button
+            type="button"
+            id="booth-mode-together-btn"
+            class="py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white"
+          >
+            👩‍❤️‍👨 Together (1 Cam)
+          </button>
+        </div>
+
+        <!-- Role Selector when in "His & Hers Split" Mode (Who is snapping right now?) -->
+        <div id="booth-role-selector-bar" class="max-w-[330px] mx-auto space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              id="booth-role-his-btn"
+              class="py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300"
+            >
+              <span>👦 <span id="role-his-name">Noah</span></span>
+              <span id="role-his-status" class="text-[10px] font-mono text-emerald-400">✓ Ready</span>
+            </button>
+            <button
+              type="button"
+              id="booth-role-hers-btn"
+              class="py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
+            >
+              <span>👧 <span id="role-hers-name">Mia</span></span>
+              <span id="role-hers-status" class="text-[10px] font-mono text-[#ff4d63]">● Active</span>
+            </button>
+          </div>
+          <p id="booth-role-hint" class="text-[11px] text-center text-stone-400">
+            Select your name above, tap <b>Take 3 Photos</b>, and we'll merge both of you side-by-side!
+          </p>
+        </div>
+
         <!-- 1:1 Square Viewfinder -->
         <div
           id="booth-vf-box"
           class="relative max-w-[330px] mx-auto aspect-square rounded-2xl overflow-hidden bg-[#0a0908] border border-white/15 vf-ring-light flex items-center justify-center"
         >
-          <!-- Live Pill -->
           <div id="booth-live-badge" class="absolute top-3 left-3 z-30 hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-white/15 text-[10px] font-mono font-bold text-white">
             <span class="w-2 h-2 rounded-full bg-[#d92338] animate-ping"></span>
             <span id="booth-status-pill">1:1 SQUARE LIVE</span>
           </div>
 
-          <!-- Shutter Flash & Flare -->
           <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-40"></div>
           <div id="booth-lens-flare" class="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-0 z-40"></div>
 
-          <!-- Square Live Video Stream -->
           <video
             id="camera-stream-video"
             autoplay
@@ -1340,7 +1391,6 @@
             style="transform: scaleX(-1);"
           ></video>
 
-          <!-- Minimal Standby Prompt -->
           <div id="booth-mirror-standby" class="relative z-10 p-6 text-center flex flex-col items-center justify-center space-y-2.5">
             <div class="w-14 h-14 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center">
               <svg class="w-7 h-7 text-[#d92338]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -1348,13 +1398,12 @@
                 <circle cx="12" cy="13" r="3.2"/>
               </svg>
             </div>
-            <h3 class="font-serif italic text-2xl text-white">3 square snaps</h3>
-            <p class="text-xs text-stone-400 max-w-[200px]">
-              Tap below once — auto-snaps 3 square photos &amp; builds your scrapbook collage.
+            <h3 id="booth-standby-title" class="font-serif italic text-2xl text-white">ready for your 3 poses?</h3>
+            <p class="text-xs text-stone-400 max-w-[215px]">
+              1 tap counts down &amp; snaps 3 square photos automatically.
             </p>
           </div>
 
-          <!-- Countdown Overlay -->
           <div id="camera-countdown-overlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-between p-4 bg-black/25 pointer-events-none">
             <div id="camera-pose-prompt" class="px-3 py-1 rounded-full bg-black/80 border border-white/20 text-[11px] font-mono font-bold text-white">
               POSE 1 / 3
@@ -1365,7 +1414,6 @@
             <div class="w-8 h-1"></div>
           </div>
 
-          <!-- 3 Progress Dots -->
           <div class="absolute bottom-3 inset-x-0 z-30 flex items-center justify-center gap-2 pointer-events-none">
             <span id="booth-dot-0" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
             <span id="booth-dot-1" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
@@ -1373,7 +1421,7 @@
           </div>
         </div>
 
-        <!-- 1 Main Action Button + Simple Upload Fallback -->
+        <!-- 1 Main Action Button + Upload Fallback -->
         <div class="flex items-center gap-2.5 max-w-[330px] mx-auto">
           <button
             id="camera-snap-trigger-btn"
@@ -1381,7 +1429,7 @@
             class="flex-1 py-3.5 px-5 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-[0.98] text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>📸</span>
-            <span id="booth-main-btn-label">Take 3 Photos</span>
+            <span id="booth-main-btn-label">Take 3 Photos (Mia)</span>
           </button>
 
           <button
@@ -1398,20 +1446,20 @@
       </div>
 
       <!-- ================================================================= -->
-      <!-- STEP 2: DISPENSED 1-OF-1 SCRAPBOOK COLLAGE (3 TILTED 1:1 PHOTOS)  -->
+      <!-- STEP 2: DISPENSED SCRAPBOOK COLLAGE + 3 DISTINCT TEMPLATE STYLES  -->
       <!-- ================================================================= -->
       <div id="photobox-developed-stage" class="hidden space-y-4 pt-1">
         <div class="dispenser-housing text-center">
           <div class="dispenser-slot-bar max-w-xs mx-auto"></div>
 
           <p class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">
-            ✦ Tap Collage to View Fullscreen ✦
+            ✦ Tap Collage to Zoom • Switch 3 Template Styles Below ✦
           </p>
 
           <!-- ONE SINGLE UNIFIED COMPOSITE SCRAPBOOK IMAGE -->
           <div
             id="booth-strip-img-wrapper"
-            class="relative inline-block max-w-[310px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
+            class="relative inline-block max-w-[315px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
           >
             <img
               id="booth-final-strip-img"
@@ -1422,10 +1470,35 @@
             <div class="holo-glint-overlay group-hover:opacity-90 transition-opacity"></div>
           </div>
 
+          <!-- 3 DISTINCT TEMPLATE VARIANTS SWITCHER -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-4 pt-3 border-t border-white/10">
+            <button
+              type="button"
+              data-booth-variant="scrapbook"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-[#f4efe4] text-stone-900 border border-white shadow cursor-pointer transition"
+            >
+              01 • Cream Scrapbook
+            </button>
+            <button
+              type="button"
+              data-booth-variant="film35"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-900 text-amber-300 border border-amber-400/30 cursor-pointer transition"
+            >
+              02 • 35mm Dark Film
+            </button>
+            <button
+              type="button"
+              data-booth-variant="newspaper"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-800 text-stone-200 border border-white/15 cursor-pointer transition"
+            >
+              03 • Sunday Love Times
+            </button>
+          </div>
+
           <div id="booth-raw-gal" class="hidden"></div>
         </div>
 
-        <!-- Clean 2-Button Action Row (No Confusing Clutter!) -->
+        <!-- Clean Action Row -->
         <div class="flex items-center gap-2.5 max-w-sm mx-auto">
           <button
             id="photobox-download-btn"
@@ -1755,55 +1828,98 @@
     function initSynthesizedWavUrls() {
       if (chatReceiveWavUrl) return;
 
-      // 1. chatReceiveWavUrl: Authentic Apple iMessage two-tone bell chime (880Hz -> 1318.5Hz)
-      chatReceiveWavUrl = generatePcmWavBlobUrl(0.62, (t) => {
+      // 1. chat-receive: Authentic iPhone iMessage two-tone crystal chime (880Hz -> 1318.5Hz)
+      chatReceiveWavUrl = generatePcmWavBlobUrl(0.65, (t) => {
         if (t < 0.13) {
-          const env = Math.exp(-t * 16) * Math.min(1, t * 250);
-          return (
-            Math.sin(2 * Math.PI * 880 * t) * 0.55 +
-            Math.sin(2 * Math.PI * 1760 * t) * 0.2
-          ) * env;
+          const env = Math.exp(-t * 15) * Math.min(1, t * 250);
+          return (Math.sin(2 * Math.PI * 880 * t) * 0.55 + Math.sin(2 * Math.PI * 1760 * t) * 0.22) * env;
         } else {
           const t2 = t - 0.13;
-          const env = Math.exp(-t2 * 7.5) * Math.min(1, t2 * 250);
-          return (
-            Math.sin(2 * Math.PI * 1318.5 * t2) * 0.6 +
-            Math.sin(2 * Math.PI * 2637 * t2) * 0.22
-          ) * env;
+          const env = Math.exp(-t2 * 7.2) * Math.min(1, t2 * 250);
+          return (Math.sin(2 * Math.PI * 1318.5 * t2) * 0.62 + Math.sin(2 * Math.PI * 2637 * t2) * 0.24) * env;
         }
       });
 
-      // 2. chatSendWavUrl: Authentic iMessage upward Swoosh-Pop (480Hz -> 980Hz)
-      chatSendWavUrl = generatePcmWavBlobUrl(0.22, (t, dur) => {
+      // 2. chat-send: Authentic iMessage upward Swoosh-Pop (400Hz -> 1060Hz)
+      chatSendWavUrl = generatePcmWavBlobUrl(0.24, (t, dur) => {
         const progress = t / dur;
-        const freq = 480 + (980 - 480) * Math.pow(progress, 1.4);
-        const env = Math.sin(Math.PI * progress) * Math.exp(-t * 6);
-        return Math.sin(2 * Math.PI * freq * t) * 0.5 * env;
+        const freq = 400 + (1060 - 400) * Math.pow(progress, 1.45);
+        const env = Math.sin(Math.PI * progress) * Math.exp(-t * 5.5);
+        return Math.sin(2 * Math.PI * freq * t) * 0.55 * env;
       });
 
-      // 3. tapWavUrl: Subtle tactile iOS keyboard pop
-      tapWavUrl = generatePcmWavBlobUrl(0.06, (t) => {
-        const freq = 520 * Math.exp(-t * 35);
-        const env = Math.exp(-t * 55);
+      // 3. tap: Crisp iOS Haptic Tap
+      tapWavUrl = generatePcmWavBlobUrl(0.055, (t) => {
+        const freq = 540 * Math.exp(-t * 38);
+        const env = Math.exp(-t * 58);
         return Math.sin(2 * Math.PI * freq * t) * 0.45 * env;
       });
 
-      // 4. unlockWavUrl: Warm lockscreen unlock chime
-      unlockWavUrl = generatePcmWavBlobUrl(0.55, (t) => {
-        const env = Math.exp(-t * 5.5) * Math.min(1, t * 120);
+      // 4. unlock: Warm chord chime
+      unlockWavUrl = generatePcmWavBlobUrl(0.58, (t) => {
+        const env = Math.exp(-t * 5.2) * Math.min(1, t * 120);
         const c1 = Math.sin(2 * Math.PI * 587.33 * t) * 0.3;
         const c2 = Math.sin(2 * Math.PI * 880 * t) * 0.3;
         const c3 = t > 0.08 ? Math.sin(2 * Math.PI * 1174.66 * (t - 0.08)) * 0.35 : 0;
         return (c1 + c2 + c3) * env;
       });
 
+      // 5. ios-typing: Soft iPhone keyboard keyclick
+      const typingWavUrl = generatePcmWavBlobUrl(0.04, (t) => {
+        const noise = (Math.random() - 0.5) * 0.35 * Math.exp(-t * 120);
+        const click = Math.sin(2 * Math.PI * 780 * t) * Math.exp(-t * 95) * 0.35;
+        return noise + click;
+      });
+
+      // 6. card-flip / paper-slide: Tactile paper cardstock swish
+      const flipWavUrl = generatePcmWavBlobUrl(0.16, (t, dur) => {
+        const env = Math.sin(Math.PI * (t / dur)) * Math.exp(-t * 10);
+        const white = (Math.random() - 0.5) * 0.55;
+        const tone = Math.sin(2 * Math.PI * (280 + t * 900) * t) * 0.2;
+        return (white + tone) * env;
+      });
+
+      // 7. stamp-slam: Heavy cashier ink-stamp THWACK!
+      const stampWavUrl = generatePcmWavBlobUrl(0.22, (t) => {
+        const thud = Math.sin(2 * Math.PI * (140 * Math.exp(-t * 18)) * t) * Math.exp(-t * 16) * 0.75;
+        const snap = (Math.random() - 0.5) * Math.exp(-t * 45) * 0.5;
+        return thud + snap;
+      });
+
+      // 8. camera-shutter: Mechanical SLR mirror-slap KA-CHICK!
+      const shutterWavUrl = generatePcmWavBlobUrl(0.18, (t) => {
+        if (t < 0.06) {
+          return ((Math.random() - 0.5) * 0.7 + Math.sin(2 * Math.PI * 900 * t) * 0.3) * Math.exp(-t * 55);
+        } else if (t > 0.07) {
+          const t2 = t - 0.07;
+          return ((Math.random() - 0.5) * 0.75 + Math.sin(2 * Math.PI * 1250 * t2) * 0.35) * Math.exp(-t2 * 50);
+        }
+        return 0;
+      });
+
+      // 9. heartbeat: Warm double-thump lub-dub (68Hz -> 54Hz)
+      const heartbeatWavUrl = generatePcmWavBlobUrl(0.48, (t) => {
+        if (t < 0.16) {
+          return Math.sin(2 * Math.PI * 64 * t) * Math.exp(-t * 22) * 0.85;
+        } else if (t >= 0.22 && t < 0.42) {
+          const t2 = t - 0.22;
+          return Math.sin(2 * Math.PI * 52 * t2) * Math.exp(-t2 * 25) * 0.7;
+        }
+        return 0;
+      });
+
       html5AudioPool["chat-receive"] = new Audio(chatReceiveWavUrl);
       html5AudioPool["chat-send"] = new Audio(chatSendWavUrl);
       html5AudioPool["tap"] = new Audio(tapWavUrl);
       html5AudioPool["unlock"] = new Audio(unlockWavUrl);
+      html5AudioPool["ios-typing"] = new Audio(typingWavUrl);
+      html5AudioPool["card-flip"] = new Audio(flipWavUrl);
+      html5AudioPool["stamp-slam"] = new Audio(stampWavUrl);
+      html5AudioPool["camera-shutter"] = new Audio(shutterWavUrl);
+      html5AudioPool["heartbeat"] = new Audio(heartbeatWavUrl);
 
       Object.values(html5AudioPool).forEach((aud) => {
-        aud.volume = 0.7;
+        aud.volume = 0.75;
         aud.preload = "auto";
       });
     }
@@ -1821,7 +1937,6 @@
       }
       if (!audioUnlocked) {
         audioUnlocked = true;
-        // Pre-warm pooled HTML5 <audio> elements silently on first touch
         Object.values(html5AudioPool).forEach((aud) => {
           const prevVol = aud.volume;
           aud.volume = 0.001;
@@ -1839,88 +1954,29 @@
       }
     }
 
-    /**
-     * Hybrid Dual-Channel Sound Player:
-     * Plays BOTH pooled HTML5 <audio> (.wav Blob URL for iOS Silent Mode bypass)
-     * AND WebAudio API synthesizer + navigator.vibrate.
-     */
     function playUiSound(type = "tap") {
       try {
         initSynthesizedWavUrls();
 
-        // 1. Haptic vibration on supported Android/mobile browsers
         if (navigator.vibrate) {
           if (type === "chat-receive" || type === "unlock") navigator.vibrate([12, 30, 18]);
+          else if (type === "stamp-slam" || type === "camera-shutter") navigator.vibrate([25, 20, 35]);
+          else if (type === "heartbeat") navigator.vibrate([35, 110, 25]);
           else navigator.vibrate(8);
         }
 
-        // 2. HTML5 <audio> channel (works on iPhone even with physical Silent Mode switch ON)
-        const mappedType = (type === "chat-receive" || type === "chat-send" || type === "unlock") ? type : "tap";
-        const baseAudio = html5AudioPool[mappedType];
+        const baseAudio = html5AudioPool[type] || html5AudioPool["tap"];
         if (baseAudio) {
           const clone = baseAudio.cloneNode();
-          clone.volume = 0.7;
+          clone.volume = type === "ios-typing" ? 0.45 : 0.78;
           clone.play().catch(() => {
             baseAudio.currentTime = 0;
-            baseAudio.volume = 0.7;
             baseAudio.play().catch(() => {});
           });
         }
-
-        // 3. WebAudio API Synthesizer Channel
-        if (!uiAudioCtx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) uiAudioCtx = new AudioContextClass();
-        }
-        if (uiAudioCtx) {
-          if (uiAudioCtx.state === "suspended") uiAudioCtx.resume().catch(() => {});
-          const now = uiAudioCtx.currentTime;
-          const osc = uiAudioCtx.createOscillator();
-          const gain = uiAudioCtx.createGain();
-          osc.connect(gain);
-          gain.connect(uiAudioCtx.destination);
-
-          if (type === "chat-receive") {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(880, now);
-            osc.frequency.setValueAtTime(1318.5, now + 0.13);
-            gain.gain.setValueAtTime(0.18, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
-            osc.start(now);
-            osc.stop(now + 0.56);
-          } else if (type === "chat-send") {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(480, now);
-            osc.frequency.exponentialRampToValueAtTime(980, now + 0.19);
-            gain.gain.setValueAtTime(0.15, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.21);
-            osc.start(now);
-            osc.stop(now + 0.22);
-          } else if (type === "unlock") {
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(587.33, now);
-            osc.frequency.setValueAtTime(880, now + 0.1);
-            osc.frequency.setValueAtTime(1174.66, now + 0.2);
-            gain.gain.setValueAtTime(0.16, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.start(now);
-            osc.stop(now + 0.52);
-          } else {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(520, now);
-            osc.frequency.exponentialRampToValueAtTime(180, now + 0.05);
-            gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
-            osc.start(now);
-            osc.stop(now + 0.06);
-          }
-        }
-      } catch (err) {
-        // Ignore audio errors on restricted environments
-      }
+      } catch (err) {}
     }
 
-    // Pre-warm audio on first user gesture anywhere
     ["touchstart", "pointerdown", "click"].forEach((evtName) => {
       document.addEventListener(evtName, unlockAudioEngine, { once: true, passive: true });
     });
@@ -2169,7 +2225,7 @@
       pillsContainer.querySelectorAll(".milestone-pill-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           activeMilestoneIndex = parseInt(btn.getAttribute("data-milestone-idx"), 10) || 0;
-          playUiSound("tap");
+          playUiSound("card-flip");
           renderMilestonesSection();
         });
       });
@@ -2250,6 +2306,97 @@
     // =========================================================================
     // 6. SECTION 3: iMESSAGE CHAT REPLAY & UNSENT DRAFTS (NO-FLASH ACCORDION)
     // =========================================================================
+    let voiceNoteAudioUrl = null;
+    let voiceNotePlaying = false;
+    let voiceNoteAudioEl = null;
+
+    function getOrCreateVoiceNoteMelodyUrl() {
+      if (voiceNoteAudioUrl) return voiceNoteAudioUrl;
+      // Sweet 6-second music-box lullaby melody for the 2AM Voice Note
+      const melody = [523.25, 659.25, 783.99, 1046.5, 880.0, 783.99, 659.25, 587.33, 659.25, 783.99, 523.25, 523.25];
+      voiceNoteAudioUrl = generatePcmWavBlobUrl(6.0, (t) => {
+        const step = Math.floor(t / 0.5) % melody.length;
+        const localT = t % 0.5;
+        const freq = melody[step];
+        const env = Math.exp(-localT * 5.2) * Math.min(1, localT * 120);
+        return (Math.sin(2 * Math.PI * freq * t) * 0.45 + Math.sin(2 * Math.PI * freq * 2 * t) * 0.15) * env;
+      });
+      return voiceNoteAudioUrl;
+    }
+
+    function createVoiceNoteBubbleHtml() {
+      return `
+        <div class="flex flex-col items-start transition-all duration-500 pt-1">
+          <div
+            id="imessage-voice-note-bubble"
+            class="imessage-received px-3.5 py-2.5 flex items-center gap-3 cursor-pointer border border-white/10 hover:border-[#007aff]/60 transition select-none max-w-[85%]"
+            title="Tap to play 2:14 AM Voice Note"
+          >
+            <button
+              type="button"
+              id="vn-play-btn"
+              class="w-8 h-8 rounded-full bg-[#007aff] text-white flex items-center justify-center shrink-0 shadow text-xs font-bold"
+            >
+              ▶
+            </button>
+            <div class="space-y-1 min-w-[145px]">
+              <div class="flex items-end gap-1 h-4">
+                <span class="vn-bar w-1 h-2 bg-white/70 rounded-full"></span>
+                <span class="vn-bar w-1 h-3.5 bg-white/90 rounded-full"></span>
+                <span class="vn-bar w-1 h-2.5 bg-white/75 rounded-full"></span>
+                <span class="vn-bar w-1 h-4 bg-[#007aff] rounded-full"></span>
+                <span class="vn-bar w-1 h-3 bg-white/85 rounded-full"></span>
+                <span class="vn-bar w-1 h-2 bg-white/65 rounded-full"></span>
+                <span class="vn-bar w-1 h-3.5 bg-white/90 rounded-full"></span>
+                <span class="vn-bar w-1 h-2.5 bg-white/75 rounded-full"></span>
+                <span class="vn-bar w-1 h-4 bg-white/90 rounded-full"></span>
+                <span class="vn-bar w-1 h-2 bg-white/60 rounded-full"></span>
+              </div>
+              <div class="flex items-center justify-between text-[10px] font-mono text-stone-400">
+                <span id="vn-status-label">Voice Memo • tap to listen</span>
+                <span>0:06</span>
+              </div>
+            </div>
+          </div>
+          <p id="vn-transcript-caption" class="hidden text-[11px] italic text-stone-300 mt-1.5 px-2">
+            "psst... i just wanted to hear your laugh one more time before i fall asleep ♥"
+          </p>
+        </div>
+      `;
+    }
+
+    function bindVoiceNoteBubble() {
+      const bubble = document.getElementById("imessage-voice-note-bubble");
+      if (!bubble || bubble.dataset.boundVn) return;
+      bubble.dataset.boundVn = "1";
+      bubble.addEventListener("click", () => {
+        const btn = document.getElementById("vn-play-btn");
+        const status = document.getElementById("vn-status-label");
+        const cap = document.getElementById("vn-transcript-caption");
+        if (!voiceNoteAudioEl) {
+          voiceNoteAudioEl = new Audio(getOrCreateVoiceNoteMelodyUrl());
+          voiceNoteAudioEl.addEventListener("ended", () => {
+            voiceNotePlaying = false;
+            if (btn) btn.textContent = "▶";
+            if (status) status.textContent = "Played • tap to replay";
+          });
+        }
+        if (!voiceNotePlaying) {
+          voiceNotePlaying = true;
+          if (btn) btn.textContent = "❚❚";
+          if (status) status.textContent = "Playing 2:14 AM Note...";
+          if (cap) cap.classList.remove("hidden");
+          voiceNoteAudioEl.currentTime = 0;
+          voiceNoteAudioEl.play().catch(() => {});
+        } else {
+          voiceNotePlaying = false;
+          voiceNoteAudioEl.pause();
+          if (btn) btn.textContent = "▶";
+          if (status) status.textContent = "Paused";
+        }
+      });
+    }
+
     function renderChatBubbles(animated = false) {
       const container = document.getElementById("chat-bubbles-container");
       if (!container) return;
@@ -2261,26 +2408,36 @@
       const msgs = Array.isArray(d.chatMessages) && d.chatMessages.length ? d.chatMessages : [];
 
       if (!animated) {
-        container.innerHTML = msgs.map((m) => createChatBubbleHtml(m)).join("");
+        container.innerHTML = msgs.map((m) => createChatBubbleHtml(m)).join("") + createVoiceNoteBubbleHtml();
+        bindVoiceNoteBubble();
         return;
       }
 
       container.innerHTML = "";
+      // Slower, natural human iPhone chat pacing (2,250ms per message with typing clicks!)
+      const STEP_MS = 2250;
+      const TYPING_DURATION_MS = 1150;
+
       msgs.forEach((msg, index) => {
-        const delay = index * 950;
+        const delay = index * STEP_MS;
         const timer = setTimeout(() => {
-          // Show brief typing indicator before message appears
           const typingEl = document.createElement("div");
           const isMe = msg.sender === "me" || msg.from === "me";
           typingEl.className = `flex ${isMe ? "justify-end" : "justify-start"}`;
           typingEl.innerHTML = `
-            <div class="px-3.5 py-2.5 rounded-2xl bg-zinc-800 text-zinc-400 text-xs flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0.15s"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style="animation-delay:0.3s"></span>
+            <div class="px-4 py-3 rounded-2xl bg-stone-800 text-stone-300 text-xs flex items-center gap-1.5 shadow">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-300 animate-bounce"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-300 animate-bounce" style="animation-delay:0.15s"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-300 animate-bounce" style="animation-delay:0.3s"></span>
             </div>
           `;
           container.appendChild(typingEl);
+
+          // Play subtle iPhone keyboard typing clicks while "..." bubble is showing
+          playUiSound("ios-typing");
+          const tClick1 = setTimeout(() => playUiSound("ios-typing"), 320);
+          const tClick2 = setTimeout(() => playUiSound("ios-typing"), 640);
+          chatReplayTimeouts.push(tClick1, tClick2);
 
           const popTimer = setTimeout(() => {
             typingEl.remove();
@@ -2289,7 +2446,18 @@
             const node = wrapper.firstElementChild;
             if (node) container.appendChild(node);
             playUiSound(isMe ? "chat-send" : "chat-receive");
-          }, 360);
+
+            if (index === msgs.length - 1) {
+              const vnTimer = setTimeout(() => {
+                const vnWrap = document.createElement("div");
+                vnWrap.innerHTML = createVoiceNoteBubbleHtml();
+                if (vnWrap.firstElementChild) container.appendChild(vnWrap.firstElementChild);
+                playUiSound("chat-receive");
+                bindVoiceNoteBubble();
+              }, 1100);
+              chatReplayTimeouts.push(vnTimer);
+            }
+          }, TYPING_DURATION_MS);
           chatReplayTimeouts.push(popTimer);
         }, delay);
         chatReplayTimeouts.push(timer);
@@ -2305,15 +2473,11 @@
           }">
             ${msg.text || ""}
           </div>
-          ${msg.time ? `<span class="text-[9px] text-zinc-500 mt-1 px-1">${msg.time}</span>` : ""}
+          ${msg.time ? `<span class="text-[9px] text-stone-500 mt-1 px-1">${msg.time}</span>` : ""}
         </div>
       `;
     }
 
-    /**
-     * Renders Unsent Draft cards and attaches direct DOM toggle listeners
-     * so clicking a draft smoothly expands/collapses it WITHOUT calling window.renderLoveOS()
-     */
     function renderUnsentDrafts() {
       const container = document.getElementById("unsent-drafts-container");
       if (!container) return;
@@ -2480,7 +2644,7 @@
       const letter = letters[idx];
       if (!letter) return;
 
-      playUiSound("unlock");
+      playUiSound("card-flip");
 
       const modal = document.getElementById("envelope-modal");
       const tagEl = document.getElementById("modal-envelope-tag");
@@ -2546,7 +2710,7 @@
       if (statusText) {
         statusText.innerHTML = '<span class="text-[#d92338] font-bold">✦ Voucher Stamped! Screenshot this receipt to redeem.</span>';
       }
-      playUiSound("unlock");
+      playUiSound("stamp-slam");
       spawnFloatingHeartBurst(8);
     }
 
@@ -2703,32 +2867,150 @@
     };
 
     // =========================================================================
-    // 14. SECTION 08: 1:1 SQUARE AUTO 3-SNAP & FULL US SCRAPBOOK MASTERPIECE ENGINE
+    // 14. SECTION 08: COUPLE SPLIT (HIS & HERS) + TOGETHER 1:1 BOOTH & 3 SCRAPBOOK VARIANTS
     // =========================================================================
-    let photoboxSlots = [null, null, null];
+    let boothCoupleMode = "couple"; // "couple" (His & Hers Split) or "together" (3-Square)
+    let boothActiveRole = "hers";   // "his" (Partner 1) or "hers" (Partner 2)
+    let boothTemplateVariant = "scrapbook"; // "scrapbook" | "film35" | "newspaper"
+
+    let photoboxSlots = [null, null, null]; // Used for "together" mode & compatibility
+    let hisSlots = [null, null, null];      // Partner 1's 3 square snaps
+    let hersSlots = [null, null, null];     // Partner 2's 3 square snaps
+
     let cameraMediaStream = null;
     let cameraFacingMode = "user";
     let isBoothBurstRunning = false;
 
     const BOOTH_POSE_PROMPTS = [
-      "POSE 1 / 3 • BEST SMILE!",
-      "POSE 2 / 3 • PEACE SIGN / CANDID!",
+      "POSE 1 / 3 • GIVE YOUR BEST SMILE!",
+      "POSE 2 / 3 • PEACE SIGN OR SILLY FACE!",
       "POSE 3 / 3 • BLOW A KISS!"
     ];
 
+    function syncDefaultHisHersFromCoupleData() {
+      const d = window.COUPLE_DATA || {};
+      const photos = Array.isArray(d.polaroidPhotos) ? d.polaroidPhotos : [];
+      const fallback0 = (photos[0] && (photos[0].imageUrl || photos[0].url)) || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80";
+      const fallback1 = (photos[1] && (photos[1].imageUrl || photos[1].url)) || fallback0;
+      const fallback2 = (photos[2] && (photos[2].imageUrl || photos[2].url)) || fallback0;
+
+      if (!hisSlots[0]) hisSlots = [fallback0, fallback1, fallback2];
+    }
+
+    function updateBoothUiLabels() {
+      const d = window.COUPLE_DATA || {};
+      const p1 = d.partner1Name || d.boyfriendName || "Noah";
+      const p2 = d.partner2Name || d.girlfriendName || "Mia";
+
+      const hisNameEl = document.getElementById("role-his-name");
+      const hersNameEl = document.getElementById("role-hers-name");
+      if (hisNameEl) hisNameEl.textContent = p1;
+      if (hersNameEl) hersNameEl.textContent = p2;
+
+      const modeCoupleBtn = document.getElementById("booth-mode-couple-btn");
+      const modeTogetherBtn = document.getElementById("booth-mode-together-btn");
+      const roleBar = document.getElementById("booth-role-selector-bar");
+      const hisBtn = document.getElementById("booth-role-his-btn");
+      const hersBtn = document.getElementById("booth-role-hers-btn");
+      const hisStatus = document.getElementById("role-his-status");
+      const hersStatus = document.getElementById("role-hers-status");
+      const mainBtnLabel = document.getElementById("booth-main-btn-label");
+      const standbyTitle = document.getElementById("booth-standby-title");
+
+      if (boothCoupleMode === "couple") {
+        if (modeCoupleBtn) modeCoupleBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow";
+        if (modeTogetherBtn) modeTogetherBtn.className = "py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white";
+        if (roleBar) roleBar.classList.remove("hidden");
+
+        const isHis = boothActiveRole === "his";
+        if (hisBtn) {
+          hisBtn.className = isHis
+            ? "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
+            : "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300";
+        }
+        if (hersBtn) {
+          hersBtn.className = !isHis
+            ? "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
+            : "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300";
+        }
+        if (hisStatus) hisStatus.textContent = hisSlots[0] ? "✓ Ready" : "● Snap";
+        if (hersStatus) hersStatus.textContent = hersSlots[0] ? "✓ Ready" : (isHis ? "Waiting" : "● Active");
+
+        const activePerson = isHis ? p1 : p2;
+        if (mainBtnLabel && !isBoothBurstRunning) mainBtnLabel.textContent = `Take 3 Photos as ${activePerson}`;
+        if (standbyTitle) standbyTitle.textContent = `${activePerson}'s 3 square poses`;
+      } else {
+        if (modeTogetherBtn) modeTogetherBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow";
+        if (modeCoupleBtn) modeCoupleBtn.className = "py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white";
+        if (roleBar) roleBar.classList.add("hidden");
+        if (mainBtnLabel && !isBoothBurstRunning) mainBtnLabel.textContent = "Take 3 Photos Together";
+        if (standbyTitle) standbyTitle.textContent = "3 square poses together";
+      }
+    }
+
     function initPhotoboxStudio() {
+      syncDefaultHisHersFromCoupleData();
+
       try {
-        const saved = localStorage.getItem("loveos_live_booth_snaps");
-        if (saved) {
-          const parsed = JSON.parse(saved);
+        const savedHis = localStorage.getItem("loveos_booth_his_snaps");
+        const savedHers = localStorage.getItem("loveos_booth_hers_snaps");
+        const savedTogether = localStorage.getItem("loveos_live_booth_snaps");
+        if (savedHis) hisSlots = JSON.parse(savedHis);
+        if (savedHers) hersSlots = JSON.parse(savedHers);
+        if (savedTogether) {
+          const parsed = JSON.parse(savedTogether);
           if (Array.isArray(parsed) && parsed.length === 3 && parsed[0]) {
             photoboxSlots = parsed;
+            if (!hersSlots[0]) hersSlots = parsed;
             renderUnifiedDispenserStrip(false);
           }
         }
       } catch (_) {}
 
-      // Flip Front/Back Lens
+      updateBoothUiLabels();
+
+      // Mode buttons: His & Hers Split vs Together
+      document.getElementById("booth-mode-couple-btn")?.addEventListener("click", () => {
+        boothCoupleMode = "couple";
+        playUiSound("tap");
+        updateBoothUiLabels();
+        if (photoboxSlots[0] || hersSlots[0]) renderUnifiedDispenserStrip(false);
+      });
+      document.getElementById("booth-mode-together-btn")?.addEventListener("click", () => {
+        boothCoupleMode = "together";
+        playUiSound("tap");
+        updateBoothUiLabels();
+        if (photoboxSlots[0] || hersSlots[0]) renderUnifiedDispenserStrip(false);
+      });
+
+      // Role buttons: His vs Hers
+      document.getElementById("booth-role-his-btn")?.addEventListener("click", () => {
+        boothActiveRole = "his";
+        playUiSound("tap");
+        updateBoothUiLabels();
+      });
+      document.getElementById("booth-role-hers-btn")?.addEventListener("click", () => {
+        boothActiveRole = "hers";
+        playUiSound("tap");
+        updateBoothUiLabels();
+      });
+
+      // 3 Distinct Template Variant Switcher Buttons
+      document.querySelectorAll(".booth-variant-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          boothTemplateVariant = btn.getAttribute("data-booth-variant") || "scrapbook";
+          playUiSound("card-flip");
+          document.querySelectorAll(".booth-variant-btn").forEach((b) => {
+            const isAct = b.getAttribute("data-booth-variant") === boothTemplateVariant;
+            b.className = isAct
+              ? "booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-[#d92338] text-white border border-white/30 shadow cursor-pointer transition"
+              : "booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-900 text-stone-300 border border-white/15 cursor-pointer transition";
+          });
+          renderUnifiedDispenserStrip(false);
+        });
+      });
+
+      // Flip Camera
       document.getElementById("camera-flip-btn")?.addEventListener("click", () => {
         cameraFacingMode = cameraFacingMode === "user" ? "environment" : "user";
         playUiSound("tap");
@@ -2737,11 +3019,9 @@
         if (cameraMediaStream) startCameraStream();
       });
 
-      // 1-CLICK MAIN BUTTON: Opens 1:1 square camera & snaps 3 square photos automatically!
+      // Main 1-Click Auto 3-Snap Trigger
       document.getElementById("camera-snap-trigger-btn")?.addEventListener("click", () => {
-        if (!isBoothBurstRunning) {
-          runAutomatedPhotoboothBurst();
-        }
+        if (!isBoothBurstRunning) runAutomatedPhotoboothBurst();
       });
 
       // Retake Button
@@ -2753,7 +3033,7 @@
         }, 350);
       });
 
-      // Fullscreen Lightbox Zoom on Collage Image Click
+      // Lightbox Zoom
       const stripWrapper = document.getElementById("booth-strip-img-wrapper");
       const lightboxModal = document.getElementById("booth-lightbox-modal");
       const lightboxImg = document.getElementById("booth-lightbox-img");
@@ -2772,7 +3052,7 @@
         lightboxModal.classList.remove("flex");
       });
 
-      // Gallery Upload Fallback
+      // Upload Fallback
       const fileInput = document.getElementById("photobox-file-input");
       document.getElementById("booth-upload-fallback-btn")?.addEventListener("click", () => {
         playUiSound("tap");
@@ -2791,10 +3071,19 @@
             tempSlots[idx] = ev.target.result;
             loaded++;
             if (loaded === targetCount) {
-              photoboxSlots[0] = tempSlots[0];
-              photoboxSlots[1] = tempSlots[1] || tempSlots[0];
-              photoboxSlots[2] = tempSlots[2] || tempSlots[0];
+              const filled = [tempSlots[0], tempSlots[1] || tempSlots[0], tempSlots[2] || tempSlots[0]];
+              photoboxSlots = filled;
+              if (boothCoupleMode === "couple") {
+                if (boothActiveRole === "his") {
+                  hisSlots = filled;
+                  try { localStorage.setItem("loveos_booth_his_snaps", JSON.stringify(hisSlots)); } catch (_) {}
+                } else {
+                  hersSlots = filled;
+                  try { localStorage.setItem("loveos_booth_hers_snaps", JSON.stringify(hersSlots)); } catch (_) {}
+                }
+              }
               try { localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots)); } catch (_) {}
+              updateBoothUiLabels();
               playUiSound("unlock");
               spawnFloatingHeartBurst(8);
               renderUnifiedDispenserStrip(true);
@@ -2886,13 +3175,13 @@
         if (!ok) {
           isBoothBurstRunning = false;
           if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-          if (mainBtnLabel) mainBtnLabel.textContent = "Take 3 Photos";
+          updateBoothUiLabels();
           return;
         }
         await sleepMs(450);
       }
 
-      photoboxSlots = [null, null, null];
+      const captured = [null, null, null];
       updateBoothDots(0);
 
       if (countdownOverlay) {
@@ -2902,7 +3191,7 @@
 
       for (let poseIdx = 0; poseIdx < 3; poseIdx++) {
         if (posePrompt) posePrompt.textContent = BOOTH_POSE_PROMPTS[poseIdx];
-        if (mainBtnLabel) mainBtnLabel.textContent = `Pose ${poseIdx + 1} / 3...`;
+        if (mainBtnLabel) mainBtnLabel.textContent = `Snapping ${poseIdx + 1} / 3...`;
 
         for (let c = 3; c >= 1; c--) {
           if (countdownNum) countdownNum.textContent = String(c);
@@ -2919,9 +3208,8 @@
           flareEl.classList.add("flare-active");
           setTimeout(() => flareEl.classList.remove("flare-active"), 550);
         }
-        playUiSound("unlock");
+        playUiSound("camera-shutter");
 
-        // Capture strictly 1:1 Square center crop from video stream!
         const vw = video.videoWidth || 720;
         const vh = video.videoHeight || 720;
         const side = Math.min(vw, vh);
@@ -2937,7 +3225,7 @@
           sCtx.scale(-1, 1);
         }
         sCtx.drawImage(video, sx, sy, side, side, 0, 0, 720, 720);
-        photoboxSlots[poseIdx] = snapCanvas.toDataURL("image/jpeg", 0.92);
+        captured[poseIdx] = snapCanvas.toDataURL("image/jpeg", 0.92);
         updateBoothDots(poseIdx + 1);
 
         if (poseIdx < 2) {
@@ -2946,6 +3234,16 @@
         }
       }
 
+      photoboxSlots = captured;
+      if (boothCoupleMode === "couple") {
+        if (boothActiveRole === "his") {
+          hisSlots = captured;
+          try { localStorage.setItem("loveos_booth_his_snaps", JSON.stringify(hisSlots)); } catch (_) {}
+        } else {
+          hersSlots = captured;
+          try { localStorage.setItem("loveos_booth_hers_snaps", JSON.stringify(hersSlots)); } catch (_) {}
+        }
+      }
       try {
         localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots));
       } catch (_) {}
@@ -2957,7 +3255,7 @@
       stopBoothCameraStream();
       isBoothBurstRunning = false;
       if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-      if (mainBtnLabel) mainBtnLabel.textContent = "Take 3 New Photos";
+      updateBoothUiLabels();
 
       spawnFloatingHeartBurst(10);
       await renderUnifiedDispenserStrip(true);
@@ -2972,7 +3270,9 @@
     }
 
     async function renderUnifiedDispenserStrip(animateDispense = false) {
-      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) return;
+      syncDefaultHisHersFromCoupleData();
+      const hasAny = photoboxSlots[0] || hersSlots[0];
+      if (!hasAny) return;
 
       const stage = document.getElementById("photobox-developed-stage");
       const finalImg = document.getElementById("booth-final-strip-img");
@@ -2985,6 +3285,7 @@
       if (finalImg) finalImg.src = unifiedDataUrl;
 
       if (wrapper && animateDispense) {
+        playUiSound("card-flip");
         wrapper.classList.remove("strip-dispense-anim");
         void wrapper.offsetWidth;
         wrapper.classList.add("strip-dispense-anim");
@@ -2998,8 +3299,80 @@
     }
 
     // =========================================================================
-    // MASTERPIECE 1080x1920 US SCRAPBOOK COLLAGE (3 TILTED 1:1 SQUARE PHOTOS + FULL ASSETS)
+    // TRUE SMOOTH BEZIER CURVE HEART & COQUETTE RIBBON STICKERS (NO WEIRD CONE HEARTS!)
     // =========================================================================
+    function drawSmoothBezierHeart(ctx, cx, cy, size, angleRad, fillColor = "#d92338") {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleRad);
+      const s = size / 64;
+      ctx.scale(s, s);
+      ctx.translate(-32, -32);
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.28)";
+      ctx.shadowBlur = 14;
+      ctx.shadowOffsetY = 6;
+
+      // Exact SVG Bezier Path: M32 54 C32 54 8 39 8 22 C8 13.5 14.8 8 22.5 8 C27.2 8 30.5 10.6 32 13.8 C33.5 10.6 36.8 8 41.5 8 C49.2 8 56 13.5 56 22 C56 39 32 54 32 54 Z
+      ctx.fillStyle = fillColor;
+      ctx.beginPath();
+      ctx.moveTo(32, 54);
+      ctx.bezierCurveTo(32, 54, 8, 39, 8, 22);
+      ctx.bezierCurveTo(8, 13.5, 14.8, 8, 22.5, 8);
+      ctx.bezierCurveTo(27.2, 8, 30.5, 10.6, 32, 13.8);
+      ctx.bezierCurveTo(33.5, 10.6, 36.8, 8, 41.5, 8);
+      ctx.bezierCurveTo(49.2, 8, 56, 13.5, 56, 22);
+      ctx.bezierCurveTo(56, 39, 32, 54, 32, 54);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+
+      // Soft glossy highlight pill on top-left lobe
+      ctx.save();
+      ctx.translate(20, 17);
+      ctx.rotate(-0.48);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 5.5, 2.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    function drawWashiTape(ctx, cx, cy, w, h, angleRad, bgColor, borderColor, labelText) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleRad);
+      ctx.shadowColor = "rgba(0,0,0,0.14)";
+      ctx.shadowBlur = 6;
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(-w / 2, -h / 2, w, h);
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = 1.8;
+      ctx.strokeRect(-w / 2, -h / 2, w, h);
+      if (labelText) {
+        ctx.fillStyle = "#44403c";
+        ctx.font = "bold 22px 'Caveat', cursive";
+        ctx.textAlign = "center";
+        ctx.fillText(labelText, 0, 7);
+      }
+      ctx.restore();
+    }
+
+    function drawSquareCover(ctx, img, x, y, size) {
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width - side) / 2;
+      const sy = (img.height - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, x, y, size, size);
+    }
+
     function generate1080x1920Canvas() {
       return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
@@ -3011,149 +3384,115 @@
         const p1 = (d.partner1Name || "NOAH").toUpperCase();
         const p2 = (d.partner2Name || "MIA").toUpperCase();
         const dateBurn = getFormattedBoothDateStamp();
+        const v = boothTemplateVariant; // "scrapbook" | "film35" | "newspaper"
 
-        // 1. WARM OATMEAL SCRAPBOOK PAPER BACKGROUND + DOT-GRID TEXTURE
-        ctx.fillStyle = "#f4efe4";
-        ctx.fillRect(0, 0, 1080, 1920);
+        // =====================================================================
+        // 1. TEMPLATE VARIANT BACKGROUNDS & EDITORIAL HEADERS
+        // =====================================================================
+        if (v === "film35") {
+          // VARIANT 02: 35MM DARK KODAK CONTACT SHEET
+          ctx.fillStyle = "#0d0c0b";
+          ctx.fillRect(0, 0, 1080, 1920);
 
-        // Subtle Scrapbook Dot-Grid & Fine Notebook Lines
-        ctx.fillStyle = "rgba(120, 105, 88, 0.18)";
-        for (let gx = 48; gx < 1040; gx += 36) {
-          for (let gy = 48; gy < 1880; gy += 36) {
+          // Left & Right 35mm Film Sprocket Holes & Gold Kodak Edge Codes
+          ctx.fillStyle = "#211e1b";
+          ctx.fillRect(0, 0, 78, 1920);
+          ctx.fillRect(1002, 0, 78, 1920);
+
+          ctx.fillStyle = "#f4efe4";
+          for (let fy = 36; fy < 1890; fy += 54) {
             ctx.beginPath();
-            ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
+            ctx.roundRect(22, fy, 34, 24, 4);
+            ctx.roundRect(1024, fy, 34, 24, 4);
             ctx.fill();
           }
-        }
 
-        // Subtle Editorial Outer Frame Border
-        ctx.strokeStyle = "#d6cbb9";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(34, 34, 1012, 1852);
-        ctx.strokeStyle = "rgba(217, 35, 56, 0.22)";
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(46, 46, 988, 1828);
+          ctx.fillStyle = "#f59e0b";
+          ctx.font = "bold 22px 'JetBrains Mono', monospace";
+          ctx.fillText("▲ KODAK PORTRA 400TM  •  CONTACT SHEET 14A", 104, 96);
 
-        // 2. DECORATIVE 35MM FILM SPROCKET STRIP PEEKING BEHIND PHOTOS
-        ctx.save();
-        ctx.translate(165, 960);
-        ctx.rotate(-0.06);
-        ctx.fillStyle = "#161412";
-        ctx.fillRect(-55, -680, 110, 1360);
-        ctx.fillStyle = "#f4efe4";
-        for (let fy = -650; fy < 650; fy += 46) {
-          ctx.fillRect(-46, fy, 16, 24);
-          ctx.fillRect(30, fy, 16, 24);
-        }
-        ctx.restore();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "italic 78px 'Instrument Serif', Georgia, serif";
+          ctx.fillText(`${p1} & ${p2}`, 104, 178);
 
-        // 3. TOP EDITORIAL HEADER + VINTAGE POSTAGE STAMP
-        ctx.fillStyle = "#d92338";
-        ctx.font = "bold 22px 'JetBrains Mono', monospace";
-        ctx.fillText("● STUDIO 402 • 1:1 ANALOG SCRAPBOOK EDITION", 78, 105);
+          ctx.fillStyle = "#a8a29e";
+          ctx.font = "bold 19px 'JetBrains Mono', monospace";
+          ctx.fillText(`PROOF SHEET ${dateBurn}  •  DO NOT CROP ♥`, 104, 218);
+        } else if (v === "newspaper") {
+          // VARIANT 03: THE SUNDAY LOVE TIMES (NY EDITORIAL ZINE)
+          ctx.fillStyle = "#f6f3eb";
+          ctx.fillRect(0, 0, 1080, 1920);
 
-        ctx.fillStyle = "#181512";
-        ctx.font = "italic 82px 'Instrument Serif', Georgia, serif";
-        ctx.fillText(`${p1} & ${p2}`, 78, 188);
-
-        ctx.fillStyle = "#6b6257";
-        ctx.font = "bold 20px 'JetBrains Mono', monospace";
-        ctx.fillText(`CAPTURED ${dateBurn}  •  KEEP FOREVER ARCHIVE`, 80, 226);
-
-        // Top-Right Tilted US Postage Stamp & Wavy Cancellation Postmark
-        ctx.save();
-        ctx.translate(920, 145);
-        ctx.rotate(0.08);
-        ctx.fillStyle = "#fffdf9";
-        ctx.strokeStyle = "#bfb29e";
-        ctx.lineWidth = 3;
-        ctx.setLineDash([6, 6]);
-        ctx.fillRect(-75, -82, 150, 164);
-        ctx.strokeRect(-75, -82, 150, 164);
-        ctx.setLineDash([]);
-        ctx.fillStyle = "#fbe4e6";
-        ctx.fillRect(-62, -68, 124, 136);
-        ctx.fillStyle = "#d92338";
-        ctx.font = "bold 16px 'JetBrains Mono', monospace";
-        ctx.textAlign = "center";
-        ctx.fillText("FIRST CLASS", 0, -40);
-        // Heart inside stamp
-        ctx.beginPath();
-        ctx.arc(-12, -5, 14, 0, Math.PI * 2);
-        ctx.arc(12, -5, 14, 0, Math.PI * 2);
-        ctx.moveTo(-25, 0);
-        ctx.lineTo(0, 28);
-        ctx.lineTo(25, 0);
-        ctx.fill();
-        ctx.fillStyle = "#181512";
-        ctx.font = "bold 15px 'JetBrains Mono', monospace";
-        ctx.fillText("US TWO ♥", 0, 52);
-        ctx.restore();
-
-        // Helper for 1:1 Square Cover-Fit Image Drawing
-        function drawSquareCover(ctx, img, x, y, size) {
-          const side = Math.min(img.width, img.height);
-          const sx = (img.width - side) / 2;
-          const sy = (img.height - side) / 2;
-          ctx.drawImage(img, sx, sy, side, side, x, y, size, size);
-        }
-
-        // Helper to draw a realistic translucent Washi Tape strip
-        function drawWashiTape(ctx, cx, cy, w, h, angleRad, bgColor, borderColor, labelText) {
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(angleRad);
-          ctx.shadowColor = "rgba(0,0,0,0.15)";
-          ctx.shadowBlur = 8;
-          ctx.fillStyle = bgColor;
-          ctx.fillRect(-w / 2, -h / 2, w, h);
-          ctx.shadowBlur = 0;
-          ctx.strokeStyle = borderColor;
-          ctx.lineWidth = 2;
-          ctx.strokeRect(-w / 2, -h / 2, w, h);
-          // Subtle diagonal crosshatch lines on tape
-          ctx.strokeStyle = "rgba(255,255,255,0.35)";
+          // Newspaper Masthead Rules
+          ctx.strokeStyle = "#181512";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(64, 62); ctx.lineTo(1016, 62);
+          ctx.moveTo(64, 182); ctx.lineTo(1016, 182);
+          ctx.stroke();
           ctx.lineWidth = 1.5;
-          for (let lx = -w / 2 + 16; lx < w / 2; lx += 22) {
-            ctx.beginPath();
-            ctx.moveTo(lx, -h / 2);
-            ctx.lineTo(lx - 10, h / 2);
-            ctx.stroke();
-          }
-          if (labelText) {
-            ctx.fillStyle = "#7f1d1d";
-            ctx.font = "bold 25px 'Caveat', cursive";
-            ctx.textAlign = "center";
-            ctx.fillText(labelText, 0, 8);
-          }
-          ctx.restore();
-        }
+          ctx.beginPath();
+          ctx.moveTo(64, 70); ctx.lineTo(1016, 70);
+          ctx.moveTo(64, 224); ctx.lineTo(1016, 224);
+          ctx.stroke();
 
-        // Helper to draw a 3D Glossy Cherry Heart Sticker
-        function draw3DPuffyHeart(ctx, cx, cy, scale, angleRad) {
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(angleRad);
-          ctx.scale(scale, scale);
-          ctx.shadowColor = "rgba(185, 28, 28, 0.38)";
-          ctx.shadowBlur = 18;
-          ctx.shadowOffsetY = 8;
+          ctx.fillStyle = "#181512";
+          ctx.font = "italic 76px 'Instrument Serif', Georgia, serif";
+          ctx.textAlign = "center";
+          ctx.fillText("The Sunday Love Times", 540, 152);
+
+          ctx.font = "bold 18px 'JetBrains Mono', monospace";
+          ctx.fillText(`VOL. 01 • SPECIAL EDITION: ${p1} & ${p2} • ${dateBurn} • PRICE: PRICELESS`, 540, 208);
+          ctx.textAlign = "left";
+        } else {
+          // VARIANT 01 (DEFAULT): CREAM SCRAPBOOK EDITION
+          ctx.fillStyle = "#f4efe4";
+          ctx.fillRect(0, 0, 1080, 1920);
+
+          ctx.fillStyle = "rgba(120, 105, 88, 0.16)";
+          for (let gx = 48; gx < 1040; gx += 36) {
+            for (let gy = 48; gy < 1880; gy += 36) {
+              ctx.beginPath();
+              ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          ctx.strokeStyle = "#d6cbb9";
+          ctx.lineWidth = 4;
+          ctx.strokeRect(36, 36, 1008, 1848);
+
           ctx.fillStyle = "#d92338";
-          ctx.beginPath();
-          ctx.arc(-18, -12, 22, 0, Math.PI * 2);
-          ctx.arc(18, -12, 22, 0, Math.PI * 2);
-          ctx.moveTo(-39, -4);
-          ctx.lineTo(0, 38);
-          ctx.lineTo(39, -4);
-          ctx.fill();
-          // Glossy specular highlight
-          ctx.shadowBlur = 0;
-          ctx.shadowOffsetY = 0;
-          ctx.fillStyle = "rgba(255,255,255,0.55)";
-          ctx.beginPath();
-          ctx.ellipse(-20, -18, 8, 4, -0.5, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.font = "bold 21px 'JetBrains Mono', monospace";
+          ctx.fillText("● STUDIO 402 • 1:1 ANALOG SCRAPBOOK", 78, 102);
+
+          ctx.fillStyle = "#181512";
+          ctx.font = "italic 80px 'Instrument Serif', Georgia, serif";
+          ctx.fillText(`${p1} & ${p2}`, 78, 184);
+
+          ctx.fillStyle = "#6b6257";
+          ctx.font = "bold 19px 'JetBrains Mono', monospace";
+          ctx.fillText(`CAPTURED ${dateBurn}  •  1 OF 1 KEEPSAKE`, 78, 220);
+
+          // Top-Right Postage Stamp with Smooth Bezier Heart
+          ctx.save();
+          ctx.translate(925, 140);
+          ctx.rotate(0.06);
+          ctx.fillStyle = "#fffdf9";
+          ctx.strokeStyle = "#bfb29e";
+          ctx.lineWidth = 3;
+          ctx.setLineDash([6, 6]);
+          ctx.fillRect(-70, -75, 140, 150);
+          ctx.strokeRect(-70, -75, 140, 150);
+          ctx.setLineDash([]);
+          ctx.fillStyle = "#fbe4e6";
+          ctx.fillRect(-58, -62, 116, 124);
+          ctx.fillStyle = "#d92338";
+          ctx.font = "bold 14px 'JetBrains Mono', monospace";
+          ctx.textAlign = "center";
+          ctx.fillText("FIRST CLASS", 0, -38);
           ctx.restore();
+          drawSmoothBezierHeart(ctx, 925, 140, 42, 0.06, "#d92338");
         }
 
         function loadImg(src) {
@@ -3167,262 +3506,251 @@
           });
         }
 
-        const s0 = photoboxSlots[0] || photoboxSlots[1] || photoboxSlots[2];
-        const s1 = photoboxSlots[1] || s0;
-        const s2 = photoboxSlots[2] || s0;
+        // Gather images depending on mode ("couple" His & Hers 6-photo split vs "together" 3-photo)
+        const h0 = hisSlots[0] || photoboxSlots[0];
+        const h1 = hisSlots[1] || h0;
+        const h2 = hisSlots[2] || h0;
 
-        Promise.all([loadImg(s0), loadImg(s1), loadImg(s2)]).then((imgs) => {
-          // =================================================================
-          // 4. BACKGROUND SCRAPBOOK STICKERS (BEHIND/AROund THE 3 1:1 PHOTOS)
-          // =================================================================
+        const w0 = hersSlots[0] || photoboxSlots[0] || h0;
+        const w1 = hersSlots[1] || photoboxSlots[1] || w0;
+        const w2 = hersSlots[2] || photoboxSlots[2] || w0;
 
-          // A) Spinning Vinyl Record Sticker peeking out top-right (X=835, Y=460)
-          ctx.save();
-          ctx.translate(835, 460);
-          ctx.rotate(0.15);
-          ctx.shadowColor = "rgba(0,0,0,0.32)";
-          ctx.shadowBlur = 24;
-          ctx.fillStyle = "#141210";
-          ctx.beginPath();
-          ctx.arc(0, 0, 145, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-          ctx.strokeStyle = "rgba(255,255,255,0.12)";
-          ctx.lineWidth = 2;
-          [120, 98, 76].forEach((r) => {
-            ctx.beginPath();
-            ctx.arc(0, 0, r, 0, Math.PI * 2);
-            ctx.stroke();
-          });
-          ctx.fillStyle = "#d92338";
-          ctx.beginPath();
-          ctx.arc(0, 0, 48, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 12px 'JetBrains Mono', monospace";
-          ctx.textAlign = "center";
-          ctx.fillText("ON REPEAT", 0, -16);
-          ctx.fillText("SIDE A", 0, 26);
-          ctx.fillStyle = "#141210";
-          ctx.beginPath();
-          ctx.arc(0, 0, 10, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
+        const t0 = photoboxSlots[0] || w0 || h0;
+        const t1 = photoboxSlots[1] || w1 || t0;
+        const t2 = photoboxSlots[2] || w2 || t0;
 
-          // Handwritten Note under Vinyl (Right side of Photo 1)
-          ctx.save();
-          ctx.translate(835, 650);
-          ctx.rotate(-0.06);
-          ctx.fillStyle = "#181512";
-          ctx.font = "bold 36px 'Caveat', cursive";
-          ctx.textAlign = "center";
-          ctx.fillText("my favorite human ↖", 0, 0);
-          ctx.fillStyle = "#d92338";
-          ctx.font = "bold 16px 'JetBrains Mono', monospace";
-          ctx.fillText("★ 100% CERTIFIED CORE MEMORY", 0, 30);
-          ctx.restore();
+        Promise.all([loadImg(h0), loadImg(h1), loadImg(h2), loadImg(w0), loadImg(w1), loadImg(w2), loadImg(t0), loadImg(t1), loadImg(t2)]).then((loaded) => {
+          const hisImgs = [loaded[0], loaded[1], loaded[2]];
+          const hersImgs = [loaded[3], loaded[4], loaded[5]];
+          const togetherImgs = [loaded[6], loaded[7], loaded[8]];
 
-          // B) Torn Yellow-Cream Sticky Note on Middle-Left (X=235, Y=955)
-          ctx.save();
-          ctx.translate(235, 955);
-          ctx.rotate(-0.08);
-          ctx.shadowColor = "rgba(0,0,0,0.18)";
-          ctx.shadowBlur = 18;
-          ctx.fillStyle = "#fff8dc";
-          ctx.fillRect(-155, -110, 310, 220);
-          ctx.shadowBlur = 0;
-          ctx.strokeStyle = "#e6d8a8";
-          ctx.lineWidth = 2;
-          ctx.strokeRect(-155, -110, 310, 220);
-          ctx.fillStyle = "#d92338";
-          ctx.font = "bold 15px 'JetBrains Mono', monospace";
-          ctx.textAlign = "left";
-          ctx.fillText("NOTE TO SELF // 2:14 AM", -130, -70);
-          ctx.fillStyle = "#181512";
-          ctx.font = "bold 34px 'Caveat', cursive";
-          ctx.fillText("still crushing on you", -130, -20);
-          ctx.fillText("harder than day one ♡", -130, 22);
-          ctx.fillStyle = "#57534e";
-          ctx.font = "bold 14px 'JetBrains Mono', monospace";
-          ctx.fillText("DO NOT LOSE THIS PHOTO →", -130, 74);
-          ctx.restore();
+          const isDark = v === "film35";
 
-          // C) Perforated Red VIP Admission Ticket Stub on Bottom-Right (X=815, Y=1420)
-          ctx.save();
-          ctx.translate(815, 1420);
-          ctx.rotate(0.09);
-          ctx.shadowColor = "rgba(0,0,0,0.22)";
-          ctx.shadowBlur = 18;
-          ctx.fillStyle = "#d92338";
-          ctx.fillRect(-155, -90, 310, 180);
-          ctx.shadowBlur = 0;
-          ctx.strokeStyle = "rgba(255,255,255,0.65)";
-          ctx.lineWidth = 2;
-          ctx.setLineDash([8, 6]);
-          ctx.strokeRect(-142, -78, 284, 156);
-          ctx.setLineDash([]);
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 16px 'JetBrains Mono', monospace";
-          ctx.textAlign = "center";
-          ctx.fillText("★ ADMIT TWO • VIP PASS ★", 0, -40);
-          ctx.font = "italic 44px 'Instrument Serif', Georgia, serif";
-          ctx.fillText("Forever Seat 14A", 0, 12);
-          ctx.font = "bold 14px 'JetBrains Mono', monospace";
-          ctx.fillText(`ISSUED ${dateBurn} • NON-EXPIRING`, 0, 52);
-          ctx.restore();
-
-          // =================================================================
-          // 5. DRAW THE 3 SQUARE (1:1) POLAROID PHOTOS IN ORGANIC TILTED LAYOUT
-          // =================================================================
-          const squareConfigs = [
-            {
-              cx: 375,
-              cy: 535,
-              angle: -0.065, // Tilted left (-3.7 deg)
-              caption: "01. golden hour with you ♡",
-              tag: "FRAME #01",
-              tapeColor: "rgba(251, 207, 232, 0.88)",
-              tapeBorder: "rgba(244, 114, 182, 0.6)",
-              tapeLabel: "us right now ♡"
-            },
-            {
-              cx: 705,
-              cy: 965,
-              angle: 0.058, // Tilted right (+3.3 deg)
-              caption: "02. 100% chaotic & candid ★",
-              tag: "FRAME #02",
-              tapeColor: "rgba(239, 230, 213, 0.92)",
-              tapeBorder: "rgba(196, 181, 155, 0.8)",
-              tapeLabel: "keep forever"
-            },
-            {
-              cx: 385,
-              cy: 1385,
-              angle: -0.042, // Tilted slightly left (-2.4 deg)
-              caption: "03. my favorite place to be",
-              tag: "FRAME #03",
-              tapeColor: "rgba(254, 215, 170, 0.88)",
-              tapeBorder: "rgba(251, 146, 60, 0.55)",
-              tapeLabel: "1 of 1 memory"
-            }
-          ];
-
-          const photoSize = 420; // Strictly 1:1 Square Photo (420x420)!
-          const frameW = 468;
-          const frameH = 545;
-
-          squareConfigs.forEach((cfg, idx) => {
-            const im = imgs[idx];
-            ctx.save();
-            ctx.translate(cfg.cx, cfg.cy);
-            ctx.rotate(cfg.angle);
-
-            // Realistic Deep Polaroid Drop Shadow
-            ctx.shadowColor = "rgba(15, 12, 10, 0.38)";
-            ctx.shadowBlur = 32;
-            ctx.shadowOffsetX = 6;
-            ctx.shadowOffsetY = 16;
-
-            // Warm Ivory Polaroid Paper Card
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(-frameW / 2, -frameH / 2, frameW, frameH);
-
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-            ctx.strokeStyle = "#ded6c8";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(-frameW / 2, -frameH / 2, frameW, frameH);
-
-            // Inner 1:1 Square Photo Box (-photoSize/2, -frameH/2 + 24)
-            const px = -photoSize / 2;
-            const py = -frameH / 2 + 24;
-
-            ctx.fillStyle = "#181512";
-            ctx.fillRect(px, py, photoSize, photoSize);
-
-            if (im) {
-              drawSquareCover(ctx, im, px, py, photoSize);
-            }
-
-            // Subtle Analog Warm Film Vignette on 1:1 Photo
-            const vig = ctx.createLinearGradient(px, py + photoSize - 85, px, py + photoSize);
-            vig.addColorStop(0, "transparent");
-            vig.addColorStop(1, "rgba(0,0,0,0.62)");
-            ctx.fillStyle = vig;
-            ctx.fillRect(px, py + photoSize - 85, photoSize, 85);
-
-            // 90s 35mm Orange Film Date Burn inside bottom-right of 1:1 Square
-            ctx.fillStyle = "#ff8524";
+          if (boothCoupleMode === "couple") {
+            // =================================================================
+            // HIS & HERS COUPLE SPLIT LAYOUT (3 ROWS × 2 COLUMNS OF 1:1 SQUARES)
+            // =================================================================
+            // Column Headers ("HIS • NOAH" & "HERS • MIA")
+            ctx.fillStyle = isDark ? "#fbbf24" : "#d92338";
             ctx.font = "bold 20px 'JetBrains Mono', monospace";
-            ctx.textAlign = "right";
-            ctx.fillText(`${dateBurn} • ${cfg.tag}`, px + photoSize - 16, py + photoSize - 16);
+            ctx.textAlign = "center";
+            ctx.fillText(`👦 HIS (${p1})`, 315, 275);
+            ctx.fillText(`👧 HERS (${p2})`, 765, 275);
 
-            // Handwritten Scrapbook Caption on Bottom Polaroid Margin
-            ctx.fillStyle = "#1c1917";
-            ctx.font = "bold 34px 'Caveat', cursive";
-            ctx.textAlign = "left";
-            ctx.fillText(cfg.caption, px + 6, py + photoSize + 54);
+            const rowsY = [515, 965, 1415];
+            const rowNotes = [
+              ["pose 01 • his smile", "pose 01 • her smile ♡"],
+              ["pose 02 • his vibe", "pose 02 • her vibe ★"],
+              ["pose 03 • always yours", "pose 03 • forever mine"]
+            ];
 
-            ctx.restore();
+            rowsY.forEach((cy, rIdx) => {
+              const pair = [
+                { cx: 315, angle: rIdx % 2 === 0 ? -0.045 : 0.035, img: hisImgs[rIdx], cap: rowNotes[rIdx][0], tape: "his ♡" },
+                { cx: 765, angle: rIdx % 2 === 0 ? 0.045 : -0.035, img: hersImgs[rIdx], cap: rowNotes[rIdx][1], tape: "hers ♡" }
+              ];
 
-            // Top Washi Tape pinning each 1:1 Polaroid
-            const tapeX = cfg.cx + Math.sin(cfg.angle) * (frameH / 2);
-            const tapeY = cfg.cy - Math.cos(cfg.angle) * (frameH / 2) + 4;
-            drawWashiTape(ctx, tapeX, tapeY, 210, 44, cfg.angle - 0.04, cfg.tapeColor, cfg.tapeBorder, cfg.tapeLabel);
-          });
+              pair.forEach((item) => {
+                const sqSize = 340;
+                const fw = 376;
+                const fh = 434;
+
+                ctx.save();
+                ctx.translate(item.cx, cy);
+                ctx.rotate(item.angle);
+
+                ctx.shadowColor = isDark ? "rgba(0,0,0,0.8)" : "rgba(20,16,12,0.32)";
+                ctx.shadowBlur = 26;
+                ctx.shadowOffsetY = 12;
+
+                ctx.fillStyle = isDark ? "#1c1917" : "#ffffff";
+                ctx.fillRect(-fw / 2, -fh / 2, fw, fh);
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetY = 0;
+
+                ctx.strokeStyle = isDark ? "rgba(255,255,255,0.18)" : "#dcd3c4";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-fw / 2, -fh / 2, fw, fh);
+
+                const px = -sqSize / 2;
+                const py = -fh / 2 + 18;
+                ctx.fillStyle = "#141210";
+                ctx.fillRect(px, py, sqSize, sqSize);
+
+                if (item.img) {
+                  drawSquareCover(ctx, item.img, px, py, sqSize);
+                }
+
+                // 35mm Orange Date Burn
+                ctx.fillStyle = "#ff8524";
+                ctx.font = "bold 17px 'JetBrains Mono', monospace";
+                ctx.textAlign = "right";
+                ctx.fillText(dateBurn, px + sqSize - 12, py + sqSize - 12);
+
+                // Handwritten Caption
+                ctx.fillStyle = isDark ? "#f5f5f4" : "#1c1917";
+                ctx.font = "bold 28px 'Caveat', cursive";
+                ctx.textAlign = "left";
+                ctx.fillText(item.cap, px + 6, py + sqSize + 44);
+
+                ctx.restore();
+
+                if (!isDark) {
+                  drawWashiTape(ctx, item.cx, cy - fh / 2 + 4, 150, 34, item.angle * -0.8, "rgba(239, 230, 213, 0.9)", "#cbbba0", item.tape);
+                }
+              });
+
+              // Center Smooth Bezier Heart connecting His & Hers on each row!
+              drawSmoothBezierHeart(ctx, 540, cy, 54, rIdx % 2 === 0 ? -0.1 : 0.1, "#d92338");
+            });
+          } else {
+            // =================================================================
+            // TOGETHER 3-SQUARE TILTED SCRAPBOOK LAYOUT
+            // =================================================================
+            if (!isDark) {
+              // Decorative Vinyl Disc on Top-Right
+              ctx.save();
+              ctx.translate(830, 465);
+              ctx.rotate(0.14);
+              ctx.fillStyle = "#141210";
+              ctx.beginPath();
+              ctx.arc(0, 0, 138, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = "#d92338";
+              ctx.beginPath();
+              ctx.arc(0, 0, 44, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = "#ffffff";
+              ctx.font = "bold 12px 'JetBrains Mono', monospace";
+              ctx.textAlign = "center";
+              ctx.fillText("OUR SONG", 0, -14);
+              ctx.fillText("SIDE A", 0, 22);
+              ctx.restore();
+
+              // Sticky Note on Middle-Left
+              ctx.save();
+              ctx.translate(240, 955);
+              ctx.rotate(-0.07);
+              ctx.fillStyle = "#fff8dc";
+              ctx.strokeStyle = "#e6d8a8";
+              ctx.lineWidth = 2;
+              ctx.fillRect(-150, -100, 300, 200);
+              ctx.strokeRect(-150, -100, 300, 200);
+              ctx.fillStyle = "#d92338";
+              ctx.font = "bold 14px 'JetBrains Mono', monospace";
+              ctx.textAlign = "left";
+              ctx.fillText("2:14 AM // NOTE", -125, -62);
+              ctx.fillStyle = "#181512";
+              ctx.font = "bold 32px 'Caveat', cursive";
+              ctx.fillText("still crushing on you", -125, -15);
+              ctx.fillText("harder than day one ♡", -125, 24);
+              ctx.restore();
+
+              // VIP Red Ticket Stub on Bottom-Right
+              ctx.save();
+              ctx.translate(815, 1415);
+              ctx.rotate(0.08);
+              ctx.fillStyle = "#d92338";
+              ctx.fillRect(-150, -85, 300, 170);
+              ctx.fillStyle = "#ffffff";
+              ctx.font = "bold 15px 'JetBrains Mono', monospace";
+              ctx.textAlign = "center";
+              ctx.fillText("★ ADMIT TWO • VIP ★", 0, -35);
+              ctx.font = "italic 40px 'Instrument Serif', Georgia, serif";
+              ctx.fillText("Forever Seat 14A", 0, 12);
+              ctx.restore();
+            }
+
+            const configs = [
+              { cx: 375, cy: 530, angle: -0.055, cap: "01. golden hour with you ♡", tape: "us right now ♡" },
+              { cx: 700, cy: 960, angle: 0.052, cap: "02. 100% chaotic & candid ★", tape: "keep forever" },
+              { cx: 385, cy: 1385, angle: -0.04, cap: "03. my favorite place to be", tape: "1 of 1 memory" }
+            ];
+
+            const sqSize = 415;
+            const fw = 462;
+            const fh = 538;
+
+            configs.forEach((cfg, idx) => {
+              const im = togetherImgs[idx];
+              ctx.save();
+              ctx.translate(cfg.cx, cfg.cy);
+              ctx.rotate(cfg.angle);
+
+              ctx.shadowColor = isDark ? "rgba(0,0,0,0.85)" : "rgba(15,12,10,0.36)";
+              ctx.shadowBlur = 30;
+              ctx.shadowOffsetY = 14;
+
+              ctx.fillStyle = isDark ? "#1c1917" : "#ffffff";
+              ctx.fillRect(-fw / 2, -fh / 2, fw, fh);
+              ctx.shadowBlur = 0;
+              ctx.shadowOffsetY = 0;
+
+              ctx.strokeStyle = isDark ? "rgba(255,255,255,0.2)" : "#ded6c8";
+              ctx.lineWidth = 2;
+              ctx.strokeRect(-fw / 2, -fh / 2, fw, fh);
+
+              const px = -sqSize / 2;
+              const py = -fh / 2 + 22;
+              ctx.fillStyle = "#181512";
+              ctx.fillRect(px, py, sqSize, sqSize);
+
+              if (im) drawSquareCover(ctx, im, px, py, sqSize);
+
+              ctx.fillStyle = "#ff8524";
+              ctx.font = "bold 19px 'JetBrains Mono', monospace";
+              ctx.textAlign = "right";
+              ctx.fillText(`${dateBurn} • #0${idx + 1}`, px + sqSize - 14, py + sqSize - 14);
+
+              ctx.fillStyle = isDark ? "#f5f5f4" : "#1c1917";
+              ctx.font = "bold 33px 'Caveat', cursive";
+              ctx.textAlign = "left";
+              ctx.fillText(cfg.cap, px + 6, py + sqSize + 52);
+
+              // Red grease-pencil circle on Film35 mode
+              if (isDark && idx === 1) {
+                ctx.strokeStyle = "#ef4444";
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, fw / 2 + 18, fh / 2 + 12, -0.08, 0, Math.PI * 2);
+                ctx.stroke();
+              }
+
+              ctx.restore();
+
+              if (!isDark) {
+                drawWashiTape(ctx, cfg.cx, cfg.cy - fh / 2 + 4, 200, 40, cfg.angle - 0.03, "rgba(239, 230, 213, 0.92)", "#cbbba0", cfg.tape);
+              }
+            });
+
+            // Smooth Bezier Hearts placed tastefully between the 3 frames
+            drawSmoothBezierHeart(ctx, 605, 695, 58, 0.2, "#d92338");
+            drawSmoothBezierHeart(ctx, 455, 1130, 50, -0.22, "#d92338");
+          }
 
           // =================================================================
-          // 6. FOREGROUND 3D STICKERS, WAX SEAL & SPARKLES OVER THE PHOTOS
+          // 7. BOTTOM EDITORIAL FOOTER BAR
           // =================================================================
-          draw3DPuffyHeart(ctx, 610, 695, 1.05, 0.22);
-          draw3DPuffyHeart(ctx, 455, 1125, 0.85, -0.25);
-          draw3DPuffyHeart(ctx, 145, 345, 0.72, -0.18);
-
-          // Gold/Red "GENUINE KEEPERS" Seal on Photo #3 Corner
-          ctx.save();
-          ctx.translate(605, 1595);
-          ctx.rotate(-0.15);
-          ctx.shadowColor = "rgba(0,0,0,0.28)";
-          ctx.shadowBlur = 12;
-          ctx.fillStyle = "#fbbf24";
-          ctx.beginPath();
-          ctx.arc(0, 0, 52, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 0;
-          ctx.strokeStyle = "#181512";
+          const footY = 1752;
+          ctx.strokeStyle = isDark ? "rgba(255,255,255,0.2)" : "#cfc3b0";
           ctx.lineWidth = 3;
-          ctx.stroke();
-          ctx.fillStyle = "#181512";
-          ctx.font = "bold 15px 'JetBrains Mono', monospace";
-          ctx.textAlign = "center";
-          ctx.fillText("100% US", 0, -6);
-          ctx.fillText("1 OF 1 ♥", 0, 15);
-          ctx.restore();
-
-          // =================================================================
-          // 7. BOTTOM EDITORIAL COLOPHON & BARCODE STRIP (Y=1745..1855)
-          // =================================================================
-          const footY = 1748;
-          ctx.strokeStyle = "#cfc3b0";
-          ctx.lineWidth = 3;
           ctx.beginPath();
-          ctx.moveTo(74, footY);
-          ctx.lineTo(1006, footY);
+          ctx.moveTo(86, footY);
+          ctx.lineTo(994, footY);
           ctx.stroke();
 
-          ctx.fillStyle = "#181512";
-          ctx.font = "bold 24px 'Inter', sans-serif";
+          ctx.fillStyle = isDark ? "#ffffff" : "#181512";
+          ctx.font = "bold 23px 'Inter', sans-serif";
           ctx.textAlign = "left";
-          ctx.fillText(`LOVEOS SCRAPBOOK ARCHIVE • ${p1} & ${p2} ♥`, 74, footY + 56);
+          ctx.fillText(`LOVEOS ARCHIVE • ${p1} & ${p2} ♥`, 86, footY + 56);
 
           const linkStr = window.location.hostname || "loveos.kept.us";
           ctx.fillStyle = "#d92338";
-          ctx.fillRect(670, footY + 20, 336, 54);
+          ctx.fillRect(664, footY + 20, 330, 52);
           ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 21px 'JetBrains Mono', monospace";
+          ctx.font = "bold 20px 'JetBrains Mono', monospace";
           ctx.textAlign = "center";
-          ctx.fillText(linkStr, 838, footY + 54);
+          ctx.fillText(linkStr, 829, footY + 53);
 
           resolve(canvas);
         });
@@ -3430,10 +3758,7 @@
     }
 
     async function download916KeepsakePng() {
-      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Tap 'Take 3 Photos' first!");
-        return;
-      }
+      syncDefaultHisHersFromCoupleData();
       playUiSound("tap");
       const btn = document.getElementById("photobox-download-btn");
       const originalText = btn ? btn.innerHTML : "";
@@ -3458,10 +3783,7 @@
     }
 
     async function shareToInstaStory() {
-      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Tap 'Take 3 Photos' first!");
-        return;
-      }
+      syncDefaultHisHersFromCoupleData();
       playUiSound("tap");
       try {
         const canvas = await generate1080x1920Canvas();
@@ -3578,6 +3900,7 @@
       renderEnvelopes();
       renderNotesAndBucketList();
       updateDynamicIslandContent();
+      if (typeof updateBoothUiLabels === 'function') updateBoothUiLabels();
     };
 
     // =========================================================================
@@ -3840,7 +4163,7 @@
       // 3D Polaroid Card Flip & Prev/Next Buttons
       const polaroid3dCard = document.getElementById("polaroid-3d-card");
       polaroid3dCard?.addEventListener("click", () => {
-        playUiSound("tap");
+        playUiSound("card-flip");
         polaroid3dCard.classList.toggle("is-flipped");
       });
 
@@ -3909,10 +4232,37 @@
         revealScratchCardCompletely();
       });
 
-      // Send Heart Pulse Footer Button
-      document.getElementById("send-heart-pulse-btn")?.addEventListener("click", () => {
-        playUiSound("unlock");
-        spawnFloatingHeartBurst(12);
+      // Interactive Thumbprint Heartbeat Sync Sensor
+      const hbBtn = document.getElementById("send-heart-pulse-btn");
+      let isSyncingHb = false;
+      hbBtn?.addEventListener("click", () => {
+        if (isSyncingHb) return;
+        isSyncingHb = true;
+        const readout = document.getElementById("heartbeat-bpm-readout");
+        const ecgSvg = document.getElementById("heartbeat-ecg-svg");
+        const btnLabel = document.getElementById("heartbeat-btn-label");
+        const d = window.COUPLE_DATA || {};
+        const p1 = d.partner1Name || "Noah";
+        const p2 = d.partner2Name || "Mia";
+
+        if (ecgSvg) ecgSvg.classList.replace("text-stone-600", "text-[#d92338]");
+        if (readout) readout.textContent = "PULSE DETECTED • 76 BPM...";
+        if (btnLabel) btnLabel.textContent = "Syncing Heartbeats... (38%)";
+        playUiSound("heartbeat");
+
+        setTimeout(() => {
+          if (readout) readout.textContent = "LOCKING RHYTHM • 82 BPM...";
+          if (btnLabel) btnLabel.textContent = "Syncing Heartbeats... (79%)";
+          playUiSound("heartbeat");
+        }, 650);
+
+        setTimeout(() => {
+          playUiSound("unlock");
+          spawnFloatingHeartBurst(14);
+          if (readout) readout.textContent = "100% LOCKED • 84 BPM ♥";
+          if (btnLabel) btnLabel.textContent = `${p1} & ${p2}'s Heartbeats Synced Forever ♥`;
+          isSyncingHb = false;
+        }, 1350);
       });
     }
 
