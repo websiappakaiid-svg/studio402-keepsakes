@@ -500,35 +500,72 @@
       border-left: 1px solid #dcd3c2 !important;
     }
 
+
+    /* ===================================================================== */
+    /* V3 US EDITORIAL PALETTE OVERRIDES (ZERO AI SLOP, WARM ESPRESSO/CREAM) */
+    /* ===================================================================== */
+    body {
+      background-color: #0a0908 !important;
+      color: #f5f2eb !important;
+    }
+    #cinematic-intro {
+      background-color: #0a0908 !important;
+    }
+
+    /* Luxury Cream Linen Envelope (Replaces Tacky Barber-Shop Airmail Stripes) */
+    .airmail-stripe-bar {
+      background: linear-gradient(90deg, #d92338 0%, #b91c1c 50%, #d92338 100%) !important;
+      height: 4px !important;
+    }
+    .envelope-card {
+      background: linear-gradient(180deg, #f8f4ec 0%, #ede5d6 100%) !important;
+      border: 1px solid #d8cebe !important;
+      box-shadow: 0 20px 42px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 #ffffff !important;
+    }
+
+    /* Viral US "Love Receipt" Thermal Paper Card (Replaces Tacky Casino Scratch Card) */
+    .love-receipt-paper {
+      position: relative;
+      background: #faf6ee;
+      color: #181615;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.85);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .receipt-serrated-top {
+      height: 12px;
+      width: 100%;
+      background: linear-gradient(-45deg, #faf6ee 6px, transparent 0), linear-gradient(45deg, #faf6ee 6px, transparent 0);
+      background-repeat: repeat-x;
+      background-size: 12px 12px;
+      margin-bottom: -1px;
+    }
+    .receipt-serrated-bottom {
+      height: 12px;
+      width: 100%;
+      background: linear-gradient(-135deg, #faf6ee 6px, transparent 0), linear-gradient(135deg, #faf6ee 6px, transparent 0);
+      background-repeat: repeat-x;
+      background-size: 12px 12px;
+      margin-top: -1px;
+    }
+    @keyframes stampSlam {
+      0% { transform: scale(2.4) rotate(-18deg); opacity: 0; }
+      70% { transform: scale(0.92) rotate(-8deg); opacity: 1; }
+      100% { transform: scale(1) rotate(-10deg); opacity: 1; }
+    }
+    .stamp-slammed {
+      animation: stampSlam 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
   </style>
 </head>
 <body class="relative is-locked selection:bg-rose-500/30 selection:text-rose-200">
 
   <!-- ===================================================================== -->
-  <!-- AMBIENT ATMOSPHERE: FILM GRAIN, BOKEH ORBS & FLOATING MICRO-SPARKLES   -->
+  <!-- AMBIENT ATMOSPHERE: CLEAN 35MM FILM GRAIN & WARM EDITORIAL GLOW -->
   <!-- ===================================================================== -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <!-- Film grain noise overlay -->
     <div class="absolute inset-0 film-grain-overlay z-10"></div>
-
-    <!-- Soft ambient glowing bokeh orbs -->
-    <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-rose-500/12 blur-[110px] animate-float-slow"></div>
-    <div class="absolute top-1/3 -right-28 w-80 h-80 rounded-full bg-amber-500/10 blur-[100px] animate-float-slow" style="animation-delay: -5s;"></div>
-    <div class="absolute bottom-12 left-1/4 w-96 h-96 rounded-full bg-fuchsia-500/10 blur-[120px] animate-float-slow" style="animation-delay: -9s;"></div>
-
-    <!-- Floating micro-sparkle SVG stars -->
-    <svg class="absolute top-[14%] left-[12%] w-4 h-4 text-rose-300/40 animate-twinkle" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-    </svg>
-    <svg class="absolute top-[38%] right-[10%] w-3.5 h-3.5 text-amber-200/40 animate-twinkle" style="animation-delay: 1.5s;" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-    </svg>
-    <svg class="absolute top-[68%] left-[8%] w-3 h-3 text-rose-200/35 animate-twinkle" style="animation-delay: 2.7s;" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-    </svg>
-    <svg class="absolute top-[84%] right-[16%] w-4 h-4 text-amber-300/30 animate-twinkle" style="animation-delay: 0.9s;" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-    </svg>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-[#d92338]/[0.07] blur-[130px]"></div>
+    <div class="absolute bottom-0 left-1/3 w-[420px] h-[420px] rounded-full bg-stone-500/[0.05] blur-[130px]"></div>
   </div>
 
   <!-- ===================================================================== -->
@@ -681,228 +718,160 @@
   <main id="main-experience" class="relative z-10 max-w-xl mx-auto px-4 sm:px-6 pt-20 pb-28 space-y-16 transition-all duration-700 hidden">
 
     <!-- =================================================================== -->
-    <!-- SECTION 1: HERO LOCKSCREEN, WEATHER PILL, COUNTER & BOARDING PASS   -->
+    <!-- SECTION 1: HERO COUNTER & TACTILE MEMORY PASS (CLEAN & CONCISE)     -->
     <!-- =================================================================== -->
-    <section id="section-hero" class="space-y-6 pt-2">
-      <!-- Cute iOS Weather / Location Status Lockscreen Pill -->
-      <div class="flex justify-center">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-inner text-xs text-zinc-200">
-          <svg class="w-4 h-4 shrink-0" viewBox="0 0 64 64" fill="none">
-            <path d="M32 8C20.954 8 12 16.954 12 28C12 41.5 32 54 32 54C32 54 52 41.5 52 28C52 16.954 43.046 8 32 8Z" fill="#f43f5e" stroke="#fecdd3" stroke-width="2"/>
-            <circle cx="32" cy="27" r="8" fill="#fff1f2"/>
-          </svg>
-          <span id="hero-weather-pill-text" class="tracking-tight">
-            Right by your side • 100% chance of missing you
-          </span>
-        </div>
-      </div>
-
-      <!-- Couple Headline & Candid Subhead -->
-      <div class="text-center space-y-2">
-        <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-rose-300/80 font-mono">
+    <section id="section-hero" class="space-y-5 pt-2">
+      <!-- Couple Headline (Short, Editorial, Zero Fluff) -->
+      <div class="text-center space-y-1.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[11px] uppercase tracking-[0.2em] text-stone-300 font-mono">
           <span id="hero-partner1-tag">NOAH</span>
-          <svg class="w-3.5 h-3.5 inline-block" viewBox="0 0 64 64" fill="none">
-            <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#f43f5e"/>
-          </svg>
+          <span class="text-[#d92338]">♥</span>
           <span id="hero-partner2-tag">MIA</span>
         </div>
-        <h1 id="hero-main-title" class="font-serif italic text-4xl sm:text-5xl text-white tracking-tight leading-[1.1]">
+        <h1 id="hero-main-title" class="font-serif italic text-4xl sm:text-5xl text-white tracking-tight leading-[1.08] pt-1">
           every second since my favorite hello.
         </h1>
-        <p id="hero-subtitle-el" class="text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
-          i built this little corner of the internet so you have somewhere to go whenever you forget how much you mean to me.
+        <p id="hero-subtitle-el" class="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto leading-relaxed">
+          our little corner of the internet.
         </p>
+        <!-- Hidden legacy hook -->
+        <span id="hero-weather-pill-text" class="hidden">Right by your side</span>
       </div>
 
-      <!-- Tactile iOS Glass Live Relationship Counter Widget -->
-      <div class="relative rounded-3xl p-5 bg-[#101014] border border-white/15 shadow-2xl overflow-hidden">
-        <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-zinc-400 mb-3">
+      <!-- Clean Warm Obsidian Live Counter Widget -->
+      <div class="relative rounded-3xl p-5 bg-[#141210] border border-white/10 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">
           <span class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="w-2 h-2 rounded-full bg-emerald-400 -ml-3.5"></span>
-            clocked in together
+            <span class="w-2 h-2 rounded-full bg-[#d92338] animate-pulse"></span>
+            <span>together for</span>
           </span>
           <span id="hero-since-date-label">SINCE OCT 14, 2023</span>
         </div>
 
         <div class="grid grid-cols-4 gap-2.5 text-center">
-          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+          <div class="p-3 rounded-2xl bg-black/50 border border-white/[0.06]">
             <div id="counter-days" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">000</div>
-            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">days</div>
+            <div class="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-0.5">days</div>
           </div>
-          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+          <div class="p-3 rounded-2xl bg-black/50 border border-white/[0.06]">
             <div id="counter-hours" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">00</div>
-            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">hours</div>
+            <div class="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-0.5">hrs</div>
           </div>
-          <div class="p-3 rounded-2xl bg-black/40 border border-white/[0.06]">
+          <div class="p-3 rounded-2xl bg-black/50 border border-white/[0.06]">
             <div id="counter-minutes" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">00</div>
-            <div class="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">mins</div>
+            <div class="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-0.5">mins</div>
           </div>
-          <div class="p-3 rounded-2xl bg-rose-500/15 border border-rose-400/25">
-            <div id="counter-seconds" class="font-mono text-2xl sm:text-3xl font-bold text-rose-300 tracking-tight">00</div>
-            <div class="text-[10px] uppercase tracking-widest text-rose-300/80 mt-0.5">secs</div>
+          <div class="p-3 rounded-2xl bg-[#d92338]/15 border border-[#d92338]/35">
+            <div id="counter-seconds" class="font-mono text-2xl sm:text-3xl font-bold text-[#ff4d63] tracking-tight">00</div>
+            <div class="text-[9px] font-mono uppercase tracking-widest text-[#ff4d63]/80 mt-0.5">secs</div>
           </div>
         </div>
       </div>
 
       <!-- Milestone Selector Pills -->
-      <div class="space-y-3">
-        <div class="flex items-center justify-between px-1">
-          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Memory Passes</span>
-          <span class="text-[11px] font-mono text-zinc-500">Tap to switch</span>
-        </div>
-        <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          <!-- Milestone pills injected by JS -->
-        </div>
+      <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <!-- Milestone pills injected by JS -->
       </div>
 
-      <!-- Apple Wallet Boarding Pass / VIP Event Ticket (#milestone-detail-card) -->
+      <!-- Tactile Cream Paper Boarding Pass (#milestone-detail-card) -->
       <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300">
-        <!-- Injected by renderMilestoneDetailCard() with semicircular notches, dashed tear-line, barcode SVG & tilted VERIFIED MEMORY ♡ stamp -->
+        <!-- Injected by renderMilestoneDetailCard() -->
       </div>
-          <!-- Section 1 Next Flow Indicator -->
-      <div id="flow-nav-sec1" class="pt-4 flex justify-center">
+
+      <!-- Section 1 Next Flow Indicator -->
+      <div id="flow-nav-sec1" class="pt-3 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-music', 'flow-nav-sec1', '02', 'Next • Spin Our Record')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          onclick="window.unsealNextChapter('section-music', 'flow-nav-sec1', '02', 'Next • Our Soundtrack')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • Spin Our Record</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Spin Our Record ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 2: ON REPEAT — VINYL RECORD & METALLIC TONEARM DECK         -->
+    <!-- SECTION 2: ON REPEAT — CLEAN VINYL TURNTABLE DECK                   -->
     <!-- =================================================================== -->
     <section id="section-music" class="space-y-4 chapter-hidden">
-      <div class="flex items-center justify-between px-1">
-        <div>
-          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">02 • heavy rotation</span>
-          <h2 class="font-serif italic text-3xl text-white">the song that sounds like us</h2>
-        </div>
-        <!-- Cassette Tape Sticker Accent -->
-        <div class="rotate-[3deg] px-2.5 py-1 rounded bg-[#f5ebd6] text-zinc-900 border border-amber-900/30 shadow-md font-mono text-[10px] font-bold tracking-tight flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-rose-600"></span>
-          <span>SIDE A • 90m TAPE</span>
-        </div>
+      <div class="px-1">
+        <h2 class="font-serif italic text-3xl text-white">our soundtrack</h2>
       </div>
 
-      <!-- Tactile Turntable Plinth Card -->
-      <div class="relative rounded-3xl p-6 bg-gradient-to-br from-[#1d1720] via-[#130f16] to-[#0d0a10] border border-white/15 shadow-2xl overflow-hidden">
-        <!-- Decorative Corner Screws -->
-        <div class="absolute top-3.5 left-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
-        <div class="absolute top-3.5 right-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
-        <div class="absolute bottom-3.5 left-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
-        <div class="absolute bottom-3.5 right-3.5 w-2.5 h-2.5 rounded-full bg-zinc-700/70 border border-zinc-500/40"></div>
-
+      <!-- Tactile Turntable Plinth Card (Warm Espresso & Brushed Silver) -->
+      <div class="relative rounded-3xl p-6 bg-[#141210] border border-white/12 shadow-2xl overflow-hidden">
         <div class="flex flex-col sm:flex-row items-center gap-6">
-          <!-- Vinyl Platter + Spinning Couple Photo Center Label + Metallic Tonearm -->
-          <div class="relative w-56 h-56 flex items-center justify-center shrink-0">
-            <!-- Platter outer rim -->
-            <div class="absolute inset-2 rounded-full border border-white/10 bg-black/50 shadow-inner"></div>
+          <!-- Spinning Vinyl Record + Metallic Tonearm -->
+          <div class="relative w-52 h-52 flex items-center justify-center shrink-0">
+            <div class="absolute inset-2 rounded-full border border-white/10 bg-black/60 shadow-inner"></div>
 
-            <!-- Spinning Vinyl Record (#vinyl-disc-el) -->
             <div
               id="vinyl-disc-el"
-              class="relative w-48 h-48 rounded-full flex items-center justify-center cursor-pointer select-none border border-zinc-700/60"
+              class="relative w-44 h-44 rounded-full flex items-center justify-center cursor-pointer select-none border border-stone-700/60"
               title="Tap vinyl to play/pause"
             >
-              <!-- Specular vinyl sheen -->
               <div class="absolute inset-0 rounded-full vinyl-sheen pointer-events-none"></div>
-              <!-- Subtle groove rings -->
               <div class="absolute inset-4 rounded-full border border-white/[0.05] pointer-events-none"></div>
-              <div class="absolute inset-8 rounded-full border border-white/[0.04] pointer-events-none"></div>
-              <div class="absolute inset-12 rounded-full border border-white/[0.06] pointer-events-none"></div>
+              <div class="absolute inset-9 rounded-full border border-white/[0.05] pointer-events-none"></div>
 
-              <!-- Couple's First Photo inside the Center Record Label -->
-              <div class="relative w-20 h-20 rounded-full overflow-hidden border-2 border-rose-200/60 shadow-inner bg-zinc-900 flex items-center justify-center">
+              <!-- Couple's Photo Center Label -->
+              <div class="relative w-18 h-18 rounded-full overflow-hidden border-2 border-[#d92338] shadow-inner bg-stone-900 flex items-center justify-center" style="width: 72px; height: 72px;">
                 <img
                   id="vinyl-center-label-img"
                   src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80"
-                  alt="Vinyl Center Label"
+                  alt="Vinyl Center"
                   class="w-full h-full object-cover"
-                  onerror="this.src='https://placehold.co/200x200/2a1b24/fda4af?text=Us'"
+                  onerror="this.src='https://placehold.co/200x200/1c1917/f5f2eb?text=Us'"
                 />
-                <!-- Circular label rim text effect -->
-                <div class="absolute inset-0 rounded-full ring-4 ring-rose-500/30 pointer-events-none"></div>
-                <!-- Center spindle hole -->
-                <div class="w-3.5 h-3.5 rounded-full bg-[#0d0a10] border border-zinc-400/70 z-10 shadow-md"></div>
+                <div class="w-3 h-3 rounded-full bg-[#0a0908] border border-stone-400 z-10"></div>
               </div>
             </div>
 
-            <!-- Realistic Metallic SVG Tonearm (#vinyl-tonearm) -->
+            <!-- Metallic Tonearm -->
             <svg
               id="vinyl-tonearm"
-              class="absolute -top-1 -right-2 w-28 h-40 pointer-events-none z-20 drop-shadow-[0_8px_12px_rgba(0,0,0,0.85)]"
+              class="absolute -top-1 -right-2 w-24 h-36 pointer-events-none z-20 drop-shadow-[0_8px_12px_rgba(0,0,0,0.85)]"
               viewBox="0 0 120 170"
               fill="none"
             >
               <defs>
                 <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#f4f4f5" />
-                  <stop offset="50%" stop-color="#a1a1aa" />
-                  <stop offset="100%" stop-color="#52525b" />
-                </linearGradient>
-                <linearGradient id="roseMetal" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fda4af" />
-                  <stop offset="100%" stop-color="#be123c" />
+                  <stop offset="0%" stop-color="#f5f5f4" />
+                  <stop offset="50%" stop-color="#a8a29e" />
+                  <stop offset="100%" stop-color="#57534e" />
                 </linearGradient>
               </defs>
-              <!-- Tonearm Base Pivot -->
-              <circle cx="92" cy="30" r="18" fill="#18181b" stroke="url(#metalGrad)" stroke-width="2.5" />
-              <circle cx="92" cy="30" r="9" fill="url(#metalGrad)" />
-              <!-- Counterweight -->
-              <rect x="86" y="6" width="12" height="10" rx="3" fill="url(#metalGrad)" />
-              <!-- Tonearm Curved Tube -->
+              <circle cx="92" cy="30" r="16" fill="#1c1917" stroke="url(#metalGrad)" stroke-width="2.5" />
+              <circle cx="92" cy="30" r="8" fill="url(#metalGrad)" />
               <path d="M92 30 L82 95 C80 112 68 124 54 136" stroke="url(#metalGrad)" stroke-width="4.5" stroke-linecap="round" />
-              <!-- Headshell / Cartridge -->
               <g transform="translate(42, 130) rotate(32)">
-                <rect x="0" y="0" width="12" height="20" rx="2.5" fill="url(#roseMetal)" stroke="#fff" stroke-width="0.7" />
-                <line x1="6" y1="20" x2="6" y2="24" stroke="#fde047" stroke-width="2" stroke-linecap="round" />
+                <rect x="0" y="0" width="12" height="20" rx="2.5" fill="#d92338" stroke="#fff" stroke-width="0.7" />
               </g>
             </svg>
           </div>
 
-          <!-- Track Details, Animated Equalizer & Controls -->
-          <div class="flex-1 w-full space-y-4 text-center sm:text-left">
-            <div class="space-y-1">
-              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-500/15 border border-rose-400/25 text-[11px] text-rose-300">
-                <!-- Animated Equalizer Bars -->
-                <div class="flex items-end gap-0.5 h-3">
-                  <span class="island-wave-bar"></span>
-                  <span class="island-wave-bar"></span>
-                  <span class="island-wave-bar"></span>
-                  <span class="island-wave-bar"></span>
-                </div>
-                <span id="vinyl-status-badge">ready to spin</span>
-              </div>
-
-              <h3 id="music-song-title" class="text-xl font-bold text-white tracking-tight pt-1">
-                Sunsetz (Late Night Drive Edit)
+          <!-- Track Info & Play Button -->
+          <div class="flex-1 w-full space-y-3.5 text-center sm:text-left">
+            <div>
+              <span id="vinyl-status-badge" class="text-[10px] font-mono uppercase tracking-widest text-[#ff4d63]">on repeat</span>
+              <h3 id="music-song-title" class="text-xl font-bold text-white tracking-tight mt-0.5">
+                Sunsetz (Late Night Drive)
               </h3>
-              <p id="music-song-artist" class="text-sm text-zinc-400 font-medium">
-                Cigarettes After Sex • Our Car Stereo
+              <p id="music-song-artist" class="text-xs text-stone-400 font-medium">
+                Cigarettes After Sex
               </p>
             </div>
 
-            <!-- Candid Dedication Quote -->
-            <p id="music-dedication-note" class="text-xs italic text-zinc-300/90 bg-white/[0.04] border-l-2 border-rose-400/70 pl-3 py-2 rounded-r-xl leading-relaxed">
-              "i still can't hear the first 5 seconds of this without immediately thinking of you with the passenger window rolled down."
+            <p id="music-dedication-note" class="text-xs italic text-stone-300 border-l-2 border-[#d92338] pl-3 py-1 leading-relaxed">
+              "can't hear the first 5 seconds without thinking of you."
             </p>
 
-            <!-- Play / Pause Button + Scrubber -->
             <div class="flex items-center gap-3 pt-1">
               <button
                 id="music-toggle-btn"
                 type="button"
-                class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] text-white font-semibold text-xs shadow-lg shadow-rose-600/30 active:scale-95 transition-all"
+                class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] text-white font-semibold text-xs shadow-lg active:scale-95 transition-all cursor-pointer"
               >
                 <svg id="music-play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
@@ -910,152 +879,98 @@
                 <svg id="music-pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                 </svg>
-                <span id="music-btn-label">Spin Our Record</span>
+                <span id="music-btn-label">Play Record</span>
               </button>
 
               <div class="flex-1 space-y-1">
                 <div class="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div id="music-progress-bar" class="h-full w-1/3 bg-gradient-to-r from-rose-400 to-amber-300 rounded-full transition-all duration-300"></div>
+                  <div id="music-progress-bar" class="h-full w-1/3 bg-[#d92338] rounded-full transition-all duration-300"></div>
                 </div>
-                <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                <div class="flex justify-between text-[10px] font-mono text-stone-500">
                   <span id="music-time-current">0:42</span>
-                  <span>∞ ON REPEAT</span>
+                  <span>33⅓ RPM</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-          <!-- Section 2 Next Flow Indicator -->
-      <div id="flow-nav-sec2" class="pt-4 flex justify-center">
+
+      <!-- Section 2 Next Flow Indicator -->
+      <div id="flow-nav-sec2" class="pt-3 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-messages', 'flow-nav-sec2', '03', 'Next • First Texts & Drafts')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          onclick="window.unsealNextChapter('section-messages', 'flow-nav-sec2', '03', 'Next • First Texts')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • First Texts & Drafts</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • First Texts ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 3: HOW IT STARTED — iOS 18 iMESSAGE & UNSENT DRAFTS         -->
+    <!-- SECTION 3: HOW IT STARTED — CLEAN iOS 18 iMESSAGE                   -->
     <!-- =================================================================== -->
-    <section id="section-messages" class="space-y-5 relative chapter-hidden">
+    <section id="section-messages" class="space-y-4 relative chapter-hidden">
       <div class="flex items-center justify-between px-1">
-        <div>
-          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">03 • receipts &amp; late nights</span>
-          <h2 class="font-serif italic text-3xl text-white">how we started talking</h2>
-        </div>
+        <h2 class="font-serif italic text-3xl text-white">how we started talking</h2>
+        <button
+          id="ios-notification-banner"
+          type="button"
+          class="px-3 py-1 rounded-full bg-white/[0.06] hover:bg-white/10 border border-white/10 text-[11px] font-mono text-stone-300 cursor-pointer transition"
+        >
+          ↻ Replay Chat
+        </button>
+        <span id="notif-sender-name" class="hidden">Mia</span>
+        <span id="notif-preview-text" class="hidden"></span>
       </div>
 
-      <!-- Drop-Down iOS Notification Banner (#ios-notification-banner) -->
-      <div
-        id="ios-notification-banner"
-        class="relative z-20 p-3.5 rounded-3xl bg-zinc-900/95 border border-white/15 backdrop-blur-2xl shadow-[0_18px_40px_rgba(0,0,0,0.75)] flex items-center gap-3.5 cursor-pointer transition-all hover:border-blue-400/40 active:scale-[0.99] -translate-y-2 opacity-95"
-        title="Tap to replay our messages with iMessage sound"
-      >
-        <div class="relative w-10 h-10 rounded-2xl bg-gradient-to-b from-[#34d399] to-[#10b981] flex items-center justify-center shrink-0 shadow-md">
-          <!-- iMessage Bubble SVG -->
-          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3C6.48 3 2 6.58 2 11c0 2.03.94 3.88 2.47 5.28-.18.96-.68 2.13-1.41 2.95-.2.22-.06.58.23.55 1.54-.17 3.09-.78 4.12-1.38.82.22 1.69.35 2.59.35 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
-          </svg>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center justify-between">
-            <span id="notif-sender-name" class="text-xs font-semibold text-white">Mia ♥</span>
-            <span class="text-[10px] text-zinc-400">iMessage • tap to replay</span>
-          </div>
-          <p id="notif-preview-text" class="text-xs text-zinc-300 truncate mt-0.5">
-            "be honest... were you nervous the first time we hung out?"
-          </p>
-        </div>
-      </div>
-
-      <!-- Authentic iOS 18 Messages Viewport Card -->
-      <div class="rounded-[32px] bg-[#0b0b0e] border border-white/15 shadow-2xl overflow-hidden">
-        <!-- Blurred iOS 18 Contact Header -->
-        <div class="px-4 py-3 bg-zinc-900/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
-          <!-- Left back button + unread pill -->
-          <div class="flex items-center gap-1 text-[#007aff] text-sm font-medium cursor-pointer" id="imessage-header-replay">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+      <!-- Authentic iOS 18 Messages Card -->
+      <div class="rounded-[28px] bg-[#100f0e] border border-white/12 shadow-2xl overflow-hidden">
+        <!-- Contact Header -->
+        <div class="px-4 py-3 bg-stone-900/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-1 text-[#007aff] text-xs font-medium cursor-pointer" id="imessage-header-replay">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            <span class="px-1.5 py-0.5 text-[11px] rounded-full bg-[#007aff] text-white font-semibold">2</span>
+            <span>Messages</span>
           </div>
 
-          <!-- Center Avatar + Contact Name > -->
-          <div class="flex flex-col items-center">
-            <div class="relative w-9 h-9 rounded-full overflow-hidden bg-gradient-to-tr from-rose-400 to-amber-300 p-[1.5px]">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full overflow-hidden border border-white/20">
               <img
                 id="imessage-contact-avatar"
                 src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=300&q=80"
-                alt="Contact Avatar"
-                class="w-full h-full rounded-full object-cover"
-                onerror="this.src='https://placehold.co/100x100/2a1b24/fda4af?text=M'"
+                alt="Contact"
+                class="w-full h-full object-cover"
               />
             </div>
-            <div class="flex items-center gap-0.5 mt-1">
-              <span id="imessage-contact-name" class="text-xs font-semibold text-white">Mia</span>
-              <svg class="w-3 h-3 text-zinc-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
+            <span id="imessage-contact-name" class="text-xs font-semibold text-white">Mia</span>
           </div>
 
-          <!-- Right FaceTime Video & Audio Icons -->
-          <div class="flex items-center gap-3 text-[#007aff]">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-          </div>
+          <div class="w-12 text-right text-[10px] font-mono text-stone-500">11:48 PM</div>
         </div>
 
-        <!-- iMessage Timestamp Header -->
-        <div class="text-center pt-4 pb-1">
-          <span id="imessage-timestamp-label" class="text-[11px] font-medium text-zinc-500">
-            iMessage • Late Night, 11:48 PM
-          </span>
+        <!-- Chat Bubbles Feed -->
+        <div id="chat-bubbles-container" class="p-4 space-y-2.5 min-h-[240px] flex flex-col justify-end">
+          <!-- Injected by renderChatBubbles() -->
         </div>
 
-        <!-- Chat Bubbles Feed (#chat-bubbles-container) -->
-        <div id="chat-bubbles-container" class="p-4 space-y-2.5 min-h-[260px] flex flex-col justify-end">
-          <!-- Chat bubbles injected by renderChatBubbles() -->
-        </div>
-
-        <!-- Delivered Receipt -->
-        <div class="px-5 pb-2 text-right">
-          <span class="text-[10px] font-medium text-zinc-500">Delivered • Read 11:51 PM</span>
-        </div>
-
-        <!-- Realistic Decorative iMessage Input Bar at Bottom -->
-        <div class="px-3.5 py-3 bg-zinc-900/70 border-t border-white/10 flex items-center gap-2.5">
-          <div class="w-7 h-7 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </div>
+        <!-- iMessage Input Bar -->
+        <div class="px-3.5 py-2.5 bg-stone-900/60 border-t border-white/10 flex items-center gap-2">
           <div
             id="replay-chat-input-bar"
-            class="flex-1 flex items-center justify-between pl-3.5 pr-1.5 py-1.5 rounded-full bg-zinc-950/90 border border-white/15 cursor-pointer hover:border-[#007aff]/60 transition-colors"
+            class="flex-1 flex items-center justify-between pl-3.5 pr-1.5 py-1.5 rounded-full bg-black/70 border border-white/10 cursor-pointer"
           >
-            <span class="text-xs text-zinc-400 truncate">iMessage... (tap to replay chat)</span>
+            <span class="text-xs text-stone-400 truncate">iMessage • tap to replay</span>
             <button
               id="replay-chat-btn"
               type="button"
-              class="w-7 h-7 rounded-full bg-[#007aff] hover:bg-blue-500 text-white flex items-center justify-center shadow-[0_0_14px_rgba(0,122,255,0.65)] transition-transform active:scale-90"
-              aria-label="Replay Chat Messages"
+              class="w-6 h-6 rounded-full bg-[#007aff] text-white flex items-center justify-center"
+              aria-label="Replay Chat"
             >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
             </button>
@@ -1063,454 +978,359 @@
         </div>
       </div>
 
-      <!-- Unsent Drafts Stack (.unsent-draft-card) -->
-      <div class="pt-3 space-y-2.5">
-        <div class="flex items-center justify-between px-1">
-          <span class="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-            unsent drafts i typed &amp; backspaced
-          </span>
-          <span class="text-[11px] font-mono text-zinc-500">tap to read</span>
-        </div>
-        <div id="unsent-drafts-container" class="space-y-2.5">
-          <!-- Unsent drafts injected by renderUnsentDrafts() -->
-        </div>
+      <!-- Unsent Drafts Stack -->
+      <div id="unsent-drafts-container" class="space-y-2 pt-1">
+        <!-- Injected by renderUnsentDrafts() -->
       </div>
-          <!-- Section 3 Next Flow Indicator -->
-      <div id="flow-nav-sec3" class="pt-4 flex justify-center">
+
+      <!-- Section 3 Next Flow Indicator -->
+      <div id="flow-nav-sec3" class="pt-3 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-polaroids', 'flow-nav-sec3', '04', 'Next • 35mm Camera Roll')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          onclick="window.unsealNextChapter('section-polaroids', 'flow-nav-sec3', '04', 'Next • Camera Roll')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • 35mm Camera Roll</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • 35mm Polaroids ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 4: CAMERA ROLL — 3D POLAROID SCRAPBOOK WITH WASHI TAPE      -->
+    <!-- SECTION 4: CAMERA ROLL — CLEAN 3D POLAROID (NO WIREFRAME AI SLOP)   -->
     <!-- =================================================================== -->
-    <section id="section-polaroids" class="space-y-5 chapter-hidden">
+    <section id="section-polaroids" class="space-y-4 chapter-hidden">
       <div class="flex items-center justify-between px-1">
-        <div>
-          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">04 • 35mm camera roll</span>
-          <h2 class="font-serif italic text-3xl text-white">frames i'm keeping forever</h2>
-        </div>
-        <span id="polaroid-counter-badge" class="font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300">
+        <h2 class="font-serif italic text-3xl text-white">35mm camera roll</h2>
+        <span id="polaroid-counter-badge" class="font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-stone-300">
           1 / 4
         </span>
       </div>
 
-      <!-- Scrapbook Stage with Washi Tape, Sparkle Doodles & 3D Flip Polaroid -->
-      <div class="relative pt-5 pb-2 px-2 sm:px-6">
-        <!-- Decorative Hand-Drawn Sparkle Doodle SVGs -->
-        <svg class="absolute top-1 left-2 w-7 h-7 text-amber-300/60 pointer-events-none z-20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <path d="M16 3v26M3 16h26M7 7l18 18M25 7L7 25" />
-        </svg>
-        <svg class="absolute bottom-8 right-1 w-8 h-8 text-rose-300/60 pointer-events-none z-20" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <path d="M20 4c1.5 9 4 12.5 14 16-10 3.5-12.5 7-14 16-1.5-9-4-12.5-14-16 10-3.5 12.5-7 14-16z" />
-        </svg>
-
-        <!-- Realistic Translucent Washi Tape SVG Strip Across Top-Center -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 z-30 pointer-events-none rotate-[-2deg] drop-shadow-md">
-          <svg width="148" height="36" viewBox="0 0 148 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 3L144 1L141 7L146 13L142 19L145 25L141 33L3 35L7 28L2 22L6 15L2 9L4 3Z" fill="#FCE7F3" fill-opacity="0.78" stroke="#F9A8D4" stroke-opacity="0.5" />
-            <!-- Subtle Washi Crosshatch Pattern -->
-            <path d="M20 3L12 34M40 3L32 34M60 2L52 34M80 2L72 34M100 2L92 34M120 2L112 34" stroke="#F472B6" stroke-opacity="0.22" stroke-width="1.2" />
-            <text x="74" y="21" text-anchor="middle" fill="#9D174D" fill-opacity="0.65" font-family="Caveat, cursive" font-size="14" font-weight="700">keep forever ♡</text>
+      <!-- Clean Scrapbook Stage with Washi Tape & 3D Flip Polaroid -->
+      <div class="relative pt-4 pb-1 px-2 sm:px-6">
+        <!-- Realistic Washi Tape Across Top-Center -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 z-30 pointer-events-none rotate-[-2deg] drop-shadow">
+          <svg width="140" height="32" viewBox="0 0 140 32" fill="none">
+            <path d="M4 2L136 1L133 8L137 15L134 22L136 29L3 30L6 22L2 15L6 8L4 2Z" fill="#EFE6D5" fill-opacity="0.92" stroke="#D5C7B2" />
+            <text x="70" y="20" text-anchor="middle" fill="#44403c" font-family="Caveat, cursive" font-size="15" font-weight="700">tap to flip ↻</text>
           </svg>
         </div>
 
         <!-- 3D Flip Polaroid Frame -->
         <div class="perspective-1000 max-w-sm mx-auto">
           <div id="polaroid-3d-card" class="polaroid-3d-inner cursor-pointer select-none">
-
-            <!-- FRONT OF POLAROID -->
-            <div class="polaroid-face rounded-xl bg-[#faf7f2] p-3.5 pb-6 shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300">
-              <div class="relative aspect-[4/4] w-full rounded-lg overflow-hidden bg-zinc-900 shadow-inner">
+            <!-- FRONT -->
+            <div class="polaroid-face rounded-xl bg-[#f8f4ec] p-3.5 pb-5 shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300">
+              <div class="relative aspect-square w-full rounded-lg overflow-hidden bg-stone-900">
                 <img
                   id="polaroid-active-img"
                   src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80"
                   alt="Couple Memory"
-                  class="w-full h-full object-cover transition-transform duration-500"
-                  onerror="this.src='https://placehold.co/600x600/2a1b24/fda4af?text=Our+Photo'"
+                  class="w-full h-full object-cover"
                 />
-                <!-- Subtle 35mm Warm Vignette -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/15 pointer-events-none"></div>
-
-                <!-- Tactile "Flip Over ↻" Pill Badge -->
-                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1.5 shadow">
-                  <svg class="w-3.5 h-3.5 text-rose-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
-                  </svg>
-                  <span>Flip Print</span>
-                </div>
-
-                <!-- Authentic 90s 35mm Film Date Burn Stamp ('24 10 14) -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none"></div>
                 <div id="polaroid-film-date" class="absolute bottom-2.5 right-3.5 text-sm font-bold film-date-burn select-none">
                   '24 10 14
                 </div>
               </div>
-
-              <!-- Handwritten Caption Below Photo -->
-              <div class="pt-4 px-2 flex items-center justify-between">
-                <p id="polaroid-front-caption" class="font-hand text-2xl text-zinc-800 leading-tight">
+              <div class="pt-3.5 px-1.5 flex items-center justify-between">
+                <p id="polaroid-front-caption" class="font-hand text-2xl text-stone-900 leading-tight">
                   golden hour in your passenger seat
                 </p>
-                <span class="text-xs font-mono text-stone-400">#01</span>
+                <span class="text-[10px] font-mono text-stone-400">FLIP ↻</span>
               </div>
             </div>
 
-            <!-- BACK OF POLAROID (Handwritten Secret Note) -->
-            <div class="polaroid-face polaroid-back absolute inset-0 rounded-xl p-6 flex flex-col justify-between shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300 text-zinc-800">
-              <div class="flex items-center justify-between border-b border-stone-300 pb-3">
-                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">KODAK PORTRA 400 • BACK OF PRINT</span>
-                <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-mono text-[10px] font-semibold">Flip Back ↻</span>
+            <!-- BACK -->
+            <div class="polaroid-face polaroid-back absolute inset-0 rounded-xl p-6 flex flex-col justify-between shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300 text-stone-900">
+              <div class="flex items-center justify-between border-b border-stone-300 pb-2.5">
+                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">KODAK 400 • BACK NOTE</span>
+                <span class="font-mono text-[10px] text-[#d92338] font-bold">Flip ↻</span>
               </div>
-
-              <div class="my-auto py-4 space-y-3">
-                <p class="text-xs font-mono uppercase tracking-wider text-stone-400">written on the back:</p>
-                <p id="polaroid-back-note" class="font-hand text-2xl sm:text-3xl text-zinc-800 leading-snug">
-                  "you were laughing so hard at your own joke here that you spilled iced coffee on your sleeve. i remember thinking: yep, i'm completely done for."
+              <div class="my-auto py-4">
+                <p id="polaroid-back-note" class="font-hand text-2xl sm:text-3xl text-stone-900 leading-snug">
+                  "you were laughing so hard at your own joke here that you spilled iced coffee on your sleeve."
                 </p>
               </div>
-
-              <div class="flex items-center justify-between border-t border-stone-300 pt-3 text-xs font-mono text-stone-500">
-                <span id="polaroid-back-location">📍 Pacific Coast Hwy</span>
+              <div class="flex items-center justify-between border-t border-stone-300 pt-2.5 text-xs font-mono text-stone-500">
+                <span id="polaroid-back-location">Pacific Coast Hwy</span>
                 <span>♥ kept safe</span>
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
-      <!-- Polaroid Navigation & Thumbnail Strip -->
-      <div class="flex items-center justify-between gap-3 max-w-sm mx-auto pt-1">
-        <button
-          id="polaroid-prev-btn"
-          type="button"
-          class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-200 transition active:scale-95"
-        >
+      <!-- Polaroid Navigation -->
+      <div class="flex items-center justify-between gap-3 max-w-sm mx-auto">
+        <button id="polaroid-prev-btn" type="button" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-200 transition">
           ← Prev
         </button>
-        <div id="polaroid-thumbs-row" class="flex items-center gap-2 overflow-x-auto py-1">
-          <!-- Thumbnails injected by JS -->
-        </div>
-        <button
-          id="polaroid-next-btn"
-          type="button"
-          class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-200 transition active:scale-95"
-        >
+        <div id="polaroid-thumbs-row" class="flex items-center gap-2 overflow-x-auto py-1"></div>
+        <button id="polaroid-next-btn" type="button" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-200 transition">
           Next →
         </button>
       </div>
-          <!-- Section 4 Next Flow Indicator -->
-      <div id="flow-nav-sec4" class="pt-4 flex justify-center">
+
+      <!-- Section 4 Next Flow Indicator -->
+      <div id="flow-nav-sec4" class="pt-3 flex justify-center">
         <button
           type="button"
           onclick="window.unsealNextChapter('section-envelopes', 'flow-nav-sec4', '05', 'Next • Sealed Letters')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • Sealed Letters</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Sealed Letters ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 5: "OPEN WHEN..." — REAL TACTILE CREAM AIRMAIL ENVELOPES    -->
+    <!-- SECTION 5: "OPEN WHEN..." — LUXURY CREAM LINEN ENVELOPES            -->
     <!-- =================================================================== -->
-    <section id="section-envelopes" class="space-y-5 chapter-hidden">
+    <section id="section-envelopes" class="space-y-4 chapter-hidden">
       <div class="px-1">
-        <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">05 • par avion keepsake mail</span>
         <h2 class="font-serif italic text-3xl text-white">open when you need me</h2>
-        <p class="text-xs text-zinc-400 mt-0.5">
-          tap any wax seal to break it open and read the letter inside.
-        </p>
       </div>
 
-      <!-- 2x2 Grid of Tactile Warm Cream / Vintage Kraft Paper Envelopes (.envelope-card) -->
       <div id="envelopes-grid-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- Tactile cream airmail envelopes injected by renderEnvelopes() -->
+        <!-- Injected by renderEnvelopes() -->
       </div>
-          <!-- Section 5 Next Flow Indicator -->
-      <div id="flow-nav-sec5" class="pt-4 flex justify-center">
+
+      <!-- Section 5 Next Flow Indicator -->
+      <div id="flow-nav-sec5" class="pt-3 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-scratch', 'flow-nav-sec5', '06', 'Next • Date Night Voucher')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          onclick="window.unsealNextChapter('section-scratch', 'flow-nav-sec5', '06', 'Next • The Love Receipt')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • Date Night Voucher</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • Our Love Receipt ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 6: SCRATCH-OFF DATE NIGHT FAVOR (PERFORATED CINEMA TICKET)  -->
+    <!-- SECTION 6: US VIRAL "THE LOVE RECEIPT" (REPLACES TACKY SCRATCH BOX) -->
     <!-- =================================================================== -->
     <section id="section-scratch" class="space-y-4 chapter-hidden">
       <div class="flex items-center justify-between px-1">
-        <div>
-          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">06 • redeemable anytime</span>
-          <h2 class="font-serif italic text-3xl text-white">scratch-off date night favor</h2>
-        </div>
+        <h2 class="font-serif italic text-3xl text-white">the love receipt</h2>
         <button
           id="reset-scratch-btn"
           type="button"
-          class="text-[11px] font-mono text-zinc-400 hover:text-rose-300 underline"
+          class="text-[11px] font-mono text-stone-400 hover:text-white underline cursor-pointer"
         >
-          reset foil
+          reset stamp
         </button>
       </div>
 
-      <!-- Perforated Cinema Ticket Voucher Container -->
-      <div class="relative rounded-3xl bg-gradient-to-b from-[#231922] to-[#140e16] border border-amber-300/30 p-5 shadow-2xl overflow-hidden">
-        <!-- Left & Right Perforated Cinema Ticket Notches -->
-        <div class="ticket-notch-left top-1/2 -translate-y-1/2 !border-amber-300/30"></div>
-        <div class="ticket-notch-right top-1/2 -translate-y-1/2 !border-amber-300/30"></div>
+      <!-- Tactile Serrated US Thermal Receipt Card -->
+      <div class="max-w-sm mx-auto">
+        <div class="receipt-serrated-top"></div>
+        <div
+          id="love-receipt-card"
+          class="love-receipt-paper px-6 py-6 space-y-4 cursor-pointer select-none"
+          title="Tap to stamp receipt"
+        >
+          <!-- Receipt Store Header -->
+          <div class="text-center border-b-2 border-dashed border-stone-300 pb-3.5 space-y-1">
+            <div class="text-sm font-extrabold tracking-widest uppercase text-stone-900">LOVEOS MARKET • 24/7</div>
+            <div class="text-[10px] text-stone-500">143 FOREVER BLVD • KEEPERS CLUB</div>
+            <div id="scratch-serial-code" class="text-[10px] text-stone-500">RECEIPT #1014-LOVE</div>
+          </div>
 
-        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-amber-200/80 mb-3 px-2">
-          <span>★ ADMIT TWO • VIP COUPON</span>
-          <span id="scratch-serial-code">NO. 1014-LOVE</span>
+          <!-- Line Items -->
+          <div class="space-y-2 text-xs border-b-2 border-dashed border-stone-300 pb-3.5">
+            <div class="flex justify-between">
+              <span>01 LATE NIGHT DRIVES</span>
+              <span class="font-bold">$0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>02 STEALING YOUR HOODIES</span>
+              <span class="font-bold">$0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>03 UNLIMITED HUGS &amp; VENTING</span>
+              <span class="font-bold">$0.00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>04 BEING MY SAFE PLACE</span>
+              <span class="font-bold">PRICELESS</span>
+            </div>
+          </div>
+
+          <!-- Redeemable Favor Coupon Box Inside Receipt -->
+          <div class="relative rounded-xl border-2 border-dashed border-[#d92338]/50 bg-[#f2ebe0] p-4 text-center space-y-1.5 overflow-hidden">
+            <span class="text-[9px] font-bold uppercase tracking-widest text-[#d92338] block">
+              ★ BONUS REDEEMABLE VOUCHER ★
+            </span>
+            <h3 id="scratch-prize-title" class="font-serif italic text-2xl text-stone-900 leading-tight font-sans">
+              Midnight Takeout + Back Scratch &amp; Zero Questions Asked
+            </h3>
+            <p id="scratch-prize-desc" class="text-[11px] font-sans text-stone-600 leading-snug">
+              screenshot this receipt &amp; send it to me whenever you want to cash it in.
+            </p>
+
+            <!-- Red Ink Stamp Overlay (Slams Down When Clicked) -->
+            <div
+              id="receipt-stamp-badge"
+              class="hidden absolute right-3 bottom-2 px-3 py-1 rounded border-2 border-[#d92338] text-[#d92338] font-mono text-[10px] font-extrabold uppercase tracking-widest bg-[#faf6ee]/95 shadow-sm"
+            >
+              APPROVED • FOREVER ♥
+            </div>
+
+            <!-- Hidden canvas kept for 100% test & editor compatibility -->
+            <canvas id="scratch-canvas" class="hidden"></canvas>
+          </div>
+
+          <!-- Totals & Barcode Footer -->
+          <div class="space-y-1 text-xs pt-1">
+            <div class="flex justify-between text-stone-500">
+              <span>SUBTOTAL</span>
+              <span>$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm font-extrabold text-stone-900 pt-1 border-t border-stone-300">
+              <span>TOTAL DUE</span>
+              <span class="text-[#d92338]">YOUR HEART ♥</span>
+            </div>
+          </div>
+
+          <!-- Barcode SVG & Tap to Stamp Action -->
+          <div class="pt-3 flex flex-col items-center space-y-2">
+            <svg class="w-48 h-9 text-stone-900" viewBox="0 0 200 36" fill="currentColor">
+              <rect x="4" y="2" width="3" height="32"/><rect x="10" y="2" width="1.5" height="32"/><rect x="15" y="2" width="4" height="32"/><rect x="22" y="2" width="2" height="32"/><rect x="28" y="2" width="1.5" height="32"/><rect x="33" y="2" width="5" height="32"/><rect x="42" y="2" width="2" height="32"/><rect x="47" y="2" width="3" height="32"/><rect x="54" y="2" width="1.5" height="32"/><rect x="59" y="2" width="4" height="32"/><rect x="67" y="2" width="2" height="32"/><rect x="72" y="2" width="5" height="32"/><rect x="81" y="2" width="1.5" height="32"/><rect x="86" y="2" width="3" height="32"/><rect x="93" y="2" width="2" height="32"/><rect x="99" y="2" width="4" height="32"/><rect x="107" y="2" width="1.5" height="32"/><rect x="112" y="2" width="5" height="32"/><rect x="121" y="2" width="2" height="32"/><rect x="126" y="2" width="3" height="32"/><rect x="133" y="2" width="4" height="32"/><rect x="141" y="2" width="1.5" height="32"/><rect x="146" y="2" width="3" height="32"/><rect x="153" y="2" width="5" height="32"/><rect x="162" y="2" width="2" height="32"/><rect x="167" y="2" width="1.5" height="32"/><rect x="172" y="2" width="4" height="32"/><rect x="180" y="2" width="2" height="32"/><rect x="186" y="2" width="3" height="32"/><rect x="192" y="2" width="4" height="32"/>
+            </svg>
+            <button
+              id="quick-reveal-scratch-btn"
+              type="button"
+              class="w-full py-2.5 rounded-xl bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white font-sans font-bold text-xs shadow transition cursor-pointer"
+            >
+              Stamp "Paid in Full" ♥
+            </button>
+            <span id="scratch-status-text" class="text-[10px] text-stone-500 font-sans">
+              tap button to stamp &amp; claim your date night voucher
+            </span>
+          </div>
         </div>
-
-        <!-- Hidden Prize Underneath + Interactive Holographic Gold-Rose Foil Canvas -->
-        <div class="relative h-44 w-full rounded-2xl overflow-hidden border border-amber-300/25 bg-[#1a121b] flex flex-col items-center justify-center text-center p-5 select-none">
-          <span class="px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-300/30 text-[10px] font-mono uppercase tracking-wider text-amber-300 mb-2">
-            GOOD FOR ONE UNCONDITIONAL FAVOR
-          </span>
-          <h3 id="scratch-prize-title" class="font-serif italic text-2xl sm:text-3xl text-white">
-            Midnight Takeout + Back Scratch &amp; Zero Questions Asked
-          </h3>
-          <p id="scratch-prize-desc" class="text-xs text-zinc-300 mt-1.5 max-w-xs">
-            screenshot this &amp; send it to me whenever you want to cash it in. valid 24/7/365.
-          </p>
-
-          <!-- Holographic Gold-Rose Foil Scratch Canvas -->
-          <canvas
-            id="scratch-canvas"
-            class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-none z-10 transition-opacity duration-500"
-          ></canvas>
-        </div>
-
-        <div class="flex items-center justify-between text-[11px] text-zinc-400 mt-3 px-2">
-          <span id="scratch-status-text">✦ rub the gold-rose foil with your finger to reveal</span>
-          <button
-            id="quick-reveal-scratch-btn"
-            type="button"
-            class="text-amber-300 hover:underline font-medium"
-          >
-            reveal instant →
-          </button>
-        </div>
+        <div class="receipt-serrated-bottom"></div>
       </div>
-          <!-- Section 6 Next Flow Indicator -->
-      <div id="flow-nav-sec6" class="pt-4 flex justify-center">
+
+      <!-- Section 6 Next Flow Indicator -->
+      <div id="flow-nav-sec6" class="pt-3 flex justify-center">
         <button
           type="button"
           onclick="window.unsealNextChapter('section-notes', 'flow-nav-sec6', '07', 'Next • 2:14 AM Note')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • 2:14 AM Note</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • 2:14 AM Note ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 7: 2:14 AM NOTES APP (WITH METALLIC PAPERCLIP) & BUCKET LIST -->
+    <!-- SECTION 7: CLEAN 2:14 AM NOTE & SOMEDAY CHECKLIST (NO PAPERCLIP)    -->
     <!-- =================================================================== -->
-    <section id="section-notes" class="space-y-8 chapter-hidden">
-      <!-- 2:14 AM Apple Notes Card with Realistic Metallic Silver Paperclip -->
-      <div class="relative pt-3">
-        <!-- Realistic Metallic Silver Paperclip SVG Clipped to Top-Right Edge -->
-        <div class="absolute -top-2 right-7 z-30 pointer-events-none drop-shadow-[0_6px_8px_rgba(0,0,0,0.7)] rotate-[6deg]">
-          <svg width="36" height="72" viewBox="0 0 36 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="silverClipGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#e4e4e7" />
-                <stop offset="45%" stop-color="#ffffff" />
-                <stop offset="100%" stop-color="#71717a" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M10 22V54C10 61.732 15.82 68 23 68C30.18 68 33 61.732 33 54V16C33 8.82 27.627 3 21 3C14.373 3 9 8.82 9 16V48C9 52.418 12.582 56 17 56C21.418 56 25 52.418 25 48V20"
-              stroke="url(#silverClipGrad)"
-              stroke-width="3.6"
-              stroke-linecap="round"
-            />
-          </svg>
+    <section id="section-notes" class="space-y-6 chapter-hidden">
+      <div class="rounded-3xl bg-[#141210] border border-white/12 shadow-2xl overflow-hidden">
+        <div class="px-5 py-3 bg-stone-900/90 border-b border-white/10 flex items-center justify-between text-stone-400 text-xs font-mono">
+          <span>iCloud Notes</span>
+          <span>2:14 AM</span>
         </div>
 
-        <div class="rounded-3xl notes-paper-lines border border-amber-400/25 shadow-2xl overflow-hidden">
-          <!-- Apple Notes Top Navigation Bar -->
-          <div class="px-5 py-3.5 bg-zinc-900/90 border-b border-white/10 flex items-center justify-between text-amber-400 text-xs font-medium">
-            <span class="flex items-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              iCloud Notes
-            </span>
-            <span class="text-[11px] font-mono text-zinc-400">Edited 2:14 AM</span>
-            <span class="font-semibold">Done</span>
-          </div>
+        <div class="p-6 space-y-4">
+          <h2 id="notes-title-el" class="font-serif italic text-3xl text-white">
+            things i don't say out loud enough
+          </h2>
 
-          <div class="p-6 space-y-5">
-            <!-- Headline with Hand-Drawn Marker Underline SVG -->
-            <div>
-              <div class="inline-block relative">
-                <h2 id="notes-title-el" class="font-serif italic text-3xl text-white relative z-10">
-                  things i don't say out loud enough
-                </h2>
-                <!-- Hand-drawn marker underline SVG -->
-                <svg class="w-full h-3 -mt-1 text-amber-400/70" viewBox="0 0 280 12" fill="none" preserveAspectRatio="none">
-                  <path d="M3 9C72 3 195 2 277 8" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
-                  <path d="M18 11C98 6 188 6 264 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6" />
-                </svg>
-              </div>
-            </div>
+          <ul id="late-night-notes-list" class="space-y-2.5 text-sm text-stone-200 leading-relaxed">
+            <!-- Injected by renderNotesAndBucketList() -->
+          </ul>
 
-            <!-- Candid Late-Night Bullet Confessions -->
-            <ul id="late-night-notes-list" class="space-y-3 text-sm text-zinc-200 leading-relaxed">
-              <!-- Injected by renderNotesAndBucketList() -->
-            </ul>
-
-            <!-- Final Candid Paragraph -->
-            <div class="pt-3 border-t border-white/10">
-              <p id="final-letter-body" class="font-hand text-2xl text-amber-100/95 leading-snug">
-                "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time."
-              </p>
-              <p id="final-letter-signoff" class="text-xs font-mono text-amber-300/80 mt-2">
-                — yours, always, Noah ♥
-              </p>
-            </div>
+          <div class="pt-3 border-t border-white/10">
+            <p id="final-letter-body" class="font-hand text-2xl text-stone-100 leading-snug">
+              "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time."
+            </p>
+            <p id="final-letter-signoff" class="text-xs font-mono text-[#ff4d63] mt-1.5">
+              — yours, always, Noah ♥
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- Shared Bucket List ("our someday list") -->
-      <div class="rounded-3xl p-6 bg-white/[0.04] border border-white/10 backdrop-blur-xl space-y-4">
+      <!-- Compact Someday Bucket List -->
+      <div class="rounded-3xl p-5 bg-[#141210] border border-white/10 space-y-3">
         <div class="flex items-center justify-between">
-          <div>
-            <span class="text-[11px] font-mono uppercase tracking-widest text-rose-300/80">interactive checklist</span>
-            <h3 class="font-serif italic text-2xl text-white">our someday bucket list</h3>
-          </div>
-          <span id="bucket-progress-badge" class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-400/30 text-xs font-mono text-rose-200">
-            2 / 5 done
+          <h3 class="font-serif italic text-2xl text-white">our someday list</h3>
+          <span id="bucket-progress-badge" class="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-stone-300">
+            2 / 5
           </span>
         </div>
-
-        <div id="bucket-list-container" class="space-y-2">
-          <!-- Interactive checkable bucket list items injected by JS -->
-        </div>
+        <div id="bucket-list-container" class="space-y-2"></div>
       </div>
 
-      <!-- Tactile Send Heart Pulse Footer Button -->
-      <div class="pt-4 text-center space-y-3">
+      <div class="text-center">
         <button
           id="send-heart-pulse-btn"
           type="button"
-          class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#fa2d48] hover:bg-[#ff3b56] text-white font-semibold text-xs tracking-wide shadow-[0_10px_30px_rgba(250,45,72,0.4)] hover:scale-105 active:scale-95 transition-all"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.06] hover:bg-white/10 border border-white/15 text-white font-medium text-xs transition cursor-pointer"
         >
-          <svg class="w-4 h-4" viewBox="0 0 64 64" fill="none">
-            <path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z" fill="#18181b"/>
-          </svg>
-          <span>Tap to Send a Little Love Pulse</span>
+          <span class="text-[#d92338]">♥</span>
+          <span>Send a Little Love Pulse</span>
         </button>
-        <p class="text-[11px] text-zinc-500 font-mono">
-          crafted with LoveOS • saved to your personal keepsake vault
-        </p>
       </div>
 
       <!-- Section 7 Next Flow Indicator -->
-      <div id="flow-nav-sec7" class="pt-4 flex justify-center">
+      <div id="flow-nav-sec7" class="pt-2 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • Live Photo Booth')"
-          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 border border-white/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)] transition-all cursor-pointer"
+          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • 1:1 Photo Booth')"
+          class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white shadow-xl transition-all cursor-pointer"
         >
-          <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-pulse"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Finale • Live Photo Booth</span>
-          <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:translate-y-0.5 transition-transform">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-          </span>
+          <span class="text-xs font-bold tracking-wide">Finale • Open 1:1 Photo Booth ↓</span>
         </button>
       </div>
     </section>
 
-  <!-- =================================================================== -->
-    <!-- SECTION 8: SNAPBOOTH-STYLE AUTO 3-SNAP LIVE BOOTH & DISPENSER SLOT -->
     <!-- =================================================================== -->
-    <section id="section-photobox" class="space-y-5 pt-4 chapter-hidden">
+    <!-- SECTION 8: ULTRA-SIMPLE 1:1 SQUARE BOOTH & FULL SCRAPBOOK OUTPUT    -->
+    <!-- =================================================================== -->
+    <section id="section-photobox" class="space-y-5 pt-2 chapter-hidden">
       <div class="flex items-center justify-between px-1">
         <div>
-          <span class="text-[11px] font-mono uppercase tracking-widest text-rose-400">08 • Finale Booth</span>
-          <h2 class="font-serif italic text-3xl text-white">self-photo dispenser</h2>
+          <h2 class="font-serif italic text-3xl text-white">1:1 photo booth</h2>
+          <p class="text-xs text-stone-400">1 tap snaps 3 square poses &amp; prints your decorated scrapbook keepsake</p>
         </div>
-        <div class="flex items-center gap-1.5">
-          <button
-            id="booth-ringlight-toggle"
-            type="button"
-            class="px-2.5 py-1.5 rounded-xl bg-amber-400/15 border border-amber-300/30 text-[11px] font-mono text-amber-200 flex items-center gap-1 transition"
-            title="Toggle Studio Ring Light"
-          >
-            <span>💡 Ring Light</span>
-          </button>
-          <button
-            id="camera-flip-btn"
-            type="button"
-            class="px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-[11px] font-mono text-zinc-300 flex items-center gap-1 transition"
-            title="Flip Front/Back Camera"
-          >
-            <span>Flip Lens</span>
-          </button>
-        </div>
+        <button
+          id="camera-flip-btn"
+          type="button"
+          class="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-xs font-mono text-stone-300 transition cursor-pointer"
+          title="Flip Camera"
+        >
+          ↻ Flip
+        </button>
       </div>
 
-      <!-- STEP 1: CLEAN LIVE CAMERA BOOTH CARD (1 CLICK -> AUTO 3 SNAPS) -->
-      <div class="rounded-3xl p-4 sm:p-5 bg-[#101015] border border-white/15 shadow-2xl space-y-4">
-        <!-- Viewfinder Stage with Studio Ring-Light Glow -->
+      <!-- STEP 1: SUPER SIMPLE 1:1 SQUARE CAMERA CARD -->
+      <div class="rounded-3xl p-4 sm:p-5 bg-[#141210] border border-white/12 shadow-2xl space-y-4">
+        <!-- 1:1 Square Viewfinder -->
         <div
           id="booth-vf-box"
-          class="relative max-w-sm mx-auto aspect-[4/5] rounded-2xl overflow-hidden bg-[#050507] border border-white/15 vf-ring-light flex items-center justify-center transition-shadow duration-300"
+          class="relative max-w-[330px] mx-auto aspect-square rounded-2xl overflow-hidden bg-[#0a0908] border border-white/15 vf-ring-light flex items-center justify-center"
         >
-          <!-- Live Badge Top-Left -->
-          <div id="booth-live-badge" class="absolute top-3.5 left-3.5 z-30 hidden items-center gap-1.5 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono font-bold text-white tracking-wider">
-            <span class="w-2 h-2 rounded-full bg-[#fa2d48] animate-ping"></span>
-            <span id="booth-status-pill">LIVE • 3-SNAP AUTO</span>
+          <!-- Live Pill -->
+          <div id="booth-live-badge" class="absolute top-3 left-3 z-30 hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-white/15 text-[10px] font-mono font-bold text-white">
+            <span class="w-2 h-2 rounded-full bg-[#d92338] animate-ping"></span>
+            <span id="booth-status-pill">1:1 SQUARE LIVE</span>
           </div>
 
-          <!-- White Shutter Flash & Diagonal Lens Flare -->
+          <!-- Shutter Flash & Flare -->
           <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-40"></div>
           <div id="booth-lens-flare" class="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-0 z-40"></div>
 
-          <!-- Mirrored Live Video Stream -->
+          <!-- Square Live Video Stream -->
           <video
             id="camera-stream-video"
             autoplay
@@ -1520,175 +1340,141 @@
             style="transform: scaleX(-1);"
           ></video>
 
-          <!-- Standby Screen (1 Tap Activates Camera & Immediately Starts 3-Snap Burst!) -->
-          <div id="booth-mirror-standby" class="relative z-10 p-6 text-center flex flex-col items-center justify-center space-y-3">
-            <div class="w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center shadow-inner">
-              <svg class="w-8 h-8 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <!-- Minimal Standby Prompt -->
+          <div id="booth-mirror-standby" class="relative z-10 p-6 text-center flex flex-col items-center justify-center space-y-2.5">
+            <div class="w-14 h-14 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-center">
+              <svg class="w-7 h-7 text-[#d92338]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                 <circle cx="12" cy="13" r="3.2"/>
               </svg>
             </div>
-            <h3 class="font-serif italic text-2xl text-white">ready for 3 quick poses?</h3>
-            <p class="text-xs text-zinc-400 max-w-[230px] leading-relaxed">
-              Tap below once—the booth will automatically count down &amp; snap 3 photos in a row, then dispense your finished strip.
+            <h3 class="font-serif italic text-2xl text-white">3 square snaps</h3>
+            <p class="text-xs text-stone-400 max-w-[200px]">
+              Tap below once — auto-snaps 3 square photos &amp; builds your scrapbook collage.
             </p>
           </div>
 
-          <!-- Countdown & Pose Prompt Overlay -->
-          <div id="camera-countdown-overlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-between p-5 bg-black/25 pointer-events-none">
-            <div id="camera-pose-prompt" class="px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-mono font-bold text-amber-300 shadow-lg">
-              POSE 1 / 3 • SMILE!
+          <!-- Countdown Overlay -->
+          <div id="camera-countdown-overlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-between p-4 bg-black/25 pointer-events-none">
+            <div id="camera-pose-prompt" class="px-3 py-1 rounded-full bg-black/80 border border-white/20 text-[11px] font-mono font-bold text-white">
+              POSE 1 / 3
             </div>
-            <span id="camera-countdown-num" class="text-8xl font-sans font-extrabold text-white drop-shadow-[0_6px_25px_rgba(0,0,0,0.95)] my-auto">
+            <span id="camera-countdown-num" class="text-7xl font-sans font-extrabold text-white drop-shadow-[0_6px_25px_rgba(0,0,0,0.95)] my-auto">
               3
             </span>
-            <div class="w-12 h-1"></div>
+            <div class="w-8 h-1"></div>
           </div>
 
-          <!-- 3 Shot Progress Dots at Bottom of Viewfinder -->
-          <div class="absolute bottom-3.5 inset-x-0 z-30 flex items-center justify-center gap-2 pointer-events-none">
+          <!-- 3 Progress Dots -->
+          <div class="absolute bottom-3 inset-x-0 z-30 flex items-center justify-center gap-2 pointer-events-none">
             <span id="booth-dot-0" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
             <span id="booth-dot-1" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
             <span id="booth-dot-2" class="w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all"></span>
           </div>
         </div>
 
-        <!-- Primary 1-Click Auto 3-Snap Action Row -->
-        <div class="flex flex-col sm:flex-row items-center gap-2.5 max-w-sm mx-auto">
+        <!-- 1 Main Action Button + Simple Upload Fallback -->
+        <div class="flex items-center gap-2.5 max-w-[330px] mx-auto">
           <button
             id="camera-snap-trigger-btn"
             type="button"
-            class="w-full flex-1 py-3.5 px-5 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] active:scale-[0.98] text-white font-bold text-xs shadow-[0_10px_28px_rgba(250,45,72,0.4)] transition flex items-center justify-center gap-2 cursor-pointer"
+            class="flex-1 py-3.5 px-5 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-[0.98] text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/>
-            </svg>
-            <span id="booth-main-btn-label">Start 3-Snap Photo Booth</span>
+            <span>📸</span>
+            <span id="booth-main-btn-label">Take 3 Photos</span>
           </button>
 
           <button
             id="booth-upload-fallback-btn"
             type="button"
-            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
+            class="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-stone-300 text-xs font-medium transition cursor-pointer"
           >
-            From Gallery
+            Upload
           </button>
           <input id="photobox-file-input" type="file" accept="image/*" multiple class="hidden" />
         </div>
 
-        <!-- Hidden compatibility hooks -->
         <div id="photobox-slots-container" class="hidden"></div>
       </div>
 
       <!-- ================================================================= -->
-      <!-- STEP 2: PHYSICAL DISPENSER SLOT OUTPUT (1 UNIFIED MERGED IMAGE!)   -->
+      <!-- STEP 2: DISPENSED 1-OF-1 SCRAPBOOK COLLAGE (3 TILTED 1:1 PHOTOS)  -->
       <!-- ================================================================= -->
-      <div id="photobox-developed-stage" class="hidden space-y-5 pt-2">
+      <div id="photobox-developed-stage" class="hidden space-y-4 pt-1">
         <div class="dispenser-housing text-center">
-          <!-- Glowing Metallic Dispenser Slot Bar -->
           <div class="dispenser-slot-bar max-w-xs mx-auto"></div>
 
-          <p class="text-[11px] font-mono uppercase tracking-widest text-amber-300/90 mb-3">
-            ✦ Freshly Printed Strip • Tap Strip to Zoom ✦
+          <p class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">
+            ✦ Tap Collage to View Fullscreen ✦
           </p>
 
-          <!-- ONE SINGLE UNIFIED COMPOSITE IMAGE (<img>) EMERGING FROM SLOT -->
+          <!-- ONE SINGLE UNIFIED COMPOSITE SCRAPBOOK IMAGE -->
           <div
             id="booth-strip-img-wrapper"
-            class="relative inline-block max-w-[290px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
-            title="Tap to view fullscreen"
+            class="relative inline-block max-w-[310px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
           >
             <img
               id="booth-final-strip-img"
               src=""
-              alt="Printed Photobooth Strip"
+              alt="Printed Scrapbook Collage"
               class="w-full h-auto block select-none"
             />
             <div class="holo-glint-overlay group-hover:opacity-90 transition-opacity"></div>
           </div>
 
-          <!-- 3 Individual Raw Shots Mini Strip (Just like SNAPBOOTH .gal) -->
-          <div id="booth-raw-gal" class="flex items-center justify-center gap-2.5 mt-4">
-            <!-- Populated with the 3 raw snapshots -->
-          </div>
-
-          <!-- Instant Frame Color Switcher (Re-renders the unified <img> on tap) -->
-          <div class="flex items-center justify-center gap-2 mt-4 pt-3 border-t border-white/10">
-            <span class="text-[10px] font-mono uppercase text-zinc-400 mr-1">Frame:</span>
-            <button type="button" data-booth-theme="seoul" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-semibold bg-[#faf6ee] text-zinc-900 border border-white shadow">
-              Cream Paper
-            </button>
-            <button type="button" data-booth-theme="midnight" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-medium bg-zinc-900 text-zinc-300 border border-white/20">
-              Obsidian 35mm
-            </button>
-            <button type="button" data-booth-theme="y2k" class="booth-theme-btn px-3 py-1 rounded-full text-[11px] font-medium bg-fuchsia-950/80 text-pink-200 border border-pink-400/30">
-              Rose Studio
-            </button>
-          </div>
+          <div id="booth-raw-gal" class="hidden"></div>
         </div>
 
-        <!-- Action Buttons: Download HD PNG, Share IG Story, Retake, Copy Link -->
-        <div class="flex flex-col sm:flex-row items-center gap-2.5">
+        <!-- Clean 2-Button Action Row (No Confusing Clutter!) -->
+        <div class="flex items-center gap-2.5 max-w-sm mx-auto">
           <button
             id="photobox-download-btn"
             type="button"
-            class="w-full sm:flex-1 py-3.5 px-4 rounded-2xl bg-[#fa2d48] hover:bg-[#ff3b56] active:scale-95 text-white font-bold text-xs shadow-lg shadow-rose-600/30 transition flex items-center justify-center gap-2 cursor-pointer"
+            class="flex-1 py-3.5 px-4 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            <span>Download Ultra HD Strip (PNG)</span>
+            <span>⬇ Save HD Photo</span>
           </button>
 
           <button
             id="photobox-share-btn"
             type="button"
-            class="w-full sm:flex-1 py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 border border-white/15 text-white font-semibold text-xs transition flex items-center justify-center gap-2 cursor-pointer"
+            class="py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 border border-white/15 text-white font-semibold text-xs transition cursor-pointer"
           >
-            <span>Share to IG Story</span>
+            Share IG
           </button>
 
           <button
             id="booth-retake-all-btn"
             type="button"
-            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
+            class="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-stone-300 text-xs font-medium transition cursor-pointer"
           >
-            Retake ↻
-          </button>
-
-          <button
-            id="photobox-copylink-btn"
-            type="button"
-            class="w-full sm:w-auto py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-zinc-300 text-xs font-medium transition cursor-pointer"
-          >
-            Copy Link
+            ↻ Retake
           </button>
         </div>
       </div>
 
-      <!-- Fullscreen Lightbox Modal when user clicks the Printed Strip Image -->
+      <!-- Fullscreen Lightbox Modal -->
       <div
         id="booth-lightbox-modal"
         class="fixed inset-0 z-[90] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl cursor-zoom-out"
       >
         <div class="relative max-w-sm w-full max-h-[90vh] flex flex-col items-center">
-          <img id="booth-lightbox-img" src="" alt="Fullscreen Strip" class="max-h-[82vh] w-auto rounded-2xl shadow-2xl border border-white/20" />
-          <span class="mt-3 text-xs font-mono text-zinc-400">Tap anywhere to close • Long-press image to save on phone</span>
+          <img id="booth-lightbox-img" src="" alt="Fullscreen Collage" class="max-h-[82vh] w-auto rounded-2xl shadow-2xl border border-white/20" />
+          <span class="mt-3 text-xs font-mono text-stone-400">Tap anywhere to close • Long-press image to save</span>
         </div>
       </div>
 
-      <!-- Back to Top Footer -->
-      <div id="flow-nav-sec8" class="flex justify-center pt-4">
+      <div id="flow-nav-sec8" class="flex justify-center pt-3">
         <button
           type="button"
           onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); playUiSound('tap');"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white transition"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-400 hover:text-white transition cursor-pointer"
         >
           <span>Back to Top ↑</span>
         </button>
       </div>
     </section>
-  
+
   </main>
 
   <!-- ===================================================================== -->
@@ -2538,20 +2324,20 @@
         const preview = draft.preview || (draft.fullText ? draft.fullText.slice(0, 46) + "..." : `Unsent Draft #${idx + 1}`);
         const fullText = draft.fullText || draft.text || preview;
         return `
-          <div class="unsent-draft-card rounded-2xl p-4 bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 cursor-pointer transition-colors select-none">
+          <div class="unsent-draft-card rounded-2xl p-4 bg-[#141210] hover:bg-white/[0.06] border border-white/10 cursor-pointer transition-colors select-none">
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-2.5 min-w-0">
-                <span class="px-2 py-0.5 rounded bg-amber-400/15 border border-amber-300/30 font-mono text-[10px] text-amber-300 shrink-0">
+                <span class="px-2 py-0.5 rounded bg-[#d92338]/15 border border-[#d92338]/35 font-mono text-[10px] text-[#ff4d63] shrink-0">
                   DRAFT #0${idx + 1}
                 </span>
-                <span class="text-xs font-medium text-zinc-200 truncate">${preview}</span>
+                <span class="text-xs font-medium text-stone-200 truncate">${preview}</span>
               </div>
-              <svg class="draft-chevron w-4 h-4 text-zinc-400 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <svg class="draft-chevron w-4 h-4 text-stone-400 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
             <div class="unsent-draft-body">
-              <p class="text-xs sm:text-sm text-rose-100/90 leading-relaxed pt-2 border-t border-white/10 font-serif italic text-base">
+              <p class="text-xs sm:text-sm text-stone-200 leading-relaxed pt-2 border-t border-white/10 font-serif italic text-base">
                 "${fullText}"
               </p>
             </div>
@@ -2644,60 +2430,35 @@
         return `
           <div
             data-envelope-idx="${idx}"
-            class="envelope-card rounded-2xl bg-gradient-to-b from-[#faf6f0] to-[#efe8dc] text-zinc-900 p-5 cursor-pointer select-none overflow-hidden border border-[#dcd0be]"
+            class="envelope-card rounded-2xl p-5 cursor-pointer select-none overflow-hidden group"
           >
-            <!-- Top Airmail Diagonal Border Accent -->
-            <div class="absolute top-0 inset-x-0 h-2 airmail-stripe-bar"></div>
-            <!-- Bottom Airmail Diagonal Border Accent -->
-            <div class="absolute bottom-0 inset-x-0 h-1.5 airmail-stripe-bar opacity-80"></div>
-
-            <!-- 3D Triangular Envelope Flap SVG Overlay -->
-            <svg class="absolute top-2 inset-x-0 w-full h-24 pointer-events-none" viewBox="0 0 300 95" preserveAspectRatio="none">
-              <polygon points="0,0 150,82 300,0" fill="#f3ece0" stroke="#d5c7b2" stroke-width="1.5" />
-              <polygon points="0,0 150,86 300,0" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="4" />
+            <!-- Crisp Linen Envelope Triangular Flap -->
+            <svg class="absolute top-0 inset-x-0 w-full h-24 pointer-events-none" viewBox="0 0 300 95" preserveAspectRatio="none">
+              <polygon points="0,0 150,80 300,0" fill="#efe7d8" stroke="#d5c7b2" stroke-width="1.5" />
             </svg>
 
-            <!-- Top Row: Circular Postmark Ink Stamp & Custom Love Postage Stamp SVG -->
-            <div class="relative z-10 flex items-start justify-between pt-1">
-              <!-- Circular Postmark Ink Stamp -->
-              <div class="flex items-center gap-1.5 opacity-75 rotate-[-4deg]">
-                <div class="w-11 h-11 rounded-full border border-dashed border-stone-700 flex flex-col items-center justify-center text-[7px] font-mono font-bold text-stone-800 leading-none text-center p-1">
-                  <span>LOVE OS</span>
-                  <span class="text-[6px] text-rose-800 my-0.5">★ FIRST CLASS ★</span>
-                  <span>2026</span>
-                </div>
-                <svg class="w-10 h-5 text-stone-600/70" viewBox="0 0 48 20" fill="none" stroke="currentColor" stroke-width="1.2">
-                  <path d="M0 4c6-3 12 3 18 0s12 3 18 0 12 3 12 0M0 10c6-3 12 3 18 0s12 3 18 0 12 3 12 0M0 16c6-3 12 3 18 0s12 3 18 0 12 3 12 0" />
-                </svg>
-              </div>
-
-              <!-- Custom Perforated Love Postage Stamp SVG -->
-              <div class="bg-[#fffdf9] p-1.5 border-2 border-dotted border-stone-400 shadow-sm rotate-[3deg]">
-                <div class="w-10 h-12 bg-rose-100 border border-rose-300 flex flex-col items-center justify-between p-1">
-                  <span class="font-mono text-[6px] font-bold text-rose-900">${item.stampCode || `LOVE 0${idx + 1}`}</span>
-                  <svg class="w-4 h-4 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                  <span class="font-mono text-[6px] text-stone-600">FOREVER</span>
-                </div>
-              </div>
+            <!-- Top Row: Minimal Postmark & Stamp -->
+            <div class="relative z-10 flex items-start justify-between">
+              <span class="font-mono text-[9px] uppercase tracking-widest text-stone-500">
+                NO. 0${idx + 1} • PAR AVION
+              </span>
+              <span class="px-2 py-0.5 rounded bg-[#d92338]/10 border border-[#d92338]/30 font-mono text-[8px] font-bold text-[#d92338]">
+                ${item.stampCode || `LETTER 0${idx + 1}`}
+              </span>
             </div>
 
-            <!-- Center Glossy Red 3D Wax Seal -->
-            <div class="relative z-20 flex flex-col items-center justify-center my-3">
-              <div class="w-14 h-14 rounded-full wax-seal-3d flex items-center justify-center border border-red-300/30 transition-transform duration-300 group-hover:scale-110">
-                <div class="w-10 h-10 rounded-full border border-dashed border-rose-200/50 flex items-center justify-center text-rose-100 text-base shadow-inner">
+            <!-- Center 3D Cherry Red Wax Seal -->
+            <div class="relative z-20 flex flex-col items-center justify-center my-4">
+              <div class="w-13 h-13 rounded-full wax-seal-3d flex items-center justify-center border border-red-300/30 transition-transform duration-300 group-hover:scale-110" style="width: 52px; height: 52px;">
+                <div class="w-9 h-9 rounded-full border border-dashed border-rose-200/50 flex items-center justify-center text-rose-100 text-sm">
                   ♥
                 </div>
               </div>
             </div>
 
-            <!-- Bottom Handwritten Label on Envelope -->
-            <div class="relative z-10 text-center pt-1 pb-1">
-              <div class="font-mono text-[9px] uppercase tracking-widest text-stone-500">
-                ${item.postmark || "PAR AVION • PRIVATE"}
-              </div>
-              <h3 class="font-hand text-2xl font-bold text-zinc-900 leading-tight mt-0.5">
+            <!-- Bottom Handwritten Title -->
+            <div class="relative z-10 text-center">
+              <h3 class="font-hand text-2xl font-bold text-stone-900 leading-tight">
                 ${item.label || item.title || "Open when you need me"}
               </h3>
             </div>
@@ -2745,92 +2506,45 @@
     let scratchRevealed = false;
 
     function initScratchCardCanvas() {
-      const canvas = document.getElementById("scratch-canvas");
-      if (!canvas) return;
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = Math.max(300, Math.floor(rect.width));
-      canvas.height = Math.max(160, Math.floor(rect.height));
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
       scratchRevealed = false;
-      canvas.style.opacity = "1";
-      canvas.style.pointerEvents = "auto";
-
-      // Holographic gold-rose metallic gradient
-      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      grad.addColorStop(0, "#f6d365");
-      grad.addColorStop(0.35, "#fda085");
-      grad.addColorStop(0.7, "#fbc2eb");
-      grad.addColorStop(1, "#f6d365");
-
-      ctx.globalCompositeOperation = "source-over";
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Subtle foil shimmer stripes
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
-      ctx.lineWidth = 2;
-      for (let x = -canvas.height; x < canvas.width; x += 18) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x + canvas.height, canvas.height);
-        ctx.stroke();
+      const stampBadge = document.getElementById("receipt-stamp-badge");
+      const statusText = document.getElementById("scratch-status-text");
+      const btn = document.getElementById("quick-reveal-scratch-btn");
+      if (stampBadge) {
+        stampBadge.classList.add("hidden");
+        stampBadge.classList.remove("stamp-slammed");
       }
+      if (btn) btn.textContent = 'Stamp "Paid in Full" ♥';
+      if (statusText) statusText.textContent = "tap button to stamp & claim your date night voucher";
 
-      // Foil label text
-      ctx.fillStyle = "#271722";
-      ctx.font = "bold 13px 'JetBrains Mono', monospace";
-      ctx.textAlign = "center";
-      ctx.fillText("✦ SCRATCH GOLD FOIL HERE ✦", canvas.width / 2, canvas.height / 2 - 4);
-      ctx.font = "12px 'Inter', sans-serif";
-      ctx.fillText("rub gently with your finger to reveal your date night favor", canvas.width / 2, canvas.height / 2 + 18);
+      // Bind click on receipt card itself for instant tactile stamp
+      const receiptCard = document.getElementById("love-receipt-card");
+      if (receiptCard && !receiptCard.dataset.boundStamp) {
+        receiptCard.dataset.boundStamp = "1";
+        receiptCard.addEventListener("click", (e) => {
+          if (e.target.closest("#reset-scratch-btn")) return;
+          if (!scratchRevealed) revealScratchCardCompletely();
+        });
+      }
     }
 
-    function scratchAtPoint(clientX, clientY) {
-      const canvas = document.getElementById("scratch-canvas");
-      if (!canvas || scratchRevealed) return;
-      const rect = canvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const x = (clientX - rect.left) * scaleX;
-      const y = (clientY - rect.top) * scaleY;
-
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath();
-      ctx.arc(x, y, 26, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Check percentage scratched
-      if (Math.random() < 0.25) {
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        let transparentPixels = 0;
-        const totalChecked = imgData.length / 16;
-        for (let i = 3; i < imgData.length; i += 16) {
-          if (imgData[i] < 128) transparentPixels++;
-        }
-        if (transparentPixels / totalChecked > 0.42) {
-          revealScratchCardCompletely();
-        }
-      }
+    function scratchAtPoint() {
+      if (!scratchRevealed) revealScratchCardCompletely();
     }
 
     function revealScratchCardCompletely() {
       if (scratchRevealed) return;
       scratchRevealed = true;
-      const canvas = document.getElementById("scratch-canvas");
+      const stampBadge = document.getElementById("receipt-stamp-badge");
       const statusText = document.getElementById("scratch-status-text");
-      if (canvas) {
-        canvas.style.opacity = "0";
-        canvas.style.pointerEvents = "none";
+      const btn = document.getElementById("quick-reveal-scratch-btn");
+      if (stampBadge) {
+        stampBadge.classList.remove("hidden");
+        stampBadge.classList.add("stamp-slammed");
       }
+      if (btn) btn.textContent = "Stamped & Approved ♥ (Screenshot Anytime)";
       if (statusText) {
-        statusText.innerHTML = `<span class="inline-flex items-center gap-1.5 text-amber-300 font-semibold"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6L12 2z"/></svg><span>Favor unlocked! Screenshot this voucher anytime.</span></span>`;
+        statusText.innerHTML = '<span class="text-[#d92338] font-bold">✦ Voucher Stamped! Screenshot this receipt to redeem.</span>';
       }
       playUiSound("unlock");
       spawnFloatingHeartBurst(8);
@@ -2848,7 +2562,7 @@
       if (notesListEl) {
         notesListEl.innerHTML = notesArr.map((line) => `
           <li class="flex items-start gap-3">
-            <span class="text-amber-400 font-mono text-xs mt-1">•</span>
+            <span class="text-[#d92338] font-mono text-xs mt-1">♥</span>
             <span>${line}</span>
           </li>
         `).join("");
@@ -2871,16 +2585,16 @@
         bucketContainer.innerHTML = bucketItems.map((item, idx) => `
           <div
             data-bucket-idx="${idx}"
-            class="bucket-item-row flex items-center gap-3 p-3 rounded-2xl bg-black/30 hover:bg-black/50 border border-white/[0.07] cursor-pointer transition select-none"
+            class="bucket-item-row flex items-center gap-3 p-3 rounded-2xl bg-black/40 hover:bg-black/60 border border-white/[0.07] cursor-pointer transition select-none"
           >
             <div class="w-5 h-5 rounded-full flex items-center justify-center border transition ${
               item.done
-                ? "bg-rose-500 border-rose-400 text-zinc-950 font-bold"
-                : "border-zinc-500 text-transparent"
+                ? "bg-[#d92338] border-[#d92338] text-white font-bold text-xs"
+                : "border-stone-500 text-transparent"
             }">
               ✓
             </div>
-            <span class="text-xs sm:text-sm ${item.done ? "line-through text-zinc-500" : "text-zinc-200"}">
+            <span class="text-xs sm:text-sm ${item.done ? "line-through text-stone-500" : "text-stone-200"}">
               ${item.text || ""}
             </span>
           </div>
@@ -2989,24 +2703,20 @@
     };
 
     // =========================================================================
-    // 14. SECTION 08: SNAPBOOTH-STYLE 1-TAP AUTO 3-SNAP & DISPENSER ENGINE
+    // 14. SECTION 08: 1:1 SQUARE AUTO 3-SNAP & FULL US SCRAPBOOK MASTERPIECE ENGINE
     // =========================================================================
-    let photoboxMode = "strip";
-    let photoboxTheme = "seoul"; // Default: Cream Paper Strip (high-contrast & tactile)
     let photoboxSlots = [null, null, null];
     let cameraMediaStream = null;
     let cameraFacingMode = "user";
     let isBoothBurstRunning = false;
-    let isRingLightOn = true;
 
     const BOOTH_POSE_PROMPTS = [
-      "POSE 1 / 3 • GIVE YOUR BEST SMILE!",
-      "POSE 2 / 3 • PEACE SIGN OR SILLY FACE!",
+      "POSE 1 / 3 • BEST SMILE!",
+      "POSE 2 / 3 • PEACE SIGN / CANDID!",
       "POSE 3 / 3 • BLOW A KISS!"
     ];
 
     function initPhotoboxStudio() {
-      // Check if user already snapped photos in this session
       try {
         const saved = localStorage.getItem("loveos_live_booth_snaps");
         if (saved) {
@@ -3018,18 +2728,6 @@
         }
       } catch (_) {}
 
-      // Ring Light Toggle
-      const ringBtn = document.getElementById("booth-ringlight-toggle");
-      const vfBox = document.getElementById("booth-vf-box");
-      ringBtn?.addEventListener("click", () => {
-        isRingLightOn = !isRingLightOn;
-        playUiSound("tap");
-        if (vfBox) vfBox.classList.toggle("vf-ring-light", isRingLightOn);
-        ringBtn.className = isRingLightOn
-          ? "px-2.5 py-1.5 rounded-xl bg-amber-400/15 border border-amber-300/30 text-[11px] font-mono text-amber-200 flex items-center gap-1 transition"
-          : "px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-[11px] font-mono text-zinc-400 flex items-center gap-1 transition";
-      });
-
       // Flip Front/Back Lens
       document.getElementById("camera-flip-btn")?.addEventListener("click", () => {
         cameraFacingMode = cameraFacingMode === "user" ? "environment" : "user";
@@ -3039,14 +2737,14 @@
         if (cameraMediaStream) startCameraStream();
       });
 
-      // 1-CLICK MAIN BUTTON: Turns on camera AND immediately starts 3-Pose Auto Burst!
+      // 1-CLICK MAIN BUTTON: Opens 1:1 square camera & snaps 3 square photos automatically!
       document.getElementById("camera-snap-trigger-btn")?.addEventListener("click", () => {
         if (!isBoothBurstRunning) {
           runAutomatedPhotoboothBurst();
         }
       });
 
-      // Retake 3 Snaps Button
+      // Retake Button
       document.getElementById("booth-retake-all-btn")?.addEventListener("click", () => {
         playUiSound("tap");
         document.getElementById("booth-vf-box")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -3055,16 +2753,7 @@
         }, 350);
       });
 
-      // Instant Frame Color Switcher below Dispenser
-      document.querySelectorAll(".booth-theme-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          photoboxTheme = btn.getAttribute("data-booth-theme") || "seoul";
-          playUiSound("tap");
-          renderUnifiedDispenserStrip(false);
-        });
-      });
-
-      // Fullscreen Lightbox Zoom on Strip Image Click
+      // Fullscreen Lightbox Zoom on Collage Image Click
       const stripWrapper = document.getElementById("booth-strip-img-wrapper");
       const lightboxModal = document.getElementById("booth-lightbox-modal");
       const lightboxImg = document.getElementById("booth-lightbox-img");
@@ -3083,7 +2772,7 @@
         lightboxModal.classList.remove("flex");
       });
 
-      // Gallery Upload Fallback (Auto-fills 3 slots & dispenses unified strip!)
+      // Gallery Upload Fallback
       const fileInput = document.getElementById("photobox-file-input");
       document.getElementById("booth-upload-fallback-btn")?.addEventListener("click", () => {
         playUiSound("tap");
@@ -3116,10 +2805,8 @@
         });
       });
 
-      // Download, Share & Copy Link
       document.getElementById("photobox-download-btn")?.addEventListener("click", download916KeepsakePng);
       document.getElementById("photobox-share-btn")?.addEventListener("click", shareToInstaStory);
-      document.getElementById("photobox-copylink-btn")?.addEventListener("click", copyKeepsakeWebLink);
     }
 
     async function startCameraStream() {
@@ -3133,7 +2820,7 @@
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: cameraFacingMode, width: { ideal: 1080 }, height: { ideal: 1350 } },
+          video: { facingMode: cameraFacingMode, width: { ideal: 1080 }, height: { ideal: 1080 } },
           audio: false
         });
         cameraMediaStream = stream;
@@ -3142,12 +2829,12 @@
         if (standby) standby.classList.add("hidden");
         if (liveBadge) {
           liveBadge.classList.remove("hidden");
-          liveBadge.classList.add(" inline-flex");
+          liveBadge.classList.add("inline-flex");
         }
         await video.play();
         return true;
       } catch (err) {
-        showToast("Camera access unavailable — pick photos from your gallery instead!");
+        showToast("Camera unavailable — pick photos from your gallery!");
         document.getElementById("photobox-file-input")?.click();
         return false;
       }
@@ -3175,7 +2862,7 @@
         const dot = document.getElementById(`booth-dot-${i}`);
         if (!dot) continue;
         dot.className = i < completedCount
-          ? "w-3 h-3 rounded-full bg-[#fa2d48] border border-white scale-110 shadow-[0_0_10px_#fa2d48] transition-all"
+          ? "w-3 h-3 rounded-full bg-[#d92338] border border-white scale-110 shadow-[0_0_10px_#d92338] transition-all"
           : "w-2.5 h-2.5 rounded-full bg-white/25 border border-white/40 transition-all";
       }
     }
@@ -3192,17 +2879,17 @@
 
       isBoothBurstRunning = true;
       if (mainBtn) mainBtn.classList.add("opacity-50", "pointer-events-none");
-      if (mainBtnLabel) mainBtnLabel.textContent = "Opening Booth Camera...";
+      if (mainBtnLabel) mainBtnLabel.textContent = "Starting Camera...";
 
       if (!cameraMediaStream) {
         const ok = await startCameraStream();
         if (!ok) {
           isBoothBurstRunning = false;
           if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-          if (mainBtnLabel) mainBtnLabel.textContent = "Start 3-Snap Photo Booth";
+          if (mainBtnLabel) mainBtnLabel.textContent = "Take 3 Photos";
           return;
         }
-        await sleepMs(500);
+        await sleepMs(450);
       }
 
       photoboxSlots = [null, null, null];
@@ -3215,15 +2902,14 @@
 
       for (let poseIdx = 0; poseIdx < 3; poseIdx++) {
         if (posePrompt) posePrompt.textContent = BOOTH_POSE_PROMPTS[poseIdx];
-        if (mainBtnLabel) mainBtnLabel.textContent = `Snapping Pose ${poseIdx + 1} of 3...`;
+        if (mainBtnLabel) mainBtnLabel.textContent = `Pose ${poseIdx + 1} / 3...`;
 
         for (let c = 3; c >= 1; c--) {
           if (countdownNum) countdownNum.textContent = String(c);
           playUiSound("tap");
-          await sleepMs(820);
+          await sleepMs(800);
         }
 
-        // SHUTTER FLASH + LENS FLARE + CAPTURE
         if (countdownNum) countdownNum.textContent = "📸";
         if (flashEl) {
           flashEl.classList.add("flash-active");
@@ -3235,21 +2921,28 @@
         }
         playUiSound("unlock");
 
+        // Capture strictly 1:1 Square center crop from video stream!
+        const vw = video.videoWidth || 720;
+        const vh = video.videoHeight || 720;
+        const side = Math.min(vw, vh);
+        const sx = (vw - side) / 2;
+        const sy = (vh - side) / 2;
+
         const snapCanvas = document.createElement("canvas");
-        snapCanvas.width = video.videoWidth || 720;
-        snapCanvas.height = video.videoHeight || 900;
+        snapCanvas.width = 720;
+        snapCanvas.height = 720;
         const sCtx = snapCanvas.getContext("2d");
         if (cameraFacingMode === "user") {
-          sCtx.translate(snapCanvas.width, 0);
+          sCtx.translate(720, 0);
           sCtx.scale(-1, 1);
         }
-        sCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+        sCtx.drawImage(video, sx, sy, side, side, 0, 0, 720, 720);
         photoboxSlots[poseIdx] = snapCanvas.toDataURL("image/jpeg", 0.92);
         updateBoothDots(poseIdx + 1);
 
         if (poseIdx < 2) {
-          if (posePrompt) posePrompt.textContent = `GREAT! GET READY FOR POSE #${poseIdx + 2}...`;
-          await sleepMs(950);
+          if (posePrompt) posePrompt.textContent = `POSE #${poseIdx + 2} COMING UP...`;
+          await sleepMs(900);
         }
       }
 
@@ -3264,7 +2957,7 @@
       stopBoothCameraStream();
       isBoothBurstRunning = false;
       if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-      if (mainBtnLabel) mainBtnLabel.textContent = "Snap Another 3-Pose Strip";
+      if (mainBtnLabel) mainBtnLabel.textContent = "Take 3 New Photos";
 
       spawnFloatingHeartBurst(10);
       await renderUnifiedDispenserStrip(true);
@@ -3278,14 +2971,12 @@
       return `'${yy} ${mm} ${dd}`;
     }
 
-    // Compiles the 3 photos + frame + stickers into ONE unified PNG and dispenses it into #booth-final-strip-img!
     async function renderUnifiedDispenserStrip(animateDispense = false) {
       if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) return;
 
       const stage = document.getElementById("photobox-developed-stage");
       const finalImg = document.getElementById("booth-final-strip-img");
       const wrapper = document.getElementById("booth-strip-img-wrapper");
-      const rawGal = document.getElementById("booth-raw-gal");
 
       const canvas = await generate1080x1920Canvas();
       const unifiedDataUrl = canvas.toDataURL("image/png");
@@ -3299,19 +2990,6 @@
         wrapper.classList.add("strip-dispense-anim");
       }
 
-      // Render the 3 individual raw shots underneath (like SNAPBOOTH .gal)
-      if (rawGal) {
-        rawGal.innerHTML = [0, 1, 2].map((i) => {
-          const src = photoboxSlots[i] || photoboxSlots[0];
-          return `
-            <div class="relative w-16 aspect-[4/5] rounded-lg overflow-hidden border border-white/25 shadow cursor-pointer hover:scale-105 transition" onclick="document.getElementById('booth-lightbox-img').src='${src}'; document.getElementById('booth-lightbox-modal').classList.remove('hidden'); document.getElementById('booth-lightbox-modal').classList.add('flex');">
-              <img src="${src}" class="w-full h-full object-cover" alt="Raw Shot ${i + 1}" />
-              <span class="absolute bottom-0.5 right-1 text-[8px] font-mono font-bold text-amber-300 drop-shadow">#0${i + 1}</span>
-            </div>
-          `;
-        }).join("");
-      }
-
       if (animateDispense && stage) {
         setTimeout(() => {
           stage.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -3319,7 +2997,9 @@
       }
     }
 
-    // High-Res 1080 x 1920 Unified Photobooth Strip Generator (Center-Cropped Aspect Fill + Custom Vector Stickers)
+    // =========================================================================
+    // MASTERPIECE 1080x1920 US SCRAPBOOK COLLAGE (3 TILTED 1:1 SQUARE PHOTOS + FULL ASSETS)
+    // =========================================================================
     function generate1080x1920Canvas() {
       return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
@@ -3327,51 +3007,153 @@
         canvas.height = 1920;
         const ctx = canvas.getContext("2d");
 
-        const isSeoul = photoboxTheme === "seoul";
-        const isY2k = photoboxTheme === "y2k";
-
-        // 1. Tactile Paper / Film Strip Background
-        ctx.fillStyle = isSeoul ? "#f8f4ec" : isY2k ? "#190d26" : "#0b0b0f";
-        ctx.fillRect(0, 0, 1080, 1920);
-
-        // Outer Frame Border
-        ctx.strokeStyle = isSeoul ? "#d8cfc0" : isY2k ? "rgba(244, 114, 182, 0.45)" : "rgba(255, 255, 255, 0.22)";
-        ctx.lineWidth = 6;
-        ctx.strokeRect(36, 36, 1008, 1848);
-
-        // 2. Top Strip Header
         const d = window.COUPLE_DATA || {};
         const p1 = (d.partner1Name || "NOAH").toUpperCase();
         const p2 = (d.partner2Name || "MIA").toUpperCase();
         const dateBurn = getFormattedBoothDateStamp();
 
-        ctx.fillStyle = isSeoul ? "#e11d48" : "#fa2d48";
-        ctx.font = "bold 24px 'JetBrains Mono', monospace";
-        ctx.fillText("● LOVEOS SELF-PHOTO DISPENSER • 3-POSE STRIP", 84, 114);
+        // 1. WARM OATMEAL SCRAPBOOK PAPER BACKGROUND + DOT-GRID TEXTURE
+        ctx.fillStyle = "#f4efe4";
+        ctx.fillRect(0, 0, 1080, 1920);
 
-        ctx.fillStyle = isSeoul ? "#141416" : "#ffffff";
-        ctx.font = "italic 68px 'Instrument Serif', Georgia, serif";
-        ctx.fillText(`${p1} & ${p2}`, 84, 190);
-
-        ctx.fillStyle = isSeoul ? "#57534e" : "rgba(255, 255, 255, 0.7)";
-        ctx.font = "bold 24px 'JetBrains Mono', monospace";
-        ctx.textAlign = "right";
-        ctx.fillText(`${dateBurn} • 1 OF 1`, 996, 190);
-        ctx.textAlign = "left";
-
-        // Helper for Cover-Fit Image Drawing (Prevents Squishing!)
-        function drawImageCover(ctx, img, x, y, w, h) {
-          const imgRatio = img.width / img.height;
-          const boxRatio = w / h;
-          let sx = 0, sy = 0, sw = img.width, sh = img.height;
-          if (imgRatio > boxRatio) {
-            sw = img.height * boxRatio;
-            sx = (img.width - sw) / 2;
-          } else {
-            sh = img.width / boxRatio;
-            sy = (img.height - sh) / 2;
+        // Subtle Scrapbook Dot-Grid & Fine Notebook Lines
+        ctx.fillStyle = "rgba(120, 105, 88, 0.18)";
+        for (let gx = 48; gx < 1040; gx += 36) {
+          for (let gy = 48; gy < 1880; gy += 36) {
+            ctx.beginPath();
+            ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
+            ctx.fill();
           }
-          ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+        }
+
+        // Subtle Editorial Outer Frame Border
+        ctx.strokeStyle = "#d6cbb9";
+        ctx.lineWidth = 4;
+        ctx.strokeRect(34, 34, 1012, 1852);
+        ctx.strokeStyle = "rgba(217, 35, 56, 0.22)";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(46, 46, 988, 1828);
+
+        // 2. DECORATIVE 35MM FILM SPROCKET STRIP PEEKING BEHIND PHOTOS
+        ctx.save();
+        ctx.translate(165, 960);
+        ctx.rotate(-0.06);
+        ctx.fillStyle = "#161412";
+        ctx.fillRect(-55, -680, 110, 1360);
+        ctx.fillStyle = "#f4efe4";
+        for (let fy = -650; fy < 650; fy += 46) {
+          ctx.fillRect(-46, fy, 16, 24);
+          ctx.fillRect(30, fy, 16, 24);
+        }
+        ctx.restore();
+
+        // 3. TOP EDITORIAL HEADER + VINTAGE POSTAGE STAMP
+        ctx.fillStyle = "#d92338";
+        ctx.font = "bold 22px 'JetBrains Mono', monospace";
+        ctx.fillText("● STUDIO 402 • 1:1 ANALOG SCRAPBOOK EDITION", 78, 105);
+
+        ctx.fillStyle = "#181512";
+        ctx.font = "italic 82px 'Instrument Serif', Georgia, serif";
+        ctx.fillText(`${p1} & ${p2}`, 78, 188);
+
+        ctx.fillStyle = "#6b6257";
+        ctx.font = "bold 20px 'JetBrains Mono', monospace";
+        ctx.fillText(`CAPTURED ${dateBurn}  •  KEEP FOREVER ARCHIVE`, 80, 226);
+
+        // Top-Right Tilted US Postage Stamp & Wavy Cancellation Postmark
+        ctx.save();
+        ctx.translate(920, 145);
+        ctx.rotate(0.08);
+        ctx.fillStyle = "#fffdf9";
+        ctx.strokeStyle = "#bfb29e";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([6, 6]);
+        ctx.fillRect(-75, -82, 150, 164);
+        ctx.strokeRect(-75, -82, 150, 164);
+        ctx.setLineDash([]);
+        ctx.fillStyle = "#fbe4e6";
+        ctx.fillRect(-62, -68, 124, 136);
+        ctx.fillStyle = "#d92338";
+        ctx.font = "bold 16px 'JetBrains Mono', monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("FIRST CLASS", 0, -40);
+        // Heart inside stamp
+        ctx.beginPath();
+        ctx.arc(-12, -5, 14, 0, Math.PI * 2);
+        ctx.arc(12, -5, 14, 0, Math.PI * 2);
+        ctx.moveTo(-25, 0);
+        ctx.lineTo(0, 28);
+        ctx.lineTo(25, 0);
+        ctx.fill();
+        ctx.fillStyle = "#181512";
+        ctx.font = "bold 15px 'JetBrains Mono', monospace";
+        ctx.fillText("US TWO ♥", 0, 52);
+        ctx.restore();
+
+        // Helper for 1:1 Square Cover-Fit Image Drawing
+        function drawSquareCover(ctx, img, x, y, size) {
+          const side = Math.min(img.width, img.height);
+          const sx = (img.width - side) / 2;
+          const sy = (img.height - side) / 2;
+          ctx.drawImage(img, sx, sy, side, side, x, y, size, size);
+        }
+
+        // Helper to draw a realistic translucent Washi Tape strip
+        function drawWashiTape(ctx, cx, cy, w, h, angleRad, bgColor, borderColor, labelText) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(angleRad);
+          ctx.shadowColor = "rgba(0,0,0,0.15)";
+          ctx.shadowBlur = 8;
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = borderColor;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(-w / 2, -h / 2, w, h);
+          // Subtle diagonal crosshatch lines on tape
+          ctx.strokeStyle = "rgba(255,255,255,0.35)";
+          ctx.lineWidth = 1.5;
+          for (let lx = -w / 2 + 16; lx < w / 2; lx += 22) {
+            ctx.beginPath();
+            ctx.moveTo(lx, -h / 2);
+            ctx.lineTo(lx - 10, h / 2);
+            ctx.stroke();
+          }
+          if (labelText) {
+            ctx.fillStyle = "#7f1d1d";
+            ctx.font = "bold 25px 'Caveat', cursive";
+            ctx.textAlign = "center";
+            ctx.fillText(labelText, 0, 8);
+          }
+          ctx.restore();
+        }
+
+        // Helper to draw a 3D Glossy Cherry Heart Sticker
+        function draw3DPuffyHeart(ctx, cx, cy, scale, angleRad) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(angleRad);
+          ctx.scale(scale, scale);
+          ctx.shadowColor = "rgba(185, 28, 28, 0.38)";
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 8;
+          ctx.fillStyle = "#d92338";
+          ctx.beginPath();
+          ctx.arc(-18, -12, 22, 0, Math.PI * 2);
+          ctx.arc(18, -12, 22, 0, Math.PI * 2);
+          ctx.moveTo(-39, -4);
+          ctx.lineTo(0, 38);
+          ctx.lineTo(39, -4);
+          ctx.fill();
+          // Glossy specular highlight
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetY = 0;
+          ctx.fillStyle = "rgba(255,255,255,0.55)";
+          ctx.beginPath();
+          ctx.ellipse(-20, -18, 8, 4, -0.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
         }
 
         function loadImg(src) {
@@ -3390,108 +3172,257 @@
         const s2 = photoboxSlots[2] || s0;
 
         Promise.all([loadImg(s0), loadImg(s1), loadImg(s2)]).then((imgs) => {
-          const startY = 250;
-          const stripW = 912;
-          const stripH = 445;
-          const gap = 36;
-          const captions = ["POSE 01 • CANDID", "POSE 02 • CHAOTIC", "POSE 03 • FOREVER"];
+          // =================================================================
+          // 4. BACKGROUND SCRAPBOOK STICKERS (BEHIND/AROund THE 3 1:1 PHOTOS)
+          // =================================================================
 
-          imgs.forEach((im, idx) => {
-            const curY = startY + idx * (stripH + gap);
+          // A) Spinning Vinyl Record Sticker peeking out top-right (X=835, Y=460)
+          ctx.save();
+          ctx.translate(835, 460);
+          ctx.rotate(0.15);
+          ctx.shadowColor = "rgba(0,0,0,0.32)";
+          ctx.shadowBlur = 24;
+          ctx.fillStyle = "#141210";
+          ctx.beginPath();
+          ctx.arc(0, 0, 145, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "rgba(255,255,255,0.12)";
+          ctx.lineWidth = 2;
+          [120, 98, 76].forEach((r) => {
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.stroke();
+          });
+          ctx.fillStyle = "#d92338";
+          ctx.beginPath();
+          ctx.arc(0, 0, 48, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 12px 'JetBrains Mono', monospace";
+          ctx.textAlign = "center";
+          ctx.fillText("ON REPEAT", 0, -16);
+          ctx.fillText("SIDE A", 0, 26);
+          ctx.fillStyle = "#141210";
+          ctx.beginPath();
+          ctx.arc(0, 0, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
 
-            // White Polaroid Sub-Frame
+          // Handwritten Note under Vinyl (Right side of Photo 1)
+          ctx.save();
+          ctx.translate(835, 650);
+          ctx.rotate(-0.06);
+          ctx.fillStyle = "#181512";
+          ctx.font = "bold 36px 'Caveat', cursive";
+          ctx.textAlign = "center";
+          ctx.fillText("my favorite human ↖", 0, 0);
+          ctx.fillStyle = "#d92338";
+          ctx.font = "bold 16px 'JetBrains Mono', monospace";
+          ctx.fillText("★ 100% CERTIFIED CORE MEMORY", 0, 30);
+          ctx.restore();
+
+          // B) Torn Yellow-Cream Sticky Note on Middle-Left (X=235, Y=955)
+          ctx.save();
+          ctx.translate(235, 955);
+          ctx.rotate(-0.08);
+          ctx.shadowColor = "rgba(0,0,0,0.18)";
+          ctx.shadowBlur = 18;
+          ctx.fillStyle = "#fff8dc";
+          ctx.fillRect(-155, -110, 310, 220);
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#e6d8a8";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(-155, -110, 310, 220);
+          ctx.fillStyle = "#d92338";
+          ctx.font = "bold 15px 'JetBrains Mono', monospace";
+          ctx.textAlign = "left";
+          ctx.fillText("NOTE TO SELF // 2:14 AM", -130, -70);
+          ctx.fillStyle = "#181512";
+          ctx.font = "bold 34px 'Caveat', cursive";
+          ctx.fillText("still crushing on you", -130, -20);
+          ctx.fillText("harder than day one ♡", -130, 22);
+          ctx.fillStyle = "#57534e";
+          ctx.font = "bold 14px 'JetBrains Mono', monospace";
+          ctx.fillText("DO NOT LOSE THIS PHOTO →", -130, 74);
+          ctx.restore();
+
+          // C) Perforated Red VIP Admission Ticket Stub on Bottom-Right (X=815, Y=1420)
+          ctx.save();
+          ctx.translate(815, 1420);
+          ctx.rotate(0.09);
+          ctx.shadowColor = "rgba(0,0,0,0.22)";
+          ctx.shadowBlur = 18;
+          ctx.fillStyle = "#d92338";
+          ctx.fillRect(-155, -90, 310, 180);
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "rgba(255,255,255,0.65)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([8, 6]);
+          ctx.strokeRect(-142, -78, 284, 156);
+          ctx.setLineDash([]);
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 16px 'JetBrains Mono', monospace";
+          ctx.textAlign = "center";
+          ctx.fillText("★ ADMIT TWO • VIP PASS ★", 0, -40);
+          ctx.font = "italic 44px 'Instrument Serif', Georgia, serif";
+          ctx.fillText("Forever Seat 14A", 0, 12);
+          ctx.font = "bold 14px 'JetBrains Mono', monospace";
+          ctx.fillText(`ISSUED ${dateBurn} • NON-EXPIRING`, 0, 52);
+          ctx.restore();
+
+          // =================================================================
+          // 5. DRAW THE 3 SQUARE (1:1) POLAROID PHOTOS IN ORGANIC TILTED LAYOUT
+          // =================================================================
+          const squareConfigs = [
+            {
+              cx: 375,
+              cy: 535,
+              angle: -0.065, // Tilted left (-3.7 deg)
+              caption: "01. golden hour with you ♡",
+              tag: "FRAME #01",
+              tapeColor: "rgba(251, 207, 232, 0.88)",
+              tapeBorder: "rgba(244, 114, 182, 0.6)",
+              tapeLabel: "us right now ♡"
+            },
+            {
+              cx: 705,
+              cy: 965,
+              angle: 0.058, // Tilted right (+3.3 deg)
+              caption: "02. 100% chaotic & candid ★",
+              tag: "FRAME #02",
+              tapeColor: "rgba(239, 230, 213, 0.92)",
+              tapeBorder: "rgba(196, 181, 155, 0.8)",
+              tapeLabel: "keep forever"
+            },
+            {
+              cx: 385,
+              cy: 1385,
+              angle: -0.042, // Tilted slightly left (-2.4 deg)
+              caption: "03. my favorite place to be",
+              tag: "FRAME #03",
+              tapeColor: "rgba(254, 215, 170, 0.88)",
+              tapeBorder: "rgba(251, 146, 60, 0.55)",
+              tapeLabel: "1 of 1 memory"
+            }
+          ];
+
+          const photoSize = 420; // Strictly 1:1 Square Photo (420x420)!
+          const frameW = 468;
+          const frameH = 545;
+
+          squareConfigs.forEach((cfg, idx) => {
+            const im = imgs[idx];
+            ctx.save();
+            ctx.translate(cfg.cx, cfg.cy);
+            ctx.rotate(cfg.angle);
+
+            // Realistic Deep Polaroid Drop Shadow
+            ctx.shadowColor = "rgba(15, 12, 10, 0.38)";
+            ctx.shadowBlur = 32;
+            ctx.shadowOffsetX = 6;
+            ctx.shadowOffsetY = 16;
+
+            // Warm Ivory Polaroid Paper Card
             ctx.fillStyle = "#ffffff";
-            ctx.fillRect(72, curY - 12, stripW + 24, stripH + 24);
-            ctx.strokeStyle = "rgba(0,0,0,0.08)";
+            ctx.fillRect(-frameW / 2, -frameH / 2, frameW, frameH);
+
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.strokeStyle = "#ded6c8";
             ctx.lineWidth = 2;
-            ctx.strokeRect(72, curY - 12, stripW + 24, stripH + 24);
+            ctx.strokeRect(-frameW / 2, -frameH / 2, frameW, frameH);
+
+            // Inner 1:1 Square Photo Box (-photoSize/2, -frameH/2 + 24)
+            const px = -photoSize / 2;
+            const py = -frameH / 2 + 24;
+
+            ctx.fillStyle = "#181512";
+            ctx.fillRect(px, py, photoSize, photoSize);
 
             if (im) {
-              drawImageCover(ctx, im, 84, curY, stripW, stripH);
+              drawSquareCover(ctx, im, px, py, photoSize);
             }
 
-            // Subtle dark bottom gradient for legible film date stamp
-            const legGrad = ctx.createLinearGradient(84, curY + stripH - 90, 84, curY + stripH);
-            legGrad.addColorStop(0, "transparent");
-            legGrad.addColorStop(1, "rgba(0,0,0,0.65)");
-            ctx.fillStyle = legGrad;
-            ctx.fillRect(84, curY + stripH - 90, stripW, 90);
+            // Subtle Analog Warm Film Vignette on 1:1 Photo
+            const vig = ctx.createLinearGradient(px, py + photoSize - 85, px, py + photoSize);
+            vig.addColorStop(0, "transparent");
+            vig.addColorStop(1, "rgba(0,0,0,0.62)");
+            ctx.fillStyle = vig;
+            ctx.fillRect(px, py + photoSize - 85, photoSize, 85);
 
-            // 90s 35mm Orange Film Date Burn
-            ctx.fillStyle = "#ff8a2b";
-            ctx.font = "bold 22px 'JetBrains Mono', monospace";
-            ctx.fillText(`${dateBurn}  •  ${captions[idx]}`, 110, curY + stripH - 22);
+            // 90s 35mm Orange Film Date Burn inside bottom-right of 1:1 Square
+            ctx.fillStyle = "#ff8524";
+            ctx.font = "bold 20px 'JetBrains Mono', monospace";
+            ctx.textAlign = "right";
+            ctx.fillText(`${dateBurn} • ${cfg.tag}`, px + photoSize - 16, py + photoSize - 16);
+
+            // Handwritten Scrapbook Caption on Bottom Polaroid Margin
+            ctx.fillStyle = "#1c1917";
+            ctx.font = "bold 34px 'Caveat', cursive";
+            ctx.textAlign = "left";
+            ctx.fillText(cfg.caption, px + 6, py + photoSize + 54);
+
+            ctx.restore();
+
+            // Top Washi Tape pinning each 1:1 Polaroid
+            const tapeX = cfg.cx + Math.sin(cfg.angle) * (frameH / 2);
+            const tapeY = cfg.cy - Math.cos(cfg.angle) * (frameH / 2) + 4;
+            drawWashiTape(ctx, tapeX, tapeY, 210, 44, cfg.angle - 0.04, cfg.tapeColor, cfg.tapeBorder, cfg.tapeLabel);
           });
 
-          // 3. Draw Tactile Stickers Directly Onto the Merged Strip
-          // Top Washi Tape Strip ("us right now ♡")
-          ctx.save();
-          ctx.translate(540, startY - 12);
-          ctx.rotate(-0.03);
-          ctx.fillStyle = "rgba(252, 231, 243, 0.92)";
-          ctx.strokeStyle = "rgba(244, 114, 182, 0.6)";
-          ctx.lineWidth = 2;
-          ctx.fillRect(-140, -24, 280, 48);
-          ctx.strokeRect(-140, -24, 280, 48);
-          ctx.fillStyle = "#9d174d";
-          ctx.font = "bold 28px 'Caveat', cursive";
-          ctx.textAlign = "center";
-          ctx.fillText("us right now ♡", 0, 9);
-          ctx.restore();
+          // =================================================================
+          // 6. FOREGROUND 3D STICKERS, WAX SEAL & SPARKLES OVER THE PHOTOS
+          // =================================================================
+          draw3DPuffyHeart(ctx, 610, 695, 1.05, 0.22);
+          draw3DPuffyHeart(ctx, 455, 1125, 0.85, -0.25);
+          draw3DPuffyHeart(ctx, 145, 345, 0.72, -0.18);
 
-          // 3D Rose-Gold Heart Sticker on Frame #2 Corner
+          // Gold/Red "GENUINE KEEPERS" Seal on Photo #3 Corner
           ctx.save();
-          ctx.translate(965, startY + stripH + gap + 20);
-          ctx.rotate(0.18);
-          ctx.fillStyle = "#fa2d48";
+          ctx.translate(605, 1595);
+          ctx.rotate(-0.15);
+          ctx.shadowColor = "rgba(0,0,0,0.28)";
+          ctx.shadowBlur = 12;
+          ctx.fillStyle = "#fbbf24";
           ctx.beginPath();
-          ctx.arc(-14, -10, 18, 0, Math.PI * 2);
-          ctx.arc(14, -10, 18, 0, Math.PI * 2);
-          ctx.moveTo(-31, -4);
-          ctx.lineTo(0, 30);
-          ctx.lineTo(31, -4);
+          ctx.arc(0, 0, 52, 0, Math.PI * 2);
           ctx.fill();
-          ctx.restore();
-
-          // Genuine 1 of 1 Gold Seal on Frame #3 Bottom-Right
-          ctx.save();
-          ctx.translate(935, startY + 2 * (stripH + gap) + stripH - 45);
-          ctx.rotate(-0.14);
-          ctx.fillStyle = "#fde047";
-          ctx.beginPath();
-          ctx.arc(0, 0, 46, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = "#18181b";
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#181512";
           ctx.lineWidth = 3;
           ctx.stroke();
-          ctx.fillStyle = "#18181b";
+          ctx.fillStyle = "#181512";
           ctx.font = "bold 15px 'JetBrains Mono', monospace";
           ctx.textAlign = "center";
-          ctx.fillText("GENUINE", 0, -4);
-          ctx.fillText("1 OF 1 ♥", 0, 16);
+          ctx.fillText("100% US", 0, -6);
+          ctx.fillText("1 OF 1 ♥", 0, 15);
           ctx.restore();
 
-          // 4. Bottom Strip Footer & Website Link Sticker
-          const footY = 1755;
-          ctx.strokeStyle = isSeoul ? "#d8cfc0" : "rgba(255, 255, 255, 0.16)";
-          ctx.lineWidth = 2;
+          // =================================================================
+          // 7. BOTTOM EDITORIAL COLOPHON & BARCODE STRIP (Y=1745..1855)
+          // =================================================================
+          const footY = 1748;
+          ctx.strokeStyle = "#cfc3b0";
+          ctx.lineWidth = 3;
           ctx.beginPath();
-          ctx.moveTo(84, footY);
-          ctx.lineTo(996, footY);
+          ctx.moveTo(74, footY);
+          ctx.lineTo(1006, footY);
           ctx.stroke();
 
-          ctx.fillStyle = isSeoul ? "#141416" : "#ffffff";
-          ctx.font = "bold 25px 'Inter', sans-serif";
+          ctx.fillStyle = "#181512";
+          ctx.font = "bold 24px 'Inter', sans-serif";
           ctx.textAlign = "left";
-          ctx.fillText("PRINTED IN OUR LOVEOS CAPSULE ♥", 84, footY + 56);
+          ctx.fillText(`LOVEOS SCRAPBOOK ARCHIVE • ${p1} & ${p2} ♥`, 74, footY + 56);
 
           const linkStr = window.location.hostname || "loveos.kept.us";
-          ctx.fillStyle = "#fa2d48";
-          ctx.fillRect(660, footY + 20, 336, 54);
+          ctx.fillStyle = "#d92338";
+          ctx.fillRect(670, footY + 20, 336, 54);
           ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 22px 'JetBrains Mono', monospace";
+          ctx.font = "bold 21px 'JetBrains Mono', monospace";
           ctx.textAlign = "center";
-          ctx.fillText(linkStr, 828, footY + 55);
+          ctx.fillText(linkStr, 838, footY + 54);
 
           resolve(canvas);
         });
@@ -3500,27 +3431,27 @@
 
     async function download916KeepsakePng() {
       if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Tap 'Start 3-Snap Photo Booth' first!");
+        showToast("Tap 'Take 3 Photos' first!");
         return;
       }
       playUiSound("tap");
       const btn = document.getElementById("photobox-download-btn");
       const originalText = btn ? btn.innerHTML : "";
-      if (btn) btn.innerHTML = "<span>Exporting Ultra HD Strip...</span>";
+      if (btn) btn.innerHTML = "<span>Saving HD Photo...</span>";
 
       try {
         const canvas = await generate1080x1920Canvas();
         const dataUrl = canvas.toDataURL("image/png");
         const a = document.createElement("a");
-        a.download = `loveos-photobooth-${Date.now()}.png`;
+        a.download = `loveos-scrapbook-${Date.now()}.png`;
         a.href = dataUrl;
         document.body.appendChild(a);
         a.click();
         a.remove();
         playUiSound("unlock");
-        showToast("✦ Ultra HD Photobooth Strip saved!");
+        showToast("✦ HD Scrapbook Photo saved!");
       } catch (err) {
-        showToast("Could not export strip: " + err.message);
+        showToast("Could not save photo: " + err.message);
       } finally {
         if (btn) btn.innerHTML = originalText;
       }
@@ -3528,7 +3459,7 @@
 
     async function shareToInstaStory() {
       if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
-        showToast("Tap 'Start 3-Snap Photo Booth' first!");
+        showToast("Tap 'Take 3 Photos' first!");
         return;
       }
       playUiSound("tap");
@@ -3536,41 +3467,27 @@
         const canvas = await generate1080x1920Canvas();
         canvas.toBlob(async (blob) => {
           if (!blob) return;
-          const file = new File([blob], "loveos-story-strip.png", { type: "image/png" });
+          const file = new File([blob], "loveos-scrapbook.png", { type: "image/png" });
 
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
                 files: [file],
-                title: "Our LoveOS Photo Strip",
-                text: "Snapped inside our private LoveOS time capsule ♡"
+                title: "Our LoveOS Scrapbook",
+                text: "Snapped inside our LoveOS time capsule ♡"
               });
               return;
             } catch (_) {}
           }
 
           const a = document.createElement("a");
-          a.download = "loveos-story-strip.png";
+          a.download = "loveos-scrapbook.png";
           a.href = URL.createObjectURL(blob);
           a.click();
-          showToast("✦ Strip downloaded! Open Instagram to share to your Story.");
+          showToast("✦ Photo saved! Open Instagram to post to your Story.");
         }, "image/png");
       } catch (err) {
-        showToast("Tap 'Download Ultra HD Strip' to save your photo!");
-      }
-    }
-
-    function copyKeepsakeWebLink() {
-      playUiSound("tap");
-      const url = window.location.href;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => {
-          showToast("✦ Keepsake link copied!");
-        }).catch(() => {
-          prompt("Copy your keepsake link:", url);
-        });
-      } else {
-        prompt("Copy your keepsake link:", url);
+        showToast("Tap 'Save HD Photo' to download!");
       }
     }
 
@@ -3579,7 +3496,7 @@
       if (!toast) {
         toast = document.createElement("div");
         toast.id = "loveos-global-toast";
-        toast.className = "fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] px-5 py-2.5 rounded-full bg-zinc-900/95 border border-white/20 text-white text-xs font-semibold shadow-2xl backdrop-blur-xl flex items-center gap-2 transition-all duration-300";
+        toast.className = "fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] px-5 py-2.5 rounded-full bg-stone-900/95 border border-white/20 text-white text-xs font-semibold shadow-2xl backdrop-blur-xl flex items-center gap-2 transition-all duration-300";
         document.body.appendChild(toast);
       }
       toast.textContent = msg;
