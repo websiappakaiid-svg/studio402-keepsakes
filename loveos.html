@@ -389,7 +389,7 @@
     #unlock-progress-circle {
       stroke-dasharray: 264;
       stroke-dashoffset: 264;
-      transition: stroke-dashoffset 1.55s cubic-bezier(0.35, 0, 0.25, 1);
+      transition: stroke-dashoffset 2.55s cubic-bezier(0.35, 0, 0.25, 1);
     }
     #unlock-experience-btn.is-scanning #unlock-progress-circle {
       stroke-dashoffset: 0;
@@ -555,6 +555,18 @@
     .stamp-slammed {
       animation: stampSlam 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
+
+    /* V5 Polaroid Instant-Film Develop Effect & Date Wheel Spin */
+    @keyframes polaroidDevelop {
+      0% { filter: sepia(0.75) blur(4px) brightness(1.25) contrast(0.85); }
+      100% { filter: sepia(0) blur(0px) brightness(1) contrast(1); }
+    }
+    .polaroid-developing {
+      animation: polaroidDevelop 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    #date-wheel-svg {
+      transition: transform 3.2s cubic-bezier(0.14, 0.88, 0.22, 1);
+    }
   </style>
 </head>
 <body class="relative is-locked selection:bg-rose-500/30 selection:text-rose-200">
@@ -667,7 +679,7 @@
         Tap Heart ID to Unlock
       </span>
       <span id="unlock-sub-status" class="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-        Hold Still • 2.4s Scan
+        Hold Still • 4.0s Biometric Scan
       </span>
       <div class="w-32 h-1 rounded-full bg-white/20 mt-1"></div>
     </div>
@@ -718,10 +730,9 @@
   <main id="main-experience" class="relative z-10 max-w-xl mx-auto px-4 sm:px-6 pt-20 pb-28 space-y-16 transition-all duration-700 hidden">
 
     <!-- =================================================================== -->
-    <!-- SECTION 1: HERO COUNTER & TACTILE MEMORY PASS (CLEAN & CONCISE)     -->
+    <!-- SECTION 1: HERO COUNTER (WITH LIVE WATCH TICK SOUND) & MEMORY PASS -->
     <!-- =================================================================== -->
     <section id="section-hero" class="space-y-5 pt-2">
-      <!-- Couple Headline (Short, Editorial, Zero Fluff) -->
       <div class="text-center space-y-1.5">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[11px] uppercase tracking-[0.2em] text-stone-300 font-mono">
           <span id="hero-partner1-tag">NOAH</span>
@@ -734,21 +745,41 @@
         <p id="hero-subtitle-el" class="text-xs sm:text-sm text-stone-400 max-w-sm mx-auto leading-relaxed">
           our little corner of the internet.
         </p>
-        <!-- Hidden legacy hook -->
         <span id="hero-weather-pill-text" class="hidden">Right by your side</span>
       </div>
 
-      <!-- Clean Warm Obsidian Live Counter Widget -->
-      <div class="relative rounded-3xl p-5 bg-[#141210] border border-white/10 shadow-2xl overflow-hidden">
+      <!-- Tactile Live Counter Widget with Mechanical Watch Tick Sound & Heartbeats Mode -->
+      <div
+        id="hero-counter-card"
+        class="relative rounded-3xl p-5 bg-[#141210] border border-white/10 shadow-2xl overflow-hidden select-none"
+      >
         <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">
           <span class="flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-[#d92338] animate-pulse"></span>
-            <span>together for</span>
+            <span id="hero-since-date-label">TOGETHER FOR</span>
           </span>
-          <span id="hero-since-date-label">SINCE OCT 14, 2023</span>
+          <div class="flex items-center gap-2">
+            <button
+              id="counter-mode-toggle-btn"
+              type="button"
+              class="px-2.5 py-0.5 rounded-full bg-white/[0.06] hover:bg-white/10 border border-white/10 text-[10px] text-stone-300 cursor-pointer transition"
+              title="Switch between Time & Total Heartbeats"
+            >
+              ♥ Heartbeats
+            </button>
+            <button
+              id="counter-sound-toggle-btn"
+              type="button"
+              class="px-2.5 py-0.5 rounded-full bg-[#d92338]/20 border border-[#d92338]/40 text-[10px] text-[#ff4d63] font-bold cursor-pointer transition"
+              title="Toggle Live Clock Tick Sound"
+            >
+              🔊 Tick: ON
+            </button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-2.5 text-center">
+        <!-- Time Grid (Days / Hrs / Mins / Secs) -->
+        <div id="counter-time-grid" class="grid grid-cols-4 gap-2.5 text-center cursor-pointer" title="Tap to switch to Total Heartbeats">
           <div class="p-3 rounded-2xl bg-black/50 border border-white/[0.06]">
             <div id="counter-days" class="font-mono text-2xl sm:text-3xl font-bold text-white tracking-tight">000</div>
             <div class="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-0.5">days</div>
@@ -762,21 +793,27 @@
             <div class="text-[9px] font-mono uppercase tracking-widest text-stone-400 mt-0.5">mins</div>
           </div>
           <div class="p-3 rounded-2xl bg-[#d92338]/15 border border-[#d92338]/35">
-            <div id="counter-seconds" class="font-mono text-2xl sm:text-3xl font-bold text-[#ff4d63] tracking-tight">00</div>
+            <div id="counter-seconds" class="font-mono text-2xl sm:text-3xl font-bold text-[#ff4d63] tracking-tight transition-transform duration-150">00</div>
             <div class="text-[9px] font-mono uppercase tracking-widest text-[#ff4d63]/80 mt-0.5">secs</div>
+          </div>
+        </div>
+
+        <!-- Alternate View: Total Heartbeats Together -->
+        <div id="counter-beats-view" class="hidden py-3 px-4 rounded-2xl bg-black/50 border border-[#d92338]/30 text-center cursor-pointer">
+          <div id="counter-total-heartbeats" class="font-mono text-3xl sm:text-4xl font-extrabold text-[#ff4d63] tracking-tight">
+            89,420,110
+          </div>
+          <div class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mt-1">
+            estimated heartbeats shared since day one ♥ (tap to switch back)
           </div>
         </div>
       </div>
 
       <!-- Milestone Selector Pills -->
-      <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-        <!-- Milestone pills injected by JS -->
-      </div>
+      <div id="milestone-pills-container" class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar"></div>
 
       <!-- Tactile Cream Paper Boarding Pass (#milestone-detail-card) -->
-      <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300">
-        <!-- Injected by renderMilestoneDetailCard() -->
-      </div>
+      <div id="milestone-detail-card" class="boarding-pass-card rounded-3xl overflow-hidden transition-all duration-300"></div>
 
       <!-- Section 1 Next Flow Indicator -->
       <div id="flow-nav-sec1" class="pt-3 flex justify-center">
@@ -997,31 +1034,50 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 4: CAMERA ROLL — CLEAN 3D POLAROID (NO WIREFRAME AI SLOP)   -->
+    <!-- SECTION 4: TACTILE 35MM POLAROID STACK (LAYERED CARDS & DEVELOP FX) -->
     <!-- =================================================================== -->
     <section id="section-polaroids" class="space-y-4 chapter-hidden">
       <div class="flex items-center justify-between px-1">
-        <h2 class="font-serif italic text-3xl text-white">35mm camera roll</h2>
-        <span id="polaroid-counter-badge" class="font-mono text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-stone-300">
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-widest text-[#ff4d63]">KODAK PORTRA 400 • INSTANT STACK</span>
+          <h2 class="font-serif italic text-3xl text-white">35mm camera roll</h2>
+        </div>
+        <span id="polaroid-counter-badge" class="font-mono text-xs px-3 py-1 rounded-full bg-[#141210] border border-white/15 text-stone-200">
           1 / 4
         </span>
       </div>
 
-      <!-- Clean Scrapbook Stage with Washi Tape & 3D Flip Polaroid -->
-      <div class="relative pt-4 pb-1 px-2 sm:px-6">
-        <!-- Realistic Washi Tape Across Top-Center -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 z-30 pointer-events-none rotate-[-2deg] drop-shadow">
-          <svg width="140" height="32" viewBox="0 0 140 32" fill="none">
-            <path d="M4 2L136 1L133 8L137 15L134 22L136 29L3 30L6 22L2 15L6 8L4 2Z" fill="#EFE6D5" fill-opacity="0.92" stroke="#D5C7B2" />
-            <text x="70" y="20" text-anchor="middle" fill="#44403c" font-family="Caveat, cursive" font-size="15" font-weight="700">tap to flip ↻</text>
+      <!-- Tactile Layered Polaroid Stack Stage -->
+      <div class="relative pt-6 pb-3 px-3 sm:px-6 max-w-sm mx-auto">
+        <!-- Background Stack Card #1 (Tilted Left) -->
+        <div class="absolute inset-x-5 top-7 bottom-4 rounded-xl bg-[#e8e0d2] border border-stone-400/60 shadow-xl -rotate-[4.5deg] -translate-x-2 pointer-events-none"></div>
+        <!-- Background Stack Card #2 (Tilted Right) -->
+        <div class="absolute inset-x-5 top-7 bottom-4 rounded-xl bg-[#efe8dc] border border-stone-400/70 shadow-xl rotate-[3.8deg] translate-x-2 pointer-events-none"></div>
+
+        <!-- Top Gingham Washi Tape Pinning the Active Polaroid -->
+        <div class="absolute top-1.5 left-1/2 -translate-x-1/2 z-30 pointer-events-none rotate-[-2deg] drop-shadow-md">
+          <svg width="154" height="34" viewBox="0 0 154 34" fill="none">
+            <path d="M4 2L150 1L147 8L151 16L148 24L150 31L3 32L6 24L2 16L6 8L4 2Z" fill="#F9E0E3" fill-opacity="0.94" stroke="#E5B5BC" />
+            <path d="M22 2L14 32M46 2L38 32M70 2L62 32M94 2L86 32M118 2L110 32M142 2L134 32" stroke="#D92338" stroke-opacity="0.16" stroke-width="1.5" />
+            <text x="77" y="21" text-anchor="middle" fill="#881337" font-family="Caveat, cursive" font-size="16" font-weight="700">tap photo to flip ↻</text>
           </svg>
         </div>
 
-        <!-- 3D Flip Polaroid Frame -->
-        <div class="perspective-1000 max-w-sm mx-auto">
+        <!-- Cute Fine-Line Coquette Silk Ribbon Bow Sticker on Top-Right Corner -->
+        <div class="absolute top-3 right-2 z-30 pointer-events-none rotate-[12deg] drop-shadow">
+          <svg width="46" height="42" viewBox="0 0 64 56" fill="none">
+            <path d="M32 24C22 10 6 12 8 24C10 34 24 30 32 24Z" fill="#D92338" stroke="#ffffff" stroke-width="2"/>
+            <path d="M32 24C42 10 58 12 56 24C54 34 40 30 32 24Z" fill="#D92338" stroke="#ffffff" stroke-width="2"/>
+            <path d="M29 26L18 48M35 26L46 48" stroke="#D92338" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="32" cy="24" r="4.5" fill="#991B1B" stroke="#ffffff" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <!-- Active 3D Flip Polaroid Card -->
+        <div class="perspective-1000 relative z-20">
           <div id="polaroid-3d-card" class="polaroid-3d-inner cursor-pointer select-none">
-            <!-- FRONT -->
-            <div class="polaroid-face rounded-xl bg-[#f8f4ec] p-3.5 pb-5 shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300">
+            <!-- FRONT OF POLAROID -->
+            <div class="polaroid-face rounded-xl bg-[#faf6ee] p-3.5 pb-5 shadow-[0_25px_55px_rgba(0,0,0,0.9)] border border-stone-300">
               <div class="relative aspect-square w-full rounded-lg overflow-hidden bg-stone-900">
                 <img
                   id="polaroid-active-img"
@@ -1029,24 +1085,35 @@
                   alt="Couple Memory"
                   class="w-full h-full object-cover"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+
+                <!-- Top-Left 35mm Frame Tag -->
+                <div class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/65 backdrop-blur-sm border border-white/15 font-mono text-[9px] text-amber-300">
+                  ▲ PORTRA 400
+                </div>
+
+                <!-- 90s 35mm Orange Date Burn -->
                 <div id="polaroid-film-date" class="absolute bottom-2.5 right-3.5 text-sm font-bold film-date-burn select-none">
                   '24 10 14
                 </div>
               </div>
-              <div class="pt-3.5 px-1.5 flex items-center justify-between">
+
+              <!-- Handwritten Caption & Red Heart Stamp -->
+              <div class="pt-3.5 px-1.5 flex items-center justify-between gap-2">
                 <p id="polaroid-front-caption" class="font-hand text-2xl text-stone-900 leading-tight">
                   golden hour in your passenger seat
                 </p>
-                <span class="text-[10px] font-mono text-stone-400">FLIP ↻</span>
+                <span class="shrink-0 px-2 py-0.5 rounded-full bg-[#d92338]/10 border border-[#d92338]/30 text-[9px] font-mono font-bold text-[#d92338]">
+                  SECRET NOTE ↻
+                </span>
               </div>
             </div>
 
-            <!-- BACK -->
-            <div class="polaroid-face polaroid-back absolute inset-0 rounded-xl p-6 flex flex-col justify-between shadow-[0_25px_55px_rgba(0,0,0,0.85)] border border-stone-300 text-stone-900">
+            <!-- BACK OF POLAROID -->
+            <div class="polaroid-face polaroid-back absolute inset-0 rounded-xl p-6 flex flex-col justify-between shadow-[0_25px_55px_rgba(0,0,0,0.9)] border border-stone-300 text-stone-900">
               <div class="flex items-center justify-between border-b border-stone-300 pb-2.5">
-                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">KODAK 400 • BACK NOTE</span>
-                <span class="font-mono text-[10px] text-[#d92338] font-bold">Flip ↻</span>
+                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">WRITTEN ON BACK OF PRINT</span>
+                <span class="font-mono text-[10px] text-[#d92338] font-bold">Flip Back ↻</span>
               </div>
               <div class="my-auto py-4">
                 <p id="polaroid-back-note" class="font-hand text-2xl sm:text-3xl text-stone-900 leading-snug">
@@ -1055,21 +1122,21 @@
               </div>
               <div class="flex items-center justify-between border-t border-stone-300 pt-2.5 text-xs font-mono text-stone-500">
                 <span id="polaroid-back-location">Pacific Coast Hwy</span>
-                <span>♥ kept safe</span>
+                <span class="text-[#d92338] font-bold">♥ KEPT FOREVER</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Polaroid Navigation -->
-      <div class="flex items-center justify-between gap-3 max-w-sm mx-auto">
-        <button id="polaroid-prev-btn" type="button" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-200 transition">
-          ← Prev
+      <!-- Polaroid Stack Navigation -->
+      <div class="flex items-center justify-between gap-3 max-w-sm mx-auto pt-1">
+        <button id="polaroid-prev-btn" type="button" class="px-4 py-2 rounded-xl bg-[#141210] hover:bg-white/10 border border-white/15 text-xs font-semibold text-stone-200 transition cursor-pointer">
+          ← Prev Print
         </button>
         <div id="polaroid-thumbs-row" class="flex items-center gap-2 overflow-x-auto py-1"></div>
-        <button id="polaroid-next-btn" type="button" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-stone-200 transition">
-          Next →
+        <button id="polaroid-next-btn" type="button" class="px-4 py-2 rounded-xl bg-[#141210] hover:bg-white/10 border border-white/15 text-xs font-semibold text-stone-200 transition cursor-pointer">
+          Next Print →
         </button>
       </div>
 
@@ -1077,11 +1144,11 @@
       <div id="flow-nav-sec4" class="pt-3 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-envelopes', 'flow-nav-sec4', '05', 'Next • Sealed Letters')"
+          onclick="window.unsealNextChapter('section-envelopes', 'flow-nav-sec4', '05', 'Next • 2 Sealed Letters')"
           class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] active:scale-95 border border-white/15 shadow-xl transition-all cursor-pointer"
         >
           <span class="w-2 h-2 rounded-full bg-[#d92338]"></span>
-          <span class="text-xs font-semibold tracking-wide text-white">Next • Sealed Letters ↓</span>
+          <span class="text-xs font-semibold tracking-wide text-white">Next • 2 Sealed Letters ↓</span>
         </button>
       </div>
     </section>
@@ -1231,31 +1298,80 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 7: CLEAN 2:14 AM NOTE, CHECKLIST & THUMBPRINT HEARTBEAT SYNC -->
+    <!-- SECTION 7: INTERACTIVE DATE NIGHT ROULETTE MINI-GAME, BUCKET LIST & HEARTBEAT SYNC -->
     <!-- =================================================================== -->
     <section id="section-notes" class="space-y-6 chapter-hidden">
-      <div class="rounded-3xl bg-[#141210] border border-white/12 shadow-2xl overflow-hidden">
-        <div class="px-5 py-3 bg-stone-900/90 border-b border-white/10 flex items-center justify-between text-stone-400 text-xs font-mono">
-          <span>iCloud Notes</span>
-          <span>2:14 AM</span>
+      <!-- Hidden legacy iCloud Notes hooks kept for 100% editor compatibility -->
+      <div class="hidden">
+        <h2 id="notes-title-el"></h2>
+        <ul id="late-night-notes-list"></ul>
+        <p id="final-letter-body"></p>
+        <p id="final-letter-signoff"></p>
+      </div>
+
+      <!-- INTERACTIVE COUPLE MINI-GAME: SPIN OUR NEXT DATE WHEEL -->
+      <div class="rounded-3xl p-6 bg-[#141210] border border-white/12 shadow-2xl text-center space-y-4 overflow-hidden relative">
+        <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-stone-400">
+          <span>COUPLE MINI-GAME</span>
+          <span class="text-[#ff4d63] font-bold">NO TAKEBACKS ♥</span>
         </div>
 
-        <div class="p-6 space-y-4">
-          <h2 id="notes-title-el" class="font-serif italic text-3xl text-white">
-            things i don't say out loud enough
-          </h2>
+        <div>
+          <h2 class="font-serif italic text-3xl text-white">spin our next date night</h2>
+          <p class="text-xs text-stone-400 mt-0.5">tap spin &amp; whatever it lands on, we have to do this week!</p>
+        </div>
 
-          <ul id="late-night-notes-list" class="space-y-2.5 text-sm text-stone-200 leading-relaxed"></ul>
-
-          <div class="pt-3 border-t border-white/10">
-            <p id="final-letter-body" class="font-hand text-2xl text-stone-100 leading-snug">
-              "if we had to start all over again in a crowded room of strangers, i'd still look straight for you every single time."
-            </p>
-            <p id="final-letter-signoff" class="text-xs font-mono text-[#ff4d63] mt-1.5">
-              — yours, always, Noah ♥
-            </p>
+        <!-- Wheel Stage with Top Pointer Arrow -->
+        <div class="relative w-64 h-64 mx-auto flex items-center justify-center my-2">
+          <!-- Top Pointer Triangle -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 drop-shadow-lg">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M14 26L3 6H25L14 26Z" fill="#d92338" stroke="#ffffff" stroke-width="2" />
+            </svg>
           </div>
+
+          <!-- 6-Slice Interactive Roulette Wheel SVG -->
+          <svg
+            id="date-wheel-svg"
+            class="w-full h-full rounded-full shadow-[0_18px_45px_rgba(0,0,0,0.85)] border-4 border-[#f6f1e7]"
+            viewBox="0 0 200 200"
+          >
+            <!-- 6 Slices (60 deg each) -->
+            <path d="M100,100 L100,0 A100,100 0 0,1 186.6,50 Z" fill="#faf6ee" />
+            <path d="M100,100 L186.6,50 A100,100 0 0,1 186.6,150 Z" fill="#d92338" />
+            <path d="M100,100 L186.6,150 A100,100 0 0,1 100,200 Z" fill="#1c1917" />
+            <path d="M100,100 L100,200 A100,100 0 0,1 13.4,150 Z" fill="#faf6ee" />
+            <path d="M100,100 L13.4,150 A100,100 0 0,1 13.4,50 Z" fill="#d92338" />
+            <path d="M100,100 L13.4,50 A100,100 0 0,1 100,0 Z" fill="#1c1917" />
+
+            <!-- Slice Labels -->
+            <g font-family="JetBrains Mono, monospace" font-size="7.5" font-weight="bold" text-anchor="middle">
+              <text x="132" y="42" fill="#181512" transform="rotate(30 132 42)">DRIVE + ICE CREAM</text>
+              <text x="162" y="103" fill="#ffffff" transform="rotate(90 162 103)">COOK PASTA 11PM</text>
+              <text x="132" y="162" fill="#faf6ee" transform="rotate(150 132 162)">MOVIE IN BED</text>
+              <text x="68" y="162" fill="#181512" transform="rotate(210 68 162)">SUNSET PICNIC</text>
+              <text x="38" y="103" fill="#ffffff" transform="rotate(270 38 103)">ARCADE DATE</text>
+              <text x="68" y="42" fill="#faf6ee" transform="rotate(330 68 42)">BACK SCRATCHES</text>
+            </g>
+
+            <!-- Center Hub Cap -->
+            <circle cx="100" cy="100" r="20" fill="#faf6ee" stroke="#181512" stroke-width="3" />
+            <text x="100" y="105" text-anchor="middle" fill="#d92338" font-size="16">♥</text>
+          </svg>
         </div>
+
+        <!-- Winning Date Night Prize Banner -->
+        <div id="date-wheel-result-box" class="py-2.5 px-4 rounded-2xl bg-black/50 border border-white/10 text-xs font-mono text-stone-300">
+          Tap spin below to lock in our next date night!
+        </div>
+
+        <button
+          id="spin-date-wheel-btn"
+          type="button"
+          class="w-full py-3.5 px-6 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white font-bold text-xs shadow-lg transition cursor-pointer"
+        >
+          🎲 Spin Our Next Date Wheel
+        </button>
       </div>
 
       <!-- Compact Someday Bucket List -->
@@ -1269,14 +1385,13 @@
         <div id="bucket-list-container" class="space-y-2"></div>
       </div>
 
-      <!-- NEW US FEATURE: INTERACTIVE THUMBPRINT HEARTBEAT SYNC SENSOR -->
+      <!-- INTERACTIVE THUMBPRINT HEARTBEAT SYNC SENSOR -->
       <div class="rounded-3xl p-5 bg-[#141210] border border-white/12 text-center space-y-3 shadow-2xl">
         <div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-stone-400 px-1">
           <span>BIOMETRIC PULSE LINK</span>
           <span id="heartbeat-bpm-readout" class="text-[#ff4d63] font-bold">READY TO SYNC</span>
         </div>
 
-        <!-- Live Animated ECG Heartbeat Waveform SVG -->
         <div class="h-12 w-full rounded-2xl bg-black/60 border border-white/[0.06] flex items-center justify-center px-4 overflow-hidden">
           <svg id="heartbeat-ecg-svg" class="w-full h-8 text-stone-600 transition-colors duration-300" viewBox="0 0 320 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M0 20 H70 L82 10 L92 32 L104 4 L116 36 L126 16 L136 20 H200 L212 10 L222 32 L234 4 L246 36 L256 16 L266 20 H320" />
@@ -1297,86 +1412,42 @@
       <div id="flow-nav-sec7" class="pt-2 flex justify-center">
         <button
           type="button"
-          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • 1:1 Photo Booth')"
+          onclick="window.unsealNextChapter('section-photobox', 'flow-nav-sec7', '08', 'Finale • Live 1:1 Photo Booth')"
           class="group inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white shadow-xl transition-all cursor-pointer"
         >
-          <span class="text-xs font-bold tracking-wide">Finale • Open Couple 1:1 Photo Booth ↓</span>
+          <span class="text-xs font-bold tracking-wide">Finale • Open Live 1:1 Photo Booth ↓</span>
         </button>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- SECTION 8: COUPLE (HIS & HERS / TOGETHER) 1:1 BOOTH & 3 TEMPLATES   -->
+    <!-- SECTION 8: 100% LIVE CAMERA 1:1 PHOTO BOOTH & 3 STUDIO TEMPLATES   -->
     <!-- =================================================================== -->
     <section id="section-photobox" class="space-y-5 pt-2 chapter-hidden">
       <div class="flex items-center justify-between px-1">
         <div>
-          <h2 class="font-serif italic text-3xl text-white">couple 1:1 photo booth</h2>
-          <p class="text-xs text-stone-400">snap together on 1 phone, or snap His &amp; Hers separately to merge!</p>
+          <span class="text-[10px] font-mono uppercase tracking-widest text-[#ff4d63]">LIVE SELF-PHOTO STUDIO</span>
+          <h2 class="font-serif italic text-3xl text-white">1:1 live photo booth</h2>
         </div>
         <button
           id="camera-flip-btn"
           type="button"
           class="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-xs font-mono text-stone-300 transition cursor-pointer"
-          title="Flip Camera"
+          title="Flip Camera Lens"
         >
-          ↻ Flip
+          ↻ Flip Lens
         </button>
       </div>
 
-      <!-- STEP 1: COUPLE MODE SELECTOR + CLEAN 1:1 SQUARE CAMERA -->
+      <!-- STEP 1: PURE LIVE CAMERA 1:1 VIEWFINDER (NO HIS/HERS, NO UPLOAD CLUTTER) -->
       <div class="rounded-3xl p-4 sm:p-5 bg-[#141210] border border-white/12 shadow-2xl space-y-4">
-        <!-- Mode Toggle: Together (1 Frame) vs His & Hers Split (Laki & Cewek) -->
-        <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-black/60 border border-white/10 max-w-[330px] mx-auto">
-          <button
-            type="button"
-            id="booth-mode-couple-btn"
-            class="py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow"
-          >
-            👦👧 His &amp; Hers Split
-          </button>
-          <button
-            type="button"
-            id="booth-mode-together-btn"
-            class="py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white"
-          >
-            👩‍❤️‍👨 Together (1 Cam)
-          </button>
-        </div>
-
-        <!-- Role Selector when in "His & Hers Split" Mode (Who is snapping right now?) -->
-        <div id="booth-role-selector-bar" class="max-w-[330px] mx-auto space-y-2">
-          <div class="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              id="booth-role-his-btn"
-              class="py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300"
-            >
-              <span>👦 <span id="role-his-name">Noah</span></span>
-              <span id="role-his-status" class="text-[10px] font-mono text-emerald-400">✓ Ready</span>
-            </button>
-            <button
-              type="button"
-              id="booth-role-hers-btn"
-              class="py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
-            >
-              <span>👧 <span id="role-hers-name">Mia</span></span>
-              <span id="role-hers-status" class="text-[10px] font-mono text-[#ff4d63]">● Active</span>
-            </button>
-          </div>
-          <p id="booth-role-hint" class="text-[11px] text-center text-stone-400">
-            Select your name above, tap <b>Take 3 Photos</b>, and we'll merge both of you side-by-side!
-          </p>
-        </div>
-
-        <!-- 1:1 Square Viewfinder -->
         <div
           id="booth-vf-box"
           class="relative max-w-[330px] mx-auto aspect-square rounded-2xl overflow-hidden bg-[#0a0908] border border-white/15 vf-ring-light flex items-center justify-center"
         >
           <div id="booth-live-badge" class="absolute top-3 left-3 z-30 hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/75 border border-white/15 text-[10px] font-mono font-bold text-white">
             <span class="w-2 h-2 rounded-full bg-[#d92338] animate-ping"></span>
-            <span id="booth-status-pill">1:1 SQUARE LIVE</span>
+            <span id="booth-status-pill">LIVE 1:1 BOOTH</span>
           </div>
 
           <div id="camera-shutter-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 z-40"></div>
@@ -1398,9 +1469,9 @@
                 <circle cx="12" cy="13" r="3.2"/>
               </svg>
             </div>
-            <h3 id="booth-standby-title" class="font-serif italic text-2xl text-white">ready for your 3 poses?</h3>
+            <h3 id="booth-standby-title" class="font-serif italic text-2xl text-white">get close for 3 live snaps</h3>
             <p class="text-xs text-stone-400 max-w-[215px]">
-              1 tap counts down &amp; snaps 3 square photos automatically.
+              Tap below once — counts down 3-2-1 three times &amp; dispenses your finished studio print.
             </p>
           </div>
 
@@ -1421,23 +1492,15 @@
           </div>
         </div>
 
-        <!-- 1 Main Action Button + Upload Fallback -->
-        <div class="flex items-center gap-2.5 max-w-[330px] mx-auto">
+        <!-- ONE EXCLUSIVE LIVE SHUTTER BUTTON -->
+        <div class="max-w-[330px] mx-auto">
           <button
             id="camera-snap-trigger-btn"
             type="button"
-            class="flex-1 py-3.5 px-5 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-[0.98] text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+            class="w-full py-4 px-5 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-[0.98] text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>📸</span>
-            <span id="booth-main-btn-label">Take 3 Photos (Mia)</span>
-          </button>
-
-          <button
-            id="booth-upload-fallback-btn"
-            type="button"
-            class="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-stone-300 text-xs font-medium transition cursor-pointer"
-          >
-            Upload
+            <span id="booth-main-btn-label">Start Live Photo Booth (3 Snaps)</span>
           </button>
           <input id="photobox-file-input" type="file" accept="image/*" multiple class="hidden" />
         </div>
@@ -1446,17 +1509,16 @@
       </div>
 
       <!-- ================================================================= -->
-      <!-- STEP 2: DISPENSED SCRAPBOOK COLLAGE + 3 DISTINCT TEMPLATE STYLES  -->
+      <!-- STEP 2: DISPENSED STUDIO PRINT + 3 NON-AI-SLOP STUDIO TEMPLATES   -->
       <!-- ================================================================= -->
       <div id="photobox-developed-stage" class="hidden space-y-4 pt-1">
         <div class="dispenser-housing text-center">
           <div class="dispenser-slot-bar max-w-xs mx-auto"></div>
 
           <p class="text-[10px] font-mono uppercase tracking-widest text-stone-400 mb-3">
-            ✦ Tap Collage to Zoom • Switch 3 Template Styles Below ✦
+            ✦ Tap Print to Zoom • Choose Studio Print Edition Below ✦
           </p>
 
-          <!-- ONE SINGLE UNIFIED COMPOSITE SCRAPBOOK IMAGE -->
           <div
             id="booth-strip-img-wrapper"
             class="relative inline-block max-w-[315px] w-full rounded-2xl overflow-hidden shadow-[0_25px_65px_rgba(0,0,0,0.95)] border border-white/20 cursor-zoom-in group"
@@ -1464,48 +1526,47 @@
             <img
               id="booth-final-strip-img"
               src=""
-              alt="Printed Scrapbook Collage"
+              alt="Printed Studio Keepsake"
               class="w-full h-auto block select-none"
             />
             <div class="holo-glint-overlay group-hover:opacity-90 transition-opacity"></div>
           </div>
 
-          <!-- 3 DISTINCT TEMPLATE VARIANTS SWITCHER -->
+          <!-- 3 STUDIO-GRADE TEMPLATE EDITIONS -->
           <div class="flex flex-wrap items-center justify-center gap-2 mt-4 pt-3 border-t border-white/10">
             <button
               type="button"
               data-booth-variant="scrapbook"
-              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-[#f4efe4] text-stone-900 border border-white shadow cursor-pointer transition"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-bold bg-[#d92338] text-white border border-white/30 shadow cursor-pointer transition"
             >
-              01 • Cream Scrapbook
+              01 • Coquette Cream Strip
             </button>
             <button
               type="button"
               data-booth-variant="film35"
-              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-900 text-amber-300 border border-amber-400/30 cursor-pointer transition"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-900 text-stone-300 border border-white/15 cursor-pointer transition"
             >
-              02 • 35mm Dark Film
+              02 • Kodak 35mm Film
             </button>
             <button
               type="button"
               data-booth-variant="newspaper"
-              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-800 text-stone-200 border border-white/15 cursor-pointer transition"
+              class="booth-variant-btn px-3 py-1.5 rounded-xl text-[11px] font-medium bg-stone-900 text-stone-300 border border-white/15 cursor-pointer transition"
             >
-              03 • Sunday Love Times
+              03 • NYT Love Zine
             </button>
           </div>
 
           <div id="booth-raw-gal" class="hidden"></div>
         </div>
 
-        <!-- Clean Action Row -->
         <div class="flex items-center gap-2.5 max-w-sm mx-auto">
           <button
             id="photobox-download-btn"
             type="button"
             class="flex-1 py-3.5 px-4 rounded-2xl bg-[#d92338] hover:bg-[#e62e44] active:scale-95 text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>⬇ Save HD Photo</span>
+            <span>⬇ Save HD Print</span>
           </button>
 
           <button
@@ -1521,7 +1582,7 @@
             type="button"
             class="py-3.5 px-4 rounded-2xl bg-white/[0.06] hover:bg-white/10 active:scale-95 border border-white/10 text-stone-300 text-xs font-medium transition cursor-pointer"
           >
-            ↻ Retake
+            ↻ Retake Live
           </button>
         </div>
       </div>
@@ -1532,7 +1593,7 @@
         class="fixed inset-0 z-[90] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl cursor-zoom-out"
       >
         <div class="relative max-w-sm w-full max-h-[90vh] flex flex-col items-center">
-          <img id="booth-lightbox-img" src="" alt="Fullscreen Collage" class="max-h-[82vh] w-auto rounded-2xl shadow-2xl border border-white/20" />
+          <img id="booth-lightbox-img" src="" alt="Fullscreen Print" class="max-h-[82vh] w-auto rounded-2xl shadow-2xl border border-white/20" />
           <span class="mt-3 text-xs font-mono text-stone-400">Tap anywhere to close • Long-press image to save</span>
         </div>
       </div>
@@ -1918,6 +1979,14 @@
       html5AudioPool["camera-shutter"] = new Audio(shutterWavUrl);
       html5AudioPool["heartbeat"] = new Audio(heartbeatWavUrl);
 
+      // 10. watch-tick: Subtle luxury mechanical wristwatch escapement tick-tock
+      const watchTickWavUrl = generatePcmWavBlobUrl(0.03, (t) => {
+        const metallic = Math.sin(2 * Math.PI * 2200 * t) * Math.exp(-t * 170) * 0.18;
+        const body = Math.sin(2 * Math.PI * 620 * t) * Math.exp(-t * 140) * 0.15;
+        return metallic + body;
+      });
+      html5AudioPool["watch-tick"] = new Audio(watchTickWavUrl);
+
       Object.values(html5AudioPool).forEach((aud) => {
         aud.volume = 0.75;
         aud.preload = "auto";
@@ -1968,7 +2037,7 @@
         const baseAudio = html5AudioPool[type] || html5AudioPool["tap"];
         if (baseAudio) {
           const clone = baseAudio.cloneNode();
-          clone.volume = type === "ios-typing" ? 0.45 : 0.78;
+          clone.volume = type === "watch-tick" ? 0.28 : type === "ios-typing" ? 0.45 : 0.78;
           clone.play().catch(() => {
             baseAudio.currentTime = 0;
             baseAudio.play().catch(() => {});
@@ -2172,6 +2241,9 @@
     // =========================================================================
     // 5. SECTION 1: LIVE COUNTER & APPLE WALLET BOARDING PASS RENDERER
     // =========================================================================
+    let isCounterTickSoundEnabled = true;
+    let isShowingHeartbeatsMode = false;
+
     function updateLiveRelationshipCounter() {
       const d = window.COUPLE_DATA || {};
       const rawDate = d.anniversaryDate || d.startDate || "2023-10-14T20:30:00";
@@ -2179,20 +2251,36 @@
       const validStart = isNaN(startMs) ? new Date("2023-10-14T20:30:00").getTime() : startMs;
       const diff = Math.max(0, Date.now() - validStart);
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const mins = Math.floor((diff / (1000 * 60)) % 60);
-      const secs = Math.floor((diff / 1000) % 60);
+      const totalSecs = Math.floor(diff / 1000);
+      const days = Math.floor(totalSecs / (60 * 60 * 24));
+      const hours = Math.floor((totalSecs / (60 * 60)) % 24);
+      const mins = Math.floor((totalSecs / 60) % 60);
+      const secs = totalSecs % 60;
 
       const dEl = document.getElementById("counter-days");
       const hEl = document.getElementById("counter-hours");
       const mEl = document.getElementById("counter-minutes");
       const sEl = document.getElementById("counter-seconds");
+      const beatsEl = document.getElementById("counter-total-heartbeats");
 
       if (dEl) dEl.textContent = String(days).padStart(3, "0");
       if (hEl) hEl.textContent = String(hours).padStart(2, "0");
       if (mEl) mEl.textContent = String(mins).padStart(2, "0");
-      if (sEl) sEl.textContent = String(secs).padStart(2, "0");
+      if (sEl) {
+        sEl.textContent = String(secs).padStart(2, "0");
+        sEl.style.transform = "scale(1.08)";
+        setTimeout(() => { if (sEl) sEl.style.transform = "scale(1)"; }, 120);
+      }
+      if (beatsEl) {
+        // Average 76 heartbeats per minute (1.266 beats per second)
+        const totalBeats = Math.floor(totalSecs * 1.266);
+        beatsEl.textContent = totalBeats.toLocaleString("en-US");
+      }
+
+      // Play subtle luxury wristwatch tick sound when unlocked, near Hero section, and music not drowning it out
+      if (isExperienceUnlocked && isCounterTickSoundEnabled && !isMusicPlaying && window.scrollY < 520) {
+        playUiSound("watch-tick");
+      }
     }
 
     function renderMilestonesSection() {
@@ -2521,7 +2609,7 @@
     // =========================================================================
     // 7. SECTION 4: 3D POLAROID SCRAPBOOK RENDERER
     // =========================================================================
-    function renderPolaroidSection() {
+    function renderPolaroidSection(triggerDevelopEffect = false) {
       const d = window.COUPLE_DATA || {};
       const photos = Array.isArray(d.polaroidPhotos) && d.polaroidPhotos.length ? d.polaroidPhotos : [];
       if (!photos.length) return;
@@ -2541,18 +2629,23 @@
       const vinylCenterImg = document.getElementById("vinyl-center-label-img");
 
       const photoUrl = current.imageUrl || current.url || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80";
-      if (imgEl) imgEl.src = photoUrl;
+      if (imgEl) {
+        imgEl.src = photoUrl;
+        if (triggerDevelopEffect) {
+          imgEl.classList.remove("polaroid-developing");
+          void imgEl.offsetWidth;
+          imgEl.classList.add("polaroid-developing");
+        }
+      }
       if (dateEl) dateEl.textContent = current.dateStamp || "'24 10 14";
       if (capEl) capEl.textContent = current.caption || "our favorite memory";
       if (noteEl) noteEl.textContent = `"${current.secretNote || current.backNote || current.caption || "kept safe in my camera roll forever."}"`;
-      if (locEl) locEl.innerHTML = `<span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5 text-rose-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg><span>${current.location || "With You"}</span></span>`;
+      if (locEl) locEl.textContent = `📍 ${current.location || "With You"}`;
       if (badgeEl) badgeEl.textContent = `${activePolaroidIndex + 1} / ${photos.length}`;
 
-      // Keep Vinyl center label synced with couple's first photo (polaroidPhotos[0].imageUrl)
       const firstPhotoUrl = photos[0].imageUrl || photos[0].url || photoUrl;
       if (vinylCenterImg) vinylCenterImg.src = firstPhotoUrl;
 
-      // Render thumbnail strip
       const thumbsRow = document.getElementById("polaroid-thumbs-row");
       if (thumbsRow) {
         thumbsRow.innerHTML = photos.map((p, idx) => {
@@ -2562,11 +2655,11 @@
             <button
               type="button"
               data-polaroid-idx="${idx}"
-              class="polaroid-thumb-btn w-11 h-11 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                isAct ? "border-rose-400 scale-105 shadow-md" : "border-white/15 opacity-55 hover:opacity-90"
+              class="polaroid-thumb-btn w-11 h-11 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                isAct ? "border-[#d92338] scale-105 shadow-md" : "border-white/15 opacity-55 hover:opacity-90"
               }"
             >
-              <img src="${u}" alt="Thumb ${idx + 1}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/2a1b24/fda4af?text=${idx + 1}'" />
+              <img src="${u}" alt="Thumb ${idx + 1}" class="w-full h-full object-cover" />
             </button>
           `;
         }).join("");
@@ -2574,63 +2667,87 @@
         thumbsRow.querySelectorAll(".polaroid-thumb-btn").forEach((btn) => {
           btn.addEventListener("click", () => {
             activePolaroidIndex = parseInt(btn.getAttribute("data-polaroid-idx"), 10) || 0;
-            playUiSound("tap");
-            renderPolaroidSection();
+            playUiSound("card-flip");
+            renderPolaroidSection(true);
           });
         });
       }
     }
 
     // =========================================================================
-    // 8. SECTION 5: TACTILE CREAM / KRAFT AIRMAIL ENVELOPES RENDERER
+    // 8. SECTION 5: 2 EXCLUSIVE HIGH-CONTRAST SEALED KEEPSAKE LETTERS
     // =========================================================================
     function renderEnvelopes() {
       const container = document.getElementById("envelopes-grid-container");
       if (!container) return;
       const d = window.COUPLE_DATA || {};
-      const letters = Array.isArray(d.openWhenLetters) && d.openWhenLetters.length ? d.openWhenLetters : [];
+      const allLetters = Array.isArray(d.openWhenLetters) && d.openWhenLetters.length ? d.openWhenLetters : [];
+      // Strictly show 2 exclusive letters so the reader is never overwhelmed!
+      const letters = allLetters.slice(0, 2);
 
       container.innerHTML = letters.map((item, idx) => {
+        const isNightEnvelope = idx === 1;
         return `
           <div
             data-envelope-idx="${idx}"
-            class="envelope-card rounded-2xl p-5 cursor-pointer select-none overflow-hidden group"
+            class="relative rounded-2xl p-5 cursor-pointer select-none overflow-hidden group transition-transform duration-300 hover:-translate-y-1 ${
+              isNightEnvelope
+                ? "bg-gradient-to-b from-[#1a1715] to-[#110f0e] text-stone-100 border border-amber-300/35 shadow-[0_20px_45px_rgba(0,0,0,0.85)]"
+                : "envelope-card text-stone-900"
+            }"
           >
-            <!-- Crisp Linen Envelope Triangular Flap -->
+            <!-- Envelope Triangular Flap SVG -->
             <svg class="absolute top-0 inset-x-0 w-full h-24 pointer-events-none" viewBox="0 0 300 95" preserveAspectRatio="none">
-              <polygon points="0,0 150,80 300,0" fill="#efe7d8" stroke="#d5c7b2" stroke-width="1.5" />
+              <polygon
+                points="0,0 150,80 300,0"
+                fill="${isNightEnvelope ? '#24201d' : '#efe7d8'}"
+                stroke="${isNightEnvelope ? 'rgba(251,191,36,0.35)' : '#d5c7b2'}"
+                stroke-width="1.5"
+              />
             </svg>
 
-            <!-- Top Row: Minimal Postmark & Stamp -->
             <div class="relative z-10 flex items-start justify-between">
-              <span class="font-mono text-[9px] uppercase tracking-widest text-stone-500">
-                NO. 0${idx + 1} • PAR AVION
+              <span class="font-mono text-[9px] uppercase tracking-widest ${isNightEnvelope ? 'text-amber-300/80' : 'text-stone-500'}">
+                ${isNightEnvelope ? '2:14 AM EDITION' : 'KEEPERS MAIL'}
               </span>
-              <span class="px-2 py-0.5 rounded bg-[#d92338]/10 border border-[#d92338]/30 font-mono text-[8px] font-bold text-[#d92338]">
-                ${item.stampCode || `LETTER 0${idx + 1}`}
+              <span class="px-2 py-0.5 rounded font-mono text-[8px] font-bold ${
+                isNightEnvelope
+                  ? 'bg-amber-400/15 border border-amber-300/40 text-amber-200'
+                  : 'bg-[#d92338]/10 border border-[#d92338]/30 text-[#d92338]'
+              }">
+                LETTER 0${idx + 1}
               </span>
             </div>
 
-            <!-- Center 3D Cherry Red Wax Seal -->
+            <!-- Center 3D Wax Seal -->
             <div class="relative z-20 flex flex-col items-center justify-center my-4">
-              <div class="w-13 h-13 rounded-full wax-seal-3d flex items-center justify-center border border-red-300/30 transition-transform duration-300 group-hover:scale-110" style="width: 52px; height: 52px;">
-                <div class="w-9 h-9 rounded-full border border-dashed border-rose-200/50 flex items-center justify-center text-rose-100 text-sm">
-                  ♥
+              <div
+                class="rounded-full flex items-center justify-center border transition-transform duration-300 group-hover:scale-110 ${
+                  isNightEnvelope
+                    ? 'bg-gradient-to-br from-amber-300 via-amber-500 to-yellow-800 border-amber-200/60 shadow-[0_8px_20px_rgba(245,158,11,0.4)]'
+                    : 'wax-seal-3d border-red-300/30'
+                }"
+                style="width: 54px; height: 54px;"
+              >
+                <div class="w-9 h-9 rounded-full border border-dashed ${isNightEnvelope ? 'border-stone-900/50 text-stone-950' : 'border-rose-200/50 text-rose-100'} flex items-center justify-center text-sm font-bold">
+                  ${isNightEnvelope ? '★' : '♥'}
                 </div>
               </div>
             </div>
 
-            <!-- Bottom Handwritten Title -->
             <div class="relative z-10 text-center">
-              <h3 class="font-hand text-2xl font-bold text-stone-900 leading-tight">
-                ${item.label || item.title || "Open when you need me"}
+              <h3 class="font-hand text-2xl font-bold ${isNightEnvelope ? 'text-amber-100' : 'text-stone-900'} leading-tight">
+                ${item.label || item.title || (isNightEnvelope ? "Open when you can't sleep" : "Open when you miss me")}
               </h3>
+              <span class="text-[10px] font-mono ${isNightEnvelope ? 'text-stone-400' : 'text-stone-500'} block mt-1">
+                tap wax seal to break open
+              </span>
             </div>
           </div>
         `;
       }).join("");
 
-      container.querySelectorAll(".envelope-card").forEach((card) => {
+      container.querySelectorAll("[data-envelope-idx]").forEach((card) => {
         card.addEventListener("click", () => {
           const idx = parseInt(card.getAttribute("data-envelope-idx"), 10) || 0;
           openEnvelopeModal(idx);
@@ -2867,135 +2984,33 @@
     };
 
     // =========================================================================
-    // 14. SECTION 08: COUPLE SPLIT (HIS & HERS) + TOGETHER 1:1 BOOTH & 3 SCRAPBOOK VARIANTS
+    // 14. SECTION 08: 100% LIVE CAMERA 1:1 STUDIO BOOTH & 3 STUDIO PRINT EDITIONS
     // =========================================================================
-    let boothCoupleMode = "couple"; // "couple" (His & Hers Split) or "together" (3-Square)
-    let boothActiveRole = "hers";   // "his" (Partner 1) or "hers" (Partner 2)
     let boothTemplateVariant = "scrapbook"; // "scrapbook" | "film35" | "newspaper"
-
-    let photoboxSlots = [null, null, null]; // Used for "together" mode & compatibility
-    let hisSlots = [null, null, null];      // Partner 1's 3 square snaps
-    let hersSlots = [null, null, null];     // Partner 2's 3 square snaps
-
+    let photoboxSlots = [null, null, null];
     let cameraMediaStream = null;
     let cameraFacingMode = "user";
     let isBoothBurstRunning = false;
 
     const BOOTH_POSE_PROMPTS = [
-      "POSE 1 / 3 • GIVE YOUR BEST SMILE!",
-      "POSE 2 / 3 • PEACE SIGN OR SILLY FACE!",
-      "POSE 3 / 3 • BLOW A KISS!"
+      "POSE 1 / 3 • GET CLOSE & SMILE!",
+      "POSE 2 / 3 • SILLY OR CANDID POSE!",
+      "POSE 3 / 3 • KISS OR HUG!"
     ];
 
-    function syncDefaultHisHersFromCoupleData() {
-      const d = window.COUPLE_DATA || {};
-      const photos = Array.isArray(d.polaroidPhotos) ? d.polaroidPhotos : [];
-      const fallback0 = (photos[0] && (photos[0].imageUrl || photos[0].url)) || "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80";
-      const fallback1 = (photos[1] && (photos[1].imageUrl || photos[1].url)) || fallback0;
-      const fallback2 = (photos[2] && (photos[2].imageUrl || photos[2].url)) || fallback0;
-
-      if (!hisSlots[0]) hisSlots = [fallback0, fallback1, fallback2];
-    }
-
-    function updateBoothUiLabels() {
-      const d = window.COUPLE_DATA || {};
-      const p1 = d.partner1Name || d.boyfriendName || "Noah";
-      const p2 = d.partner2Name || d.girlfriendName || "Mia";
-
-      const hisNameEl = document.getElementById("role-his-name");
-      const hersNameEl = document.getElementById("role-hers-name");
-      if (hisNameEl) hisNameEl.textContent = p1;
-      if (hersNameEl) hersNameEl.textContent = p2;
-
-      const modeCoupleBtn = document.getElementById("booth-mode-couple-btn");
-      const modeTogetherBtn = document.getElementById("booth-mode-together-btn");
-      const roleBar = document.getElementById("booth-role-selector-bar");
-      const hisBtn = document.getElementById("booth-role-his-btn");
-      const hersBtn = document.getElementById("booth-role-hers-btn");
-      const hisStatus = document.getElementById("role-his-status");
-      const hersStatus = document.getElementById("role-hers-status");
-      const mainBtnLabel = document.getElementById("booth-main-btn-label");
-      const standbyTitle = document.getElementById("booth-standby-title");
-
-      if (boothCoupleMode === "couple") {
-        if (modeCoupleBtn) modeCoupleBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow";
-        if (modeTogetherBtn) modeTogetherBtn.className = "py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white";
-        if (roleBar) roleBar.classList.remove("hidden");
-
-        const isHis = boothActiveRole === "his";
-        if (hisBtn) {
-          hisBtn.className = isHis
-            ? "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
-            : "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300";
-        }
-        if (hersBtn) {
-          hersBtn.className = !isHis
-            ? "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-[#d92338]/20 border-[#d92338] text-white"
-            : "py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between cursor-pointer bg-white/[0.05] border-white/15 text-stone-300";
-        }
-        if (hisStatus) hisStatus.textContent = hisSlots[0] ? "✓ Ready" : "● Snap";
-        if (hersStatus) hersStatus.textContent = hersSlots[0] ? "✓ Ready" : (isHis ? "Waiting" : "● Active");
-
-        const activePerson = isHis ? p1 : p2;
-        if (mainBtnLabel && !isBoothBurstRunning) mainBtnLabel.textContent = `Take 3 Photos as ${activePerson}`;
-        if (standbyTitle) standbyTitle.textContent = `${activePerson}'s 3 square poses`;
-      } else {
-        if (modeTogetherBtn) modeTogetherBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer bg-[#d92338] text-white shadow";
-        if (modeCoupleBtn) modeCoupleBtn.className = "py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer text-stone-400 hover:text-white";
-        if (roleBar) roleBar.classList.add("hidden");
-        if (mainBtnLabel && !isBoothBurstRunning) mainBtnLabel.textContent = "Take 3 Photos Together";
-        if (standbyTitle) standbyTitle.textContent = "3 square poses together";
-      }
-    }
-
     function initPhotoboxStudio() {
-      syncDefaultHisHersFromCoupleData();
-
       try {
-        const savedHis = localStorage.getItem("loveos_booth_his_snaps");
-        const savedHers = localStorage.getItem("loveos_booth_hers_snaps");
         const savedTogether = localStorage.getItem("loveos_live_booth_snaps");
-        if (savedHis) hisSlots = JSON.parse(savedHis);
-        if (savedHers) hersSlots = JSON.parse(savedHers);
         if (savedTogether) {
           const parsed = JSON.parse(savedTogether);
           if (Array.isArray(parsed) && parsed.length === 3 && parsed[0]) {
             photoboxSlots = parsed;
-            if (!hersSlots[0]) hersSlots = parsed;
             renderUnifiedDispenserStrip(false);
           }
         }
       } catch (_) {}
 
-      updateBoothUiLabels();
-
-      // Mode buttons: His & Hers Split vs Together
-      document.getElementById("booth-mode-couple-btn")?.addEventListener("click", () => {
-        boothCoupleMode = "couple";
-        playUiSound("tap");
-        updateBoothUiLabels();
-        if (photoboxSlots[0] || hersSlots[0]) renderUnifiedDispenserStrip(false);
-      });
-      document.getElementById("booth-mode-together-btn")?.addEventListener("click", () => {
-        boothCoupleMode = "together";
-        playUiSound("tap");
-        updateBoothUiLabels();
-        if (photoboxSlots[0] || hersSlots[0]) renderUnifiedDispenserStrip(false);
-      });
-
-      // Role buttons: His vs Hers
-      document.getElementById("booth-role-his-btn")?.addEventListener("click", () => {
-        boothActiveRole = "his";
-        playUiSound("tap");
-        updateBoothUiLabels();
-      });
-      document.getElementById("booth-role-hers-btn")?.addEventListener("click", () => {
-        boothActiveRole = "hers";
-        playUiSound("tap");
-        updateBoothUiLabels();
-      });
-
-      // 3 Distinct Template Variant Switcher Buttons
+      // 3 Studio Template Edition Switcher Buttons
       document.querySelectorAll(".booth-variant-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           boothTemplateVariant = btn.getAttribute("data-booth-variant") || "scrapbook";
@@ -3010,7 +3025,7 @@
         });
       });
 
-      // Flip Camera
+      // Flip Camera Lens
       document.getElementById("camera-flip-btn")?.addEventListener("click", () => {
         cameraFacingMode = cameraFacingMode === "user" ? "environment" : "user";
         playUiSound("tap");
@@ -3019,12 +3034,12 @@
         if (cameraMediaStream) startCameraStream();
       });
 
-      // Main 1-Click Auto 3-Snap Trigger
+      // Main 1-Click Live 3-Snap Trigger
       document.getElementById("camera-snap-trigger-btn")?.addEventListener("click", () => {
         if (!isBoothBurstRunning) runAutomatedPhotoboothBurst();
       });
 
-      // Retake Button
+      // Retake Live Button
       document.getElementById("booth-retake-all-btn")?.addEventListener("click", () => {
         playUiSound("tap");
         document.getElementById("booth-vf-box")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -3033,7 +3048,7 @@
         }, 350);
       });
 
-      // Lightbox Zoom
+      // Fullscreen Lightbox Zoom
       const stripWrapper = document.getElementById("booth-strip-img-wrapper");
       const lightboxModal = document.getElementById("booth-lightbox-modal");
       const lightboxImg = document.getElementById("booth-lightbox-img");
@@ -3050,48 +3065,6 @@
       lightboxModal?.addEventListener("click", () => {
         lightboxModal.classList.add("hidden");
         lightboxModal.classList.remove("flex");
-      });
-
-      // Upload Fallback
-      const fileInput = document.getElementById("photobox-file-input");
-      document.getElementById("booth-upload-fallback-btn")?.addEventListener("click", () => {
-        playUiSound("tap");
-        fileInput?.click();
-      });
-      fileInput?.addEventListener("change", (e) => {
-        const files = Array.from(e.target.files || []);
-        if (!files.length) return;
-        let loaded = 0;
-        const targetCount = Math.min(files.length, 3);
-        const tempSlots = [null, null, null];
-
-        files.slice(0, 3).forEach((file, idx) => {
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            tempSlots[idx] = ev.target.result;
-            loaded++;
-            if (loaded === targetCount) {
-              const filled = [tempSlots[0], tempSlots[1] || tempSlots[0], tempSlots[2] || tempSlots[0]];
-              photoboxSlots = filled;
-              if (boothCoupleMode === "couple") {
-                if (boothActiveRole === "his") {
-                  hisSlots = filled;
-                  try { localStorage.setItem("loveos_booth_his_snaps", JSON.stringify(hisSlots)); } catch (_) {}
-                } else {
-                  hersSlots = filled;
-                  try { localStorage.setItem("loveos_booth_hers_snaps", JSON.stringify(hersSlots)); } catch (_) {}
-                }
-              }
-              try { localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots)); } catch (_) {}
-              updateBoothUiLabels();
-              playUiSound("unlock");
-              spawnFloatingHeartBurst(8);
-              renderUnifiedDispenserStrip(true);
-              fileInput.value = "";
-            }
-          };
-          reader.readAsDataURL(file);
-        });
       });
 
       document.getElementById("photobox-download-btn")?.addEventListener("click", download916KeepsakePng);
@@ -3123,8 +3096,7 @@
         await video.play();
         return true;
       } catch (err) {
-        showToast("Camera unavailable — pick photos from your gallery!");
-        document.getElementById("photobox-file-input")?.click();
+        showToast("Please allow camera access for the Live Photo Booth!");
         return false;
       }
     }
@@ -3168,14 +3140,14 @@
 
       isBoothBurstRunning = true;
       if (mainBtn) mainBtn.classList.add("opacity-50", "pointer-events-none");
-      if (mainBtnLabel) mainBtnLabel.textContent = "Starting Camera...";
+      if (mainBtnLabel) mainBtnLabel.textContent = "Opening Live Camera...";
 
       if (!cameraMediaStream) {
         const ok = await startCameraStream();
         if (!ok) {
           isBoothBurstRunning = false;
           if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-          updateBoothUiLabels();
+          if (mainBtnLabel) mainBtnLabel.textContent = "Start Live Photo Booth (3 Snaps)";
           return;
         }
         await sleepMs(450);
@@ -3191,7 +3163,7 @@
 
       for (let poseIdx = 0; poseIdx < 3; poseIdx++) {
         if (posePrompt) posePrompt.textContent = BOOTH_POSE_PROMPTS[poseIdx];
-        if (mainBtnLabel) mainBtnLabel.textContent = `Snapping ${poseIdx + 1} / 3...`;
+        if (mainBtnLabel) mainBtnLabel.textContent = `Live Snap ${poseIdx + 1} of 3...`;
 
         for (let c = 3; c >= 1; c--) {
           if (countdownNum) countdownNum.textContent = String(c);
@@ -3229,21 +3201,12 @@
         updateBoothDots(poseIdx + 1);
 
         if (poseIdx < 2) {
-          if (posePrompt) posePrompt.textContent = `POSE #${poseIdx + 2} COMING UP...`;
+          if (posePrompt) posePrompt.textContent = `HOLD TIGHT • POSE #${poseIdx + 2} NEXT...`;
           await sleepMs(900);
         }
       }
 
       photoboxSlots = captured;
-      if (boothCoupleMode === "couple") {
-        if (boothActiveRole === "his") {
-          hisSlots = captured;
-          try { localStorage.setItem("loveos_booth_his_snaps", JSON.stringify(hisSlots)); } catch (_) {}
-        } else {
-          hersSlots = captured;
-          try { localStorage.setItem("loveos_booth_hers_snaps", JSON.stringify(hersSlots)); } catch (_) {}
-        }
-      }
       try {
         localStorage.setItem("loveos_live_booth_snaps", JSON.stringify(photoboxSlots));
       } catch (_) {}
@@ -3255,7 +3218,7 @@
       stopBoothCameraStream();
       isBoothBurstRunning = false;
       if (mainBtn) mainBtn.classList.remove("opacity-50", "pointer-events-none");
-      updateBoothUiLabels();
+      if (mainBtnLabel) mainBtnLabel.textContent = "Snap 3 New Live Photos";
 
       spawnFloatingHeartBurst(10);
       await renderUnifiedDispenserStrip(true);
@@ -3270,9 +3233,7 @@
     }
 
     async function renderUnifiedDispenserStrip(animateDispense = false) {
-      syncDefaultHisHersFromCoupleData();
-      const hasAny = photoboxSlots[0] || hersSlots[0];
-      if (!hasAny) return;
+      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) return;
 
       const stage = document.getElementById("photobox-developed-stage");
       const finalImg = document.getElementById("booth-final-strip-img");
@@ -3299,7 +3260,7 @@
     }
 
     // =========================================================================
-    // TRUE SMOOTH BEZIER CURVE HEART & COQUETTE RIBBON STICKERS (NO WEIRD CONE HEARTS!)
+    // STUDIO-GRADE VECTOR STICKERS ON CANVAS (ZERO MESSY PAINT BOXES!)
     // =========================================================================
     function drawSmoothBezierHeart(ctx, cx, cy, size, angleRad, fillColor = "#d92338") {
       ctx.save();
@@ -3309,11 +3270,10 @@
       ctx.scale(s, s);
       ctx.translate(-32, -32);
 
-      ctx.shadowColor = "rgba(0, 0, 0, 0.28)";
-      ctx.shadowBlur = 14;
-      ctx.shadowOffsetY = 6;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.22)";
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetY = 5;
 
-      // Exact SVG Bezier Path: M32 54 C32 54 8 39 8 22 C8 13.5 14.8 8 22.5 8 C27.2 8 30.5 10.6 32 13.8 C33.5 10.6 36.8 8 41.5 8 C49.2 8 56 13.5 56 22 C56 39 32 54 32 54 Z
       ctx.fillStyle = fillColor;
       ctx.beginPath();
       ctx.moveTo(32, 54);
@@ -3328,11 +3288,10 @@
 
       ctx.shadowBlur = 0;
       ctx.shadowOffsetY = 0;
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      // Soft glossy highlight pill on top-left lobe
       ctx.save();
       ctx.translate(20, 17);
       ctx.rotate(-0.48);
@@ -3341,7 +3300,86 @@
       ctx.ellipse(0, 0, 5.5, 2.4, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
+      ctx.restore();
+    }
 
+    // Fine-Line Coquette Silk Ribbon Bow Sticker
+    function drawCoquetteRibbonBow(ctx, cx, cy, scale, angleRad, color = "#d92338") {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleRad);
+      ctx.scale(scale, scale);
+
+      ctx.shadowColor = "rgba(0,0,0,0.2)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 4;
+
+      // Left loop
+      ctx.fillStyle = color;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-18, -22, -46, -16, -42, 4);
+      ctx.bezierCurveTo(-38, 22, -12, 14, 0, 0);
+      ctx.fill();
+      ctx.stroke();
+
+      // Right loop
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(18, -22, 46, -16, 42, 4);
+      ctx.bezierCurveTo(38, 22, 12, 14, 0, 0);
+      ctx.fill();
+      ctx.stroke();
+
+      // Flowing tails
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 7;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-4, 4);
+      ctx.quadraticCurveTo(-16, 24, -24, 42);
+      ctx.moveTo(4, 4);
+      ctx.quadraticCurveTo(16, 24, 24, 42);
+      ctx.stroke();
+
+      // Center knot
+      ctx.fillStyle = "#991b1b";
+      ctx.beginPath();
+      ctx.arc(0, 0, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Fine-Line Circular Vintage Postmark Stamp
+    function drawCircularPostmark(ctx, cx, cy, angleRad, color, topText, bottomText) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angleRad);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, 58, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.arc(0, 0, 48, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.font = "bold 12px 'JetBrains Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(topText, 0, -16);
+      ctx.font = "italic 22px 'Instrument Serif', Georgia, serif";
+      ctx.fillText("★ 1 OF 1 ★", 0, 7);
+      ctx.font = "bold 11px 'JetBrains Mono', monospace";
+      ctx.fillText(bottomText, 0, 26);
       ctx.restore();
     }
 
@@ -3349,16 +3387,16 @@
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(angleRad);
-      ctx.shadowColor = "rgba(0,0,0,0.14)";
+      ctx.shadowColor = "rgba(0,0,0,0.12)";
       ctx.shadowBlur = 6;
       ctx.fillStyle = bgColor;
       ctx.fillRect(-w / 2, -h / 2, w, h);
       ctx.shadowBlur = 0;
       ctx.strokeStyle = borderColor;
-      ctx.lineWidth = 1.8;
+      ctx.lineWidth = 1.6;
       ctx.strokeRect(-w / 2, -h / 2, w, h);
       if (labelText) {
-        ctx.fillStyle = "#44403c";
+        ctx.fillStyle = "#57534e";
         ctx.font = "bold 22px 'Caveat', cursive";
         ctx.textAlign = "center";
         ctx.fillText(labelText, 0, 7);
@@ -3373,6 +3411,9 @@
       ctx.drawImage(img, sx, sy, side, side, x, y, size, size);
     }
 
+    // =========================================================================
+    // 3 STUDIO-GRADE 1080x1920 PRINT TEMPLATES (LIFE4CUTS / URBAN OUTFITTERS / NYT ZINE)
+    // =========================================================================
     function generate1080x1920Canvas() {
       return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
@@ -3386,115 +3427,6 @@
         const dateBurn = getFormattedBoothDateStamp();
         const v = boothTemplateVariant; // "scrapbook" | "film35" | "newspaper"
 
-        // =====================================================================
-        // 1. TEMPLATE VARIANT BACKGROUNDS & EDITORIAL HEADERS
-        // =====================================================================
-        if (v === "film35") {
-          // VARIANT 02: 35MM DARK KODAK CONTACT SHEET
-          ctx.fillStyle = "#0d0c0b";
-          ctx.fillRect(0, 0, 1080, 1920);
-
-          // Left & Right 35mm Film Sprocket Holes & Gold Kodak Edge Codes
-          ctx.fillStyle = "#211e1b";
-          ctx.fillRect(0, 0, 78, 1920);
-          ctx.fillRect(1002, 0, 78, 1920);
-
-          ctx.fillStyle = "#f4efe4";
-          for (let fy = 36; fy < 1890; fy += 54) {
-            ctx.beginPath();
-            ctx.roundRect(22, fy, 34, 24, 4);
-            ctx.roundRect(1024, fy, 34, 24, 4);
-            ctx.fill();
-          }
-
-          ctx.fillStyle = "#f59e0b";
-          ctx.font = "bold 22px 'JetBrains Mono', monospace";
-          ctx.fillText("▲ KODAK PORTRA 400TM  •  CONTACT SHEET 14A", 104, 96);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "italic 78px 'Instrument Serif', Georgia, serif";
-          ctx.fillText(`${p1} & ${p2}`, 104, 178);
-
-          ctx.fillStyle = "#a8a29e";
-          ctx.font = "bold 19px 'JetBrains Mono', monospace";
-          ctx.fillText(`PROOF SHEET ${dateBurn}  •  DO NOT CROP ♥`, 104, 218);
-        } else if (v === "newspaper") {
-          // VARIANT 03: THE SUNDAY LOVE TIMES (NY EDITORIAL ZINE)
-          ctx.fillStyle = "#f6f3eb";
-          ctx.fillRect(0, 0, 1080, 1920);
-
-          // Newspaper Masthead Rules
-          ctx.strokeStyle = "#181512";
-          ctx.lineWidth = 4;
-          ctx.beginPath();
-          ctx.moveTo(64, 62); ctx.lineTo(1016, 62);
-          ctx.moveTo(64, 182); ctx.lineTo(1016, 182);
-          ctx.stroke();
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(64, 70); ctx.lineTo(1016, 70);
-          ctx.moveTo(64, 224); ctx.lineTo(1016, 224);
-          ctx.stroke();
-
-          ctx.fillStyle = "#181512";
-          ctx.font = "italic 76px 'Instrument Serif', Georgia, serif";
-          ctx.textAlign = "center";
-          ctx.fillText("The Sunday Love Times", 540, 152);
-
-          ctx.font = "bold 18px 'JetBrains Mono', monospace";
-          ctx.fillText(`VOL. 01 • SPECIAL EDITION: ${p1} & ${p2} • ${dateBurn} • PRICE: PRICELESS`, 540, 208);
-          ctx.textAlign = "left";
-        } else {
-          // VARIANT 01 (DEFAULT): CREAM SCRAPBOOK EDITION
-          ctx.fillStyle = "#f4efe4";
-          ctx.fillRect(0, 0, 1080, 1920);
-
-          ctx.fillStyle = "rgba(120, 105, 88, 0.16)";
-          for (let gx = 48; gx < 1040; gx += 36) {
-            for (let gy = 48; gy < 1880; gy += 36) {
-              ctx.beginPath();
-              ctx.arc(gx, gy, 1.5, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-
-          ctx.strokeStyle = "#d6cbb9";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(36, 36, 1008, 1848);
-
-          ctx.fillStyle = "#d92338";
-          ctx.font = "bold 21px 'JetBrains Mono', monospace";
-          ctx.fillText("● STUDIO 402 • 1:1 ANALOG SCRAPBOOK", 78, 102);
-
-          ctx.fillStyle = "#181512";
-          ctx.font = "italic 80px 'Instrument Serif', Georgia, serif";
-          ctx.fillText(`${p1} & ${p2}`, 78, 184);
-
-          ctx.fillStyle = "#6b6257";
-          ctx.font = "bold 19px 'JetBrains Mono', monospace";
-          ctx.fillText(`CAPTURED ${dateBurn}  •  1 OF 1 KEEPSAKE`, 78, 220);
-
-          // Top-Right Postage Stamp with Smooth Bezier Heart
-          ctx.save();
-          ctx.translate(925, 140);
-          ctx.rotate(0.06);
-          ctx.fillStyle = "#fffdf9";
-          ctx.strokeStyle = "#bfb29e";
-          ctx.lineWidth = 3;
-          ctx.setLineDash([6, 6]);
-          ctx.fillRect(-70, -75, 140, 150);
-          ctx.strokeRect(-70, -75, 140, 150);
-          ctx.setLineDash([]);
-          ctx.fillStyle = "#fbe4e6";
-          ctx.fillRect(-58, -62, 116, 124);
-          ctx.fillStyle = "#d92338";
-          ctx.font = "bold 14px 'JetBrains Mono', monospace";
-          ctx.textAlign = "center";
-          ctx.fillText("FIRST CLASS", 0, -38);
-          ctx.restore();
-          drawSmoothBezierHeart(ctx, 925, 140, 42, 0.06, "#d92338");
-        }
-
         function loadImg(src) {
           return new Promise((res) => {
             if (!src) return res(null);
@@ -3506,187 +3438,243 @@
           });
         }
 
-        // Gather images depending on mode ("couple" His & Hers 6-photo split vs "together" 3-photo)
-        const h0 = hisSlots[0] || photoboxSlots[0];
-        const h1 = hisSlots[1] || h0;
-        const h2 = hisSlots[2] || h0;
+        const s0 = photoboxSlots[0] || photoboxSlots[1] || photoboxSlots[2];
+        const s1 = photoboxSlots[1] || s0;
+        const s2 = photoboxSlots[2] || s0;
 
-        const w0 = hersSlots[0] || photoboxSlots[0] || h0;
-        const w1 = hersSlots[1] || photoboxSlots[1] || w0;
-        const w2 = hersSlots[2] || photoboxSlots[2] || w0;
-
-        const t0 = photoboxSlots[0] || w0 || h0;
-        const t1 = photoboxSlots[1] || w1 || t0;
-        const t2 = photoboxSlots[2] || w2 || t0;
-
-        Promise.all([loadImg(h0), loadImg(h1), loadImg(h2), loadImg(w0), loadImg(w1), loadImg(w2), loadImg(t0), loadImg(t1), loadImg(t2)]).then((loaded) => {
-          const hisImgs = [loaded[0], loaded[1], loaded[2]];
-          const hersImgs = [loaded[3], loaded[4], loaded[5]];
-          const togetherImgs = [loaded[6], loaded[7], loaded[8]];
-
-          const isDark = v === "film35";
-
-          if (boothCoupleMode === "couple") {
+        Promise.all([loadImg(s0), loadImg(s1), loadImg(s2)]).then((imgs) => {
+          if (v === "film35") {
             // =================================================================
-            // HIS & HERS COUPLE SPLIT LAYOUT (3 ROWS × 2 COLUMNS OF 1:1 SQUARES)
+            // EDITION 02: KODAK 35MM ANALOG FILM CONTACT STRIP
             // =================================================================
-            // Column Headers ("HIS • NOAH" & "HERS • MIA")
-            ctx.fillStyle = isDark ? "#fbbf24" : "#d92338";
-            ctx.font = "bold 20px 'JetBrains Mono', monospace";
-            ctx.textAlign = "center";
-            ctx.fillText(`👦 HIS (${p1})`, 315, 275);
-            ctx.fillText(`👧 HERS (${p2})`, 765, 275);
+            ctx.fillStyle = "#0b0a09";
+            ctx.fillRect(0, 0, 1080, 1920);
 
-            const rowsY = [515, 965, 1415];
-            const rowNotes = [
-              ["pose 01 • his smile", "pose 01 • her smile ♡"],
-              ["pose 02 • his vibe", "pose 02 • her vibe ★"],
-              ["pose 03 • always yours", "pose 03 • forever mine"]
-            ];
+            // Authentic 35mm Sprocket Rails Left & Right
+            ctx.fillStyle = "#171513";
+            ctx.fillRect(0, 0, 92, 1920);
+            ctx.fillRect(988, 0, 92, 1920);
 
-            rowsY.forEach((cy, rIdx) => {
-              const pair = [
-                { cx: 315, angle: rIdx % 2 === 0 ? -0.045 : 0.035, img: hisImgs[rIdx], cap: rowNotes[rIdx][0], tape: "his ♡" },
-                { cx: 765, angle: rIdx % 2 === 0 ? 0.045 : -0.035, img: hersImgs[rIdx], cap: rowNotes[rIdx][1], tape: "hers ♡" }
-              ];
-
-              pair.forEach((item) => {
-                const sqSize = 340;
-                const fw = 376;
-                const fh = 434;
-
-                ctx.save();
-                ctx.translate(item.cx, cy);
-                ctx.rotate(item.angle);
-
-                ctx.shadowColor = isDark ? "rgba(0,0,0,0.8)" : "rgba(20,16,12,0.32)";
-                ctx.shadowBlur = 26;
-                ctx.shadowOffsetY = 12;
-
-                ctx.fillStyle = isDark ? "#1c1917" : "#ffffff";
-                ctx.fillRect(-fw / 2, -fh / 2, fw, fh);
-                ctx.shadowBlur = 0;
-                ctx.shadowOffsetY = 0;
-
-                ctx.strokeStyle = isDark ? "rgba(255,255,255,0.18)" : "#dcd3c4";
-                ctx.lineWidth = 2;
-                ctx.strokeRect(-fw / 2, -fh / 2, fw, fh);
-
-                const px = -sqSize / 2;
-                const py = -fh / 2 + 18;
-                ctx.fillStyle = "#141210";
-                ctx.fillRect(px, py, sqSize, sqSize);
-
-                if (item.img) {
-                  drawSquareCover(ctx, item.img, px, py, sqSize);
-                }
-
-                // 35mm Orange Date Burn
-                ctx.fillStyle = "#ff8524";
-                ctx.font = "bold 17px 'JetBrains Mono', monospace";
-                ctx.textAlign = "right";
-                ctx.fillText(dateBurn, px + sqSize - 12, py + sqSize - 12);
-
-                // Handwritten Caption
-                ctx.fillStyle = isDark ? "#f5f5f4" : "#1c1917";
-                ctx.font = "bold 28px 'Caveat', cursive";
-                ctx.textAlign = "left";
-                ctx.fillText(item.cap, px + 6, py + sqSize + 44);
-
-                ctx.restore();
-
-                if (!isDark) {
-                  drawWashiTape(ctx, item.cx, cy - fh / 2 + 4, 150, 34, item.angle * -0.8, "rgba(239, 230, 213, 0.9)", "#cbbba0", item.tape);
-                }
-              });
-
-              // Center Smooth Bezier Heart connecting His & Hers on each row!
-              drawSmoothBezierHeart(ctx, 540, cy, 54, rIdx % 2 === 0 ? -0.1 : 0.1, "#d92338");
-            });
-          } else {
-            // =================================================================
-            // TOGETHER 3-SQUARE TILTED SCRAPBOOK LAYOUT
-            // =================================================================
-            if (!isDark) {
-              // Decorative Vinyl Disc on Top-Right
-              ctx.save();
-              ctx.translate(830, 465);
-              ctx.rotate(0.14);
-              ctx.fillStyle = "#141210";
+            ctx.fillStyle = "#f4efe4";
+            for (let fy = 34; fy < 1890; fy += 56) {
               ctx.beginPath();
-              ctx.arc(0, 0, 138, 0, Math.PI * 2);
+              ctx.roundRect(26, fy, 40, 26, 4);
+              ctx.roundRect(1014, fy, 40, 26, 4);
               ctx.fill();
-              ctx.fillStyle = "#d92338";
-              ctx.beginPath();
-              ctx.arc(0, 0, 44, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.fillStyle = "#ffffff";
-              ctx.font = "bold 12px 'JetBrains Mono', monospace";
-              ctx.textAlign = "center";
-              ctx.fillText("OUR SONG", 0, -14);
-              ctx.fillText("SIDE A", 0, 22);
-              ctx.restore();
-
-              // Sticky Note on Middle-Left
-              ctx.save();
-              ctx.translate(240, 955);
-              ctx.rotate(-0.07);
-              ctx.fillStyle = "#fff8dc";
-              ctx.strokeStyle = "#e6d8a8";
-              ctx.lineWidth = 2;
-              ctx.fillRect(-150, -100, 300, 200);
-              ctx.strokeRect(-150, -100, 300, 200);
-              ctx.fillStyle = "#d92338";
-              ctx.font = "bold 14px 'JetBrains Mono', monospace";
-              ctx.textAlign = "left";
-              ctx.fillText("2:14 AM // NOTE", -125, -62);
-              ctx.fillStyle = "#181512";
-              ctx.font = "bold 32px 'Caveat', cursive";
-              ctx.fillText("still crushing on you", -125, -15);
-              ctx.fillText("harder than day one ♡", -125, 24);
-              ctx.restore();
-
-              // VIP Red Ticket Stub on Bottom-Right
-              ctx.save();
-              ctx.translate(815, 1415);
-              ctx.rotate(0.08);
-              ctx.fillStyle = "#d92338";
-              ctx.fillRect(-150, -85, 300, 170);
-              ctx.fillStyle = "#ffffff";
-              ctx.font = "bold 15px 'JetBrains Mono', monospace";
-              ctx.textAlign = "center";
-              ctx.fillText("★ ADMIT TWO • VIP ★", 0, -35);
-              ctx.font = "italic 40px 'Instrument Serif', Georgia, serif";
-              ctx.fillText("Forever Seat 14A", 0, 12);
-              ctx.restore();
             }
 
-            const configs = [
-              { cx: 375, cy: 530, angle: -0.055, cap: "01. golden hour with you ♡", tape: "us right now ♡" },
-              { cx: 700, cy: 960, angle: 0.052, cap: "02. 100% chaotic & candid ★", tape: "keep forever" },
-              { cx: 385, cy: 1385, angle: -0.04, cap: "03. my favorite place to be", tape: "1 of 1 memory" }
+            // Gold Kodak Edge Print Codes along margins
+            ctx.save();
+            ctx.fillStyle = "#f59e0b";
+            ctx.font = "bold 17px 'JetBrains Mono', monospace";
+            ctx.translate(82, 960);
+            ctx.rotate(-Math.PI / 2);
+            ctx.textAlign = "center";
+            ctx.fillText("▲ KODAK PORTRA 400TM  •  SAFETY FILM 5012  •  FRAME 14A - 16A ▲", 0, 0);
+            ctx.restore();
+
+            // Studio Header
+            ctx.fillStyle = "#f59e0b";
+            ctx.font = "bold 20px 'JetBrains Mono', monospace";
+            ctx.textAlign = "left";
+            ctx.fillText("● 35MM LIVE ANALOG PROOF SHEET  •  ISO 400", 126, 92);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "italic 74px 'Instrument Serif', Georgia, serif";
+            ctx.fillText(`${p1} & ${p2}`, 126, 168);
+
+            ctx.fillStyle = "#a8a29e";
+            ctx.font = "bold 18px 'JetBrains Mono', monospace";
+            ctx.fillText(`DATE ${dateBurn}  •  UNEDITED LIVE SESSION`, 126, 204);
+
+            // 3 Large 1:1 Square Film Frames stacked cleanly with warm film light-leak
+            const sqSize = 446;
+            const framesY = [245, 735, 1225];
+            const frameCodes = ["14A • POSE I", "15A • POSE II", "16A • POSE III"];
+            const captions = ["golden hour in our booth", "caught mid-laugh ♥", "keeping this strip forever"];
+
+            framesY.forEach((topY, idx) => {
+              const im = imgs[idx];
+              const leftX = (1080 - sqSize) / 2;
+
+              // Subtle warm film border
+              ctx.strokeStyle = "rgba(245, 158, 11, 0.35)";
+              ctx.lineWidth = 2;
+              ctx.strokeRect(leftX - 10, topY - 10, sqSize + 20, sqSize + 20);
+
+              if (im) drawSquareCover(ctx, im, leftX, topY, sqSize);
+
+              // Subtle Analog Warm Light Leak on Left Edge of Photo
+              const leak = ctx.createLinearGradient(leftX, topY, leftX + 110, topY);
+              leak.addColorStop(0, "rgba(234, 88, 12, 0.28)");
+              leak.addColorStop(1, "transparent");
+              ctx.fillStyle = leak;
+              ctx.fillRect(leftX, topY, 110, sqSize);
+
+              // Camera Viewfinder Crosshair + 35mm Date Burn
+              ctx.fillStyle = "#ff8524";
+              ctx.font = "bold 19px 'JetBrains Mono', monospace";
+              ctx.textAlign = "right";
+              ctx.fillText(`${dateBurn} • ${frameCodes[idx]}`, leftX + sqSize - 16, topY + sqSize - 16);
+
+              // Side China-Marker Handwritten Annotation
+              ctx.save();
+              ctx.translate(idx % 2 === 0 ? 885 : 195, topY + sqSize / 2);
+              ctx.rotate(idx % 2 === 0 ? 0.08 : -0.08);
+              ctx.fillStyle = "#faf6ee";
+              ctx.font = "bold 28px 'Caveat', cursive";
+              ctx.textAlign = "center";
+              ctx.fillText(captions[idx], 0, 0);
+              ctx.restore();
+            });
+
+            drawSmoothBezierHeart(ctx, 880, 165, 52, 0.12, "#d92338");
+          } else if (v === "newspaper") {
+            // =================================================================
+            // EDITION 03: NYT MODERN LOVE ZINE / EDITORIAL NEWSPAPER
+            // =================================================================
+            ctx.fillStyle = "#f5f1e8";
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // Outer Newspaper Border
+            ctx.strokeStyle = "#181512";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(44, 44, 992, 1832);
+
+            // Masthead
+            ctx.fillStyle = "#181512";
+            ctx.font = "italic 76px 'Instrument Serif', Georgia, serif";
+            ctx.textAlign = "center";
+            ctx.fillText("The Sunday Love Times", 540, 136);
+
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(68, 158); ctx.lineTo(1012, 158);
+            ctx.moveTo(68, 198); ctx.lineTo(1012, 198);
+            ctx.stroke();
+
+            ctx.font = "bold 17px 'JetBrains Mono', monospace";
+            ctx.fillText(`NEW YORK & EVERYWHERE  •  FEATURING ${p1} & ${p2}  •  ${dateBurn}  •  EDITION 1 OF 1`, 540, 184);
+
+            // 3 Staggered 1:1 Square Zine Frames with Crisp Ink Borders & Editorial Captions
+            const zinePositions = [
+              { cx: 365, cy: 485, title: "FIG. 01 — THE FAVORITE HELLO", quote: "'In a crowded room, I would still look straight for you every single time.'" },
+              { cx: 715, cy: 960, title: "FIG. 02 — UNFILTERED & CANDID", quote: "'Five minutes of laughing with you fixes my entire week.'" },
+              { cx: 365, cy: 1435, title: "FIG. 03 — FOR THE ARCHIVES", quote: "'Clocked in together, zero plans of ever checking out.'" }
             ];
 
-            const sqSize = 415;
-            const fw = 462;
-            const fh = 538;
+            const sqSize = 420;
+            zinePositions.forEach((pos, idx) => {
+              const im = imgs[idx];
+              const x = pos.cx - sqSize / 2;
+              const y = pos.cy - sqSize / 2;
 
-            configs.forEach((cfg, idx) => {
-              const im = togetherImgs[idx];
+              // Brutalist-chic hard ink offset shadow
+              ctx.fillStyle = "#181512";
+              ctx.fillRect(x + 10, y + 10, sqSize, sqSize);
+
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(x, y, sqSize, sqSize);
+              if (im) drawSquareCover(ctx, im, x, y, sqSize);
+
+              ctx.strokeStyle = "#181512";
+              ctx.lineWidth = 3.5;
+              ctx.strokeRect(x, y, sqSize, sqSize);
+
+              // Editorial Column Caption beside each photo
+              const textX = idx === 1 ? 105 : 620;
+              ctx.fillStyle = "#d92338";
+              ctx.font = "bold 17px 'JetBrains Mono', monospace";
+              ctx.textAlign = "left";
+              ctx.fillText(pos.title, textX, pos.cy - 45);
+
+              ctx.fillStyle = "#181512";
+              ctx.font = "italic 34px 'Instrument Serif', Georgia, serif";
+              const words = pos.quote.split(" ");
+              let line = "";
+              let ly = pos.cy - 5;
+              words.forEach((w) => {
+                if ((line + w).length > 22) {
+                  ctx.fillText(line, textX, ly);
+                  line = w + " ";
+                  ly += 38;
+                } else {
+                  line += w + " ";
+                }
+              });
+              if (line) ctx.fillText(line, textX, ly);
+            });
+
+            drawCircularPostmark(ctx, 835, 1460, -0.14, "#d92338", "VERIFIED COUPLE", dateBurn);
+            drawSmoothBezierHeart(ctx, 835, 480, 54, 0.1, "#d92338");
+          } else {
+            // =================================================================
+            // EDITION 01 (DEFAULT): COQUETTE CREAM EDITORIAL SCRAPBOOK STRIP
+            // =================================================================
+            ctx.fillStyle = "#faf6ee";
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // Subtle fine dot-grid
+            ctx.fillStyle = "rgba(140, 125, 105, 0.15)";
+            for (let gx = 54; gx < 1030; gx += 36) {
+              for (let gy = 54; gy < 1870; gy += 36) {
+                ctx.beginPath();
+                ctx.arc(gx, gy, 1.4, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+
+            // Double Hairline Studio Border
+            ctx.strokeStyle = "#d5cbb8";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(38, 38, 1004, 1844);
+            ctx.strokeStyle = "rgba(217, 35, 56, 0.25)";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(50, 50, 980, 1820);
+
+            // Header
+            ctx.fillStyle = "#d92338";
+            ctx.font = "bold 20px 'JetBrains Mono', monospace";
+            ctx.textAlign = "left";
+            ctx.fillText("● STUDIO 402  •  1:1 LIVE SELF-PHOTO BOOTH", 82, 104);
+
+            ctx.fillStyle = "#181512";
+            ctx.font = "italic 78px 'Instrument Serif', Georgia, serif";
+            ctx.fillText(`${p1} & ${p2}`, 82, 182);
+
+            ctx.fillStyle = "#6b6257";
+            ctx.font = "bold 18px 'JetBrains Mono', monospace";
+            ctx.fillText(`LIVE SESSION ${dateBurn}  •  KEPT FOREVER ♥`, 82, 216);
+
+            drawCircularPostmark(ctx, 915, 148, 0.08, "#d92338", "LOVEOS STUDIO", dateBurn);
+
+            // 3 Large 1:1 Square Polaroids Arranged with Gentle Studio Tilt (Zero Messy Boxes Behind!)
+            const cards = [
+              { cx: 430, cy: 515, angle: -0.032, cap: "01. my favorite person ♡", tape: "us right now ♡" },
+              { cx: 650, cy: 965, angle: 0.032, cap: "02. 100% chaotic & candid ★", tape: "keep forever" },
+              { cx: 430, cy: 1415, angle: -0.022, cap: "03. right where i belong", tape: "1 of 1 memory" }
+            ];
+
+            const sqSize = 416;
+            const fw = 460;
+            const fh = 532;
+
+            cards.forEach((cfg, idx) => {
+              const im = imgs[idx];
               ctx.save();
               ctx.translate(cfg.cx, cfg.cy);
               ctx.rotate(cfg.angle);
 
-              ctx.shadowColor = isDark ? "rgba(0,0,0,0.85)" : "rgba(15,12,10,0.36)";
-              ctx.shadowBlur = 30;
-              ctx.shadowOffsetY = 14;
+              ctx.shadowColor = "rgba(20, 16, 12, 0.28)";
+              ctx.shadowBlur = 28;
+              ctx.shadowOffsetY = 12;
 
-              ctx.fillStyle = isDark ? "#1c1917" : "#ffffff";
+              ctx.fillStyle = "#ffffff";
               ctx.fillRect(-fw / 2, -fh / 2, fw, fh);
               ctx.shadowBlur = 0;
               ctx.shadowOffsetY = 0;
 
-              ctx.strokeStyle = isDark ? "rgba(255,255,255,0.2)" : "#ded6c8";
+              ctx.strokeStyle = "#ded6c8";
               ctx.lineWidth = 2;
               ctx.strokeRect(-fw / 2, -fh / 2, fw, fh);
 
@@ -3698,59 +3686,69 @@
               if (im) drawSquareCover(ctx, im, px, py, sqSize);
 
               ctx.fillStyle = "#ff8524";
-              ctx.font = "bold 19px 'JetBrains Mono', monospace";
+              ctx.font = "bold 18px 'JetBrains Mono', monospace";
               ctx.textAlign = "right";
               ctx.fillText(`${dateBurn} • #0${idx + 1}`, px + sqSize - 14, py + sqSize - 14);
 
-              ctx.fillStyle = isDark ? "#f5f5f4" : "#1c1917";
-              ctx.font = "bold 33px 'Caveat', cursive";
+              ctx.fillStyle = "#1c1917";
+              ctx.font = "bold 32px 'Caveat', cursive";
               ctx.textAlign = "left";
-              ctx.fillText(cfg.cap, px + 6, py + sqSize + 52);
-
-              // Red grease-pencil circle on Film35 mode
-              if (isDark && idx === 1) {
-                ctx.strokeStyle = "#ef4444";
-                ctx.lineWidth = 5;
-                ctx.beginPath();
-                ctx.ellipse(0, 0, fw / 2 + 18, fh / 2 + 12, -0.08, 0, Math.PI * 2);
-                ctx.stroke();
-              }
+              ctx.fillText(cfg.cap, px + 6, py + sqSize + 50);
 
               ctx.restore();
 
-              if (!isDark) {
-                drawWashiTape(ctx, cfg.cx, cfg.cy - fh / 2 + 4, 200, 40, cfg.angle - 0.03, "rgba(239, 230, 213, 0.92)", "#cbbba0", cfg.tape);
-              }
+              // Top Washi Tape on each Polaroid
+              drawWashiTape(ctx, cfg.cx, cfg.cy - fh / 2 + 4, 190, 38, cfg.angle * -0.7, "rgba(249, 224, 227, 0.92)", "#e5b5bc", cfg.tape);
             });
 
-            // Smooth Bezier Hearts placed tastefully between the 3 frames
-            drawSmoothBezierHeart(ctx, 605, 695, 58, 0.2, "#d92338");
-            drawSmoothBezierHeart(ctx, 455, 1130, 50, -0.22, "#d92338");
+            // Clean Editorial Side Annotations & Fine-Line Coquette Bows / Smooth Bezier Hearts
+            drawCoquetteRibbonBow(ctx, 825, 445, 1.15, 0.14, "#d92338");
+            ctx.save();
+            ctx.translate(825, 525);
+            ctx.rotate(-0.05);
+            ctx.fillStyle = "#181512";
+            ctx.font = "bold 34px 'Caveat', cursive";
+            ctx.textAlign = "center";
+            ctx.fillText("luckiest in the world ↖", 0, 0);
+            ctx.restore();
+
+            drawSmoothBezierHeart(ctx, 245, 920, 56, -0.15, "#d92338");
+            ctx.save();
+            ctx.translate(245, 985);
+            ctx.rotate(0.06);
+            ctx.fillStyle = "#181512";
+            ctx.font = "bold 32px 'Caveat', cursive";
+            ctx.textAlign = "center";
+            ctx.fillText("core memory unlocked ↗", 0, 0);
+            ctx.restore();
+
+            drawCoquetteRibbonBow(ctx, 825, 1390, 1.05, -0.12, "#d92338");
           }
 
           // =================================================================
-          // 7. BOTTOM EDITORIAL FOOTER BAR
+          // BOTTOM STUDIO COLOPHON & WEB BADGE
           // =================================================================
-          const footY = 1752;
+          const isDark = v === "film35";
+          const footY = 1756;
           ctx.strokeStyle = isDark ? "rgba(255,255,255,0.2)" : "#cfc3b0";
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.moveTo(86, footY);
-          ctx.lineTo(994, footY);
+          ctx.moveTo(82, footY);
+          ctx.lineTo(998, footY);
           ctx.stroke();
 
           ctx.fillStyle = isDark ? "#ffffff" : "#181512";
-          ctx.font = "bold 23px 'Inter', sans-serif";
+          ctx.font = "bold 22px 'Inter', sans-serif";
           ctx.textAlign = "left";
-          ctx.fillText(`LOVEOS ARCHIVE • ${p1} & ${p2} ♥`, 86, footY + 56);
+          ctx.fillText(`LOVEOS LIVE BOOTH  •  ${p1} & ${p2} ♥`, 82, footY + 54);
 
           const linkStr = window.location.hostname || "loveos.kept.us";
           ctx.fillStyle = "#d92338";
-          ctx.fillRect(664, footY + 20, 330, 52);
+          ctx.fillRect(668, footY + 18, 330, 50);
           ctx.fillStyle = "#ffffff";
           ctx.font = "bold 20px 'JetBrains Mono', monospace";
           ctx.textAlign = "center";
-          ctx.fillText(linkStr, 829, footY + 53);
+          ctx.fillText(linkStr, 833, footY + 50);
 
           resolve(canvas);
         });
@@ -3758,23 +3756,26 @@
     }
 
     async function download916KeepsakePng() {
-      syncDefaultHisHersFromCoupleData();
+      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
+        showToast("Tap 'Start Live Photo Booth' first!");
+        return;
+      }
       playUiSound("tap");
       const btn = document.getElementById("photobox-download-btn");
       const originalText = btn ? btn.innerHTML : "";
-      if (btn) btn.innerHTML = "<span>Saving HD Photo...</span>";
+      if (btn) btn.innerHTML = "<span>Saving HD Print...</span>";
 
       try {
         const canvas = await generate1080x1920Canvas();
         const dataUrl = canvas.toDataURL("image/png");
         const a = document.createElement("a");
-        a.download = `loveos-scrapbook-${Date.now()}.png`;
+        a.download = `loveos-live-print-${Date.now()}.png`;
         a.href = dataUrl;
         document.body.appendChild(a);
         a.click();
         a.remove();
         playUiSound("unlock");
-        showToast("✦ HD Scrapbook Photo saved!");
+        showToast("✦ HD Studio Print saved!");
       } catch (err) {
         showToast("Could not save photo: " + err.message);
       } finally {
@@ -3783,19 +3784,22 @@
     }
 
     async function shareToInstaStory() {
-      syncDefaultHisHersFromCoupleData();
+      if (!photoboxSlots[0] && !photoboxSlots[1] && !photoboxSlots[2]) {
+        showToast("Tap 'Start Live Photo Booth' first!");
+        return;
+      }
       playUiSound("tap");
       try {
         const canvas = await generate1080x1920Canvas();
         canvas.toBlob(async (blob) => {
           if (!blob) return;
-          const file = new File([blob], "loveos-scrapbook.png", { type: "image/png" });
+          const file = new File([blob], "loveos-live-print.png", { type: "image/png" });
 
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
               await navigator.share({
                 files: [file],
-                title: "Our LoveOS Scrapbook",
+                title: "Our LoveOS Live Print",
                 text: "Snapped inside our LoveOS time capsule ♡"
               });
               return;
@@ -3803,13 +3807,13 @@
           }
 
           const a = document.createElement("a");
-          a.download = "loveos-scrapbook.png";
+          a.download = "loveos-live-print.png";
           a.href = URL.createObjectURL(blob);
           a.click();
-          showToast("✦ Photo saved! Open Instagram to post to your Story.");
+          showToast("✦ Print saved! Open Instagram to post to your Story.");
         }, "image/png");
       } catch (err) {
-        showToast("Tap 'Save HD Photo' to download!");
+        showToast("Tap 'Save HD Print' to download!");
       }
     }
 
@@ -3998,10 +4002,7 @@
         if (isExperienceUnlocked || isBiometricScanRunning) return;
         isBiometricScanRunning = true;
         unlockAudioEngine();
-        playUiSound("tap");
-        if (navigator.vibrate) {
-          try { navigator.vibrate([18, 40, 20]); } catch (_) {}
-        }
+        playUiSound("heartbeat");
 
         const hintLabel = document.getElementById("unlock-hint-label");
         const subStatus = document.getElementById("unlock-sub-status");
@@ -4011,56 +4012,61 @@
         const d = window.COUPLE_DATA || {};
         const receiver = d.partner2Name || d.girlfriendName || "Mia";
 
-        // Phase 1 (0.0s - 0.95s): Biometric Ring Progress & Dynamic Island Scan Status
+        // Phase 1 (0.0s - 2.55s): 4-Second Dramatic Biometric Heart-ID Scan with Percentage Count-Up
         unlockBtn?.classList.add("is-scanning");
         if (hintLabel) {
-          hintLabel.textContent = "Scanning Heart Signature...";
+          hintLabel.textContent = "Scanning Heart Signature... 24%";
           hintLabel.className = "text-xs font-semibold tracking-wide text-rose-300 transition-colors";
         }
-        if (subStatus) subStatus.textContent = "HOLD STILL • VERIFYING BIOMETRICS";
+        if (subStatus) subStatus.textContent = "HOLD STILL • READING PULSE RHYTHM";
 
         if (islandEl && !isDynamicIslandExpanded) {
-          islandEl.style.width = "210px";
+          islandEl.style.width = "220px";
           islandEl.innerHTML = `
             <div class="flex items-center gap-2 w-full justify-center text-[11px] font-mono text-rose-300">
-              <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
-              <span>Verifying Heart ID...</span>
+              <span class="w-2 h-2 rounded-full bg-[#d92338] animate-ping"></span>
+              <span>Scanning Heart ID...</span>
             </div>
           `;
         }
 
-        // Phase 2 (0.95s - 1.75s): Identity Matched -> Morph to 3D Rose-Gold Heart
+        setTimeout(() => {
+          playUiSound("heartbeat");
+          if (hintLabel) hintLabel.textContent = "Scanning Heart Signature... 68%";
+        }, 900);
+
+        setTimeout(() => {
+          playUiSound("heartbeat");
+          if (hintLabel) hintLabel.textContent = "Matching Biometrics... 96%";
+        }, 1750);
+
+        // Phase 2 (2.55s - 3.95s): 100% Match -> Morph to 3D Heart + Radial Particle Burst
         setTimeout(() => {
           playUiSound("unlock");
-          if (navigator.vibrate) {
-            try { navigator.vibrate([30, 45, 70]); } catch (_) {}
-          }
           if (fpIcon) fpIcon.classList.add("hidden");
           if (heartIcon) {
             heartIcon.classList.remove("hidden");
             heartIcon.classList.add("scale-110");
           }
           if (hintLabel) {
-            hintLabel.textContent = `Identity Verified • Welcome in, ${receiver}`;
+            hintLabel.textContent = `100% Match • Welcome in, ${receiver} ♥`;
             hintLabel.className = "text-xs font-bold tracking-wide text-amber-300 transition-colors";
           }
-          if (subStatus) subStatus.textContent = "ACCESS GRANTED • UNSEALING CHAPTER 01";
+          if (subStatus) subStatus.textContent = "IDENTITY VERIFIED • UNSEALING CAPSULE";
 
           if (islandEl && !isDynamicIslandExpanded) {
-            islandEl.style.width = "220px";
+            islandEl.style.width = "225px";
             islandEl.innerHTML = `
               <div class="flex items-center gap-1.5 w-full justify-center text-[11px] font-mono text-emerald-300 font-semibold">
-                <svg class="w-3.5 h-3.5 text-rose-400" viewBox="0 0 64 64" fill="currentColor"><path d="M32 53C32 53 10 38.6 10 23C10 15.2 16.2 9.5 23.4 9.5C27.8 9.5 30.8 11.8 32 14.5C33.2 11.8 36.2 9.5 40.6 9.5C47.8 9.5 54 15.2 54 23C54 38.6 32 53 32 53Z"/></svg>
-                <span>Unlocked • Yours Only</span>
+                <span>♥ Unlocked • ${receiver}'s Eyes Only</span>
               </div>
             `;
           }
 
-          // Radial 16-Particle SVG Love Burst from the Sensor!
           spawnUnlockRadialLoveBurst(unlockBtn);
-        }, 950);
+        }, 2550);
 
-        // Phase 3 (2.35s): Curtain Slide-Up & Enter Chapter 01
+        // Phase 3 (3.95s): Smooth Curtain Lift to Enter Chapter 01
         setTimeout(() => {
           isExperienceUnlocked = true;
           unlockBtn?.classList.remove("is-scanning");
@@ -4073,7 +4079,7 @@
           document.body.style.overflow = "";
 
           if (introEl) {
-            introEl.style.transition = "transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease";
+            introEl.style.transition = "transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease";
             introEl.style.transform = "translateY(-100%)";
             introEl.style.opacity = "0";
             introEl.style.pointerEvents = "none";
@@ -4081,9 +4087,9 @@
               introEl.style.display = "none";
               introEl.classList.add("hidden");
               window.scrollTo({ top: 0, behavior: "smooth" });
-            }, 750);
+            }, 850);
           }
-        }, 2350);
+        }, 3950);
       }
 
       // Keep real-time clock synced
@@ -4230,6 +4236,73 @@
       });
       document.getElementById("quick-reveal-scratch-btn")?.addEventListener("click", () => {
         revealScratchCardCompletely();
+      });
+
+      // Counter Watch-Tick Sound Toggle & Heartbeats View Toggle
+      const soundToggleBtn = document.getElementById("counter-sound-toggle-btn");
+      soundToggleBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        isCounterTickSoundEnabled = !isCounterTickSoundEnabled;
+        playUiSound("tap");
+        soundToggleBtn.textContent = isCounterTickSoundEnabled ? "🔊 Tick: ON" : "🔇 Tick: OFF";
+        soundToggleBtn.className = isCounterTickSoundEnabled
+          ? "px-2.5 py-0.5 rounded-full bg-[#d92338]/20 border border-[#d92338]/40 text-[10px] text-[#ff4d63] font-bold cursor-pointer transition"
+          : "px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[10px] text-stone-400 cursor-pointer transition";
+      });
+
+      const toggleHeartbeatsView = () => {
+        isShowingHeartbeatsMode = !isShowingHeartbeatsMode;
+        playUiSound("card-flip");
+        document.getElementById("counter-time-grid")?.classList.toggle("hidden", isShowingHeartbeatsMode);
+        document.getElementById("counter-beats-view")?.classList.toggle("hidden", !isShowingHeartbeatsMode);
+        const modeBtn = document.getElementById("counter-mode-toggle-btn");
+        if (modeBtn) modeBtn.textContent = isShowingHeartbeatsMode ? "⏱ Show Time" : "♥ Heartbeats";
+      };
+      document.getElementById("counter-mode-toggle-btn")?.addEventListener("click", toggleHeartbeatsView);
+      document.getElementById("counter-time-grid")?.addEventListener("click", toggleHeartbeatsView);
+      document.getElementById("counter-beats-view")?.addEventListener("click", toggleHeartbeatsView);
+
+      // Interactive Date Night Roulette Wheel Mini-Game
+      let currentWheelRotation = 0;
+      let isWheelSpinning = false;
+      const DATE_WHEEL_PRIZES = [
+        "Midnight Drive + Ice Cream Date 🍦",
+        "20-Minute Back Scratches (No Complaints!) ✨",
+        "Arcade Battle + Photo Booth Night 🕹️",
+        "Sunset Blanket Picnic Together 🌅",
+        "Cozy Movie Fort Marathon in Bed 🍿",
+        "Cook Pasta Together at 11:00 PM 🍝"
+      ];
+      document.getElementById("spin-date-wheel-btn")?.addEventListener("click", () => {
+        if (isWheelSpinning) return;
+        isWheelSpinning = true;
+        const wheelSvg = document.getElementById("date-wheel-svg");
+        const resBox = document.getElementById("date-wheel-result-box");
+        const spinBtn = document.getElementById("spin-date-wheel-btn");
+
+        const prizeIdx = Math.floor(Math.random() * DATE_WHEEL_PRIZES.length);
+        const extraSpins = (5 + Math.floor(Math.random() * 3)) * 360;
+        const targetSliceAngle = prizeIdx * 60 + 30;
+        currentWheelRotation += extraSpins + (360 - (currentWheelRotation % 360)) + targetSliceAngle;
+
+        if (wheelSvg) wheelSvg.style.transform = `rotate(${currentWheelRotation}deg)`;
+        if (resBox) resBox.textContent = "Spinning wheel... fingers crossed!";
+        if (spinBtn) spinBtn.textContent = "Spinning...";
+
+        // Play rapid arcade wheel ticks while spinning
+        [0, 220, 460, 720, 1020, 1360, 1740, 2180, 2650].forEach((ms) => {
+          setTimeout(() => playUiSound("ios-typing"), ms);
+        });
+
+        setTimeout(() => {
+          playUiSound("unlock");
+          spawnFloatingHeartBurst(10);
+          if (resBox) {
+            resBox.innerHTML = `<span class="text-[#ff4d63] font-bold">★ WINNER: ${DATE_WHEEL_PRIZES[prizeIdx]}</span>`;
+          }
+          if (spinBtn) spinBtn.textContent = "🎲 Spin Again";
+          isWheelSpinning = false;
+        }, 3200);
       });
 
       // Interactive Thumbprint Heartbeat Sync Sensor
